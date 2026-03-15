@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Api
-  version: 0.1.0
+  version: 0.2.0
   description: MeTime Stories Football Academy Player Portal API
 servers:
   - url: /api
@@ -15,12 +15,12 @@ tags:
     description: Player operations
   - name: journey
     description: Journey response operations
-  - name: parent
-    description: Parent response operations
-  - name: coach
-    description: Coach response operations
+  - name: stakeholders
+    description: Stakeholder (parent/friend/staff) operations
   - name: admin
     description: Admin dashboard operations
+  - name: storage
+    description: Object storage operations
 paths:
   /healthz:
     get:
@@ -94,7 +94,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Player"
         "404":
-          description: Player not found
+          description: Not found
           content:
             application/json:
               schema:
@@ -104,7 +104,7 @@ paths:
     post:
       operationId: saveJourneyResponses
       tags: [journey]
-      summary: Save journey responses for a player
+      summary: Save journey responses
       parameters:
         - name: playerId
           in: path
@@ -119,23 +119,17 @@ paths:
               $ref: "#/components/schemas/SaveJourneyResponsesInput"
       responses:
         "200":
-          description: Journey responses saved
+          description: Saved
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/SaveJourneyResponsesResult"
-        "400":
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
 
   /players/{playerId}/journey/status:
     patch:
       operationId: completeJourney
       tags: [journey]
-      summary: Mark player journey as complete and generate parent/coach codes
+      summary: Mark journey complete
       parameters:
         - name: playerId
           in: path
@@ -144,42 +138,38 @@ paths:
             type: string
       responses:
         "200":
-          description: Journey completed
+          description: Completed
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/CompleteJourneyResult"
 
-  /parent/{parentCode}:
+  /players/{playerId}/stakeholder-links:
     get:
-      operationId: getPlayerByParentCode
-      tags: [parent]
-      summary: Get player info by parent code
+      operationId: getStakeholderLinks
+      tags: [stakeholders]
+      summary: Get all stakeholder links for a player
       parameters:
-        - name: parentCode
+        - name: playerId
           in: path
           required: true
           schema:
             type: string
       responses:
         "200":
-          description: Player found
+          description: Stakeholder links
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PlayerPublicInfo"
-        "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                type: array
+                items:
+                  $ref: "#/components/schemas/StakeholderLink"
     post:
-      operationId: submitParentResponses
-      tags: [parent]
-      summary: Submit parent responses
+      operationId: createStakeholderLinks
+      tags: [stakeholders]
+      summary: Create stakeholder links for a player
       parameters:
-        - name: parentCode
+        - name: playerId
           in: path
           required: true
           schema:
@@ -189,39 +179,35 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SubmitParentResponsesInput"
+              $ref: "#/components/schemas/CreateStakeholderLinksInput"
       responses:
         "201":
-          description: Parent responses submitted
+          description: Links created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SubmitResult"
-        "400":
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                type: array
+                items:
+                  $ref: "#/components/schemas/StakeholderLink"
 
-  /coach/{coachCode}:
+  /stakeholder/{code}:
     get:
-      operationId: getPlayerByCoachCode
-      tags: [coach]
-      summary: Get player info by coach code
+      operationId: getStakeholderByCode
+      tags: [stakeholders]
+      summary: Get stakeholder info by code
       parameters:
-        - name: coachCode
+        - name: code
           in: path
           required: true
           schema:
             type: string
       responses:
         "200":
-          description: Player found
+          description: Stakeholder info
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PlayerPublicInfo"
+                $ref: "#/components/schemas/StakeholderInfo"
         "404":
           description: Not found
           content:
@@ -229,11 +215,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
     post:
-      operationId: submitCoachResponses
-      tags: [coach]
-      summary: Submit coach responses
+      operationId: submitStakeholderResponses
+      tags: [stakeholders]
+      summary: Submit stakeholder responses
       parameters:
-        - name: coachCode
+        - name: code
           in: path
           required: true
           schema:
@@ -243,10 +229,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SubmitCoachResponsesInput"
+              $ref: "#/components/schemas/SubmitStakeholderResponsesInput"
       responses:
         "201":
-          description: Coach responses submitted
+          description: Submitted
           content:
             application/json:
               schema:
@@ -271,7 +257,7 @@ paths:
             type: string
       responses:
         "200":
-          description: List of players with response status
+          description: Players list
           content:
             application/json:
               schema:
@@ -303,7 +289,7 @@ paths:
             type: string
       responses:
         "200":
-          description: Full player profile
+          description: Full profile
           content:
             application/json:
               schema:
@@ -315,11 +301,30 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "404":
-          description: Player not found
+          description: Not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+
+  /storage/uploads/request-url:
+    post:
+      operationId: requestUploadUrl
+      tags: [storage]
+      summary: Request a presigned upload URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestUploadUrlBody"
+      responses:
+        "200":
+          description: Presigned URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestUploadUrlResponse"
 
 components:
   schemas:
@@ -328,16 +333,14 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
     ErrorResponse:
       type: object
       properties:
         error:
           type: string
-      required:
-        - error
+      required: [error]
 
     Academy:
       type: object
@@ -356,14 +359,7 @@ components:
           type: string
         welcomeMessage:
           type: string
-      required:
-        - id
-        - key
-        - name
-        - logoText
-        - primaryColor
-        - secondaryColor
-        - welcomeMessage
+      required: [id, key, name, logoText, primaryColor, secondaryColor, welcomeMessage]
 
     RegisterPlayerInput:
       type: object
@@ -383,12 +379,7 @@ components:
           type: string
         position:
           type: string
-      required:
-        - playerName
-        - age
-        - shirtNumber
-        - academyKey
-        - position
+      required: [playerName, age, shirtNumber, academyKey, position]
 
     Player:
       type: object
@@ -409,27 +400,11 @@ components:
           type: string
         accessCode:
           type: string
-        parentCode:
-          type: string
-        coachCode:
-          type: string
         status:
           type: string
         createdAt:
           type: string
-      required:
-        - id
-        - playerName
-        - age
-        - shirtNumber
-        - academyKey
-        - academyName
-        - position
-        - accessCode
-        - parentCode
-        - coachCode
-        - status
-        - createdAt
+      required: [id, playerName, age, shirtNumber, academyKey, academyName, position, accessCode, status, createdAt]
 
     JourneyResponseItem:
       type: object
@@ -442,11 +417,14 @@ components:
           type: string
         answerText:
           type: string
-      required:
-        - stage
-        - questionNumber
-        - questionText
-        - answerText
+        audioUrl:
+          type: string
+          nullable: true
+        mediaUrls:
+          type: array
+          items:
+            type: string
+      required: [stage, questionNumber, questionText, answerText]
 
     SaveJourneyResponsesInput:
       type: object
@@ -455,35 +433,60 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/JourneyResponseItem"
-      required:
-        - responses
+      required: [responses]
 
     SaveJourneyResponsesResult:
       type: object
       properties:
         saved:
           type: integer
-      required:
-        - saved
+      required: [saved]
 
     CompleteJourneyResult:
       type: object
       properties:
-        parentCode:
-          type: string
-        coachCode:
-          type: string
         status:
           type: string
-      required:
-        - parentCode
-        - coachCode
-        - status
+      required: [status]
 
-    PlayerPublicInfo:
+    StakeholderLink:
       type: object
       properties:
         id:
+          type: integer
+        playerId:
+          type: string
+        type:
+          type: string
+        label:
+          type: string
+        code:
+          type: string
+        submitted:
+          type: boolean
+        createdAt:
+          type: string
+      required: [id, playerId, type, label, code, submitted, createdAt]
+
+    CreateStakeholderLinksInput:
+      type: object
+      properties:
+        parentCount:
+          type: integer
+          minimum: 1
+          maximum: 4
+        friendCount:
+          type: integer
+          minimum: 0
+          maximum: 6
+      required: [parentCount, friendCount]
+
+    StakeholderInfo:
+      type: object
+      properties:
+        linkId:
+          type: integer
+        playerId:
           type: string
         playerName:
           type: string
@@ -491,13 +494,15 @@ components:
           type: string
         position:
           type: string
-      required:
-        - id
-        - playerName
-        - academyName
-        - position
+        type:
+          type: string
+        label:
+          type: string
+        submitted:
+          type: boolean
+      required: [linkId, playerId, playerName, academyName, position, type, label, submitted]
 
-    ParentResponseItem:
+    StakeholderResponseItem:
       type: object
       properties:
         questionNumber:
@@ -506,44 +511,23 @@ components:
           type: string
         answerText:
           type: string
-      required:
-        - questionNumber
-        - questionText
-        - answerText
+        audioUrl:
+          type: string
+          nullable: true
+        mediaUrls:
+          type: array
+          items:
+            type: string
+      required: [questionNumber, questionText, answerText]
 
-    SubmitParentResponsesInput:
+    SubmitStakeholderResponsesInput:
       type: object
       properties:
         responses:
           type: array
           items:
-            $ref: "#/components/schemas/ParentResponseItem"
-      required:
-        - responses
-
-    CoachResponseItem:
-      type: object
-      properties:
-        questionNumber:
-          type: integer
-        questionText:
-          type: string
-        answerText:
-          type: string
-      required:
-        - questionNumber
-        - questionText
-        - answerText
-
-    SubmitCoachResponsesInput:
-      type: object
-      properties:
-        responses:
-          type: array
-          items:
-            $ref: "#/components/schemas/CoachResponseItem"
-      required:
-        - responses
+            $ref: "#/components/schemas/StakeholderResponseItem"
+      required: [responses]
 
     SubmitResult:
       type: object
@@ -552,9 +536,7 @@ components:
           type: boolean
         message:
           type: string
-      required:
-        - success
-        - message
+      required: [success, message]
 
     AdminPlayerSummary:
       type: object
@@ -571,22 +553,17 @@ components:
           type: string
         status:
           type: string
-        parentSubmitted:
-          type: boolean
-        coachSubmitted:
-          type: boolean
+        stakeholderCounts:
+          type: object
+          properties:
+            total:
+              type: integer
+            submitted:
+              type: integer
+          required: [total, submitted]
         createdAt:
           type: string
-      required:
-        - id
-        - playerName
-        - academyName
-        - age
-        - position
-        - status
-        - parentSubmitted
-        - coachSubmitted
-        - createdAt
+      required: [id, playerName, academyName, age, position, status, stakeholderCounts, createdAt]
 
     AdminPlayerProfile:
       type: object
@@ -597,16 +574,47 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/JourneyResponseItem"
-        parentResponses:
+        stakeholderLinks:
           type: array
           items:
-            $ref: "#/components/schemas/ParentResponseItem"
-        coachResponses:
+            $ref: "#/components/schemas/StakeholderLink"
+        stakeholderResponses:
           type: array
           items:
-            $ref: "#/components/schemas/CoachResponseItem"
-      required:
-        - player
-        - journeyResponses
-        - parentResponses
-        - coachResponses
+            $ref: "#/components/schemas/AdminStakeholderResponse"
+      required: [player, journeyResponses, stakeholderLinks, stakeholderResponses]
+
+    AdminStakeholderResponse:
+      type: object
+      properties:
+        stakeholderLinkId:
+          type: integer
+        type:
+          type: string
+        label:
+          type: string
+        responses:
+          type: array
+          items:
+            $ref: "#/components/schemas/StakeholderResponseItem"
+      required: [stakeholderLinkId, type, label, responses]
+
+    RequestUploadUrlBody:
+      type: object
+      properties:
+        name:
+          type: string
+        size:
+          type: integer
+        contentType:
+          type: string
+      required: [name, size, contentType]
+
+    RequestUploadUrlResponse:
+      type: object
+      properties:
+        uploadURL:
+          type: string
+        objectPath:
+          type: string
+      required: [uploadURL, objectPath]

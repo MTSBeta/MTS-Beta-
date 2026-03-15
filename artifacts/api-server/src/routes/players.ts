@@ -16,7 +16,6 @@ router.post("/players", async (req, res) => {
 
   const { playerName, age, shirtNumber, academyKey, position } = parsed.data;
 
-  // Lookup academy name
   const [academy] = await db
     .select()
     .from(academiesTable)
@@ -29,8 +28,6 @@ router.post("/players", async (req, res) => {
   }
 
   const accessCode = generateCode("PLY");
-  const parentCode = generateCode("PAR");
-  const coachCode = generateCode("COA");
 
   const [player] = await db
     .insert(playersTable)
@@ -42,8 +39,6 @@ router.post("/players", async (req, res) => {
       academyName: academy.name,
       position,
       accessCode,
-      parentCode,
-      coachCode,
       status: "registered",
     })
     .returning();
@@ -58,8 +53,6 @@ router.post("/players", async (req, res) => {
       academyName: player.academyName,
       position: player.position,
       accessCode: player.accessCode,
-      parentCode: player.parentCode,
-      coachCode: player.coachCode,
       status: player.status,
       createdAt: player.createdAt.toISOString(),
     })
@@ -90,8 +83,6 @@ router.get("/players/:playerId", async (req, res) => {
       academyName: player.academyName,
       position: player.position,
       accessCode: player.accessCode,
-      parentCode: player.parentCode,
-      coachCode: player.coachCode,
       status: player.status,
       createdAt: player.createdAt.toISOString(),
     })

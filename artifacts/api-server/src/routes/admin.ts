@@ -3,8 +3,8 @@ import { db } from "@workspace/db";
 import {
   playersTable,
   playerJourneyResponsesTable,
-  parentResponsesTable,
-  coachResponsesTable,
+  stakeholderLinksTable,
+  stakeholderResponsesTable,
 } from "@workspace/db/schema";
 import { eq, sql } from "drizzle-orm";
 import { desc } from "drizzle-orm";
@@ -25,43 +25,36 @@ router.get("/admin/players", async (req, res) => {
     .from(playersTable)
     .orderBy(desc(playersTable.createdAt));
 
-  // Check which players have parent/coach responses
-  const playerIds = players.map((p) => p.id);
-
-  const parentCounts = playerIds.length
+  // Count stakeholder links and submissions per player
+  const linkCounts = players.length
     ? await db
         .select({
-          playerId: parentResponsesTable.playerId,
-          count: sql<number>`count(*)::int`,
+          playerId: stakeholderLinksTable.playerId,
+          total: sql<number>`count(*)::int`,
+          submitted: sql<number>`count(*) FILTER (WHERE submitted = true)::int`,
         })
-        .from(parentResponsesTable)
-        .groupBy(parentResponsesTable.playerId)
+        .from(stakeholderLinksTable)
+        .groupBy(stakeholderLinksTable.playerId)
     : [];
 
-  const coachCounts = playerIds.length
-    ? await db
-        .select({
-          playerId: coachResponsesTable.playerId,
-          count: sql<number>`count(*)::int`,
-        })
-        .from(coachResponsesTable)
-        .groupBy(coachResponsesTable.playerId)
-    : [];
+  const countMap = new Map(linkCounts.map((r) => [r.playerId, r]));
 
-  const parentSet = new Set(parentCounts.filter((r) => r.count > 0).map((r) => r.playerId));
-  const coachSet = new Set(coachCounts.filter((r) => r.count > 0).map((r) => r.playerId));
-
-  const result = players.map((p) => ({
-    id: p.id,
-    playerName: p.playerName,
-    academyName: p.academyName,
-    age: p.age,
-    position: p.position,
-    status: p.status,
-    parentSubmitted: parentSet.has(p.id),
-    coachSubmitted: coachSet.has(p.id),
-    createdAt: p.createdAt.toISOString(),
-  }));
+  const result = players.map((p) => {
+    const counts = countMap.get(p.id) ?? { total: 0, submitted: 0 };
+    return {
+      id: p.id,
+      playerName: p.playerName,
+      academyName: p.academyName,
+      age: p.age,
+      position: p.position,
+      status: p.status,
+      stakeholderCounts: {
+        total: counts.total,
+        submitted: counts.submitted,
+      },
+      createdAt: p.createdAt.toISOString(),
+    };
+  });
 
   res.json(result);
 });
@@ -92,17 +85,40 @@ router.get("/admin/players/:playerId", async (req, res) => {
     .where(eq(playerJourneyResponsesTable.playerId, playerId))
     .orderBy(playerJourneyResponsesTable.questionNumber);
 
-  const parentResponses = await db
+  const stakeholderLinks = await db
     .select()
-    .from(parentResponsesTable)
-    .where(eq(parentResponsesTable.playerId, playerId))
-    .orderBy(parentResponsesTable.questionNumber);
+    .from(stakeholderLinksTable)
+    .where(eq(stakeholderLinksTable.playerId, playerId))
+    .orderBy(stakeholderLinksTable.id);
 
-  const coachResponses = await db
+  const stakeholderResponseRows = await db
     .select()
-    .from(coachResponsesTable)
-    .where(eq(coachResponsesTable.playerId, playerId))
-    .orderBy(coachResponsesTable.questionNumber);
+    .from(stakeholderResponsesTable)
+    .where(eq(stakeholderResponsesTable.playerId, playerId))
+    .orderBy(stakeholderResponsesTable.questionNumber);
+
+  // Group responses by stakeholder link
+  const responsesByLink = new Map<number, typeof stakeholderResponseRows>();
+  for (const r of stakeholderResponseRows) {
+    const arr = responsesByLink.get(r.stakeholderLinkId) ?? [];
+    arr.push(r);
+    responsesByLink.set(r.stakeholderLinkId, arr);
+  }
+
+  const stakeholderResponses = stakeholderLinks
+    .filter((l) => l.submitted)
+    .map((l) => ({
+      stakeholderLinkId: l.id,
+      type: l.type,
+      label: l.label,
+      responses: (responsesByLink.get(l.id) ?? []).map((r) => ({
+        questionNumber: r.questionNumber,
+        questionText: r.questionText,
+        answerText: r.answerText,
+        audioUrl: r.audioUrl,
+        mediaUrls: (r.mediaUrls as string[]) ?? [],
+      })),
+    }));
 
   res.json({
     player: {
@@ -114,8 +130,6 @@ router.get("/admin/players/:playerId", async (req, res) => {
       academyName: player.academyName,
       position: player.position,
       accessCode: player.accessCode,
-      parentCode: player.parentCode,
-      coachCode: player.coachCode,
       status: player.status,
       createdAt: player.createdAt.toISOString(),
     },
@@ -124,17 +138,19 @@ router.get("/admin/players/:playerId", async (req, res) => {
       questionNumber: r.questionNumber,
       questionText: r.questionText,
       answerText: r.answerText,
+      audioUrl: r.audioUrl,
+      mediaUrls: (r.mediaUrls as string[]) ?? [],
     })),
-    parentResponses: parentResponses.map((r) => ({
-      questionNumber: r.questionNumber,
-      questionText: r.questionText,
-      answerText: r.answerText,
+    stakeholderLinks: stakeholderLinks.map((l) => ({
+      id: l.id,
+      playerId: l.playerId,
+      type: l.type,
+      label: l.label,
+      code: l.code,
+      submitted: l.submitted,
+      createdAt: l.createdAt.toISOString(),
     })),
-    coachResponses: coachResponses.map((r) => ({
-      questionNumber: r.questionNumber,
-      questionText: r.questionText,
-      answerText: r.answerText,
-    })),
+    stakeholderResponses,
   });
 });
 

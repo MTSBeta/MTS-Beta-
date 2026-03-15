@@ -1,5 +1,5 @@
 export * from "./academies";
 export * from "./players";
 export * from "./journeyResponses";
-export * from "./parentResponses";
-export * from "./coachResponses";
+export * from "./stakeholderLinks";
+export * from "./stakeholderResponses";

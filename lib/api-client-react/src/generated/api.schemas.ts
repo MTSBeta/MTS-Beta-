@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * MeTime Stories Football Academy Player Portal API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 export interface HealthStatus {
   status: string;
@@ -49,8 +49,6 @@ export interface Player {
   academyName: string;
   position: string;
   accessCode: string;
-  parentCode: string;
-  coachCode: string;
   status: string;
   createdAt: string;
 }
@@ -60,6 +58,8 @@ export interface JourneyResponseItem {
   questionNumber: number;
   questionText: string;
   answerText: string;
+  audioUrl?: string | null;
+  mediaUrls?: string[];
 }
 
 export interface SaveJourneyResponsesInput {
@@ -71,42 +71,64 @@ export interface SaveJourneyResponsesResult {
 }
 
 export interface CompleteJourneyResult {
-  parentCode: string;
-  coachCode: string;
   status: string;
 }
 
-export interface PlayerPublicInfo {
-  id: string;
+export interface StakeholderLink {
+  id: number;
+  playerId: string;
+  type: string;
+  label: string;
+  code: string;
+  submitted: boolean;
+  createdAt: string;
+}
+
+export interface CreateStakeholderLinksInput {
+  /**
+   * @minimum 1
+   * @maximum 4
+   */
+  parentCount: number;
+  /**
+   * @minimum 0
+   * @maximum 6
+   */
+  friendCount: number;
+}
+
+export interface StakeholderInfo {
+  linkId: number;
+  playerId: string;
   playerName: string;
   academyName: string;
   position: string;
+  type: string;
+  label: string;
+  submitted: boolean;
 }
 
-export interface ParentResponseItem {
+export interface StakeholderResponseItem {
   questionNumber: number;
   questionText: string;
   answerText: string;
+  audioUrl?: string | null;
+  mediaUrls?: string[];
 }
 
-export interface SubmitParentResponsesInput {
-  responses: ParentResponseItem[];
-}
-
-export interface CoachResponseItem {
-  questionNumber: number;
-  questionText: string;
-  answerText: string;
-}
-
-export interface SubmitCoachResponsesInput {
-  responses: CoachResponseItem[];
+export interface SubmitStakeholderResponsesInput {
+  responses: StakeholderResponseItem[];
 }
 
 export interface SubmitResult {
   success: boolean;
   message: string;
 }
+
+export type AdminPlayerSummaryStakeholderCounts = {
+  total: number;
+  submitted: number;
+};
 
 export interface AdminPlayerSummary {
   id: string;
@@ -115,16 +137,33 @@ export interface AdminPlayerSummary {
   age: number;
   position: string;
   status: string;
-  parentSubmitted: boolean;
-  coachSubmitted: boolean;
+  stakeholderCounts: AdminPlayerSummaryStakeholderCounts;
   createdAt: string;
+}
+
+export interface AdminStakeholderResponse {
+  stakeholderLinkId: number;
+  type: string;
+  label: string;
+  responses: StakeholderResponseItem[];
 }
 
 export interface AdminPlayerProfile {
   player: Player;
   journeyResponses: JourneyResponseItem[];
-  parentResponses: ParentResponseItem[];
-  coachResponses: CoachResponseItem[];
+  stakeholderLinks: StakeholderLink[];
+  stakeholderResponses: AdminStakeholderResponse[];
+}
+
+export interface RequestUploadUrlBody {
+  name: string;
+  size: number;
+  contentType: string;
+}
+
+export interface RequestUploadUrlResponse {
+  uploadURL: string;
+  objectPath: string;
 }
 
 export type AdminListPlayersParams = {

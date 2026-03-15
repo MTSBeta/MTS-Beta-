@@ -6,6 +6,12 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export interface HealthStatus {
-  status: string;
+export interface StakeholderLink {
+  id: number;
+  playerId: string;
+  type: string;
+  label: string;
+  code: string;
+  submitted: boolean;
+  createdAt: string;
 }

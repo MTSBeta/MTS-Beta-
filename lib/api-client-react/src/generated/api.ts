@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * MeTime Stories Football Academy Player Portal API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
@@ -23,16 +23,19 @@ import type {
   AdminPlayerProfile,
   AdminPlayerSummary,
   CompleteJourneyResult,
+  CreateStakeholderLinksInput,
   ErrorResponse,
   HealthStatus,
   Player,
-  PlayerPublicInfo,
   RegisterPlayerInput,
+  RequestUploadUrlBody,
+  RequestUploadUrlResponse,
   SaveJourneyResponsesInput,
   SaveJourneyResponsesResult,
-  SubmitCoachResponsesInput,
-  SubmitParentResponsesInput,
+  StakeholderInfo,
+  StakeholderLink,
   SubmitResult,
+  SubmitStakeholderResponsesInput,
 } from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
@@ -366,7 +369,7 @@ export function useGetPlayer<
 }
 
 /**
- * @summary Save journey responses for a player
+ * @summary Save journey responses
  */
 export const getSaveJourneyResponsesUrl = (playerId: string) => {
   return `/api/players/${playerId}/journey`;
@@ -389,7 +392,7 @@ export const saveJourneyResponses = async (
 };
 
 export const getSaveJourneyResponsesMutationOptions = <
-  TError = ErrorType<ErrorResponse>,
+  TError = ErrorType<unknown>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -431,13 +434,13 @@ export type SaveJourneyResponsesMutationResult = NonNullable<
 >;
 export type SaveJourneyResponsesMutationBody =
   BodyType<SaveJourneyResponsesInput>;
-export type SaveJourneyResponsesMutationError = ErrorType<ErrorResponse>;
+export type SaveJourneyResponsesMutationError = ErrorType<unknown>;
 
 /**
- * @summary Save journey responses for a player
+ * @summary Save journey responses
  */
 export const useSaveJourneyResponses = <
-  TError = ErrorType<ErrorResponse>,
+  TError = ErrorType<unknown>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -457,7 +460,7 @@ export const useSaveJourneyResponses = <
 };
 
 /**
- * @summary Mark player journey as complete and generate parent/coach codes
+ * @summary Mark journey complete
  */
 export const getCompleteJourneyUrl = (playerId: string) => {
   return `/api/players/${playerId}/journey/status`;
@@ -518,7 +521,7 @@ export type CompleteJourneyMutationResult = NonNullable<
 export type CompleteJourneyMutationError = ErrorType<unknown>;
 
 /**
- * @summary Mark player journey as complete and generate parent/coach codes
+ * @summary Mark journey complete
  */
 export const useCompleteJourney = <
   TError = ErrorType<unknown>,
@@ -541,217 +544,34 @@ export const useCompleteJourney = <
 };
 
 /**
- * @summary Get player info by parent code
+ * @summary Get all stakeholder links for a player
  */
-export const getGetPlayerByParentCodeUrl = (parentCode: string) => {
-  return `/api/parent/${parentCode}`;
+export const getGetStakeholderLinksUrl = (playerId: string) => {
+  return `/api/players/${playerId}/stakeholder-links`;
 };
 
-export const getPlayerByParentCode = async (
-  parentCode: string,
+export const getStakeholderLinks = async (
+  playerId: string,
   options?: RequestInit,
-): Promise<PlayerPublicInfo> => {
-  return customFetch<PlayerPublicInfo>(
-    getGetPlayerByParentCodeUrl(parentCode),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
-};
-
-export const getGetPlayerByParentCodeQueryKey = (parentCode: string) => {
-  return [`/api/parent/${parentCode}`] as const;
-};
-
-export const getGetPlayerByParentCodeQueryOptions = <
-  TData = Awaited<ReturnType<typeof getPlayerByParentCode>>,
-  TError = ErrorType<ErrorResponse>,
->(
-  parentCode: string,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getPlayerByParentCode>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-
-  const queryKey =
-    queryOptions?.queryKey ?? getGetPlayerByParentCodeQueryKey(parentCode);
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getPlayerByParentCode>>
-  > = ({ signal }) =>
-    getPlayerByParentCode(parentCode, { signal, ...requestOptions });
-
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!parentCode,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof getPlayerByParentCode>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
-
-export type GetPlayerByParentCodeQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getPlayerByParentCode>>
->;
-export type GetPlayerByParentCodeQueryError = ErrorType<ErrorResponse>;
-
-/**
- * @summary Get player info by parent code
- */
-
-export function useGetPlayerByParentCode<
-  TData = Awaited<ReturnType<typeof getPlayerByParentCode>>,
-  TError = ErrorType<ErrorResponse>,
->(
-  parentCode: string,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getPlayerByParentCode>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetPlayerByParentCodeQueryOptions(
-    parentCode,
-    options,
-  );
-
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
-
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-/**
- * @summary Submit parent responses
- */
-export const getSubmitParentResponsesUrl = (parentCode: string) => {
-  return `/api/parent/${parentCode}`;
-};
-
-export const submitParentResponses = async (
-  parentCode: string,
-  submitParentResponsesInput: SubmitParentResponsesInput,
-  options?: RequestInit,
-): Promise<SubmitResult> => {
-  return customFetch<SubmitResult>(getSubmitParentResponsesUrl(parentCode), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(submitParentResponsesInput),
-  });
-};
-
-export const getSubmitParentResponsesMutationOptions = <
-  TError = ErrorType<ErrorResponse>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof submitParentResponses>>,
-    TError,
-    { parentCode: string; data: BodyType<SubmitParentResponsesInput> },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof submitParentResponses>>,
-  TError,
-  { parentCode: string; data: BodyType<SubmitParentResponsesInput> },
-  TContext
-> => {
-  const mutationKey = ["submitParentResponses"];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof submitParentResponses>>,
-    { parentCode: string; data: BodyType<SubmitParentResponsesInput> }
-  > = (props) => {
-    const { parentCode, data } = props ?? {};
-
-    return submitParentResponses(parentCode, data, requestOptions);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type SubmitParentResponsesMutationResult = NonNullable<
-  Awaited<ReturnType<typeof submitParentResponses>>
->;
-export type SubmitParentResponsesMutationBody =
-  BodyType<SubmitParentResponsesInput>;
-export type SubmitParentResponsesMutationError = ErrorType<ErrorResponse>;
-
-/**
- * @summary Submit parent responses
- */
-export const useSubmitParentResponses = <
-  TError = ErrorType<ErrorResponse>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof submitParentResponses>>,
-    TError,
-    { parentCode: string; data: BodyType<SubmitParentResponsesInput> },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationResult<
-  Awaited<ReturnType<typeof submitParentResponses>>,
-  TError,
-  { parentCode: string; data: BodyType<SubmitParentResponsesInput> },
-  TContext
-> => {
-  return useMutation(getSubmitParentResponsesMutationOptions(options));
-};
-
-/**
- * @summary Get player info by coach code
- */
-export const getGetPlayerByCoachCodeUrl = (coachCode: string) => {
-  return `/api/coach/${coachCode}`;
-};
-
-export const getPlayerByCoachCode = async (
-  coachCode: string,
-  options?: RequestInit,
-): Promise<PlayerPublicInfo> => {
-  return customFetch<PlayerPublicInfo>(getGetPlayerByCoachCodeUrl(coachCode), {
+): Promise<StakeholderLink[]> => {
+  return customFetch<StakeholderLink[]>(getGetStakeholderLinksUrl(playerId), {
     ...options,
     method: "GET",
   });
 };
 
-export const getGetPlayerByCoachCodeQueryKey = (coachCode: string) => {
-  return [`/api/coach/${coachCode}`] as const;
+export const getGetStakeholderLinksQueryKey = (playerId: string) => {
+  return [`/api/players/${playerId}/stakeholder-links`] as const;
 };
 
-export const getGetPlayerByCoachCodeQueryOptions = <
-  TData = Awaited<ReturnType<typeof getPlayerByCoachCode>>,
-  TError = ErrorType<ErrorResponse>,
+export const getGetStakeholderLinksQueryOptions = <
+  TData = Awaited<ReturnType<typeof getStakeholderLinks>>,
+  TError = ErrorType<unknown>,
 >(
-  coachCode: string,
+  playerId: string,
   options?: {
     query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getPlayerByCoachCode>>,
+      Awaited<ReturnType<typeof getStakeholderLinks>>,
       TError,
       TData
     >;
@@ -761,49 +581,49 @@ export const getGetPlayerByCoachCodeQueryOptions = <
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey =
-    queryOptions?.queryKey ?? getGetPlayerByCoachCodeQueryKey(coachCode);
+    queryOptions?.queryKey ?? getGetStakeholderLinksQueryKey(playerId);
 
   const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof getPlayerByCoachCode>>
+    Awaited<ReturnType<typeof getStakeholderLinks>>
   > = ({ signal }) =>
-    getPlayerByCoachCode(coachCode, { signal, ...requestOptions });
+    getStakeholderLinks(playerId, { signal, ...requestOptions });
 
   return {
     queryKey,
     queryFn,
-    enabled: !!coachCode,
+    enabled: !!playerId,
     ...queryOptions,
   } as UseQueryOptions<
-    Awaited<ReturnType<typeof getPlayerByCoachCode>>,
+    Awaited<ReturnType<typeof getStakeholderLinks>>,
     TError,
     TData
   > & { queryKey: QueryKey };
 };
 
-export type GetPlayerByCoachCodeQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getPlayerByCoachCode>>
+export type GetStakeholderLinksQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStakeholderLinks>>
 >;
-export type GetPlayerByCoachCodeQueryError = ErrorType<ErrorResponse>;
+export type GetStakeholderLinksQueryError = ErrorType<unknown>;
 
 /**
- * @summary Get player info by coach code
+ * @summary Get all stakeholder links for a player
  */
 
-export function useGetPlayerByCoachCode<
-  TData = Awaited<ReturnType<typeof getPlayerByCoachCode>>,
-  TError = ErrorType<ErrorResponse>,
+export function useGetStakeholderLinks<
+  TData = Awaited<ReturnType<typeof getStakeholderLinks>>,
+  TError = ErrorType<unknown>,
 >(
-  coachCode: string,
+  playerId: string,
   options?: {
     query?: UseQueryOptions<
-      Awaited<ReturnType<typeof getPlayerByCoachCode>>,
+      Awaited<ReturnType<typeof getStakeholderLinks>>,
       TError,
       TData
     >;
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetPlayerByCoachCodeQueryOptions(coachCode, options);
+  const queryOptions = getGetStakeholderLinksQueryOptions(playerId, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
@@ -813,43 +633,46 @@ export function useGetPlayerByCoachCode<
 }
 
 /**
- * @summary Submit coach responses
+ * @summary Create stakeholder links for a player
  */
-export const getSubmitCoachResponsesUrl = (coachCode: string) => {
-  return `/api/coach/${coachCode}`;
+export const getCreateStakeholderLinksUrl = (playerId: string) => {
+  return `/api/players/${playerId}/stakeholder-links`;
 };
 
-export const submitCoachResponses = async (
-  coachCode: string,
-  submitCoachResponsesInput: SubmitCoachResponsesInput,
+export const createStakeholderLinks = async (
+  playerId: string,
+  createStakeholderLinksInput: CreateStakeholderLinksInput,
   options?: RequestInit,
-): Promise<SubmitResult> => {
-  return customFetch<SubmitResult>(getSubmitCoachResponsesUrl(coachCode), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(submitCoachResponsesInput),
-  });
+): Promise<StakeholderLink[]> => {
+  return customFetch<StakeholderLink[]>(
+    getCreateStakeholderLinksUrl(playerId),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(createStakeholderLinksInput),
+    },
+  );
 };
 
-export const getSubmitCoachResponsesMutationOptions = <
-  TError = ErrorType<ErrorResponse>,
+export const getCreateStakeholderLinksMutationOptions = <
+  TError = ErrorType<unknown>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof submitCoachResponses>>,
+    Awaited<ReturnType<typeof createStakeholderLinks>>,
     TError,
-    { coachCode: string; data: BodyType<SubmitCoachResponsesInput> },
+    { playerId: string; data: BodyType<CreateStakeholderLinksInput> },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof submitCoachResponses>>,
+  Awaited<ReturnType<typeof createStakeholderLinks>>,
   TError,
-  { coachCode: string; data: BodyType<SubmitCoachResponsesInput> },
+  { playerId: string; data: BodyType<CreateStakeholderLinksInput> },
   TContext
 > => {
-  const mutationKey = ["submitCoachResponses"];
+  const mutationKey = ["createStakeholderLinks"];
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       "mutationKey" in options.mutation &&
@@ -859,45 +682,221 @@ export const getSubmitCoachResponsesMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof submitCoachResponses>>,
-    { coachCode: string; data: BodyType<SubmitCoachResponsesInput> }
+    Awaited<ReturnType<typeof createStakeholderLinks>>,
+    { playerId: string; data: BodyType<CreateStakeholderLinksInput> }
   > = (props) => {
-    const { coachCode, data } = props ?? {};
+    const { playerId, data } = props ?? {};
 
-    return submitCoachResponses(coachCode, data, requestOptions);
+    return createStakeholderLinks(playerId, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type SubmitCoachResponsesMutationResult = NonNullable<
-  Awaited<ReturnType<typeof submitCoachResponses>>
+export type CreateStakeholderLinksMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createStakeholderLinks>>
 >;
-export type SubmitCoachResponsesMutationBody =
-  BodyType<SubmitCoachResponsesInput>;
-export type SubmitCoachResponsesMutationError = ErrorType<ErrorResponse>;
+export type CreateStakeholderLinksMutationBody =
+  BodyType<CreateStakeholderLinksInput>;
+export type CreateStakeholderLinksMutationError = ErrorType<unknown>;
 
 /**
- * @summary Submit coach responses
+ * @summary Create stakeholder links for a player
  */
-export const useSubmitCoachResponses = <
-  TError = ErrorType<ErrorResponse>,
+export const useCreateStakeholderLinks = <
+  TError = ErrorType<unknown>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof submitCoachResponses>>,
+    Awaited<ReturnType<typeof createStakeholderLinks>>,
     TError,
-    { coachCode: string; data: BodyType<SubmitCoachResponsesInput> },
+    { playerId: string; data: BodyType<CreateStakeholderLinksInput> },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
-  Awaited<ReturnType<typeof submitCoachResponses>>,
+  Awaited<ReturnType<typeof createStakeholderLinks>>,
   TError,
-  { coachCode: string; data: BodyType<SubmitCoachResponsesInput> },
+  { playerId: string; data: BodyType<CreateStakeholderLinksInput> },
   TContext
 > => {
-  return useMutation(getSubmitCoachResponsesMutationOptions(options));
+  return useMutation(getCreateStakeholderLinksMutationOptions(options));
+};
+
+/**
+ * @summary Get stakeholder info by code
+ */
+export const getGetStakeholderByCodeUrl = (code: string) => {
+  return `/api/stakeholder/${code}`;
+};
+
+export const getStakeholderByCode = async (
+  code: string,
+  options?: RequestInit,
+): Promise<StakeholderInfo> => {
+  return customFetch<StakeholderInfo>(getGetStakeholderByCodeUrl(code), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetStakeholderByCodeQueryKey = (code: string) => {
+  return [`/api/stakeholder/${code}`] as const;
+};
+
+export const getGetStakeholderByCodeQueryOptions = <
+  TData = Awaited<ReturnType<typeof getStakeholderByCode>>,
+  TError = ErrorType<ErrorResponse>,
+>(
+  code: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getStakeholderByCode>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetStakeholderByCodeQueryKey(code);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getStakeholderByCode>>
+  > = ({ signal }) => getStakeholderByCode(code, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!code,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getStakeholderByCode>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetStakeholderByCodeQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStakeholderByCode>>
+>;
+export type GetStakeholderByCodeQueryError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Get stakeholder info by code
+ */
+
+export function useGetStakeholderByCode<
+  TData = Awaited<ReturnType<typeof getStakeholderByCode>>,
+  TError = ErrorType<ErrorResponse>,
+>(
+  code: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getStakeholderByCode>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetStakeholderByCodeQueryOptions(code, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Submit stakeholder responses
+ */
+export const getSubmitStakeholderResponsesUrl = (code: string) => {
+  return `/api/stakeholder/${code}`;
+};
+
+export const submitStakeholderResponses = async (
+  code: string,
+  submitStakeholderResponsesInput: SubmitStakeholderResponsesInput,
+  options?: RequestInit,
+): Promise<SubmitResult> => {
+  return customFetch<SubmitResult>(getSubmitStakeholderResponsesUrl(code), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(submitStakeholderResponsesInput),
+  });
+};
+
+export const getSubmitStakeholderResponsesMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof submitStakeholderResponses>>,
+    TError,
+    { code: string; data: BodyType<SubmitStakeholderResponsesInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof submitStakeholderResponses>>,
+  TError,
+  { code: string; data: BodyType<SubmitStakeholderResponsesInput> },
+  TContext
+> => {
+  const mutationKey = ["submitStakeholderResponses"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof submitStakeholderResponses>>,
+    { code: string; data: BodyType<SubmitStakeholderResponsesInput> }
+  > = (props) => {
+    const { code, data } = props ?? {};
+
+    return submitStakeholderResponses(code, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type SubmitStakeholderResponsesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof submitStakeholderResponses>>
+>;
+export type SubmitStakeholderResponsesMutationBody =
+  BodyType<SubmitStakeholderResponsesInput>;
+export type SubmitStakeholderResponsesMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Submit stakeholder responses
+ */
+export const useSubmitStakeholderResponses = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof submitStakeholderResponses>>,
+    TError,
+    { code: string; data: BodyType<SubmitStakeholderResponsesInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof submitStakeholderResponses>>,
+  TError,
+  { code: string; data: BodyType<SubmitStakeholderResponsesInput> },
+  TContext
+> => {
+  return useMutation(getSubmitStakeholderResponsesMutationOptions(options));
 };
 
 /**
@@ -1111,3 +1110,89 @@ export function useAdminGetPlayer<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Request a presigned upload URL
+ */
+export const getRequestUploadUrlUrl = () => {
+  return `/api/storage/uploads/request-url`;
+};
+
+export const requestUploadUrl = async (
+  requestUploadUrlBody: RequestUploadUrlBody,
+  options?: RequestInit,
+): Promise<RequestUploadUrlResponse> => {
+  return customFetch<RequestUploadUrlResponse>(getRequestUploadUrlUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(requestUploadUrlBody),
+  });
+};
+
+export const getRequestUploadUrlMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof requestUploadUrl>>,
+    TError,
+    { data: BodyType<RequestUploadUrlBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof requestUploadUrl>>,
+  TError,
+  { data: BodyType<RequestUploadUrlBody> },
+  TContext
+> => {
+  const mutationKey = ["requestUploadUrl"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof requestUploadUrl>>,
+    { data: BodyType<RequestUploadUrlBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return requestUploadUrl(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RequestUploadUrlMutationResult = NonNullable<
+  Awaited<ReturnType<typeof requestUploadUrl>>
+>;
+export type RequestUploadUrlMutationBody = BodyType<RequestUploadUrlBody>;
+export type RequestUploadUrlMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Request a presigned upload URL
+ */
+export const useRequestUploadUrl = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof requestUploadUrl>>,
+    TError,
+    { data: BodyType<RequestUploadUrlBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof requestUploadUrl>>,
+  TError,
+  { data: BodyType<RequestUploadUrlBody> },
+  TContext
+> => {
+  return useMutation(getRequestUploadUrlMutationOptions(options));
+};

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * MeTime Stories Football Academy Player Portal API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import * as zod from "zod";
 
@@ -62,14 +62,12 @@ export const GetPlayerResponse = zod.object({
   academyName: zod.string(),
   position: zod.string(),
   accessCode: zod.string(),
-  parentCode: zod.string(),
-  coachCode: zod.string(),
   status: zod.string(),
   createdAt: zod.string(),
 });
 
 /**
- * @summary Save journey responses for a player
+ * @summary Save journey responses
  */
 export const SaveJourneyResponsesParams = zod.object({
   playerId: zod.coerce.string(),
@@ -82,6 +80,8 @@ export const SaveJourneyResponsesBody = zod.object({
       questionNumber: zod.number(),
       questionText: zod.string(),
       answerText: zod.string(),
+      audioUrl: zod.string().nullish(),
+      mediaUrls: zod.array(zod.string()).optional(),
     }),
   ),
 });
@@ -91,76 +91,92 @@ export const SaveJourneyResponsesResponse = zod.object({
 });
 
 /**
- * @summary Mark player journey as complete and generate parent/coach codes
+ * @summary Mark journey complete
  */
 export const CompleteJourneyParams = zod.object({
   playerId: zod.coerce.string(),
 });
 
 export const CompleteJourneyResponse = zod.object({
-  parentCode: zod.string(),
-  coachCode: zod.string(),
   status: zod.string(),
 });
 
 /**
- * @summary Get player info by parent code
+ * @summary Get all stakeholder links for a player
  */
-export const GetPlayerByParentCodeParams = zod.object({
-  parentCode: zod.coerce.string(),
+export const GetStakeholderLinksParams = zod.object({
+  playerId: zod.coerce.string(),
 });
 
-export const GetPlayerByParentCodeResponse = zod.object({
-  id: zod.string(),
-  playerName: zod.string(),
-  academyName: zod.string(),
-  position: zod.string(),
+export const GetStakeholderLinksResponseItem = zod.object({
+  id: zod.number(),
+  playerId: zod.string(),
+  type: zod.string(),
+  label: zod.string(),
+  code: zod.string(),
+  submitted: zod.boolean(),
+  createdAt: zod.string(),
+});
+export const GetStakeholderLinksResponse = zod.array(
+  GetStakeholderLinksResponseItem,
+);
+
+/**
+ * @summary Create stakeholder links for a player
+ */
+export const CreateStakeholderLinksParams = zod.object({
+  playerId: zod.coerce.string(),
+});
+
+export const createStakeholderLinksBodyParentCountMax = 4;
+
+export const createStakeholderLinksBodyFriendCountMin = 0;
+export const createStakeholderLinksBodyFriendCountMax = 6;
+
+export const CreateStakeholderLinksBody = zod.object({
+  parentCount: zod
+    .number()
+    .min(1)
+    .max(createStakeholderLinksBodyParentCountMax),
+  friendCount: zod
+    .number()
+    .min(createStakeholderLinksBodyFriendCountMin)
+    .max(createStakeholderLinksBodyFriendCountMax),
 });
 
 /**
- * @summary Submit parent responses
+ * @summary Get stakeholder info by code
  */
-export const SubmitParentResponsesParams = zod.object({
-  parentCode: zod.coerce.string(),
+export const GetStakeholderByCodeParams = zod.object({
+  code: zod.coerce.string(),
 });
 
-export const SubmitParentResponsesBody = zod.object({
+export const GetStakeholderByCodeResponse = zod.object({
+  linkId: zod.number(),
+  playerId: zod.string(),
+  playerName: zod.string(),
+  academyName: zod.string(),
+  position: zod.string(),
+  type: zod.string(),
+  label: zod.string(),
+  submitted: zod.boolean(),
+});
+
+/**
+ * @summary Submit stakeholder responses
+ */
+export const SubmitStakeholderResponsesParams = zod.object({
+  code: zod.coerce.string(),
+});
+
+export const SubmitStakeholderResponsesBody = zod.object({
   responses: zod.array(
     zod.object({
       questionNumber: zod.number(),
       questionText: zod.string(),
       answerText: zod.string(),
-    }),
-  ),
-});
-
-/**
- * @summary Get player info by coach code
- */
-export const GetPlayerByCoachCodeParams = zod.object({
-  coachCode: zod.coerce.string(),
-});
-
-export const GetPlayerByCoachCodeResponse = zod.object({
-  id: zod.string(),
-  playerName: zod.string(),
-  academyName: zod.string(),
-  position: zod.string(),
-});
-
-/**
- * @summary Submit coach responses
- */
-export const SubmitCoachResponsesParams = zod.object({
-  coachCode: zod.coerce.string(),
-});
-
-export const SubmitCoachResponsesBody = zod.object({
-  responses: zod.array(
-    zod.object({
-      questionNumber: zod.number(),
-      questionText: zod.string(),
-      answerText: zod.string(),
+      audioUrl: zod.string().nullish(),
+      mediaUrls: zod.array(zod.string()).optional(),
     }),
   ),
 });
@@ -179,8 +195,10 @@ export const AdminListPlayersResponseItem = zod.object({
   age: zod.number(),
   position: zod.string(),
   status: zod.string(),
-  parentSubmitted: zod.boolean(),
-  coachSubmitted: zod.boolean(),
+  stakeholderCounts: zod.object({
+    total: zod.number(),
+    submitted: zod.number(),
+  }),
   createdAt: zod.string(),
 });
 export const AdminListPlayersResponse = zod.array(AdminListPlayersResponseItem);
@@ -206,8 +224,6 @@ export const AdminGetPlayerResponse = zod.object({
     academyName: zod.string(),
     position: zod.string(),
     accessCode: zod.string(),
-    parentCode: zod.string(),
-    coachCode: zod.string(),
     status: zod.string(),
     createdAt: zod.string(),
   }),
@@ -217,20 +233,49 @@ export const AdminGetPlayerResponse = zod.object({
       questionNumber: zod.number(),
       questionText: zod.string(),
       answerText: zod.string(),
+      audioUrl: zod.string().nullish(),
+      mediaUrls: zod.array(zod.string()).optional(),
     }),
   ),
-  parentResponses: zod.array(
+  stakeholderLinks: zod.array(
     zod.object({
-      questionNumber: zod.number(),
-      questionText: zod.string(),
-      answerText: zod.string(),
+      id: zod.number(),
+      playerId: zod.string(),
+      type: zod.string(),
+      label: zod.string(),
+      code: zod.string(),
+      submitted: zod.boolean(),
+      createdAt: zod.string(),
     }),
   ),
-  coachResponses: zod.array(
+  stakeholderResponses: zod.array(
     zod.object({
-      questionNumber: zod.number(),
-      questionText: zod.string(),
-      answerText: zod.string(),
+      stakeholderLinkId: zod.number(),
+      type: zod.string(),
+      label: zod.string(),
+      responses: zod.array(
+        zod.object({
+          questionNumber: zod.number(),
+          questionText: zod.string(),
+          answerText: zod.string(),
+          audioUrl: zod.string().nullish(),
+          mediaUrls: zod.array(zod.string()).optional(),
+        }),
+      ),
     }),
   ),
+});
+
+/**
+ * @summary Request a presigned upload URL
+ */
+export const RequestUploadUrlBody = zod.object({
+  name: zod.string(),
+  size: zod.number(),
+  contentType: zod.string(),
+});
+
+export const RequestUploadUrlResponse = zod.object({
+  uploadURL: zod.string(),
+  objectPath: zod.string(),
 });

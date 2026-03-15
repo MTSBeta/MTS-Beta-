@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * MeTime Stories Football Academy Player Portal API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 
 export * from "./academy";
@@ -11,17 +11,21 @@ export * from "./adminGetPlayerParams";
 export * from "./adminListPlayersParams";
 export * from "./adminPlayerProfile";
 export * from "./adminPlayerSummary";
-export * from "./coachResponseItem";
+export * from "./adminPlayerSummaryStakeholderCounts";
+export * from "./adminStakeholderResponse";
 export * from "./completeJourneyResult";
+export * from "./createStakeholderLinksInput";
 export * from "./errorResponse";
 export * from "./healthStatus";
 export * from "./journeyResponseItem";
-export * from "./parentResponseItem";
 export * from "./player";
-export * from "./playerPublicInfo";
 export * from "./registerPlayerInput";
+export * from "./requestUploadUrlBody";
+export * from "./requestUploadUrlResponse";
 export * from "./saveJourneyResponsesInput";
 export * from "./saveJourneyResponsesResult";
-export * from "./submitCoachResponsesInput";
-export * from "./submitParentResponsesInput";
+export * from "./stakeholderInfo";
+export * from "./stakeholderLink";
+export * from "./stakeholderResponseItem";
 export * from "./submitResult";
+export * from "./submitStakeholderResponsesInput";

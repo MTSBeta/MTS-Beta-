@@ -1,9 +1,16 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import type { Player } from "@workspace/api-client-react";
+import type { Player, StakeholderLink } from "@workspace/api-client-react";
 import { type AcademyConfig } from "../data/academies";
 
+interface AnswerEntry {
+  text: string;
+  audioUrl: string | null;
+  audioBlob?: Blob | null;
+  mediaUrls: string[];
+}
+
 interface JourneyAnswers {
-  [stageId: string]: string[];
+  [stageId: string]: AnswerEntry[];
 }
 
 interface PlayerContextType {
@@ -12,10 +19,10 @@ interface PlayerContextType {
   playerData: Player | null;
   setPlayerData: (player: Player | null) => void;
   journeyAnswers: JourneyAnswers;
-  saveJourneyStage: (stageId: string, answers: string[]) => void;
+  saveJourneyStage: (stageId: string, answers: AnswerEntry[]) => void;
   clearContext: () => void;
-  completionData: { parentCode: string; coachCode: string } | null;
-  setCompletionData: (data: { parentCode: string; coachCode: string }) => void;
+  stakeholderLinks: StakeholderLink[];
+  setStakeholderLinks: (links: StakeholderLink[]) => void;
 }
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -24,20 +31,17 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [selectedAcademy, setSelectedAcademy] = useState<AcademyConfig | null>(null);
   const [playerData, setPlayerData] = useState<Player | null>(null);
   const [journeyAnswers, setJourneyAnswers] = useState<JourneyAnswers>({});
-  const [completionData, setCompletionData] = useState<{ parentCode: string; coachCode: string } | null>(null);
+  const [stakeholderLinks, setStakeholderLinks] = useState<StakeholderLink[]>([]);
 
-  const saveJourneyStage = (stageId: string, answers: string[]) => {
-    setJourneyAnswers(prev => ({
-      ...prev,
-      [stageId]: answers
-    }));
+  const saveJourneyStage = (stageId: string, answers: AnswerEntry[]) => {
+    setJourneyAnswers((prev) => ({ ...prev, [stageId]: answers }));
   };
 
   const clearContext = () => {
     setSelectedAcademy(null);
     setPlayerData(null);
     setJourneyAnswers({});
-    setCompletionData(null);
+    setStakeholderLinks([]);
   };
 
   return (
@@ -50,8 +54,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         journeyAnswers,
         saveJourneyStage,
         clearContext,
-        completionData,
-        setCompletionData
+        stakeholderLinks,
+        setStakeholderLinks,
       }}
     >
       {children}
@@ -66,3 +70,5 @@ export function usePlayerContext() {
   }
   return context;
 }
+
+export type { AnswerEntry };

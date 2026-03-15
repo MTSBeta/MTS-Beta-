@@ -1,84 +1,88 @@
-export const JOURNEY_STAGES = [
+export interface JourneyStage {
+  id: string;
+  title: string;
+  emoji: string;
+  subtitle: string;
+  questions: string[];
+}
+
+export const JOURNEY_STAGES: JourneyStage[] = [
   {
-    id: "dream",
-    title: "Dream",
+    id: "Dream",
+    title: "The Dream",
+    emoji: "⚽",
+    subtitle: "Let's start with the big picture — what's the dream?",
     questions: [
-      "What is your biggest dream as a footballer?",
-      "Who is your football hero and why do they inspire you?",
-      "Describe the perfect match you imagine playing in.",
-      "What position do you love most and why?",
-      "How does it feel when you play your best football?"
-    ]
+      "If you could live your perfect football life, what would it actually look like?",
+      "Who's your football hero? What is it about them that just gets you?",
+      "Picture your perfect game — describe exactly what's happening.",
+      "Why do you love your position? What does it let you do that nothing else does?",
+      "Tell me about a moment when you were totally in the zone and football just felt right.",
+    ],
   },
   {
-    id: "storm",
-    title: "Storm",
+    id: "Storm",
+    title: "The Storm",
+    emoji: "⛈️",
+    subtitle: "Every great player goes through tough times. Let's talk about yours.",
     questions: [
-      "Tell me about a time when football felt really difficult.",
-      "What challenges have you faced in your football journey?",
-      "Describe a match or training session that did not go as planned.",
-      "How do you feel when things get tough on the pitch?",
-      "What makes you want to keep trying when it is hard?"
-    ]
+      "Think of a time when football was really hard — what was actually going on?",
+      "What's the biggest challenge you've faced as a player so far?",
+      "Tell me about a match or training session that went badly. What happened?",
+      "How does it feel in your body when things aren't going well on the pitch?",
+      "When everything's going wrong, what's the thing that makes you choose to keep going?",
+    ],
   },
   {
-    id: "rock-bottom",
+    id: "Rock Bottom",
     title: "Rock Bottom",
+    emoji: "🪨",
+    subtitle: "This is the realest part. Be honest — it's just between us.",
     questions: [
-      "Share a moment when you felt like giving up on football.",
-      "What was your most disappointing football experience?",
-      "Tell me about a time you felt you were not good enough.",
-      "How did it feel when you made a big mistake in a game?",
-      "What thoughts went through your head during your lowest moment?"
-    ]
+      "Has there ever been a moment when you thought about quitting football? Tell me about it.",
+      "What's been the most gutting thing that's happened to you in football?",
+      "Was there a time when you felt like you just weren't good enough? What was that like?",
+      "Tell me about a mistake in a game that really hit you hard.",
+      "When you were at your lowest point — what was actually going through your head?",
+    ],
   },
   {
-    id: "rise",
-    title: "Rise",
+    id: "Rise",
+    title: "The Rise",
+    emoji: "🔥",
+    subtitle: "You got back up. How? This is the part that matters most.",
     questions: [
-      "How did you find the strength to keep going?",
-      "Tell me about someone who helped you through tough times.",
-      "What changed your mind about giving up?",
-      "Describe the moment you started believing in yourself again.",
-      "How did you turn your weakness into strength?"
-    ]
+      "What got you through it? Where did you actually find the strength?",
+      "Who showed up for you when things were tough? What did they do?",
+      "Was there a moment when something just clicked and you thought 'I'm not done'?",
+      "When did you start believing in yourself again — and what helped make that happen?",
+      "How did something that felt like a weakness end up making you stronger?",
+    ],
   },
   {
-    id: "elite-wisdom",
+    id: "Elite Wisdom",
     title: "Elite Wisdom",
+    emoji: "🧠",
+    subtitle: "You've been through it. What have you learned about yourself?",
     questions: [
-      "What is the most important lesson football has taught you?",
-      "How has playing football changed who you are as a person?",
-      "What advice would you give to a younger player?",
-      "What does being part of a team really mean to you?",
-      "How do you stay motivated when facing setbacks?"
-    ]
+      "What's the biggest thing football has actually taught you about yourself?",
+      "How has being a footballer changed the way you handle life — not just sport?",
+      "What would you tell a 10-year-old who's just starting out?",
+      "What does being part of a team actually mean to you — real talk?",
+      "When setbacks hit, what do you actually do to stay on it?",
+    ],
   },
   {
-    id: "next-level",
+    id: "Next Level",
     title: "Next Level",
+    emoji: "🚀",
+    subtitle: "Where are you going? Let's talk about the future you're building.",
     questions: [
-      "Where do you see yourself in football in 5 years?",
-      "What skills are you most excited to develop?",
-      "How will you help your teammates reach their dreams too?",
-      "What legacy do you want to leave in football?",
-      "What does success in football mean to you now?"
-    ]
-  }
-];
-
-export const PARENT_QUESTIONS = [
-  "How have you seen your child grow through football, both on and off the pitch?",
-  "What challenges has your child faced in their football journey, and how have they handled them?",
-  "What are you most proud of regarding your child's football development?",
-  "How do you see your child's personality and character reflected in their approach to football?",
-  "What dreams and aspirations do you have for your child's football future?"
-];
-
-export const COACH_QUESTIONS = [
-  "How would you describe this player's technical and tactical development over time?",
-  "What mental and emotional strengths does this player demonstrate during training and matches?",
-  "How does this player respond to challenges, setbacks, and pressure situations?",
-  "What leadership qualities and team dynamics does this player bring to the group?",
-  "What potential do you see in this player, and what areas should they focus on for future development?"
+      "Where do you honestly see yourself in football in five years?",
+      "What part of your game are you most excited to level up?",
+      "How are you going to help the players around you get better too?",
+      "What do you want people to remember about the way you played?",
+      "Right now — what does success in football actually mean to you?",
+    ],
+  },
 ];

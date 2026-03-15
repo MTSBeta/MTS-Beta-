@@ -3,8 +3,9 @@
  * Do not edit manually.
  * Api
  * MeTime Stories Football Academy Player Portal API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
+import type { AdminPlayerSummaryStakeholderCounts } from "./adminPlayerSummaryStakeholderCounts";
 
 export interface AdminPlayerSummary {
   id: string;
@@ -13,7 +14,6 @@ export interface AdminPlayerSummary {
   age: number;
   position: string;
   status: string;
-  parentSubmitted: boolean;
-  coachSubmitted: boolean;
+  stakeholderCounts: AdminPlayerSummaryStakeholderCounts;
   createdAt: string;
 }

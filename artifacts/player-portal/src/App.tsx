@@ -10,8 +10,7 @@ import Register from "@/pages/Register";
 import Welcome from "@/pages/Welcome";
 import Journey from "@/pages/Journey";
 import Invite from "@/pages/Invite";
-import ParentForm from "@/pages/ParentForm";
-import CoachForm from "@/pages/CoachForm";
+import Stakeholder from "@/pages/Stakeholder";
 import Complete from "@/pages/Complete";
 import Admin from "@/pages/Admin";
 
@@ -31,8 +30,7 @@ function Router() {
       <Route path="/welcome" component={Welcome} />
       <Route path="/journey" component={Journey} />
       <Route path="/invite" component={Invite} />
-      <Route path="/parent/:code" component={ParentForm} />
-      <Route path="/coach/:code" component={CoachForm} />
+      <Route path="/stakeholder/:code" component={Stakeholder} />
       <Route path="/complete" component={Complete} />
       <Route path="/admin" component={Admin} />
       <Route component={NotFound} />

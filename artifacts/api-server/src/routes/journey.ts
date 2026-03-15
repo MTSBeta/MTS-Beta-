@@ -26,7 +26,7 @@ router.post("/players/:playerId/journey", async (req, res) => {
     return;
   }
 
-  // Delete any existing journey responses before saving (allows resubmission)
+  // Delete existing and reinsert
   await db
     .delete(playerJourneyResponsesTable)
     .where(eq(playerJourneyResponsesTable.playerId, playerId));
@@ -36,7 +36,9 @@ router.post("/players/:playerId/journey", async (req, res) => {
     stage: r.stage,
     questionNumber: r.questionNumber,
     questionText: r.questionText,
-    answerText: r.answerText,
+    answerText: r.answerText ?? "",
+    audioUrl: r.audioUrl ?? null,
+    mediaUrls: r.mediaUrls ?? [],
   }));
 
   if (rows.length > 0) {
@@ -65,11 +67,7 @@ router.patch("/players/:playerId/journey/status", async (req, res) => {
     .set({ status: "journey_complete" })
     .where(eq(playersTable.id, playerId));
 
-  res.json({
-    parentCode: player.parentCode,
-    coachCode: player.coachCode,
-    status: "journey_complete",
-  });
+  res.json({ status: "journey_complete" });
 });
 
 export default router;
