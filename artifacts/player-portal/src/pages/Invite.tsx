@@ -77,8 +77,8 @@ export default function Invite() {
   const generateLinks = async () => {
     try {
       const result = await createMutation.mutateAsync({
-        pathParams: { playerId: playerData.id },
-        body: { parentCount, friendCount },
+        playerId: playerData.id,
+        data: { parentCount, friendCount },
       });
       setStakeholderLinks(result);
       setStep("links");

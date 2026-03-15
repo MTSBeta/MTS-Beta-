@@ -6,18 +6,27 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useAdminListPlayers, useAdminGetPlayer } from "@workspace/api-client-react";
 
+const TYPE_LABEL: Record<string, string> = {
+  parent: "Parent / Guardian",
+  friend: "Friend",
+  football_coach: "Football Coach",
+  education: "Education Staff",
+  psychology: "Psychology Staff",
+  player_care: "Player Care",
+};
+
 export default function Admin() {
   const [passcode, setPasscode] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
 
   const { data: players, isLoading: listLoading, error: listError } = useAdminListPlayers(
-    { passcode }, 
+    { passcode },
     { query: { enabled: isAuthenticated, retry: false } }
   );
 
   const { data: profile, isLoading: profileLoading } = useAdminGetPlayer(
-    selectedPlayerId || "", 
+    selectedPlayerId || "",
     { passcode },
     { query: { enabled: !!selectedPlayerId && isAuthenticated } }
   );
@@ -80,8 +89,7 @@ export default function Admin() {
                     <th className="p-4 font-semibold">Academy</th>
                     <th className="p-4 font-semibold">Position</th>
                     <th className="p-4 font-semibold">Status</th>
-                    <th className="p-4 font-semibold text-center">Parent</th>
-                    <th className="p-4 font-semibold text-center">Coach</th>
+                    <th className="p-4 font-semibold text-center">Stakeholders</th>
                     <th className="p-4"></th>
                   </tr>
                 </thead>
@@ -96,11 +104,10 @@ export default function Admin() {
                           {p.status}
                         </span>
                       </td>
-                      <td className="p-4 text-center">
-                        {p.parentSubmitted ? <span className="text-green-400 font-bold">✓</span> : <span className="text-white/20">-</span>}
-                      </td>
-                      <td className="p-4 text-center">
-                        {p.coachSubmitted ? <span className="text-green-400 font-bold">✓</span> : <span className="text-white/20">-</span>}
+                      <td className="p-4 text-center text-white/70 text-sm font-medium">
+                        {p.stakeholderCounts
+                          ? `${p.stakeholderCounts.submitted} / ${p.stakeholderCounts.total}`
+                          : "-"}
                       </td>
                       <td className="p-4 text-right">
                         <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white inline-block" />
@@ -109,7 +116,7 @@ export default function Admin() {
                   ))}
                   {players?.length === 0 && (
                     <tr>
-                      <td colSpan={7} className="p-10 text-center text-white/40">No player submissions found.</td>
+                      <td colSpan={6} className="p-10 text-center text-white/40">No player submissions found.</td>
                     </tr>
                   )}
                 </tbody>
@@ -122,15 +129,15 @@ export default function Admin() {
         <AnimatePresence>
           {selectedPlayerId && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-              <motion.div 
-                initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
-                exit={{ opacity: 0 }} 
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 className="absolute inset-0 bg-black/80 backdrop-blur-sm"
                 onClick={() => setSelectedPlayerId(null)}
               />
-              
-              <motion.div 
+
+              <motion.div
                 initial={{ opacity: 0, y: 20, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -195,37 +202,48 @@ export default function Admin() {
                         )}
                       </section>
 
-                      {/* Parent Responses */}
+                      {/* Stakeholder Perspectives */}
                       <section>
-                        <h3 className="text-xl font-display font-bold text-white mb-4 border-b border-white/10 pb-2">Parent Perspective</h3>
-                        {profile.parentResponses.length > 0 ? (
-                          <div className="bg-white/5 rounded-2xl p-6 border border-white/10 space-y-4">
-                            {profile.parentResponses.map(r => (
-                              <div key={r.questionNumber}>
-                                <p className="text-sm font-semibold text-white/80 mb-1">Q{r.questionNumber}. {r.questionText}</p>
-                                <p className="text-white/90 italic pl-4 border-l-2 border-white/20">{r.answerText}</p>
-                              </div>
-                            ))}
+                        <h3 className="text-xl font-display font-bold text-white mb-4 border-b border-white/10 pb-2">Stakeholder Perspectives</h3>
+                        {profile.stakeholderLinks && profile.stakeholderLinks.length > 0 ? (
+                          <div className="space-y-6">
+                            {profile.stakeholderLinks.map((link: { id: number; type: string; label: string; code: string; submitted: boolean }) => {
+                              const submission = profile.stakeholderResponses?.find(
+                                (s: { stakeholderLinkId: number }) => s.stakeholderLinkId === link.id
+                              );
+                              return (
+                                <div key={link.id} className="bg-white/5 rounded-2xl p-6 border border-white/10">
+                                  <div className="flex items-center justify-between mb-4">
+                                    <h4 className="text-base font-display font-bold text-white">
+                                      {link.label}
+                                      <span className="ml-2 text-xs text-white/40 font-normal normal-case">
+                                        ({TYPE_LABEL[link.type] ?? link.type})
+                                      </span>
+                                    </h4>
+                                    <span className={`text-xs font-bold px-2 py-1 rounded ${link.submitted ? 'bg-green-500/20 text-green-400' : 'bg-white/10 text-white/40'}`}>
+                                      {link.submitted ? 'Submitted' : 'Pending'}
+                                    </span>
+                                  </div>
+                                  {submission ? (
+                                    <div className="space-y-4">
+                                      {submission.responses.map((r: { questionNumber: number; questionText: string; answerText: string }) => (
+                                        <div key={r.questionNumber}>
+                                          <p className="text-sm font-semibold text-white/80 mb-1">Q{r.questionNumber}. {r.questionText}</p>
+                                          <p className="text-white/90 italic pl-4 border-l-2 border-white/20">{r.answerText}</p>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  ) : (
+                                    <p className="text-white/30 text-sm italic">
+                                      {link.submitted ? "Responses recorded." : `Awaiting — share link: /stakeholder/${link.code}`}
+                                    </p>
+                                  )}
+                                </div>
+                              );
+                            })}
                           </div>
                         ) : (
-                          <p className="text-white/40 italic">Awaiting parent submission. Link: .../parent/{profile.player.parentCode}</p>
-                        )}
-                      </section>
-
-                      {/* Coach Responses */}
-                      <section>
-                        <h3 className="text-xl font-display font-bold text-white mb-4 border-b border-white/10 pb-2">Coach Assessment</h3>
-                        {profile.coachResponses.length > 0 ? (
-                          <div className="bg-white/5 rounded-2xl p-6 border border-white/10 space-y-4">
-                            {profile.coachResponses.map(r => (
-                              <div key={r.questionNumber}>
-                                <p className="text-sm font-semibold text-white/80 mb-1">Q{r.questionNumber}. {r.questionText}</p>
-                                <p className="text-white/90 italic pl-4 border-l-2 border-white/20">{r.answerText}</p>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <p className="text-white/40 italic">Awaiting coach submission. Link: .../coach/{profile.player.coachCode}</p>
+                          <p className="text-white/40 italic">No stakeholder links generated yet.</p>
                         )}
                       </section>
                     </div>

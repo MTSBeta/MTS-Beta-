@@ -1,0 +1,44 @@
+This is a great set of enhancements. Let me plan what needs to happen:
+
+Better questions — rewrite all stages for 12–14 year olds, more conversational and emotionally engaging
+Voice notes — browser MediaRecorder API to record audio answers
+Media uploads — attach images/videos as supporting "receipts"
+Multiple parents — flexible parent links (not just one)
+Friend perspectives — player chooses how many friends to invite
+Academy staff expanded — Football Coach, Education, Psychology, Player Care (each with voice input)
+Database restructure — replace rigid parent/coach tables with a flexible stakeholder model
+Let me read the object storage skill first for media handling, then build everything in parallel.
+
+Big and exciting upgrade. Here's what I'm building:
+
+Rewritten questions — conversational, emoji-free, friendly for 12–14 year olds
+Voice notes — tap to record, play back, attach to any answer
+Media receipts — attach photos/videos to support answers
+Flexible stakeholders — player sets how many parent links + friend links (multiple)
+Expanded academy staff — Football Coach, Education, Psychology, Player Care — each with voice input
+Restructured database — flexible stakeholder_links model replacing rigid parent/coach tables
+Let me start building in parallel:
+
+Object storage is ready. Now let me do all the schema updates, copy storage files, and update the API spec in parallel:
+
+Now copy the object storage templates and update the OpenAPI spec simultaneously:
+
+Now let me run codegen, push DB schema, and install packages all in parallel:
+
+The schema push needs interactive input. Let me apply schema changes directly via SQL:
+
+All database changes applied. Now let me write all the backend route updates and new frontend files in parallel:
+
+Now let me write all the frontend updates in parallel — rewritten questions, voice recorder, media uploader, new invite flow, and stakeholder form:
+
+Good — now I'll write all the frontend files in parallel. Let me batch write them:
+
+Now let me write the updated Journey, Invite, and new Stakeholder pages — plus check the current App.tsx:
+
+Now update App.tsx to add the /stakeholder/:code route and remove old parent/coach routes:
+
+Let me check the generated code and storage route before restarting:
+
+Generated code looks perfect. Let me check what's exported from the client library and check the DB schema files:
+
+All the generated hooks are present. Now let me check the storage route and restart both servers:

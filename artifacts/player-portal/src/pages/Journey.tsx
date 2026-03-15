@@ -102,18 +102,18 @@ export default function Journey() {
     try {
       if (currentStep < totalStages - 1) {
         await saveMutation.mutateAsync({
-          pathParams: { playerId: playerData!.id },
-          body: { responses },
+          playerId: playerData!.id,
+          data: { responses },
         });
         setCurrentStep((s) => s + 1);
       } else {
         // Final stage — save + complete
         await saveMutation.mutateAsync({
-          pathParams: { playerId: playerData!.id },
-          body: { responses },
+          playerId: playerData!.id,
+          data: { responses },
         });
         await completeMutation.mutateAsync({
-          pathParams: { playerId: playerData!.id },
+          playerId: playerData!.id,
         });
         navigate("/invite");
       }

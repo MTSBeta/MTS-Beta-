@@ -43,12 +43,12 @@ export default function Complete() {
                 <span className="text-green-400 font-bold flex items-center gap-2">✓ Complete</span>
               </div>
               <div className="flex items-center justify-between mb-4">
-                <span className="text-white/80 font-medium">Parent Perspective</span>
-                <span className="text-white/40 font-bold">Pending...</span>
+                <span className="text-white/80 font-medium">Parent &amp; Friend Perspectives</span>
+                <span className="text-white/40 font-bold">Awaiting responses...</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-white/80 font-medium">Coach Perspective</span>
-                <span className="text-white/40 font-bold">Pending...</span>
+                <span className="text-white/80 font-medium">Academy Staff Perspectives</span>
+                <span className="text-white/40 font-bold">Awaiting responses...</span>
               </div>
             </div>
 

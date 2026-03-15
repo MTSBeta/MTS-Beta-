@@ -106,8 +106,8 @@ export default function Stakeholder() {
     }));
 
     await submitMutation.mutateAsync({
-      pathParams: { code },
-      body: { responses },
+      code,
+      data: { responses },
     });
 
     setIsSubmitted(true);
