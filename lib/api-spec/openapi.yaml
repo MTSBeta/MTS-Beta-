@@ -1,22 +1,32 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: MeTime Stories Football Academy Player Portal API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: academies
+    description: Academy operations
+  - name: players
+    description: Player operations
+  - name: journey
+    description: Journey response operations
+  - name: parent
+    description: Parent response operations
+  - name: coach
+    description: Coach response operations
+  - name: admin
+    description: Admin dashboard operations
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +34,293 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /academies:
+    get:
+      operationId: listAcademies
+      tags: [academies]
+      summary: List all academies
+      responses:
+        "200":
+          description: List of academies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Academy"
+
+  /players:
+    post:
+      operationId: registerPlayer
+      tags: [players]
+      summary: Register a new player
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterPlayerInput"
+      responses:
+        "201":
+          description: Player registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Player"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /players/{playerId}:
+    get:
+      operationId: getPlayer
+      tags: [players]
+      summary: Get player by ID
+      parameters:
+        - name: playerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Player found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Player"
+        "404":
+          description: Player not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /players/{playerId}/journey:
+    post:
+      operationId: saveJourneyResponses
+      tags: [journey]
+      summary: Save journey responses for a player
+      parameters:
+        - name: playerId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaveJourneyResponsesInput"
+      responses:
+        "200":
+          description: Journey responses saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SaveJourneyResponsesResult"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /players/{playerId}/journey/status:
+    patch:
+      operationId: completeJourney
+      tags: [journey]
+      summary: Mark player journey as complete and generate parent/coach codes
+      parameters:
+        - name: playerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Journey completed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompleteJourneyResult"
+
+  /parent/{parentCode}:
+    get:
+      operationId: getPlayerByParentCode
+      tags: [parent]
+      summary: Get player info by parent code
+      parameters:
+        - name: parentCode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Player found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerPublicInfo"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: submitParentResponses
+      tags: [parent]
+      summary: Submit parent responses
+      parameters:
+        - name: parentCode
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitParentResponsesInput"
+      responses:
+        "201":
+          description: Parent responses submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmitResult"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /coach/{coachCode}:
+    get:
+      operationId: getPlayerByCoachCode
+      tags: [coach]
+      summary: Get player info by coach code
+      parameters:
+        - name: coachCode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Player found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerPublicInfo"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: submitCoachResponses
+      tags: [coach]
+      summary: Submit coach responses
+      parameters:
+        - name: coachCode
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitCoachResponsesInput"
+      responses:
+        "201":
+          description: Coach responses submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmitResult"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/players:
+    get:
+      operationId: adminListPlayers
+      tags: [admin]
+      summary: Admin list all players
+      parameters:
+        - name: passcode
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of players with response status
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AdminPlayerSummary"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/players/{playerId}:
+    get:
+      operationId: adminGetPlayer
+      tags: [admin]
+      summary: Admin get full player profile
+      parameters:
+        - name: playerId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: passcode
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Full player profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminPlayerProfile"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Player not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +331,282 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    Academy:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+        name:
+          type: string
+        logoText:
+          type: string
+        primaryColor:
+          type: string
+        secondaryColor:
+          type: string
+        welcomeMessage:
+          type: string
+      required:
+        - id
+        - key
+        - name
+        - logoText
+        - primaryColor
+        - secondaryColor
+        - welcomeMessage
+
+    RegisterPlayerInput:
+      type: object
+      properties:
+        playerName:
+          type: string
+          minLength: 2
+        age:
+          type: integer
+          minimum: 6
+          maximum: 21
+        shirtNumber:
+          type: integer
+          minimum: 1
+          maximum: 99
+        academyKey:
+          type: string
+        position:
+          type: string
+      required:
+        - playerName
+        - age
+        - shirtNumber
+        - academyKey
+        - position
+
+    Player:
+      type: object
+      properties:
+        id:
+          type: string
+        playerName:
+          type: string
+        age:
+          type: integer
+        shirtNumber:
+          type: integer
+        academyKey:
+          type: string
+        academyName:
+          type: string
+        position:
+          type: string
+        accessCode:
+          type: string
+        parentCode:
+          type: string
+        coachCode:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - playerName
+        - age
+        - shirtNumber
+        - academyKey
+        - academyName
+        - position
+        - accessCode
+        - parentCode
+        - coachCode
+        - status
+        - createdAt
+
+    JourneyResponseItem:
+      type: object
+      properties:
+        stage:
+          type: string
+        questionNumber:
+          type: integer
+        questionText:
+          type: string
+        answerText:
+          type: string
+      required:
+        - stage
+        - questionNumber
+        - questionText
+        - answerText
+
+    SaveJourneyResponsesInput:
+      type: object
+      properties:
+        responses:
+          type: array
+          items:
+            $ref: "#/components/schemas/JourneyResponseItem"
+      required:
+        - responses
+
+    SaveJourneyResponsesResult:
+      type: object
+      properties:
+        saved:
+          type: integer
+      required:
+        - saved
+
+    CompleteJourneyResult:
+      type: object
+      properties:
+        parentCode:
+          type: string
+        coachCode:
+          type: string
+        status:
+          type: string
+      required:
+        - parentCode
+        - coachCode
+        - status
+
+    PlayerPublicInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        playerName:
+          type: string
+        academyName:
+          type: string
+        position:
+          type: string
+      required:
+        - id
+        - playerName
+        - academyName
+        - position
+
+    ParentResponseItem:
+      type: object
+      properties:
+        questionNumber:
+          type: integer
+        questionText:
+          type: string
+        answerText:
+          type: string
+      required:
+        - questionNumber
+        - questionText
+        - answerText
+
+    SubmitParentResponsesInput:
+      type: object
+      properties:
+        responses:
+          type: array
+          items:
+            $ref: "#/components/schemas/ParentResponseItem"
+      required:
+        - responses
+
+    CoachResponseItem:
+      type: object
+      properties:
+        questionNumber:
+          type: integer
+        questionText:
+          type: string
+        answerText:
+          type: string
+      required:
+        - questionNumber
+        - questionText
+        - answerText
+
+    SubmitCoachResponsesInput:
+      type: object
+      properties:
+        responses:
+          type: array
+          items:
+            $ref: "#/components/schemas/CoachResponseItem"
+      required:
+        - responses
+
+    SubmitResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+        - message
+
+    AdminPlayerSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        playerName:
+          type: string
+        academyName:
+          type: string
+        age:
+          type: integer
+        position:
+          type: string
+        status:
+          type: string
+        parentSubmitted:
+          type: boolean
+        coachSubmitted:
+          type: boolean
+        createdAt:
+          type: string
+      required:
+        - id
+        - playerName
+        - academyName
+        - age
+        - position
+        - status
+        - parentSubmitted
+        - coachSubmitted
+        - createdAt
+
+    AdminPlayerProfile:
+      type: object
+      properties:
+        player:
+          $ref: "#/components/schemas/Player"
+        journeyResponses:
+          type: array
+          items:
+            $ref: "#/components/schemas/JourneyResponseItem"
+        parentResponses:
+          type: array
+          items:
+            $ref: "#/components/schemas/ParentResponseItem"
+        coachResponses:
+          type: array
+          items:
+            $ref: "#/components/schemas/CoachResponseItem"
+      required:
+        - player
+        - journeyResponses
+        - parentResponses
+        - coachResponses

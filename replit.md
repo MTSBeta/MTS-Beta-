@@ -1,8 +1,8 @@
-# Workspace
+# MeTime Stories — Football Academy Player Portal
 
 ## Overview
 
-pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
+A white-labelled football academy player development portal. Young players complete a guided 6-stage reflection journey, with separate forms for parent and coach perspectives. All data is stored in PostgreSQL.
 
 ## Stack
 
@@ -10,87 +10,101 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **Node.js version**: 24
 - **Package manager**: pnpm
 - **TypeScript version**: 5.9
-- **API framework**: Express 5
+- **Frontend**: React + Vite (artifact: `player-portal`) at path `/`
+- **Backend**: Express 5 (artifact: `api-server`) at path `/api`
 - **Database**: PostgreSQL + Drizzle ORM
-- **Validation**: Zod (`zod/v4`), `drizzle-zod`
+- **Validation**: Zod, drizzle-zod
 - **API codegen**: Orval (from OpenAPI spec)
-- **Build**: esbuild (CJS bundle)
+- **Forms**: React Hook Form + Zod resolvers
+- **Animations**: Framer Motion
+- **Routing**: Wouter
 
 ## Structure
 
 ```text
-artifacts-monorepo/
-├── artifacts/              # Deployable applications
-│   └── api-server/         # Express API server
-├── lib/                    # Shared libraries
-│   ├── api-spec/           # OpenAPI spec + Orval codegen config
-│   ├── api-client-react/   # Generated React Query hooks
-│   ├── api-zod/            # Generated Zod schemas from OpenAPI
-│   └── db/                 # Drizzle ORM schema + DB connection
-├── scripts/                # Utility scripts (single workspace package)
-│   └── src/                # Individual .ts scripts, run via `pnpm --filter @workspace/scripts run <script>`
-├── pnpm-workspace.yaml     # pnpm workspace (artifacts/*, lib/*, lib/integrations/*, scripts)
-├── tsconfig.base.json      # Shared TS options (composite, bundler resolution, es2022)
-├── tsconfig.json           # Root TS project references
-└── package.json            # Root package with hoisted devDeps
+artifacts/
+├── api-server/         # Express API server
+│   └── src/routes/     # academies, players, journey, parent, coach, admin
+└── player-portal/      # React + Vite frontend
+    └── src/
+        ├── pages/      # Home, Register, Welcome, Journey, Invite, Complete, ParentForm, CoachForm, Admin
+        ├── components/ # Layout, Button, Input, Textarea, etc.
+        ├── context/    # PlayerContext (selected academy, player data, journey answers)
+        └── data/       # academies.ts, positions.ts, questions.ts
+lib/
+├── api-spec/           # OpenAPI spec + Orval codegen
+├── api-client-react/   # Generated React Query hooks
+├── api-zod/            # Generated Zod schemas
+└── db/
+    └── src/schema/     # academies, players, journeyResponses, parentResponses, coachResponses
 ```
 
-## TypeScript & Composite Projects
+## Routes
 
-Every package extends `tsconfig.base.json` which sets `composite: true`. The root `tsconfig.json` lists all packages as project references. This means:
+### Frontend Routes
+- `/` — Landing: academy selection
+- `/register` — Player registration form
+- `/welcome` — Post-registration welcome screen
+- `/journey` — 6-stage multi-step reflection form
+- `/invite` — Parent & coach link generation
+- `/complete` — Completion summary
+- `/parent/:code` — Parent perspective form
+- `/coach/:code` — Coach perspective form
+- `/admin` — Admin dashboard (passcode-gated)
 
-- **Always typecheck from the root** — run `pnpm run typecheck` (which runs `tsc --build --emitDeclarationOnly`). This builds the full dependency graph so that cross-package imports resolve correctly. Running `tsc` inside a single package will fail if its dependencies haven't been built yet.
-- **`emitDeclarationOnly`** — we only emit `.d.ts` files during typecheck; actual JS bundling is handled by esbuild/tsx/vite...etc, not `tsc`.
-- **Project references** — when package A depends on package B, A's `tsconfig.json` must list B in its `references` array. `tsc --build` uses this to determine build order and skip up-to-date packages.
+### API Routes
+- `GET /api/academies` — List all academies
+- `POST /api/players` — Register a player
+- `GET /api/players/:id` — Get player by ID
+- `POST /api/players/:id/journey` — Save journey responses
+- `PATCH /api/players/:id/journey/status` — Mark journey complete
+- `GET /api/parent/:code` — Get player by parent code
+- `POST /api/parent/:code` — Submit parent responses
+- `GET /api/coach/:code` — Get player by coach code
+- `POST /api/coach/:code` — Submit coach responses
+- `GET /api/admin/players?passcode=X` — Admin list players
+- `GET /api/admin/players/:id?passcode=X` — Admin full player profile
 
-## Root Scripts
+## Database Tables
 
-- `pnpm run build` — runs `typecheck` first, then recursively runs `build` in all packages that define it
-- `pnpm run typecheck` — runs `tsc --build --emitDeclarationOnly` using project references
+- `academies` — Academy config (key, name, colours, welcome message)
+- `players` — Player registrations (name, age, position, codes)
+- `player_journey_responses` — 6-stage journey answers (30 responses per player)
+- `parent_responses` — Parent form answers (5 per player)
+- `coach_responses` — Coach form answers (5 per player)
 
-## Packages
+## Academy Keys (used in database)
+`birmingham-city`, `chelsea`, `arsenal`, `liverpool`, `manchester-city`, `manchester-united`, `tottenham`, `newcastle`
 
-### `artifacts/api-server` (`@workspace/api-server`)
+## Admin Access
+Default passcode: `metime2024` (set via `ADMIN_PASSCODE` env var)
 
-Express 5 API server. Routes live in `src/routes/` and use `@workspace/api-zod` for request and response validation and `@workspace/db` for persistence.
+## Journey Stages
+1. Dream — aspirations and inspiration
+2. Storm — challenges and difficulties
+3. Rock Bottom — lowest moments
+4. Rise — comeback and resilience
+5. Elite Wisdom — lessons learned
+6. Next Level — future goals and vision
 
-- Entry: `src/index.ts` — reads `PORT`, starts Express
-- App setup: `src/app.ts` — mounts CORS, JSON/urlencoded parsing, routes at `/api`
-- Routes: `src/routes/index.ts` mounts sub-routers; `src/routes/health.ts` exposes `GET /health` (full path: `/api/health`)
-- Depends on: `@workspace/db`, `@workspace/api-zod`
-- `pnpm --filter @workspace/api-server run dev` — run the dev server
-- `pnpm --filter @workspace/api-server run build` — production esbuild bundle (`dist/index.cjs`)
-- Build bundles an allowlist of deps (express, cors, pg, drizzle-orm, zod, etc.) and externalizes the rest
+## White-labelling
+Academy config is data-driven. Each academy has: `key`, `name`, `logoText`, `primaryColor`, `secondaryColor`, `welcomeMessage`. Add new academies via the `academies` table.
 
-### `lib/db` (`@workspace/db`)
+## Position Config
+Each position (GK, RB, CB, LB, CDM, CM, CAM, RW, ST, LW, CF) maps to: `displayName`, `traits`, `archetype`, `mentalFocus`. Stored in `src/data/positions.ts` for future story generation use.
 
-Database layer using Drizzle ORM with PostgreSQL. Exports a Drizzle client instance and schema models.
+## Common Commands
 
-- `src/index.ts` — creates a `Pool` + Drizzle instance, exports schema
-- `src/schema/index.ts` — barrel re-export of all models
-- `src/schema/<modelname>.ts` — table definitions with `drizzle-zod` insert schemas (no models definitions exist right now)
-- `drizzle.config.ts` — Drizzle Kit config (requires `DATABASE_URL`, automatically provided by Replit)
-- Exports: `.` (pool, db, schema), `./schema` (schema only)
+```bash
+# Run codegen after changing OpenAPI spec
+pnpm --filter @workspace/api-spec run codegen
 
-Production migrations are handled by Replit when publishing. In development, we just use `pnpm --filter @workspace/db run push`, and we fallback to `pnpm --filter @workspace/db run push-force`.
+# Push DB schema changes
+pnpm --filter @workspace/db run push
 
-### `lib/api-spec` (`@workspace/api-spec`)
+# Start API server
+pnpm --filter @workspace/api-server run dev
 
-Owns the OpenAPI 3.1 spec (`openapi.yaml`) and the Orval config (`orval.config.ts`). Running codegen produces output into two sibling packages:
-
-1. `lib/api-client-react/src/generated/` — React Query hooks + fetch client
-2. `lib/api-zod/src/generated/` — Zod schemas
-
-Run codegen: `pnpm --filter @workspace/api-spec run codegen`
-
-### `lib/api-zod` (`@workspace/api-zod`)
-
-Generated Zod schemas from the OpenAPI spec (e.g. `HealthCheckResponse`). Used by `api-server` for response validation.
-
-### `lib/api-client-react` (`@workspace/api-client-react`)
-
-Generated React Query hooks and fetch client from the OpenAPI spec (e.g. `useHealthCheck`, `healthCheck`).
-
-### `scripts` (`@workspace/scripts`)
-
-Utility scripts package. Each script is a `.ts` file in `src/` with a corresponding npm script in `package.json`. Run scripts via `pnpm --filter @workspace/scripts run <script>`. Scripts can import any workspace package (e.g., `@workspace/db`) by adding it as a dependency in `scripts/package.json`.
+# Start frontend
+pnpm --filter @workspace/player-portal run dev
+```

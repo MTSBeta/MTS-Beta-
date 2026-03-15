@@ -1,0 +1,17 @@
+packages:
+  "framer-motion": "Animations and page transitions for premium feel"
+  "react-hook-form": "Form state management"
+  "@hookform/resolvers": "Zod validation resolver"
+  "clsx": "Class merging utility"
+  "tailwind-merge": "Class merging utility"
+images:
+  - path: "artifacts/player-portal/public/images/hero-bg.png"
+    description: "Dark atmospheric football stadium at night under floodlights, empty pitch, cinematic dramatic lighting, luxury sports aesthetic, ultra high quality, deep shadows"
+    aspect_ratio: "16:9"
+  - path: "artifacts/player-portal/public/images/abstract-texture.png"
+    description: "Abstract dark background with subtle elegant light streaks, carbon fiber texture, premium luxury athletic aesthetic, deep black and charcoal"
+    aspect_ratio: "16:9"
+notes:
+  - Assumes React 19, Wouter for routing, TanStack Query v5.
+  - Orval generated hooks import from @workspace/api-client-react.
+  - Uses Tailwind CSS v4 and strict dark luxury aesthetic.

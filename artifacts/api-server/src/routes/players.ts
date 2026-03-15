@@ -1,0 +1,101 @@
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import { playersTable, academiesTable } from "@workspace/db/schema";
+import { RegisterPlayerBody, GetPlayerResponse } from "@workspace/api-zod";
+import { generateCode } from "../lib/codeGenerator.js";
+import { eq } from "drizzle-orm";
+
+const router: IRouter = Router();
+
+router.post("/players", async (req, res) => {
+  const parsed = RegisterPlayerBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+
+  const { playerName, age, shirtNumber, academyKey, position } = parsed.data;
+
+  // Lookup academy name
+  const [academy] = await db
+    .select()
+    .from(academiesTable)
+    .where(eq(academiesTable.key, academyKey))
+    .limit(1);
+
+  if (!academy) {
+    res.status(400).json({ error: "Invalid academy key" });
+    return;
+  }
+
+  const accessCode = generateCode("PLY");
+  const parentCode = generateCode("PAR");
+  const coachCode = generateCode("COA");
+
+  const [player] = await db
+    .insert(playersTable)
+    .values({
+      playerName,
+      age,
+      shirtNumber,
+      academyKey,
+      academyName: academy.name,
+      position,
+      accessCode,
+      parentCode,
+      coachCode,
+      status: "registered",
+    })
+    .returning();
+
+  res.status(201).json(
+    GetPlayerResponse.parse({
+      id: player.id,
+      playerName: player.playerName,
+      age: player.age,
+      shirtNumber: player.shirtNumber,
+      academyKey: player.academyKey,
+      academyName: player.academyName,
+      position: player.position,
+      accessCode: player.accessCode,
+      parentCode: player.parentCode,
+      coachCode: player.coachCode,
+      status: player.status,
+      createdAt: player.createdAt.toISOString(),
+    })
+  );
+});
+
+router.get("/players/:playerId", async (req, res) => {
+  const { playerId } = req.params;
+
+  const [player] = await db
+    .select()
+    .from(playersTable)
+    .where(eq(playersTable.id, playerId))
+    .limit(1);
+
+  if (!player) {
+    res.status(404).json({ error: "Player not found" });
+    return;
+  }
+
+  res.json(
+    GetPlayerResponse.parse({
+      id: player.id,
+      playerName: player.playerName,
+      age: player.age,
+      shirtNumber: player.shirtNumber,
+      academyKey: player.academyKey,
+      academyName: player.academyName,
+      position: player.position,
+      accessCode: player.accessCode,
+      parentCode: player.parentCode,
+      coachCode: player.coachCode,
+      status: player.status,
+      createdAt: player.createdAt.toISOString(),
+    })
+  );
+});
+
+export default router;

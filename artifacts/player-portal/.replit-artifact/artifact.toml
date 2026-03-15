@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "MeTime Stories — Football Academy Player Portal"
+version = "1.0.0"
+id = "artifacts/player-portal"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+localPort = 20707
+name = "web"
+paths = ["/"]
+
+[services.development]
+run = "pnpm --filter @workspace/player-portal run dev"
+
+[services.env]
+PORT = "20707"
+BASE_PATH = "/"
+
+[services.production]
+build = ["pnpm", "--filter", "@workspace/player-portal", "run", "build"]
+publicDir = "artifacts/player-portal/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
