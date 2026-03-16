@@ -13,6 +13,7 @@ import staffSubmissionsRouter from "./staffSubmissions.js";
 import staffTeamRouter from "./staffTeam.js";
 import staffAcademyRouter from "./staffAcademy.js";
 import ttsRouter from "./tts.js";
+import assistantRouter from "./assistant.js";
 
 const router: IRouter = Router();
 
@@ -30,5 +31,6 @@ router.use(staffSubmissionsRouter);
 router.use(staffTeamRouter);
 router.use(staffAcademyRouter);
 router.use(ttsRouter);
+router.use(assistantRouter);
 
 export default router;

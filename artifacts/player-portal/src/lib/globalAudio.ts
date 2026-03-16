@@ -10,9 +10,36 @@ function set(a: HTMLAudioElement | null) {
   w[KEY] = a;
 }
 
+function createAudioElement(): HTMLAudioElement {
+  const audio = new Audio(publicAssetUrl("audio/love-me-again.mp3"));
+  audio.volume = 0.15;
+  audio.currentTime = 12;
+  audio.preload = "auto";
+  audio.addEventListener("ended", () => { set(null); });
+  return audio;
+}
+
 function playWithFallback(audio: HTMLAudioElement): void {
   audio.play().catch(() => {
     const tryPlay = () => { audio.play().catch(() => {}); };
+    document.addEventListener("click",      tryPlay, { once: true, capture: true });
+    document.addEventListener("touchstart", tryPlay, { once: true, capture: true });
+    document.addEventListener("keydown",    tryPlay, { once: true, capture: true });
+  });
+}
+
+export function preloadMusic(): void {
+  if (get()) return;
+  const audio = createAudioElement();
+  set(audio);
+  audio.load();
+  audio.play().catch(() => {
+    const tryPlay = () => {
+      audio.play().catch(() => {});
+      document.removeEventListener("click",      tryPlay, { capture: true });
+      document.removeEventListener("touchstart", tryPlay, { capture: true });
+      document.removeEventListener("keydown",    tryPlay, { capture: true });
+    };
     document.addEventListener("click",      tryPlay, { once: true, capture: true });
     document.addEventListener("touchstart", tryPlay, { once: true, capture: true });
     document.addEventListener("keydown",    tryPlay, { once: true, capture: true });
@@ -23,10 +50,7 @@ export function ensureMusicPlaying(): void {
   let audio = get();
   if (audio && !audio.paused) return;
   if (!audio) {
-    audio = new Audio(publicAssetUrl("audio/love-me-again.mp3"));
-    audio.volume = 0.15;
-    audio.currentTime = 12;
-    audio.addEventListener("ended", () => { set(null); });
+    audio = createAudioElement();
     set(audio);
   }
   playWithFallback(audio);

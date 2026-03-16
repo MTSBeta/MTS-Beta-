@@ -1,51 +1,36 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { X } from "lucide-react";
+import { X, Send } from "lucide-react";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { getAcademyMascot } from "@/data/mascots";
 
 const PLAYER_PATHS = ["/welcome", "/welcome-u9", "/journey", "/journey-u9", "/complete", "/invite"];
 
-interface PageGuide {
-  title: string;
-  body: string;
+const PAGE_HINTS: Record<string, string> = {
+  "/welcome":    "Browse the chapters below, then tap Begin My Story when you're ready. Got a question? Ask me anything.",
+  "/welcome-u9": "Have a look around, then tap Begin My Story when you're ready. Ask me anything!",
+  "/journey":    "Answer honestly — there are no wrong answers. Use the mic if it's easier. Ask me anything about any question.",
+  "/journey-u9": "Take your time with each picture question. Ask me if you need help!",
+  "/complete":   "You're done — well played! Your story is being put together. Ask me if you have any questions.",
+  "/invite":     "Send links to the people who know you best. Ask me who to invite or how it works.",
+};
+
+interface Message {
+  role: "assistant" | "user";
+  text: string;
 }
 
-function getGuide(path: string, mascotName: string): PageGuide {
-  if (path === "/welcome" || path === "/welcome-u9") {
-    return {
-      title: `${mascotName} here`,
-      body: "Browse through the chapters below to see what's coming. When you're ready, tap Begin My Story to start your journey. You've got 20–30 minutes, but you can always save and come back.",
-    };
-  }
-  if (path === "/journey" || path === "/journey-u9") {
-    return {
-      title: "Take your time",
-      body: "Answer each question honestly — there are no wrong answers. Use the mic if talking is easier than typing. You can skip questions and come back to them at the end.",
-    };
-  }
-  if (path === "/complete") {
-    return {
-      title: "You've done your part",
-      body: "Your story is being put together. Check with your coach or academy to find out when it'll be ready. Well done for making it through.",
-    };
-  }
-  if (path === "/invite") {
-    return {
-      title: "Bring your people in",
-      body: "Invite the people who know you best — parents, coaches, teammates. Their perspective adds a completely different dimension to your story.",
-    };
-  }
-  return {
-    title: `${mascotName} here`,
-    body: "I'm your guide through MeTime Stories. Tap me on any page if you need help or context about what you're doing.",
-  };
-}
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 export default function MetyButton() {
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
   const { selectedAcademy } = usePlayerContext();
 
   const isPlayerPage = PLAYER_PATHS.some(p => location === p || location.startsWith(p + "/"));
@@ -54,7 +39,49 @@ export default function MetyButton() {
   const mascotName = getAcademyMascot(selectedAcademy?.key ?? "");
   const initial = mascotName.charAt(0).toUpperCase();
   const accentColor = selectedAcademy?.primaryColor ?? "#EAB308";
-  const guide = getGuide(location, mascotName);
+  const hint = PAGE_HINTS[location] ?? "Ask me anything about your journey.";
+
+  useEffect(() => {
+    if (open) {
+      if (messages.length === 0) {
+        setMessages([{ role: "assistant", text: hint }]);
+      }
+      setTimeout(() => inputRef.current?.focus(), 150);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
+
+  async function sendMessage() {
+    const q = input.trim();
+    if (!q || loading) return;
+    setInput("");
+    setMessages(prev => [...prev, { role: "user", text: q }]);
+    setLoading(true);
+    try {
+      const res = await fetch(`${base}/api/assistant/ask`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: q, page: location, mascotName }),
+      });
+      const data = await res.json();
+      const answer = data.answer ?? "I'm not sure — check with your coach!";
+      setMessages(prev => [...prev, { role: "assistant", text: answer }]);
+    } catch {
+      setMessages(prev => [...prev, { role: "assistant", text: "Couldn't connect — try again in a second." }]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleKey(e: React.KeyboardEvent) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
 
   return (
     <>
@@ -75,16 +102,18 @@ export default function MetyButton() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 8, scale: 0.95 }}
               transition={{ type: "spring", stiffness: 380, damping: 28 }}
-              className="fixed z-[910] right-4 max-w-[280px]"
+              className="fixed z-[910] right-4 w-[300px]"
               style={{ bottom: "calc(max(env(safe-area-inset-bottom), 16px) + 68px)" }}
+              onClick={e => e.stopPropagation()}
             >
               <div
-                className="rounded-2xl overflow-hidden px-5 py-4 relative"
+                className="rounded-2xl overflow-hidden relative flex flex-col"
                 style={{
-                  background: "rgba(12,12,12,0.96)",
+                  background: "rgba(12,12,12,0.97)",
                   border: `1px solid ${accentColor}35`,
                   backdropFilter: "blur(20px)",
                   boxShadow: `0 0 40px ${accentColor}15, 0 20px 60px rgba(0,0,0,0.8)`,
+                  maxHeight: 380,
                 }}
               >
                 <div
@@ -92,7 +121,7 @@ export default function MetyButton() {
                   style={{ background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)` }}
                 />
 
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-2 px-4 pt-4 pb-2 flex-shrink-0">
                   <div
                     className="w-7 h-7 rounded-full flex items-center justify-center text-sm font-black"
                     style={{ background: `${accentColor}18`, border: `1px solid ${accentColor}35`, color: accentColor }}
@@ -100,10 +129,7 @@ export default function MetyButton() {
                     {initial}
                   </div>
                   <div>
-                    <p
-                      className="text-[11px] font-black uppercase tracking-widest leading-none"
-                      style={{ color: accentColor }}
-                    >
+                    <p className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: accentColor }}>
                       {mascotName}
                     </p>
                     {selectedAcademy?.shortName && (
@@ -112,22 +138,66 @@ export default function MetyButton() {
                       </p>
                     )}
                   </div>
-                  <button
-                    onClick={() => setOpen(false)}
-                    className="ml-auto text-white/30 hover:text-white/60 transition-colors"
-                  >
+                  <button onClick={() => setOpen(false)} className="ml-auto text-white/30 hover:text-white/60 transition-colors">
                     <X size={13} />
                   </button>
                 </div>
 
-                <p className="text-white font-bold text-[13px] leading-snug mb-1">{guide.title}</p>
-                <p className="text-white/55 text-[12px] leading-relaxed">{guide.body}</p>
+                <div className="flex-1 overflow-y-auto px-4 pb-2 space-y-2" style={{ minHeight: 80 }}>
+                  {messages.map((m, i) => (
+                    <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                      <div
+                        className="text-[12px] leading-relaxed rounded-xl px-3 py-2 max-w-[85%]"
+                        style={
+                          m.role === "user"
+                            ? { background: `${accentColor}22`, color: "rgba(255,255,255,0.9)", border: `1px solid ${accentColor}30` }
+                            : { background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)" }
+                        }
+                      >
+                        {m.text}
+                      </div>
+                    </div>
+                  ))}
+                  {loading && (
+                    <div className="flex justify-start">
+                      <div className="text-[12px] rounded-xl px-3 py-2" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.4)" }}>
+                        <span className="animate-pulse">...</span>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={bottomRef} />
+                </div>
+
+                <div className="px-3 pb-3 flex-shrink-0">
+                  <div
+                    className="flex items-center gap-2 rounded-xl px-3 py-2"
+                    style={{ background: "rgba(255,255,255,0.06)", border: `1px solid ${accentColor}20` }}
+                  >
+                    <input
+                      ref={inputRef}
+                      value={input}
+                      onChange={e => setInput(e.target.value)}
+                      onKeyDown={handleKey}
+                      placeholder="Ask me anything..."
+                      className="flex-1 bg-transparent text-white text-[12px] outline-none placeholder-white/25"
+                      disabled={loading}
+                    />
+                    <button
+                      onClick={sendMessage}
+                      disabled={!input.trim() || loading}
+                      className="transition-opacity"
+                      style={{ color: accentColor, opacity: input.trim() && !loading ? 1 : 0.3 }}
+                    >
+                      <Send size={14} />
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <div
                 className="absolute right-[18px] -bottom-[6px] w-3 h-3 rotate-45"
                 style={{
-                  background: "rgba(12,12,12,0.96)",
+                  background: "rgba(12,12,12,0.97)",
                   borderRight: `1px solid ${accentColor}35`,
                   borderBottom: `1px solid ${accentColor}35`,
                 }}
@@ -153,7 +223,7 @@ export default function MetyButton() {
             : "0 4px 24px rgba(0,0,0,0.5)",
           backdropFilter: "blur(12px)",
         }}
-        aria-label={`${mascotName} — tap for guidance`}
+        aria-label={`${mascotName} — tap for help`}
       >
         {!open && (
           <motion.div
@@ -163,10 +233,7 @@ export default function MetyButton() {
             transition={{ repeat: Infinity, duration: 2.6, ease: "easeInOut" }}
           />
         )}
-        <span
-          className="text-base font-black"
-          style={{ color: accentColor, fontFamily: "system-ui, sans-serif" }}
-        >
+        <span className="text-base font-black" style={{ color: accentColor, fontFamily: "system-ui, sans-serif" }}>
           {initial}
         </span>
       </motion.button>
