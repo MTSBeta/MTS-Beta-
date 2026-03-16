@@ -1,7 +1,7 @@
-import { useRef, useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useRef, useEffect, useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { LogOut } from "lucide-react";
+import { LogOut, ChevronLeft, ChevronRight } from "lucide-react";
 import { PlayerJersey } from "@/components/PlayerJersey";
 import { LikenessUploader } from "@/components/LikenessUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
@@ -14,6 +14,25 @@ const TIPS = [
   { emoji: "⏸️", title: "No timer", body: "Pause between stages, come back later. There's no rush and no deadline." },
   { emoji: "✅", title: "No wrong answers", body: "Whatever's true for you is exactly what we're looking for." },
 ];
+
+const KIT_IMAGES: Record<string, string> = {
+  "arsenal":           "https://cdn.footballkitarchive.com/2025/11/18/Z5U71ocitVEydDn.jpg",
+  "aston-villa":       "https://cdn.footballkitarchive.com/2025/07/19/oHl9m2AVpKx9AcP.jpg",
+  "bournemouth":       "https://cdn.footballkitarchive.com/2025/07/15/cqZWpPeYuqhb0S1.jpg",
+  "brentford":         "https://cdn.footballkitarchive.com/2025/07/04/Ss8OoroRbWUUZBo.jpg",
+  "brighton":          "https://cdn.footballkitarchive.com/2025/07/01/JlDs4PKkAbkYe7h.jpg",
+  "chelsea":           "https://cdn.footballkitarchive.com/2025/09/22/Wj8ki6qeOusGzIo.jpg",
+  "ipswich":           "https://cdn.footballkitarchive.com/2025/07/05/jZf2VTTHMOc2fBS.jpg",
+  "leicester":         "https://cdn.footballkitarchive.com/2025/10/19/arMY5zWmi8mta4g.jpg",
+  "manchester-city":   "https://cdn.footballkitarchive.com/2025/05/13/gewy1MN5rMVUaTX.jpg",
+  "manchester-united": "https://cdn.footballkitarchive.com/2025/11/18/RdjHzn4ULniPu0Z.jpg",
+  "newcastle":         "https://cdn.footballkitarchive.com/2025/06/12/iuRDJNGMm7vZyUg.jpg",
+  "nottingham-forest": "https://cdn.footballkitarchive.com/2025/08/05/du0Arc2gsNuIftL.jpg",
+  "southampton":       "https://cdn.footballkitarchive.com/2025/07/14/YcJdtamVgX4L7ny.jpg",
+  "tottenham":         "https://cdn.footballkitarchive.com/2025/06/03/AjKuLXeetr2zHNt.jpg",
+  "west-ham":          "https://cdn.footballkitarchive.com/2025/09/17/yqkFgKPTnE2kHpY.jpg",
+  "wolves":            "https://cdn.footballkitarchive.com/2025/06/27/wKi1rTZkD8iNPcV.jpg",
+};
 
 function isLightColor(hex: string) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -30,34 +49,61 @@ export default function Welcome() {
   const [isMuted, setIsMuted] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const [revealPhase, setRevealPhase] = useState<0 | 1 | 2 | 3 | 4>(0);
+  const [kitImageFailed, setKitImageFailed] = useState(false);
+  const [activeChapter, setActiveChapter] = useState(0);
+  const [chapterDir, setChapterDir] = useState(1);
+  const carouselTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+
   useEffect(() => {
-    // Play theme music at 15% volume for 2 minutes (skip first 12 seconds)
+    const t0 = setTimeout(() => setRevealPhase(1), 200);
+    const t1 = setTimeout(() => setRevealPhase(2), 1500);
+    const t2 = setTimeout(() => setRevealPhase(3), 2300);
+    const t3 = setTimeout(() => setRevealPhase(4), 3400);
+    return () => [t0, t1, t2, t3].forEach(clearTimeout);
+  }, []);
+
+  useEffect(() => {
+    if (revealPhase < 4) return;
+    carouselTimer.current = setInterval(() => {
+      setChapterDir(1);
+      setActiveChapter(prev => (prev + 1) % JOURNEY_STAGES.length);
+    }, 4000);
+    return () => { if (carouselTimer.current) clearInterval(carouselTimer.current); };
+  }, [revealPhase]);
+
+  useEffect(() => {
     const audio = new Audio(`${import.meta.env.BASE_URL}audio/love-me-again.mp3`);
-    audio.volume = 0.15; // 15% volume - subtle background
-    audio.currentTime = 12; // Skip first 12 seconds
+    audio.volume = 0.15;
+    audio.currentTime = 12;
     audioRef.current = audio;
     audio.play().catch(() => {});
-    timeoutRef.current = setTimeout(() => { 
-      audio.pause(); 
-      audio.src = ""; 
-    }, 120000); // 2 minutes
-    return () => { 
+    timeoutRef.current = setTimeout(() => {
+      audio.pause();
+      audio.src = "";
+    }, 120000);
+    return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      audio.pause(); 
-      audio.src = ""; 
+      audio.pause();
+      audio.src = "";
     };
   }, []);
 
   const handleMute = () => {
     setIsMuted(true);
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.src = "";
-    }
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current.src = ""; }
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
   };
+
+  const goChapter = useCallback((dir: 1 | -1) => {
+    if (carouselTimer.current) clearInterval(carouselTimer.current);
+    setChapterDir(dir);
+    setActiveChapter(prev => (prev + dir + JOURNEY_STAGES.length) % JOURNEY_STAGES.length);
+    carouselTimer.current = setInterval(() => {
+      setChapterDir(1);
+      setActiveChapter(p => (p + 1) % JOURNEY_STAGES.length);
+    }, 4000);
+  }, []);
 
   if (!selectedAcademy || !playerData) {
     navigate("/");
@@ -68,6 +114,7 @@ export default function Welcome() {
   const firstName = playerData.playerName.split(" ")[0];
   const surname = playerData.playerName.split(" ").slice(1).join(" ") || playerData.playerName;
   const btnText = isLightColor(selectedAcademy.primaryColor) ? "#000000" : "#FFFFFF";
+  const kitUrl = KIT_IMAGES[selectedAcademy.key];
 
   const handleLogout = () => {
     audioRef.current?.pause();
@@ -75,8 +122,174 @@ export default function Welcome() {
     navigate("/");
   };
 
+  const activeStage = JOURNEY_STAGES[activeChapter];
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] overflow-x-hidden">
+
+      {/* ── FIFA CARD REVEAL OVERLAY ── */}
+      <AnimatePresence>
+        {revealPhase < 4 && (
+          <motion.div
+            key="reveal"
+            className="fixed inset-0 z-[200] flex flex-col items-center justify-center overflow-hidden"
+            style={{ background: "#000" }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+          >
+            {/* Ambient background gradient */}
+            <motion.div
+              className="absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: revealPhase >= 1 ? 1 : 0 }}
+              transition={{ duration: 0.6 }}
+              style={{
+                background: `radial-gradient(ellipse 80% 60% at 50% 60%, ${selectedAcademy.primaryColor}30 0%, transparent 70%)`
+              }}
+            />
+
+            {/* Scan lines */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 4px)",
+                opacity: revealPhase >= 1 ? 1 : 0
+              }}
+            />
+
+            {/* WHITE FLASH on phase 2 */}
+            <AnimatePresence>
+              {revealPhase === 2 && (
+                <motion.div
+                  key="flash"
+                  className="absolute inset-0 bg-white z-10"
+                  initial={{ opacity: 0.9 }}
+                  animate={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                />
+              )}
+            </AnimatePresence>
+
+            {/* ── JERSEY ── */}
+            <AnimatePresence>
+              {revealPhase >= 1 && (
+                <motion.div
+                  key="jersey"
+                  className="relative z-20 flex flex-col items-center"
+                  initial={{ opacity: 0, y: 80, scale: 0.7 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 20, duration: 0.8 }}
+                >
+                  {/* Glow ring below kit */}
+                  <motion.div
+                    className="absolute bottom-8 left-1/2 -translate-x-1/2 rounded-full blur-2xl"
+                    style={{ backgroundColor: selectedAcademy.primaryColor, width: 200, height: 40, opacity: 0.6 }}
+                    animate={{ opacity: [0.4, 0.8, 0.4], scaleX: [1, 1.15, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
+
+                  {kitUrl && !kitImageFailed ? (
+                    <motion.img
+                      src={kitUrl}
+                      alt={`${selectedAcademy.name} kit`}
+                      className="w-56 h-auto object-contain drop-shadow-2xl relative z-10"
+                      onError={() => setKitImageFailed(true)}
+                      animate={revealPhase >= 2 ? { filter: ["brightness(1)", "brightness(2.5)", "brightness(1)"] } : {}}
+                      transition={{ duration: 0.5 }}
+                    />
+                  ) : (
+                    <div className="relative z-10 scale-125">
+                      <PlayerJersey
+                        surname={surname}
+                        number={playerData.shirtNumber}
+                        primaryColor={selectedAcademy.primaryColor}
+                        secondaryColor={selectedAcademy.secondaryColor}
+                      />
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* ── PLAYER NAME REVEAL ── */}
+            <AnimatePresence>
+              {revealPhase >= 2 && (
+                <motion.div
+                  key="name"
+                  className="absolute bottom-[30%] left-0 right-0 z-30 text-center px-4"
+                  initial={{ opacity: 0, y: 30, letterSpacing: "0.3em" }}
+                  animate={{ opacity: 1, y: 0, letterSpacing: "0.08em" }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                >
+                  <motion.p
+                    className="text-[10px] uppercase tracking-[0.4em] font-bold mb-2"
+                    style={{ color: selectedAcademy.primaryColor }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    {selectedAcademy.shortName} Academy
+                  </motion.p>
+                  <h1
+                    className="font-display font-black text-white uppercase leading-none"
+                    style={{ fontSize: "clamp(2rem, 10vw, 3.5rem)", textShadow: `0 0 40px ${selectedAcademy.primaryColor}80` }}
+                  >
+                    {playerData.playerName}
+                  </h1>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* ── SHIRT NUMBER POP ── */}
+            <AnimatePresence>
+              {revealPhase >= 3 && (
+                <motion.div
+                  key="number"
+                  className="absolute bottom-[14%] left-0 right-0 z-30 flex flex-col items-center gap-1"
+                  initial={{ scale: 3.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                >
+                  <span
+                    className="font-display font-black leading-none"
+                    style={{ fontSize: "5rem", color: selectedAcademy.primaryColor, textShadow: `0 0 60px ${selectedAcademy.primaryColor}` }}
+                  >
+                    #{playerData.shirtNumber}
+                  </span>
+                  <motion.p
+                    className="text-white/60 text-sm font-bold uppercase tracking-widest"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.25 }}
+                  >
+                    {posInfo?.archetype || "The Player"}
+                  </motion.p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Bottom bar branding */}
+            <AnimatePresence>
+              {revealPhase >= 3 && (
+                <motion.div
+                  key="brand"
+                  className="absolute bottom-6 left-0 right-0 flex justify-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <div
+                    className="text-[9px] uppercase tracking-[0.4em] font-bold px-4 py-1.5 rounded-full"
+                    style={{ color: selectedAcademy.primaryColor, border: `1px solid ${selectedAcademy.primaryColor}40`, background: `${selectedAcademy.primaryColor}12` }}
+                  >
+                    MeTime Stories · Player Portal
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── BG texture ── */}
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -87,7 +300,6 @@ export default function Welcome() {
 
       {/* ── HERO CARD ── */}
       <div className="relative z-10">
-        {/* Club colour gradient fill */}
         <div
           className="absolute inset-0 opacity-30"
           style={{ background: `linear-gradient(160deg, ${selectedAcademy.primaryColor}CC 0%, transparent 65%)` }}
@@ -123,24 +335,43 @@ export default function Welcome() {
 
         {/* Jersey + player card */}
         <div className="relative flex flex-col items-center px-5 pb-8 pt-2">
-
-          {/* Ambient glow */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full blur-[70px] opacity-20 pointer-events-none"
             style={{ backgroundColor: selectedAcademy.primaryColor }} />
 
-          {/* Jersey */}
+          {/* Jersey — uses real kit image if available */}
           <motion.div
             initial={{ opacity: 0, scale: 0.85, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 180, damping: 18, delay: 0.1 }}
             className="relative z-10 mb-2"
           >
-            <PlayerJersey
-              surname={surname}
-              number={playerData.shirtNumber}
-              primaryColor={selectedAcademy.primaryColor}
-              secondaryColor={selectedAcademy.secondaryColor}
-            />
+            {kitUrl && !kitImageFailed ? (
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                className="relative"
+              >
+                <motion.div
+                  className="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-full blur-xl"
+                  style={{ backgroundColor: selectedAcademy.primaryColor, width: "70%", height: 18 }}
+                  animate={{ opacity: [0.35, 0.55, 0.35], scaleX: [1, 0.9, 1] }}
+                  transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <img
+                  src={kitUrl}
+                  alt={`${selectedAcademy.name} kit`}
+                  className="w-44 h-auto object-contain drop-shadow-2xl relative z-10"
+                  onError={() => setKitImageFailed(true)}
+                />
+              </motion.div>
+            ) : (
+              <PlayerJersey
+                surname={surname}
+                number={playerData.shirtNumber}
+                primaryColor={selectedAcademy.primaryColor}
+                secondaryColor={selectedAcademy.secondaryColor}
+              />
+            )}
           </motion.div>
 
           {/* Player identity */}
@@ -156,7 +387,6 @@ export default function Welcome() {
             <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: selectedAcademy.primaryColor }}>
               {posInfo?.archetype || "The Player"}
             </p>
-            {/* Chips */}
             <div className="flex items-center justify-center gap-2 flex-wrap">
               <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/8 text-white/70 border border-white/10">
                 {selectedAcademy.name}
@@ -186,10 +416,7 @@ export default function Welcome() {
           className="rounded-3xl overflow-hidden"
           style={{ background: `linear-gradient(135deg, ${selectedAcademy.primaryColor}22, ${selectedAcademy.primaryColor}08)`, border: `1px solid ${selectedAcademy.primaryColor}30` }}
         >
-          <div
-            className="h-1 w-full"
-            style={{ background: selectedAcademy.primaryColor }}
-          />
+          <div className="h-1 w-full" style={{ background: selectedAcademy.primaryColor }} />
           <div className="p-5">
             <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold mb-2">
               {selectedAcademy.name} · Academy
@@ -264,7 +491,7 @@ export default function Welcome() {
           <p className="text-white/20 text-[10px] text-right pr-1 mt-1">swipe →</p>
         </motion.div>
 
-        {/* ── 6 STAGES ── */}
+        {/* ── CHAPTER CAROUSEL ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -277,77 +504,110 @@ export default function Welcome() {
             <span className="text-xs text-white/25 font-mono">do them in order</span>
           </div>
 
-          <div className="space-y-2.5">
-            {JOURNEY_STAGES.map((stage, i) => {
-              const isActive = i === 0;
-              const isLocked = i > 0;
-              return (
-                <motion.div
-                  key={stage.id}
-                  initial={{ opacity: 0, x: -16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.75 + i * 0.07 }}
-                  whileHover={!isLocked ? { scale: 1.02, x: 4 } : {}}
-                  className={`flex items-center gap-3.5 rounded-2xl px-4 py-4 backdrop-blur-sm transition-all group ${
-                    isLocked ? "opacity-60" : "hover:shadow-lg"
-                  }`}
-                  style={{
-                    background: isActive
-                      ? `linear-gradient(135deg, ${selectedAcademy.primaryColor}25, ${selectedAcademy.primaryColor}08)`
-                      : isLocked
-                      ? "rgba(255,255,255,0.03)"
-                      : "rgba(255,255,255,0.05)",
-                    border: isActive
-                      ? `1.5px solid ${selectedAcademy.primaryColor}40`
-                      : isLocked
-                      ? "1px solid rgba(255,255,255,0.05)"
-                      : "1px solid rgba(255,255,255,0.1)",
-                    boxShadow: isActive ? `0 8px 24px ${selectedAcademy.primaryColor}15` : "none"
-                  }}
-                >
-                  {/* Step number bubble */}
+          {/* Carousel card */}
+          <div className="relative overflow-hidden rounded-3xl" style={{ minHeight: 220 }}>
+            <AnimatePresence mode="wait" initial={false} custom={chapterDir}>
+              <motion.div
+                key={activeChapter}
+                custom={chapterDir}
+                variants={{
+                  enter: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%", opacity: 0 }),
+                  center: { x: 0, opacity: 1 },
+                  exit:  (dir: number) => ({ x: dir > 0 ? "-100%" : "100%", opacity: 0 }),
+                }}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="w-full rounded-3xl p-6 flex flex-col justify-between"
+                style={{
+                  background: activeChapter === 0
+                    ? `linear-gradient(135deg, ${selectedAcademy.primaryColor}35, ${selectedAcademy.primaryColor}10)`
+                    : "rgba(255,255,255,0.04)",
+                  border: activeChapter === 0
+                    ? `1.5px solid ${selectedAcademy.primaryColor}50`
+                    : "1px solid rgba(255,255,255,0.08)",
+                  boxShadow: activeChapter === 0 ? `0 12px 40px ${selectedAcademy.primaryColor}20` : "none",
+                  minHeight: 220,
+                }}
+              >
+                {/* Chapter number + lock */}
+                <div className="flex items-start justify-between mb-3">
                   <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-black shrink-0 transition-all"
+                    className="text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full"
                     style={{
-                      background: isActive
-                        ? selectedAcademy.primaryColor
-                        : isLocked
-                        ? "rgba(255,255,255,0.05)"
-                        : "rgba(255,255,255,0.08)",
-                      color: isActive
-                        ? btnText
-                        : isLocked
-                        ? "rgba(255,255,255,0.25)"
-                        : "rgba(255,255,255,0.45)",
-                      boxShadow: isActive ? `0 4px 12px ${selectedAcademy.primaryColor}35` : "none"
+                      background: activeChapter === 0 ? selectedAcademy.primaryColor : "rgba(255,255,255,0.08)",
+                      color: activeChapter === 0 ? btnText : "rgba(255,255,255,0.4)"
                     }}
                   >
-                    {i + 1}
+                    Chapter {activeChapter + 1} of {JOURNEY_STAGES.length}
                   </div>
+                  {activeChapter > 0 && (
+                    <span className="text-white/20 text-lg">🔒</span>
+                  )}
+                  {activeChapter === 0 && (
+                    <span
+                      className="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full"
+                      style={{ background: `${selectedAcademy.primaryColor}25`, color: selectedAcademy.primaryColor }}
+                    >
+                      START HERE
+                    </span>
+                  )}
+                </div>
 
-                  {/* Emoji + text */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-xl">{stage.emoji}</span>
-                      <span className={`font-bold text-sm ${isLocked ? "text-white/50" : "text-white"}`}>
-                        {stage.title}
-                      </span>
-                    </div>
-                    <p className={`text-xs mt-1 truncate ${isLocked ? "text-white/25" : "text-white/45"}`}>
-                      {stage.description}
+                {/* Emoji + title */}
+                <div className="flex items-center gap-4 mb-3">
+                  <span className="text-5xl">{activeStage.emoji}</span>
+                  <div>
+                    <h3 className={`font-black text-xl leading-tight ${activeChapter > 0 ? "text-white/50" : "text-white"}`}>
+                      {activeStage.title}
+                    </h3>
+                    <p className={`text-xs mt-1 leading-relaxed ${activeChapter > 0 ? "text-white/25" : "text-white/55"}`}>
+                      {activeStage.description}
                     </p>
                   </div>
+                </div>
 
-                  {/* Lock icon for future stages */}
-                  {isLocked && (
-                    <span className="text-white/20 text-sm shrink-0">🔒</span>
-                  )}
-                  {isActive && (
-                    <span className="text-white/40 text-xs shrink-0 font-mono">start</span>
-                  )}
-                </motion.div>
-              );
-            })}
+                {/* Unlocks message */}
+                {activeChapter > 0 && (
+                  <p className="text-white/20 text-[11px] font-medium italic">
+                    Unlocks after completing chapter {activeChapter}
+                  </p>
+                )}
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Prev / Next arrows */}
+            <button
+              onClick={() => goChapter(-1)}
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:bg-white/15"
+              style={{ background: "rgba(255,255,255,0.08)" }}
+            >
+              <ChevronLeft size={16} className="text-white/60" />
+            </button>
+            <button
+              onClick={() => goChapter(1)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:bg-white/15"
+              style={{ background: "rgba(255,255,255,0.08)" }}
+            >
+              <ChevronRight size={16} className="text-white/60" />
+            </button>
+          </div>
+
+          {/* Dot indicators */}
+          <div className="flex items-center justify-center gap-1.5 mt-3">
+            {JOURNEY_STAGES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => { setChapterDir(i > activeChapter ? 1 : -1); setActiveChapter(i); }}
+                className="rounded-full transition-all"
+                style={{
+                  width: i === activeChapter ? 20 : 6,
+                  height: 6,
+                  background: i === activeChapter ? selectedAcademy.primaryColor : "rgba(255,255,255,0.18)",
+                }}
+              />
+            ))}
           </div>
         </motion.div>
 
