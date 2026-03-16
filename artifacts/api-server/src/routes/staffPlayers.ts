@@ -9,7 +9,7 @@ import {
   academyStaffTable,
   academiesTable,
 } from "@workspace/db/schema";
-import { eq, and, ilike } from "drizzle-orm";
+import { eq, and, ilike, sql } from "drizzle-orm";
 import { staffAuth, requireRole } from "../middlewares/staffAuth.js";
 import { generateCode } from "../lib/codeGenerator.js";
 
@@ -24,18 +24,16 @@ router.get("/staff/players", staffAuth, async (req, res) => {
 
   const conditions = [];
 
-  const [academy] = await db
-    .select()
-    .from(academiesTable)
-    .where(eq(academiesTable.id, staffUser.academyId))
-    .limit(1);
-
-  if (!academy) {
+  const academyResult = await db.execute(
+    sql`SELECT id, key, name FROM academies WHERE id = ${staffUser.academyId} LIMIT 1`
+  );
+  if (!academyResult.rows || academyResult.rows.length === 0) {
     res.status(400).json({ error: "Staff academy not found" });
     return;
   }
+  const academyRow = academyResult.rows[0] as any;
 
-  conditions.push(eq(playersTable.academyKey, academy.key));
+  conditions.push(eq(playersTable.academyKey, academyRow.key as string));
 
   if (ageGroup) {
     conditions.push(eq(playersTable.ageGroup, ageGroup));
@@ -86,16 +84,14 @@ router.post("/staff/players", staffAuth, requireRole("academy_admin"), async (re
     return;
   }
 
-  const [academy] = await db
-    .select()
-    .from(academiesTable)
-    .where(eq(academiesTable.id, staffUser.academyId))
-    .limit(1);
-
-  if (!academy) {
+  const postAcademyResult = await db.execute(
+    sql`SELECT id, key, name FROM academies WHERE id = ${staffUser.academyId} LIMIT 1`
+  );
+  if (!postAcademyResult.rows || postAcademyResult.rows.length === 0) {
     res.status(400).json({ error: "Academy not found" });
     return;
   }
+  const postAcademy = postAcademyResult.rows[0] as any;
 
   // Derive age group string from age
   const ageGroup = age <= 9 ? "U9" : `U${age <= 10 ? 10 : age <= 11 ? 11 : age <= 12 ? 12 : age <= 13 ? 13 : age <= 14 ? 14 : age <= 15 ? 15 : age <= 16 ? 16 : age <= 17 ? 17 : age <= 18 ? 18 : "U21"}`;
@@ -109,8 +105,8 @@ router.post("/staff/players", staffAuth, requireRole("academy_admin"), async (re
       playerName: playerName.trim(),
       age,
       shirtNumber: shirtNumber ?? 0,
-      academyKey: academy.key,
-      academyName: academy.name,
+      academyKey: postAcademy.key,
+      academyName: postAcademy.name,
       position,
       accessCode,
       parentCode,

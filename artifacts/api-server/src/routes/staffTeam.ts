@@ -44,13 +44,10 @@ router.post("/staff/team", staffAuth, requireRole("academy_admin"), async (req, 
     return;
   }
 
-  const [academy] = await db
-    .select()
-    .from(academiesTable)
-    .where(eq(academiesTable.id, staffUser.academyId))
-    .limit(1);
-
-  const maxStaff = academy?.maxStaffAccounts ?? 8;
+  const createAcademyResult = await db.execute(
+    sql`SELECT max_staff_accounts FROM academies WHERE id = ${staffUser.academyId} LIMIT 1`
+  );
+  const maxStaff = (createAcademyResult.rows?.[0] as any)?.max_staff_accounts ?? 8;
 
   const [countResult] = await db
     .select({ count: sql<number>`count(*)::int` })
@@ -152,12 +149,10 @@ router.put("/staff/team/:id", staffAuth, requireRole("academy_admin"), async (re
   }
 
   if (isActive === true && !existing.isActive) {
-    const [academy] = await db
-      .select()
-      .from(academiesTable)
-      .where(eq(academiesTable.id, staffUser.academyId))
-      .limit(1);
-    const maxStaff = academy?.maxStaffAccounts ?? 8;
+    const updateAcademyResult = await db.execute(
+      sql`SELECT max_staff_accounts FROM academies WHERE id = ${staffUser.academyId} LIMIT 1`
+    );
+    const maxStaff = (updateAcademyResult.rows?.[0] as any)?.max_staff_accounts ?? 8;
 
     const [countResult] = await db
       .select({ count: sql<number>`count(*)::int` })
@@ -224,8 +219,10 @@ router.patch("/staff/team/:id/toggle", staffAuth, requireRole("academy_admin"), 
   const newActive = typeof isActive === "boolean" ? isActive : !existing.isActive;
 
   if (newActive === true && !existing.isActive) {
-    const [academy] = await db.select().from(academiesTable).where(eq(academiesTable.id, staffUser.academyId)).limit(1);
-    const maxStaff = academy?.maxStaffAccounts ?? 8;
+    const toggleAcademyResult = await db.execute(
+      sql`SELECT max_staff_accounts FROM academies WHERE id = ${staffUser.academyId} LIMIT 1`
+    );
+    const maxStaff = (toggleAcademyResult.rows?.[0] as any)?.max_staff_accounts ?? 8;
     const [countResult] = await db
       .select({ count: sql<number>`count(*)::int` })
       .from(academyStaffTable)
