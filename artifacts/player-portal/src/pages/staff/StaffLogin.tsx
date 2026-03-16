@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
 import { Loader2, Shield, ArrowLeft } from "lucide-react";
@@ -12,10 +12,9 @@ export default function StaffLogin() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  if (staffUser) {
-    navigate("/staff-dashboard");
-    return null;
-  }
+  useEffect(() => {
+    if (staffUser) navigate("/staff-dashboard");
+  }, [staffUser]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

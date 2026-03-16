@@ -21,8 +21,10 @@ export default function StaffDashboard() {
   }, []);
 
   const totalPlayers = players.length;
-  const completedPlayers = players.filter((p) => p.status === "completed").length;
-  const inProgress = totalPlayers - completedPlayers;
+  const completedPlayers = players.filter((p) =>
+    ["journey_complete", "links_generated", "story_complete"].includes(p.status)
+  ).length;
+  const inProgress = players.filter((p) => p.status === "journey_started").length;
 
   const recentPlayers = [...players]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
