@@ -1,7 +1,7 @@
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { Layout } from "@/components/Layout";
-import { Button } from "@/components/ui/Button";
+import { LogOut } from "lucide-react";
 import { PlayerJersey } from "@/components/PlayerJersey";
 import { LikenessUploader } from "@/components/LikenessUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
@@ -9,31 +9,23 @@ import { POSITIONS } from "@/data/positions";
 import { JOURNEY_STAGES } from "@/data/questions";
 
 const TIPS = [
-  {
-    icon: "🎙️",
-    title: "Use your voice",
-    body: "Every question has a voice note button. Use it. Your actual voice — the pauses, the energy — adds something written words can't."
-  },
-  {
-    icon: "💬",
-    title: "These questions go deep",
-    body: "Some will feel unusual. That's intentional. The academy wants your real story, not a performance."
-  },
-  {
-    icon: "⏸️",
-    title: "Take your time",
-    body: "You can pause between stages and come back. There's no timer. Think before you answer."
-  },
-  {
-    icon: "✅",
-    title: "No wrong answers",
-    body: "There's no right thing to say here. Whatever is true for you is exactly what we're looking for."
-  },
+  { emoji: "🎙️", title: "Talk, don't type", body: "Every question has a voice note. Use it — your actual voice tells more of the story." },
+  { emoji: "💬", title: "Go deep", body: "Some questions feel unusual. That's on purpose. Real answers, not a performance." },
+  { emoji: "⏸️", title: "No timer", body: "Pause between stages, come back later. There's no rush and no deadline." },
+  { emoji: "✅", title: "No wrong answers", body: "Whatever's true for you is exactly what we're looking for." },
 ];
+
+function isLightColor(hex: string) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 155;
+}
 
 export default function Welcome() {
   const [_, navigate] = useLocation();
-  const { selectedAcademy, playerData } = usePlayerContext();
+  const { selectedAcademy, playerData, clearContext } = usePlayerContext();
+  const tipsRef = useRef<HTMLDivElement>(null);
 
   if (!selectedAcademy || !playerData) {
     navigate("/");
@@ -43,44 +35,56 @@ export default function Welcome() {
   const posInfo = POSITIONS.find(p => p.id === playerData.position);
   const firstName = playerData.playerName.split(" ")[0];
   const surname = playerData.playerName.split(" ").slice(1).join(" ") || playerData.playerName;
+  const btnText = isLightColor(selectedAcademy.primaryColor) ? "#000000" : "#FFFFFF";
+
+  const handleLogout = () => { clearContext(); navigate("/"); };
 
   return (
-    <Layout>
-      <div className="w-full max-w-2xl mx-auto pb-16">
+    <div className="min-h-screen bg-[#0a0a0a] overflow-x-hidden">
 
-        {/* ── HERO ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col items-center text-center pt-8 pb-10 relative"
-        >
-          {/* Ambient glow behind jersey */}
+      {/* ── BG texture ── */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
+          className="w-full h-full object-cover opacity-20 mix-blend-overlay" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a0a]/60 to-[#0a0a0a]" />
+      </div>
+
+      {/* ── HERO CARD ── */}
+      <div className="relative z-10">
+        {/* Club colour gradient fill */}
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{ background: `linear-gradient(160deg, ${selectedAcademy.primaryColor}CC 0%, transparent 65%)` }}
+        />
+
+        {/* Top bar */}
+        <div className="relative flex items-center justify-between px-5 pt-5 pb-2">
+          <button onClick={handleLogout}
+            className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-xs">
+            <LogOut size={13} />
+            <span>Log out</span>
+          </button>
           <div
-            className="absolute top-20 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full blur-[80px] opacity-25 pointer-events-none"
-            style={{ backgroundColor: selectedAcademy.primaryColor }}
-          />
-
-          {/* Club badge */}
-          <motion.div
-            initial={{ scale: 0.7, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-            className="w-16 h-16 rounded-2xl flex items-center justify-center font-display font-black text-white text-lg shadow-2xl mb-6 relative z-10"
-            style={{
-              backgroundColor: selectedAcademy.primaryColor,
-              boxShadow: `0 0 40px ${selectedAcademy.primaryColor}80, 0 8px 32px rgba(0,0,0,0.4)`,
-            }}
+            className="px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase"
+            style={{ background: `${selectedAcademy.primaryColor}30`, color: selectedAcademy.primaryColor, border: `1px solid ${selectedAcademy.primaryColor}50` }}
           >
             {selectedAcademy.logoText}
-          </motion.div>
+          </div>
+        </div>
+
+        {/* Jersey + player card */}
+        <div className="relative flex flex-col items-center px-5 pb-8 pt-2">
+
+          {/* Ambient glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full blur-[70px] opacity-20 pointer-events-none"
+            style={{ backgroundColor: selectedAcademy.primaryColor }} />
 
           {/* Jersey */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="relative z-10 mb-5"
+            initial={{ opacity: 0, scale: 0.85, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 180, damping: 18, delay: 0.1 }}
+            className="relative z-10 mb-2"
           >
             <PlayerJersey
               surname={surname}
@@ -90,154 +94,211 @@ export default function Welcome() {
             />
           </motion.div>
 
-          {/* Player name */}
+          {/* Player identity */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.35 }}
-            className="relative z-10"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            className="relative z-10 text-center"
           >
-            <h1 className="text-3xl md:text-4xl font-display font-black text-white uppercase tracking-wide mb-1">
+            <h1 className="text-4xl font-display font-black text-white uppercase tracking-tight leading-none mb-1">
               {playerData.playerName}
             </h1>
-            <p className="text-sm font-semibold uppercase tracking-widest" style={{ color: selectedAcademy.primaryColor }}>
+            <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: selectedAcademy.primaryColor }}>
               {posInfo?.archetype || "The Player"}
             </p>
-            <p className="text-white/50 text-sm mt-0.5">
-              {selectedAcademy.name} · {posInfo?.displayName || playerData.position} · #{playerData.shirtNumber}
-            </p>
+            {/* Chips */}
+            <div className="flex items-center justify-center gap-2 flex-wrap">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/8 text-white/70 border border-white/10">
+                {selectedAcademy.name}
+              </span>
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/8 text-white/70 border border-white/10">
+                {posInfo?.displayName || playerData.position}
+              </span>
+              <span
+                className="px-3 py-1 rounded-full text-xs font-black"
+                style={{ background: selectedAcademy.primaryColor, color: btnText }}
+              >
+                #{playerData.shirtNumber}
+              </span>
+            </div>
           </motion.div>
-        </motion.div>
+        </div>
+      </div>
 
-        {/* ── PERSONAL MESSAGE ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="glass-panel rounded-3xl p-6 md:p-8 mb-6"
-        >
-          <p className="text-white/50 text-xs uppercase tracking-widest font-bold mb-3">
-            A message from {selectedAcademy.name}
-          </p>
-          <p className="text-xl md:text-2xl text-white font-medium leading-relaxed mb-5">
-            This profile was built specifically for you, <span className="font-black">{firstName}</span>.
-          </p>
-          <blockquote
-            className="text-base text-white/80 leading-relaxed italic border-l-4 pl-5"
-            style={{ borderColor: selectedAcademy.primaryColor }}
-          >
-            "{selectedAcademy.welcomeMessage}"
-          </blockquote>
-        </motion.div>
+      {/* ── SCROLLABLE CONTENT ── */}
+      <div className="relative z-10 px-4 pb-36 space-y-5 max-w-lg mx-auto">
 
-        {/* ── LIKENESS PHOTOS ── */}
+        {/* ── CLUB MESSAGE ── */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.48 }}
-          className="glass-panel rounded-3xl p-6 md:p-8 mb-6 border border-white/6"
-          style={{ borderColor: `${selectedAcademy.primaryColor}25` }}
+          transition={{ delay: 0.35 }}
+          className="rounded-3xl overflow-hidden"
+          style={{ background: `linear-gradient(135deg, ${selectedAcademy.primaryColor}22, ${selectedAcademy.primaryColor}08)`, border: `1px solid ${selectedAcademy.primaryColor}30` }}
         >
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-base">🎨</span>
-            <p className="text-white/40 text-xs uppercase tracking-widest font-bold">
-              For your illustration
+          <div
+            className="h-1 w-full"
+            style={{ background: selectedAcademy.primaryColor }}
+          />
+          <div className="p-5">
+            <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold mb-2">
+              {selectedAcademy.name} · Academy
+            </p>
+            <p className="text-white text-lg font-bold leading-snug mb-2">
+              This profile was built<br />for you, <span style={{ color: selectedAcademy.primaryColor }}>{firstName}.</span>
+            </p>
+            <p className="text-white/55 text-sm leading-relaxed">
+              "{selectedAcademy.welcomeMessage}"
             </p>
           </div>
-          <p className="text-white/60 text-sm leading-relaxed mb-5">
-            Your story will be turned into an illustrated book. Submit up to 3 photos so the illustrator can capture your likeness — your face, your kit, your presence.
+        </motion.div>
+
+        {/* ── PHOTOS ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45 }}
+          className="rounded-3xl bg-white/4 border border-white/8 p-5"
+        >
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xl">🎨</span>
+            <div>
+              <p className="text-white font-bold text-base">Get illustrated</p>
+              <p className="text-white/40 text-xs">Your story becomes a book. Give us your likeness.</p>
+            </div>
+          </div>
+          <p className="text-white/50 text-sm leading-relaxed mt-3 mb-4">
+            Add up to 3 photos — face, kit, anything that looks like you — so the illustrator can bring you to life on the page.
           </p>
           <LikenessUploader primaryColor={selectedAcademy.primaryColor} />
         </motion.div>
 
-        {/* ── TIPS ── */}
+        {/* ── TIPS: horizontal scroll ── */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="mb-6"
+          transition={{ delay: 0.55 }}
         >
-          <p className="text-white/40 text-xs uppercase tracking-widest font-bold mb-3 px-1">
+          <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold mb-3 px-1">
             Before you start
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div
+            ref={tipsRef}
+            className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none -mx-4 px-4"
+            style={{ scrollbarWidth: "none" }}
+          >
             {TIPS.map((tip, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.55 + i * 0.07 }}
-                className="glass-panel rounded-2xl p-4 flex gap-3 items-start"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 + i * 0.08 }}
+                className="snap-start shrink-0 w-52 rounded-2xl p-4 flex flex-col gap-3"
+                style={{
+                  background: i === 0
+                    ? `linear-gradient(135deg, ${selectedAcademy.primaryColor}30, ${selectedAcademy.primaryColor}10)`
+                    : "rgba(255,255,255,0.04)",
+                  border: i === 0
+                    ? `1px solid ${selectedAcademy.primaryColor}40`
+                    : "1px solid rgba(255,255,255,0.07)"
+                }}
               >
-                <span className="text-2xl flex-shrink-0 mt-0.5">{tip.icon}</span>
+                <span className="text-3xl">{tip.emoji}</span>
                 <div>
-                  <p className="text-white font-bold text-sm mb-0.5">{tip.title}</p>
-                  <p className="text-white/55 text-xs leading-relaxed">{tip.body}</p>
+                  <p className="text-white font-bold text-sm mb-1">{tip.title}</p>
+                  <p className="text-white/50 text-xs leading-relaxed">{tip.body}</p>
                 </div>
               </motion.div>
             ))}
           </div>
+          <p className="text-white/20 text-[10px] text-right pr-1 mt-1">swipe →</p>
         </motion.div>
 
-        {/* ── STAGES PREVIEW ── */}
+        {/* ── 6 STAGES ── */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.72 }}
-          className="glass-panel rounded-3xl p-6 md:p-8 mb-8"
+          transition={{ delay: 0.7 }}
         >
-          <p className="text-white/40 text-xs uppercase tracking-widest font-bold mb-1">
-            Your 6-Stage Journey
-          </p>
-          <p className="text-white/70 text-sm mb-5">
-            Each stage unlocks a different part of your story. Work through them in order.
-          </p>
+          <div className="flex items-center justify-between mb-3 px-1">
+            <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">
+              Your 6 chapters
+            </p>
+            <span className="text-xs text-white/25 font-mono">do them in order</span>
+          </div>
 
           <div className="space-y-2">
             {JOURNEY_STAGES.map((stage, i) => (
               <motion.div
                 key={stage.id}
-                initial={{ opacity: 0, x: -12 }}
+                initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.78 + i * 0.06 }}
-                className="flex items-center gap-4 p-3 rounded-xl bg-white/5 hover:bg-white/8 transition-colors"
+                transition={{ delay: 0.75 + i * 0.07 }}
+                className="flex items-center gap-4 rounded-2xl px-4 py-3.5"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.07)"
+                }}
               >
-                <div className="w-8 h-8 rounded-lg bg-white/8 flex items-center justify-center text-base flex-shrink-0">
-                  {stage.emoji}
+                {/* Step number bubble */}
+                <div
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-black shrink-0"
+                  style={{
+                    background: i === 0 ? selectedAcademy.primaryColor : "rgba(255,255,255,0.08)",
+                    color: i === 0 ? btnText : "rgba(255,255,255,0.4)"
+                  }}
+                >
+                  {i + 1}
                 </div>
+
+                {/* Emoji + text */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-white/30 font-mono text-xs">{i + 1}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{stage.emoji}</span>
                     <span className="text-white font-bold text-sm">{stage.title}</span>
                   </div>
-                  <p className="text-white/45 text-xs truncate">{stage.description}</p>
+                  <p className="text-white/35 text-xs mt-0.5 truncate">{stage.description}</p>
                 </div>
-                <div className="w-1.5 h-1.5 rounded-full bg-white/15 flex-shrink-0" />
+
+                {/* Lock icon for future stages */}
+                {i > 0 && (
+                  <span className="text-white/15 text-xs shrink-0">🔒</span>
+                )}
               </motion.div>
             ))}
           </div>
         </motion.div>
 
-        {/* ── CTA ── */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1.1 }}
-          className="flex flex-col items-center gap-3"
-        >
-          <Button
-            size="lg"
-            onClick={() => navigate("/journey")}
-            className="w-full sm:w-auto px-16 text-base"
-          >
-            Begin My Story
-          </Button>
-          <p className="text-white/30 text-xs text-center max-w-xs">
-            Your answers are private and will only be seen by your academy. Take as long as you need.
-          </p>
-        </motion.div>
-
       </div>
-    </Layout>
+
+      {/* ── STICKY CTA ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.1, type: "spring", stiffness: 200 }}
+        className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 pt-4"
+        style={{ background: "linear-gradient(to top, #0a0a0a 60%, transparent)" }}
+      >
+        <div className="max-w-lg mx-auto">
+          <motion.button
+            whileTap={{ scale: 0.96 }}
+            onClick={() => navigate("/journey")}
+            className="w-full py-4 rounded-2xl font-black text-base uppercase tracking-widest transition-all shadow-2xl font-display"
+            style={{
+              background: selectedAcademy.primaryColor,
+              color: btnText,
+              boxShadow: `0 8px 32px ${selectedAcademy.primaryColor}60`
+            }}
+          >
+            Begin My Story →
+          </motion.button>
+          <p className="text-white/25 text-[10px] text-center mt-2">
+            Private · Only your academy sees your answers
+          </p>
+        </div>
+      </motion.div>
+
+    </div>
   );
 }
