@@ -3,12 +3,12 @@ import { textToSpeech } from "@workspace/integrations-openai-ai-server/audio";
 import { existsSync } from "fs";
 import { writeFile, readFile, mkdir } from "fs/promises";
 import { join } from "path";
-import { fileURLToPath } from "url";
 
 const router = Router();
 
-const __dirname = fileURLToPath(new URL(".", import.meta.url));
-const CACHE_DIR = join(__dirname, "../../.tts-cache");
+// Use process.cwd() instead of import.meta.url — the latter is undefined
+// when bundled to CJS format (esbuild format:"cjs") and crashes at startup.
+const CACHE_DIR = join(process.cwd(), ".tts-cache");
 
 const ASSISTANT_VOICE_MAP: Record<string, "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer"> = {
   cheeky: "onyx",
