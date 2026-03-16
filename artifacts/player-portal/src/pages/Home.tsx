@@ -18,13 +18,7 @@ const PL_LION_SVG = (
   </svg>
 );
 
-const CHAMP_SVG = (
-  <svg width="36" height="36" viewBox="0 0 80 80" fill="none">
-    <circle cx="40" cy="40" r="38" fill="#0033A0" stroke="#C8102E" strokeWidth="2" />
-    <text x="40" y="50" textAnchor="middle" fontSize="20" fontWeight="900"
-      fontFamily="Arial Black, sans-serif" fill="#FFFFFF">CH</text>
-  </svg>
-);
+// EFL Championship logo will be rendered as an img tag below
 
 export default function Home() {
   const [_, navigate] = useLocation();
@@ -128,10 +122,11 @@ export default function Home() {
               >
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-sky-900/20 to-transparent" />
                 <div className="relative z-10 flex flex-col items-center gap-4">
-                  <svg width="48" height="48" viewBox="0 0 120 120" fill="none" className="drop-shadow-lg">
-                    <rect width="120" height="120" rx="12" fill="#0033A0" />
-                    <text x="60" y="70" textAnchor="middle" fontSize="36" fontWeight="900" fontFamily="Arial Black, sans-serif" fill="#C8102E">EFL</text>
-                  </svg>
+                  <img 
+                    src={`${import.meta.env.BASE_URL}logos/efl-championship-logo.png`}
+                    alt="EFL Championship"
+                    className="h-16 w-auto object-contain drop-shadow-lg"
+                  />
                   <div className="text-center">
                     <div className="text-white font-black text-xl md:text-2xl uppercase tracking-wider font-display">Championship</div>
                     <div className="text-white/40 text-sm mt-1">22 academies</div>
