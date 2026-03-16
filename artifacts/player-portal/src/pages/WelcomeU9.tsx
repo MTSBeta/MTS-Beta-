@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { LogOut } from "lucide-react";
+import { LogOut, Music2, VolumeX } from "lucide-react";
 import { usePlayerContext } from "@/context/PlayerContext";
 
 function isLight(hex: string) {
@@ -188,8 +188,36 @@ export default function WelcomeU9() {
   const [_, navigate] = useLocation();
   const { selectedAcademy, playerData, clearContext } = usePlayerContext();
   const [ready, setReady] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [chantPlaying, setChantPlaying] = useState(false);
+  const [chantBlocked, setChantBlocked] = useState(false);
+
+  const chantUrl = selectedAcademy?.chantUrl ?? null;
+
+  const toggleChant = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (chantPlaying) {
+      audio.pause();
+      setChantPlaying(false);
+    } else {
+      audio.play().then(() => { setChantPlaying(true); setChantBlocked(false); }).catch(() => setChantPlaying(false));
+    }
+  }, [chantPlaying]);
 
   useEffect(() => { setTimeout(() => setReady(true), 200); }, []);
+
+  useEffect(() => {
+    if (!chantUrl) return;
+    const audio = new Audio(chantUrl);
+    audio.volume = 0.55;
+    audio.loop = true;
+    audioRef.current = audio;
+    audio.play()
+      .then(() => setChantPlaying(true))
+      .catch(() => setChantBlocked(true));
+    return () => { audio.pause(); audio.src = ""; };
+  }, [chantUrl]);
 
   if (!selectedAcademy || !playerData) { navigate("/"); return null; }
 
@@ -233,9 +261,42 @@ export default function WelcomeU9() {
             </div>
           )}
           <span className="text-white/35 text-xs font-bold uppercase tracking-widest">{selectedAcademy.shortName}</span>
+
+          {/* Chant button */}
+          {selectedAcademy.chantUrl && (
+            <AnimatePresence mode="wait">
+              <motion.button
+                key={chantPlaying ? "on" : "off"}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.15 }}
+                onClick={toggleChant}
+                className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold transition-all"
+                style={chantPlaying
+                  ? { background: `${primaryColor}25`, color: primaryColor, border: `1px solid ${primaryColor}50` }
+                  : { background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.30)", border: "1px solid rgba(255,255,255,0.10)" }
+                }
+              >
+                {chantPlaying ? (
+                  <>
+                    <motion.span animate={{ scale: [1, 1.3, 1] }} transition={{ repeat: Infinity, duration: 0.9 }}>
+                      <Music2 size={10} />
+                    </motion.span>
+                    <span>chant</span>
+                  </>
+                ) : (
+                  <>
+                    <VolumeX size={10} />
+                    <span>{chantBlocked ? "play" : "off"}</span>
+                  </>
+                )}
+              </motion.button>
+            </AnimatePresence>
+          )}
         </div>
         <button
-          onClick={() => { clearContext(); navigate("/"); }}
+          onClick={() => { audioRef.current?.pause(); clearContext(); navigate("/"); }}
           className="flex items-center gap-1.5 text-white/25 hover:text-white/55 text-xs transition-colors"
         >
           <LogOut size={12} /><span>Log out</span>

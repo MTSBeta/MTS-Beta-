@@ -1,0 +1,499 @@
+Refactor and upgrade our MeTime Stories Football Academy platform into a role-based academy system.
+
+We are no longer treating all non-parent contributors as simple external form users. We now want a more structured internal platform for academy staff.
+
+BUILD GOAL
+
+Create a football academy platform with two clear entry paths:
+
+1. Player Journey
+
+players/families complete the story journey flow
+
+parents still receive secure links and do not need accounts
+
+2. Academy Staff Login
+
+internal staff log in and work from dashboards
+
+staff can enter and review supporting material for player profiles
+
+each academy has role-based access and a maximum of 8 staff/admin accounts
+
+TECH STACK
+
+Use:
+
+React + Vite
+
+Tailwind CSS
+
+React Router
+
+Supabase Auth
+
+Supabase database
+
+clean component structure
+
+no giant single-file HTML or inline JS
+
+APP STRUCTURE
+
+Create clean folders such as:
+
+src/pages
+
+src/components
+
+src/layouts
+
+src/lib
+
+src/hooks
+
+src/data
+
+src/types
+
+CORE PRODUCT RULES
+
+Parents remain link-based only
+
+Academy staff log in with email/password
+
+Staff may still receive direct player links if needed, but should primarily work through login/dashboard
+
+Each academy can have a maximum of 8 active staff accounts
+
+Academy data must be isolated so staff only see their own academy’s players and submissions
+
+Player profile becomes the central internal record
+
+Build for future scale, not as a temporary form hack
+
+HOMEPAGE CHANGES
+
+Update homepage to have two clear paths:
+
+1. Player Journey
+2. Academy Staff Login
+
+Add a visible button such as:
+
+“Academy Staff Login”
+
+This should route to:
+
+/staff-login
+
+ROUTES TO CREATE
+
+Create these routes:
+
+Public / player-facing:
+
+/
+
+/register
+
+/journey
+
+/invite
+
+/parent/:code
+
+/complete
+
+Staff/internal:
+
+/staff-login
+
+/staff-dashboard
+
+/staff/players
+
+/staff/players/:id
+
+/staff/team
+
+/staff/settings
+
+Optional:
+
+/staff/submissions/:playerId/:role
+
+ROLES
+
+Support these academy staff roles:
+
+academy_admin
+
+football_coaching
+
+psychology
+
+education
+
+player_care
+
+Store both:
+
+a system role for permissions
+
+an optional job title for display
+
+Example:
+
+system_role: psychology
+
+job_title: Academy Psychologist
+
+ROLE BEHAVIOUR
+academy_admin
+
+see all players in academy
+
+see all staff submissions
+
+manage staff accounts
+
+manage academy settings
+
+enforce max 8 staff accounts
+
+football_coaching
+
+see players assigned to their team/age group or academy scope
+
+complete football coaching observations
+
+revisit player profiles and update submissions
+
+psychology
+
+see players within allowed academy scope
+
+add psychology / mindset / resilience / emotional development observations
+
+revisit and update submissions
+
+education
+
+add educational / behavioural / academic / off-pitch development notes
+
+player_care
+
+add wellbeing / welfare / safeguarding / transition / family support observations
+
+revisit and update submissions
+
+PARENTS
+
+Parents should not log in.
+Parents receive secure links only.
+Parent route:
+
+/parent/:code
+
+Parent can open form directly and submit their response.
+
+PLAYER PROFILE
+
+Create a central player profile page for internal staff at:
+
+/staff/players/:id
+
+This page should show:
+
+player registration info
+
+academy
+
+age group
+
+position
+
+player journey responses
+
+parent submission status and content
+
+football coaching submissions
+
+psychology submissions
+
+education submissions
+
+player care submissions
+
+completion / status tracking
+
+STAFF DASHBOARD
+
+Create a staff dashboard where logged-in users can:
+
+view players from their academy
+
+filter by age group/team/status
+
+search player profiles
+
+open and move in/out of player profiles easily
+
+submit or edit role-based supporting materials
+
+AUTH
+
+Use Supabase Auth for staff login.
+
+Login flow:
+
+email + password
+
+load staff profile
+
+identify academy_id and role
+
+route into correct dashboard context
+
+DATABASE / DATA MODEL
+
+Create or refactor toward this schema:
+
+academies
+
+id
+
+key
+
+name
+
+logo_text
+
+primary_color
+
+secondary_color
+
+welcome_message
+
+max_staff_accounts
+
+academy_staff
+
+id
+
+academy_id
+
+auth_user_id
+
+full_name
+
+email
+
+system_role
+
+job_title
+
+team_name
+
+age_group
+
+is_active
+
+created_at
+
+players
+
+id
+
+academy_id
+
+player_name
+
+age
+
+shirt_number
+
+age_group
+
+position
+
+access_code
+
+parent_code
+
+status
+
+created_at
+
+player_journey_responses
+
+id
+
+player_id
+
+stage
+
+question_number
+
+question_text
+
+answer_text
+
+created_at
+
+parent_responses
+
+id
+
+player_id
+
+question_number
+
+question_text
+
+answer_text
+
+submitted_at
+
+staff_submissions
+
+id
+
+player_id
+
+academy_staff_id
+
+academy_id
+
+system_role
+
+submission_type
+
+question_number
+
+question_text
+
+answer_text
+
+submitted_at
+
+updated_at
+
+Use staff_submissions to support:
+
+football coaching inputs
+
+psychology inputs
+
+education inputs
+
+player care inputs
+
+PERMISSIONS
+
+Use Supabase Row Level Security where possible.
+
+Rules:
+
+staff can only access data for their own academy
+
+admins only manage staff in their own academy
+
+staff can only create/edit their own submissions unless admin
+
+parent access is limited to secure link/code flow
+
+academy staff count limit of 8 active accounts must be enforced
+
+UI / UX DIRECTION
+
+Keep the design premium and modern:
+
+dark luxury sports aesthetic
+
+clean spacing
+
+strong typography
+
+clear dashboards
+
+mobile responsive
+
+easy filtering and navigation
+
+academy branding should remain data-driven
+
+WHITE-LABELLING
+
+Keep academy theming data-driven.
+
+Academy config should control:
+
+academy name
+
+logo text
+
+primary/secondary colours
+
+welcome message
+
+BUILD ORDER
+
+Implement in this order:
+
+Add homepage “Academy Staff Login” button
+
+Add /staff-login page
+
+Set up Supabase Auth for staff login
+
+Create academy_staff table + role model
+
+Build staff dashboard
+
+Build internal players list page
+
+Build internal player profile page
+
+Build staff submission flow tied to player profile
+
+Keep parent link-based flow working
+
+Add admin staff/account management
+
+Enforce max 8 staff accounts per academy
+
+Add RLS/policy-ready structure
+
+IMPORTANT ENGINEERING RULES
+
+Do not build this as a giant single file
+
+Do not fake advanced logic
+
+Keep code clean and maintainable
+
+Use reusable components
+
+Add comments where helpful
+
+Avoid overengineering
+
+Make the MVP stable first
+
+FIRST STEP
+
+Before writing lots of code, first output:
+
+proposed folder structure
+
+route map
+
+component breakdown
+
+Supabase schema plan
+
+implementation order
+
+Then begin building.

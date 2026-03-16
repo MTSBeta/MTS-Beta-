@@ -10,7 +10,10 @@ export interface AcademyConfig {
   accentColor?: string;
   crestUrl?: string;
   welcomeMessage: string;
+  chantUrl?: string;
 }
+
+const FC = "https://www.fanchants.com/media/chants/full/download/";
 
 export const ACADEMIES: AcademyConfig[] = [
 
@@ -27,7 +30,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#FFFFFF",
     accentColor: "#063672",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
-    welcomeMessage: "Victoria Concordia Crescit. Welcome to the Arsenal Academy family."
+    welcomeMessage: "Victoria Concordia Crescit. Welcome to the Arsenal Academy family.",
+    chantUrl: `${FC}90707_0071b-fanchants-free.mp3`,
   },
   {
     id: 2,
@@ -39,7 +43,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#670E36",
     secondaryColor: "#95BFE5",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/8/86/Aston_Villa_F.C._logo.svg",
-    welcomeMessage: "In Preparation is Victory. Your Villa story starts here."
+    welcomeMessage: "In Preparation is Victory. Your Villa story starts here.",
+    chantUrl: `${FC}woke-up-this-morning-feeling-fine-fanchants-free.mp3`,
   },
   {
     id: 3,
@@ -51,7 +56,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#DA291C",
     secondaryColor: "#000000",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/e/e5/AFC_Bournemouth_%282013%29.svg",
-    welcomeMessage: "Welcome to the Cherries Academy. Your journey on the south coast starts now."
+    welcomeMessage: "Welcome to the Cherries Academy. Your journey on the south coast starts now.",
+    chantUrl: `${FC}r09_0038a_f-2-fanchants-free.mp3`,
   },
   {
     id: 4,
@@ -64,7 +70,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#FFFFFF",
     accentColor: "#000000",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg",
-    welcomeMessage: "Welcome to Brentford Academy. Think differently, play boldly."
+    welcomeMessage: "Welcome to Brentford Academy. Think differently, play boldly.",
+    chantUrl: `${FC}181006_03_b_f-fanchants-free.mp3`,
   },
   {
     id: 5,
@@ -76,7 +83,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#0057B8",
     secondaryColor: "#FFCD00",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_logo.svg",
-    welcomeMessage: "Seagulls, your development journey begins at the Amex."
+    welcomeMessage: "Seagulls, your development journey begins at the Amex.",
+    chantUrl: `${FC}r09_0012c_f-2-fanchants-free.mp3`,
   },
   {
     id: 6,
@@ -88,7 +96,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#034694",
     secondaryColor: "#DBA111",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg",
-    welcomeMessage: "Welcome to Cobham. Your blue journey starts here."
+    welcomeMessage: "Welcome to Cobham. Your blue journey starts here.",
+    chantUrl: `${FC}16307_0085g-fanchants-free.mp3`,
   },
   {
     id: 7,
@@ -100,7 +109,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#1B458F",
     secondaryColor: "#C4122E",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/a/a2/Crystal_Palace_FC_logo_%282022%29.svg",
-    welcomeMessage: "Glad All Over. Your Palace Academy story begins today."
+    welcomeMessage: "Glad All Over. Your Palace Academy story begins today.",
+    chantUrl: `${FC}r09_0070a_f-fanchants-free.mp3`,
   },
   {
     id: 8,
@@ -113,7 +123,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#FFFFFF",
     accentColor: "#BCA996",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/7/7c/Everton_FC_logo.svg",
-    welcomeMessage: "Nil Satis Nisi Optimum — nothing but the best. Welcome to Everton Academy."
+    welcomeMessage: "Nil Satis Nisi Optimum — nothing but the best. Welcome to Everton Academy.",
+    chantUrl: `${FC}r09_0025a_f-4-fanchants-free.mp3`,
   },
   {
     id: 9,
@@ -126,7 +137,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#FFFFFF",
     accentColor: "#000000",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/e/eb/Fulham_FC_%28shield%29.svg",
-    welcomeMessage: "Welcome to Fulham Academy. The Thames runs through our history."
+    welcomeMessage: "Welcome to Fulham Academy. The Thames runs through our history.",
+    chantUrl: `${FC}r09_0021a_f-3-fanchants-free.mp3`,
   },
   {
     id: 10,
@@ -138,7 +150,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#003781",
     secondaryColor: "#FFFFFF",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/4/43/Ipswich_Town.svg",
-    welcomeMessage: "Welcome to Portman Road. Suffolk's finest, your story starts here."
+    welcomeMessage: "Welcome to Portman Road. Suffolk's finest, your story starts here.",
+    chantUrl: `${FC}and-its-ipswich-town-r07_0006a-fanchants-free.mp3`,
   },
   {
     id: 11,
@@ -150,7 +163,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#003090",
     secondaryColor: "#FDBE11",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/2/2d/Leicester_City_crest.svg",
-    welcomeMessage: "Welcome to the King Power. Your Foxes journey begins."
+    welcomeMessage: "Welcome to the King Power. Your Foxes journey begins.",
+    chantUrl: `${FC}nananana-leicester-city-r07_0010a-fanchants-free.mp3`,
   },
   {
     id: 12,
@@ -163,7 +177,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#F6EB61",
     accentColor: "#00B2A9",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg",
-    welcomeMessage: "You'll Never Walk Alone. Begin your Anfield legacy."
+    welcomeMessage: "You'll Never Walk Alone. Begin your Anfield legacy.",
+    chantUrl: `${FC}29407_0056a-fanchants-free.mp3`,
   },
   {
     id: 13,
@@ -175,7 +190,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#6CABDD",
     secondaryColor: "#1C2C5B",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
-    welcomeMessage: "Cityzens, your path to greatness starts at the City Football Academy."
+    welcomeMessage: "Cityzens, your path to greatness starts at the City Football Academy.",
+    chantUrl: `${FC}omar-marmoush-manchester-city-player-chant-fanchants-free.mp3`,
   },
   {
     id: 14,
@@ -188,7 +204,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#FBE122",
     accentColor: "#000000",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg",
-    welcomeMessage: "Welcome to Carrington. Build your United story."
+    welcomeMessage: "Welcome to Carrington. Build your United story.",
+    chantUrl: `${FC}harry-maguire-player-chant-manchester-united-fanchants-free.mp3`,
   },
   {
     id: 15,
@@ -201,7 +218,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#FFFFFF",
     accentColor: "#41B6E6",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg",
-    welcomeMessage: "Howay the Lads! Forge your path at the Newcastle Academy."
+    welcomeMessage: "Howay the Lads! Forge your path at the Newcastle Academy.",
+    chantUrl: `${FC}blaydon-races-chorus-only-fanchants-free.mp3`,
   },
   {
     id: 16,
@@ -213,7 +231,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#DD0000",
     secondaryColor: "#FFFFFF",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/e/e5/Nottingham_Forest_F.C._logo.svg",
-    welcomeMessage: "Welcome to the Garibaldi. Forest roots run deep — so will your story."
+    welcomeMessage: "Welcome to the Garibaldi. Forest roots run deep — so will your story.",
+    chantUrl: `${FC}r07_0034e-fanchants-free.mp3`,
   },
   {
     id: 17,
@@ -226,7 +245,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#FFFFFF",
     accentColor: "#130C0E",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/c/c9/FC_Southampton.svg",
-    welcomeMessage: "Welcome to Staplewood. The Saints Academy has shaped legends."
+    welcomeMessage: "Welcome to Staplewood. The Saints Academy has shaped legends.",
+    chantUrl: `${FC}r09_0090i_f-fanchants-free.mp3`,
   },
   {
     id: 18,
@@ -238,7 +258,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#132257",
     secondaryColor: "#FFFFFF",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg",
-    welcomeMessage: "To Dare Is To Do. Step into your Spurs future."
+    welcomeMessage: "To Dare Is To Do. Step into your Spurs future.",
+    chantUrl: `${FC}kulusevski-player-chant-tottenham-fanchants-free.mp3`,
   },
   {
     id: 19,
@@ -251,7 +272,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#1BB1E7",
     accentColor: "#F5D439",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg",
-    welcomeMessage: "Forever Blowing Bubbles. Welcome to the West Ham Academy."
+    welcomeMessage: "Forever Blowing Bubbles. Welcome to the West Ham Academy.",
+    chantUrl: `${FC}r07_0020c-fanchants-free.mp3`,
   },
   {
     id: 20,
@@ -263,7 +285,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#FDB913",
     secondaryColor: "#231F20",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg",
-    welcomeMessage: "Welcome to the Wolves Academy. Old Gold runs through everything we do."
+    welcomeMessage: "Welcome to the Wolves Academy. Old Gold runs through everything we do.",
+    chantUrl: `${FC}r09_0004a-3-fanchants-free.mp3`,
   },
 
   // ── CHAMPIONSHIP ────────────────────────────────────────────────────────────
@@ -278,7 +301,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#1B2D7E",
     secondaryColor: "#FFFFFF",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/6/68/Birmingham_City_FC_logo.svg",
-    welcomeMessage: "Keep Right On! Welcome to your Birmingham City development journey."
+    welcomeMessage: "Keep Right On! Welcome to your Birmingham City development journey.",
+    chantUrl: `${FC}05907_0017e-fanchants-free.mp3`,
   },
   {
     id: 22,
@@ -290,7 +314,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#1D428A",
     secondaryColor: "#FFCD00",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/5/54/Leeds_United_F.C._logo.svg",
-    welcomeMessage: "Marching On Together. Leeds Academy — ambition without limits."
+    welcomeMessage: "Marching On Together. Leeds Academy — ambition without limits.",
+    chantUrl: `${FC}99407_0060a-fanchants-free.mp3`,
   },
   {
     id: 23,
@@ -302,7 +327,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#EB172B",
     secondaryColor: "#FFFFFF",
     accentColor: "#000000",
-    welcomeMessage: "Ha'way the Lads! Sunderland Academy — built on pride and graft."
+    welcomeMessage: "Ha'way the Lads! Sunderland Academy — built on pride and graft.",
+    chantUrl: `${FC}r09_0117b_f-fanchants-free.mp3`,
   },
   {
     id: 24,
@@ -315,7 +341,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#FFFFFF",
     accentColor: "#000000",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/9/9c/Sheffield_United_FC_logo.svg",
-    welcomeMessage: "United as One. Sheffield United Academy starts your Blades journey."
+    welcomeMessage: "United as One. Sheffield United Academy starts your Blades journey.",
+    chantUrl: `${FC}r07_0003c-4-fanchants-free.mp3`,
   },
   {
     id: 25,
@@ -327,7 +354,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#122F67",
     secondaryColor: "#FFFFFF",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg",
-    welcomeMessage: "Throstle pride runs deep. West Brom Academy — your story, your chapter."
+    welcomeMessage: "Throstle pride runs deep. West Brom Academy — your story, your chapter.",
+    chantUrl: `${FC}the-lords-my-shepherd-1-fanchants-free.mp3`,
   },
   {
     id: 26,
@@ -339,7 +367,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#EE2020",
     secondaryColor: "#FFFFFF",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/2/2c/Middlesbrough_FC_crest.svg",
-    welcomeMessage: "Boro born and Boro bred. The Riverside Academy is your launchpad."
+    welcomeMessage: "Boro born and Boro bred. The Riverside Academy is your launchpad.",
+    chantUrl: `${FC}69907_0006a-fanchants-free.mp3`,
   },
   {
     id: 27,
@@ -351,7 +380,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#6C1D45",
     secondaryColor: "#99D6EA",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/6/6d/Burnley_FC_Logo.svg",
-    welcomeMessage: "Clarets together. Burnley Academy — roots in the community, eyes on the top."
+    welcomeMessage: "Clarets together. Burnley Academy — roots in the community, eyes on the top.",
+    chantUrl: `${FC}r07_0044d-fanchants-free.mp3`,
   },
   {
     id: 28,
@@ -363,7 +393,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#00A650",
     secondaryColor: "#FFF200",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/1/17/Norwich_City_FC_logo.svg",
-    welcomeMessage: "On the Ball City! Norwich Academy — the Canary in you is ready to fly."
+    welcomeMessage: "On the Ball City! Norwich Academy — the Canary in you is ready to fly.",
+    chantUrl: `${FC}r07_0001b-7-fanchants-free.mp3`,
   },
   {
     id: 29,
@@ -376,7 +407,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#ED2127",
     accentColor: "#000000",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/e/e2/Watford.svg",
-    welcomeMessage: "Come On You 'Orns! Watford Academy — building the future of the Hornets."
+    welcomeMessage: "Come On You 'Orns! Watford Academy — building the future of the Hornets.",
+    chantUrl: `${FC}r07_0760003b-2-fanchants-free.mp3`,
   },
   {
     id: 30,
@@ -389,7 +421,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#FFFFFF",
     accentColor: "#034694",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/7/7b/Coventry_City_FC_crest.svg",
-    welcomeMessage: "Sky Blue Army! Coventry Academy — your journey in sky blue."
+    welcomeMessage: "Sky Blue Army! Coventry Academy — your journey in sky blue.",
+    chantUrl: `${FC}city-far-r07_0043a-fanchants-free.mp3`,
   },
   {
     id: 31,
@@ -401,7 +434,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#0066B3",
     secondaryColor: "#FFFFFF",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/a/a5/Sheffield_Wednesday.svg",
-    welcomeMessage: "Owls forever. Sheffield Wednesday Academy — wise players, bold futures."
+    welcomeMessage: "Owls forever. Sheffield Wednesday Academy — wise players, bold futures.",
+    chantUrl: `${FC}honolulu-wednesday-r07_0025e-fanchants-free.mp3`,
   },
   {
     id: 32,
@@ -414,7 +448,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#FFFFFF",
     accentColor: "#EF3829",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/0/0f/Blackburn_Rovers.svg",
-    welcomeMessage: "Rovers forever. Blackburn Academy — blue and white, through and through."
+    welcomeMessage: "Rovers forever. Blackburn Academy — blue and white, through and through.",
+    chantUrl: `${FC}r07_9340033d-fanchants-free.mp3`,
   },
   {
     id: 33,
@@ -427,7 +462,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#FFFFFF",
     accentColor: "#1B2F6B",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/2/29/Stoke_City_FC.svg",
-    welcomeMessage: "Delilah! Stoke City Academy — Potteries grit, Premier League ambition."
+    welcomeMessage: "Delilah! Stoke City Academy — Potteries grit, Premier League ambition.",
+    chantUrl: `${FC}33807_0032a-fanchants-free.mp3`,
   },
   {
     id: 34,
@@ -438,7 +474,8 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "championship",
     primaryColor: "#F5A12D",
     secondaryColor: "#231F20",
-    welcomeMessage: "Tigers together. Hull City Academy — amber and black, building your story."
+    welcomeMessage: "Tigers together. Hull City Academy — amber and black, building your story.",
+    chantUrl: `${FC}jump-up-if-your-hull-city-fanchants-free.mp3`,
   },
   {
     id: 35,
@@ -451,7 +488,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#FFFFFF",
     accentColor: "#D4011D",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/3/3c/Cardiff_City_crest.svg",
-    welcomeMessage: "Bluebirds rising. Cardiff Academy — your story in the Welsh capital."
+    welcomeMessage: "Bluebirds rising. Cardiff Academy — your story in the Welsh capital.",
+    chantUrl: `${FC}r07_0044d-2-fanchants-free.mp3`,
   },
   {
     id: 36,
@@ -464,7 +502,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#241F21",
     accentColor: "#B1B3B3",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/4/4a/Derby_County_crest.svg",
-    welcomeMessage: "Pride of the Midlands. Derby Academy — your Ram story begins."
+    welcomeMessage: "Pride of the Midlands. Derby Academy — your Ram story begins.",
+    chantUrl: `${FC}r09_0025b_f-3-fanchants-free.mp3`,
   },
   {
     id: 37,
@@ -476,7 +515,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#001D5E",
     secondaryColor: "#FFFFFF",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/7/71/Millwall_FC_logo.png",
-    welcomeMessage: "No One Likes Us, We Don't Care. Millwall Academy — lion-hearted players."
+    welcomeMessage: "No One Likes Us, We Don't Care. Millwall Academy — lion-hearted players.",
+    chantUrl: `${FC}what-was-that-r07_0003a-fanchants-free.mp3`,
   },
   {
     id: 38,
@@ -488,7 +528,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#F78F1E",
     secondaryColor: "#001F5B",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/9/9d/Luton_Town_logo.svg",
-    welcomeMessage: "Come On You Hatters! Luton Academy — keep on keeping on."
+    welcomeMessage: "Come On You Hatters! Luton Academy — keep on keeping on.",
+    chantUrl: `${FC}hello-we-are-the-luton-boys-fanchants-free.mp3`,
   },
   {
     id: 39,
@@ -500,7 +541,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#1D5BA4",
     secondaryColor: "#FFFFFF",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/3/31/Queens_Park_Rangers_crest.svg",
-    welcomeMessage: "QPR Academy — Hoops ambition, no limits."
+    welcomeMessage: "QPR Academy — Hoops ambition, no limits.",
+    chantUrl: `${FC}were-the-rangers-the-mighty-rangerswere-gona-win-a-fanchants-free.mp3`,
   },
   {
     id: 40,
@@ -512,7 +554,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#E00000",
     secondaryColor: "#FFFFFF",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/f/f5/Bristol_City_crest.svg",
-    welcomeMessage: "Seize The Day. Bristol City Academy — the city's red heart beats for you."
+    welcomeMessage: "Seize The Day. Bristol City Academy — the city's red heart beats for you.",
+    chantUrl: `${FC}flying-high-bcfc-fanchants-free.mp3`,
   },
   {
     id: 41,
@@ -524,7 +567,8 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#121212",
     secondaryColor: "#FFFFFF",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/f/f9/Swansea_City_AFC_logo.svg",
-    welcomeMessage: "Swans together. Swansea City Academy — your Welsh journey on the Liberty."
+    welcomeMessage: "Swans together. Swansea City Academy — your Welsh journey on the Liberty.",
+    chantUrl: `${FC}36807_0013g-fanchants-free.mp3`,
   },
   {
     id: 42,
@@ -537,7 +581,8 @@ export const ACADEMIES: AcademyConfig[] = [
     secondaryColor: "#FFFFFF",
     accentColor: "#C8102E",
     crestUrl: "https://upload.wikimedia.org/wikipedia/en/3/38/Portsmouth_FC_logo.svg",
-    welcomeMessage: "Play Up Pompey! Portsmouth Academy — Fratton spirit in every step."
+    welcomeMessage: "Play Up Pompey! Portsmouth Academy — Fratton spirit in every step.",
+    chantUrl: `${FC}paul-cook-blue-army-fanchants-free.mp3`,
   }
 ];
 
