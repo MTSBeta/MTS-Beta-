@@ -5,7 +5,7 @@ import { ChevronLeft, SkipForward } from "lucide-react";
 import { VoiceRecorder } from "@/components/VoiceRecorder";
 import { MediaUploader } from "@/components/MediaUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
-import { JOURNEY_STAGES, COACHING_STAGE_INDEX, computeCharacterProfile } from "@/data/questions";
+import { PLAYER_STAGES, computeCharacterProfile } from "@/data/questions";
 import type { JourneyQuestion } from "@/data/questions";
 import { useSaveJourneyResponses, useCompleteJourney } from "@workspace/api-client-react";
 import type { AnswerEntry } from "@/context/PlayerContext";
@@ -240,10 +240,9 @@ export default function Journey() {
 
   const [currentStep, setCurrentStep] = useState(0);
 
-  const stage = JOURNEY_STAGES[currentStep];
+  const stage = PLAYER_STAGES[currentStep];
   const qCount = stage.questions.length;
-  const totalStages = JOURNEY_STAGES.length;
-  const isCoachingStage = !!stage.isCoaching;
+  const totalStages = PLAYER_STAGES.length;
   const primaryColor = selectedAcademy?.primaryColor ?? "#6d28d9";
   const btnText = isLight(primaryColor) ? "#000" : "#fff";
 
@@ -255,7 +254,6 @@ export default function Journey() {
 
   const [skippedSet, setSkippedSet] = useState<Set<string>>(new Set());
   const [showReview, setShowReview] = useState(false);
-  const [showCoachHandover, setShowCoachHandover] = useState(false);
   const [reviewAnswers, setReviewAnswers] = useState<Record<string, ReviewEntry>>({});
   const reviewScrollRef = useRef<HTMLDivElement>(null);
 
@@ -265,7 +263,7 @@ export default function Journey() {
   useEffect(() => { if (!playerData) navigate("/"); }, [playerData]);
 
   useEffect(() => {
-    if (showReview || showCoachHandover) return;
+    if (showReview) return;
     const newCount = stage.questions.length;
     const saved = journeyAnswers[stage.id];
     setLocalAnswers(
@@ -274,7 +272,7 @@ export default function Journey() {
         : Array(newCount).fill(null).map(() => ({ text: "", audioUrl: null, audioBlob: null, mediaUrls: [] }))
     );
     setErrors(Array(newCount).fill(false));
-  }, [currentStep, stage.id, showReview, showCoachHandover]);
+  }, [currentStep, stage.id, showReview]);
 
   const skipKey = (stageId: string, qi: number) => `${stageId}__${qi}`;
   const isSkipped = (stageId: string, qi: number) => skippedSet.has(skipKey(stageId, qi));
@@ -306,7 +304,7 @@ export default function Journey() {
   };
 
   // All skipped questions across all stages (for review)
-  const allSkipped = JOURNEY_STAGES.filter(s => !s.isCoaching).flatMap((s, si) =>
+  const allSkipped = PLAYER_STAGES.flatMap((s, si) =>
     s.questions.map((q, qi) => ({ s, si, q, qi, key: skipKey(s.id, qi) }))
       .filter(({ key }) => skippedSet.has(key))
   );
@@ -321,7 +319,7 @@ export default function Journey() {
       answerText: string; audioUrl: string | null; mediaUrls: string[];
     }[] = [];
 
-    for (const s of JOURNEY_STAGES) {
+    for (const s of PLAYER_STAGES) {
       const stageAnswers = all[s.id] ?? [];
       for (let qi = 0; qi < s.questions.length; qi++) {
         runningNum++;
@@ -343,13 +341,6 @@ export default function Journey() {
   };
 
   const validateAndAdvance = async () => {
-    // Coaching stage — no required validation, just complete
-    if (isCoachingStage) {
-      saveJourneyStage(stage.id, localAnswers);
-      await completeJourney({});
-      return;
-    }
-
     // Validate player questions
     const newErrors = localAnswers.map((a, qi) => {
       if (isSkipped(stage.id, qi)) return false;
@@ -364,40 +355,13 @@ export default function Journey() {
 
     const nextStep = currentStep + 1;
 
-    // Check if next stage is coaching — show handover first
-    if (nextStep < totalStages && JOURNEY_STAGES[nextStep].isCoaching) {
-      setIsSaving(true);
-      const allAnswers = { ...journeyAnswers, [stage.id]: localAnswers };
-      let runningNum = 0;
-      const responses: { stage: string; questionNumber: number; questionText: string; answerText: string; audioUrl: string | null; mediaUrls: string[] }[] = [];
-      for (let si = 0; si <= currentStep; si++) {
-        const s = JOURNEY_STAGES[si];
-        const stageAnswers = allAnswers[s.id] ?? [];
-        for (let qi = 0; qi < s.questions.length; qi++) {
-          runningNum++;
-          responses.push({
-            stage: s.id, questionNumber: runningNum, questionText: s.questions[qi].text,
-            answerText: (stageAnswers[qi] as AnswerEntry)?.text ?? "",
-            audioUrl: (stageAnswers[qi] as AnswerEntry)?.audioUrl ?? null,
-            mediaUrls: (stageAnswers[qi] as AnswerEntry)?.mediaUrls ?? [],
-          });
-        }
-      }
-      try {
-        await saveMutation.mutateAsync({ playerId: playerData!.id, data: { responses } });
-        setShowCoachHandover(true);
-      } catch (err) { console.error("Save error", err); }
-      finally { setIsSaving(false); }
-      return;
-    }
-
     if (nextStep < totalStages) {
       setIsSaving(true);
       const allAnswers = { ...journeyAnswers, [stage.id]: localAnswers };
       let runningNum = 0;
       const responses: { stage: string; questionNumber: number; questionText: string; answerText: string; audioUrl: string | null; mediaUrls: string[] }[] = [];
       for (let si = 0; si <= currentStep; si++) {
-        const s = JOURNEY_STAGES[si];
+        const s = PLAYER_STAGES[si];
         const stageAnswers = allAnswers[s.id] ?? [];
         for (let qi = 0; qi < s.questions.length; qi++) {
           runningNum++;
@@ -450,7 +414,6 @@ export default function Journey() {
 
   const goBack = () => {
     if (showReview) { setShowReview(false); return; }
-    if (showCoachHandover) { setShowCoachHandover(false); return; }
     if (currentStep > 0) { saveJourneyStage(stage.id, localAnswers); setCurrentStep(s => s - 1); }
   };
 
@@ -461,7 +424,7 @@ export default function Journey() {
       let runningNum = 0;
       const responses: { stage: string; questionNumber: number; questionText: string; answerText: string; audioUrl: string | null; mediaUrls: string[] }[] = [];
       for (let si = 0; si < currentStep; si++) {
-        const s = JOURNEY_STAGES[si];
+        const s = PLAYER_STAGES[si];
         const stageAnswers = allAnswers[s.id] ?? [];
         for (let qi = 0; qi < s.questions.length; qi++) {
           runningNum++;
@@ -578,79 +541,7 @@ export default function Journey() {
     );
   }
 
-  // ══ COACH HANDOVER SCREEN ═══════════════════════════════════════════════════
-  if (showCoachHandover) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
-            className="w-full h-full object-cover opacity-15 mix-blend-overlay" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0a0a]" />
-          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(13,148,136,0.18) 0%, transparent 60%)" }} />
-        </div>
-
-        <div className="sticky top-0 z-30 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/6">
-          <div className="flex items-center justify-between px-4 h-12">
-            <button onClick={() => setShowCoachHandover(false)}
-              className="flex items-center gap-1 text-white/40 hover:text-white/70 text-xs transition-colors py-2 -ml-1">
-              <ChevronLeft size={15} />Back
-            </button>
-            <span className="text-teal-400/70 text-xs font-bold uppercase tracking-widest">Coach Section</span>
-            <div className="w-14" />
-          </div>
-        </div>
-
-        <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-12 text-center max-w-sm mx-auto">
-          <motion.div
-            initial={{ scale: 0, rotate: -10 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 180 }}
-            className="text-7xl mb-6"
-          >
-            📋
-          </motion.div>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-            <p className="text-teal-400 text-xs font-black uppercase tracking-widest mb-3">Player section complete ✓</p>
-            <h1 className="text-3xl font-display font-black text-white uppercase tracking-tight leading-tight mb-4">
-              Hand to a<br />
-              <span className="text-teal-400">Coach</span>
-            </h1>
-            <p className="text-white/50 text-sm leading-relaxed mb-2">
-              The player's journey is done. This final section is for coaching staff — your professional insights shape the story's values, lessons, and purpose.
-            </p>
-            <p className="text-white/30 text-xs leading-relaxed">
-              All responses are used only to personalise this player's book. Nothing is shared publicly.
-            </p>
-          </motion.div>
-        </div>
-
-        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-8 pt-3 space-y-3"
-          style={{ background: "linear-gradient(to top, #0a0a0a 75%, transparent)" }}>
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            onClick={() => { setShowCoachHandover(false); setCurrentStep(COACHING_STAGE_INDEX); }}
-            className="w-full py-4 rounded-2xl font-black text-base uppercase tracking-widest font-display"
-            style={{ background: "#0d9488", color: "#fff", boxShadow: "0 8px 32px rgba(13,148,136,0.4)" }}
-          >
-            Continue as Coach →
-          </motion.button>
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            onClick={() => completeJourney({})}
-            disabled={isSaving}
-            className="w-full py-3 rounded-2xl text-sm font-bold text-white/40 hover:text-white/60 transition-colors disabled:opacity-30"
-          >
-            Skip coach section &amp; finish →
-          </motion.button>
-        </div>
-      </div>
-    );
-  }
-
   // ══ MAIN JOURNEY ═══════════════════════════════════════════════════════════
-  const playerStageCount = JOURNEY_STAGES.filter(s => !s.isCoaching).length;
-  const displayStep = isCoachingStage ? playerStageCount : currentStep;
-  const progressStages = JOURNEY_STAGES.filter(s => !s.isCoaching);
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
@@ -658,9 +549,6 @@ export default function Journey() {
         <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
           className="w-full h-full object-cover opacity-15 mix-blend-overlay" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0a0a]" />
-        {isCoachingStage && (
-          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(13,148,136,0.12) 0%, transparent 55%)" }} />
-        )}
       </div>
 
       {/* Sticky header */}
@@ -676,49 +564,34 @@ export default function Journey() {
           </button>
 
           <div className="flex items-center gap-2">
-            {isCoachingStage ? (
-              <span className="px-2 py-0.5 rounded text-[10px] font-black tracking-widest uppercase bg-teal-500/20 text-teal-400">Coach Section</span>
-            ) : (
-              <>
-                <span className="text-white/30 text-xs font-mono">{currentStep + 1}</span>
-                <span className="text-white/15 text-xs">/</span>
-                <span className="text-white/20 text-xs font-mono">{playerStageCount}</span>
-                <span className="text-lg ml-1">{stage.emoji}</span>
-                {totalSkippedCount > 0 && (
-                  <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-400">
-                    {totalSkippedCount} skipped
-                  </span>
-                )}
-              </>
+            <span className="text-white/30 text-xs font-mono">{currentStep + 1}</span>
+            <span className="text-white/15 text-xs">/</span>
+            <span className="text-white/20 text-xs font-mono">{totalStages}</span>
+            <span className="text-lg ml-1">{stage.emoji}</span>
+            {totalSkippedCount > 0 && (
+              <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-400">
+                {totalSkippedCount} skipped
+              </span>
             )}
           </div>
 
-          {!isCoachingStage && (
-            <button
-              onClick={saveAndExit}
-              disabled={isSaving}
-              className="text-white/30 hover:text-white/60 text-xs transition-colors py-2 -mr-1 disabled:opacity-30"
-            >
-              Save & Exit
-            </button>
-          )}
-          {isCoachingStage && <div className="w-14" />}
+          <button
+            onClick={saveAndExit}
+            disabled={isSaving}
+            className="text-white/30 hover:text-white/60 text-xs transition-colors py-2 -mr-1 disabled:opacity-30"
+          >
+            Save & Exit
+          </button>
         </div>
 
-        {/* Progress strip — player stages only */}
-        {!isCoachingStage && (
-          <div className="flex gap-0.5 px-4 pb-2">
-            {progressStages.map((_, i) => (
-              <div key={i} className="h-1 flex-1 rounded-full transition-all duration-500"
-                style={{
-                  background: i < currentStep ? `${primaryColor}90` : i === currentStep ? primaryColor : "rgba(255,255,255,0.08)"
-                }} />
-            ))}
-          </div>
-        )}
-        {isCoachingStage && (
-          <div className="h-1 mx-4 mb-2 rounded-full bg-teal-500/40" />
-        )}
+        <div className="flex gap-0.5 px-4 pb-2">
+          {PLAYER_STAGES.map((_, i) => (
+            <div key={i} className="h-1 flex-1 rounded-full transition-all duration-500"
+              style={{
+                background: i < currentStep ? `${primaryColor}90` : i === currentStep ? primaryColor : "rgba(255,255,255,0.08)"
+              }} />
+          ))}
+        </div>
       </div>
 
       {/* Scrollable body */}
@@ -736,28 +609,15 @@ export default function Journey() {
             <div className="text-center pb-2">
               <span className="text-5xl mb-3 block">{stage.emoji}</span>
               <h1 className="text-3xl font-display font-black text-white mb-2 leading-tight">{stage.title}</h1>
-              <p className={`text-sm leading-relaxed ${isCoachingStage ? "text-teal-400/70" : "text-white/50"}`}>
-                {stage.subtitle}
-              </p>
+              <p className="text-sm leading-relaxed text-white/50">{stage.subtitle}</p>
             </div>
 
-            {/* Voice nudge — player stages only */}
-            {!isCoachingStage && (
-              <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border text-sm"
-                style={{ background: `${primaryColor}12`, borderColor: `${primaryColor}30` }}>
-                <span className="text-xl shrink-0">🎙️</span>
-                <span className="text-white/55">Tap <strong className="text-white/80">Add voice note</strong> — talking tells more of your story than typing.</span>
-              </div>
-            )}
-
-            {/* Coaching intro banner */}
-            {isCoachingStage && (
-              <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border text-sm"
-                style={{ background: "rgba(13,148,136,0.08)", borderColor: "rgba(13,148,136,0.25)" }}>
-                <span className="text-xl shrink-0">📋</span>
-                <span className="text-teal-300/70">Your input is used exclusively to personalise this player's story. All fields are optional — share what feels useful.</span>
-              </div>
-            )}
+            {/* Voice nudge */}
+            <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border text-sm"
+              style={{ background: `${primaryColor}12`, borderColor: `${primaryColor}30` }}>
+              <span className="text-xl shrink-0">🎙️</span>
+              <span className="text-white/55">Tap <strong className="text-white/80">Add voice note</strong> — talking tells more of your story than typing.</span>
+            </div>
 
             {/* Questions */}
             <div className="space-y-4">
@@ -770,7 +630,7 @@ export default function Journey() {
                   skipped={isSkipped(stage.id, qi)}
                   error={errors[qi] ?? false}
                   primaryColor={primaryColor}
-                  isCoaching={isCoachingStage}
+                  isCoaching={false}
                   onTextChange={val => updateAnswer(qi, { text: val })}
                   onAudioReady={(blob, url) => updateAnswer(qi, { audioBlob: blob, audioUrl: url })}
                   onMediaChange={paths => updateAnswer(qi, { mediaUrls: paths })}
@@ -793,9 +653,9 @@ export default function Journey() {
             disabled={isSaving}
             className="w-full py-4 rounded-2xl font-black text-base uppercase tracking-widest disabled:opacity-50 font-display"
             style={{
-              background: isCoachingStage ? "#0d9488" : primaryColor,
-              color: isCoachingStage ? "#fff" : btnText,
-              boxShadow: isCoachingStage ? "0 8px 32px rgba(13,148,136,0.4)" : `0 8px 32px ${primaryColor}55`,
+              background: primaryColor,
+              color: btnText,
+              boxShadow: `0 8px 32px ${primaryColor}55`,
             }}
           >
             {isSaving
@@ -805,11 +665,9 @@ export default function Journey() {
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>Saving…
                 </span>
-              : isCoachingStage
-              ? "Complete Journey →"
-              : currentStep < playerStageCount - 1
+              : currentStep < totalStages - 1
               ? "Next Chapter →"
-              : "Finish Player Section →"}
+              : "Complete My Journey →"}
           </motion.button>
         </div>
       </div>

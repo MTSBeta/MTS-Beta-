@@ -357,6 +357,8 @@ export const U9_STAGES: U9Stage[] = [
   },
 ];
 
+export const U9_PLAYER_STAGES = U9_STAGES.filter(s => !s.isCoaching);
+
 /** Compute a character profile summary from select/multiselect answers */
 export function computeCharacterProfile(
   answers: { text: string }[],

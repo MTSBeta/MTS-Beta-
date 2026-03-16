@@ -37,13 +37,16 @@ export const STAKEHOLDER_QUESTIONS: Record<string, StakeholderQuestionSet> = {
     type: "football_coach",
     title: "Football Coach",
     emoji: "📋",
-    intro: "Your eye sees things no one else on this list can see. We need your honest, professional read — the version beyond the session report.",
+    intro: "Your eye sees things no one else on this list can see. We need your honest, professional read — the version beyond the session report. You'll also help shape how this player's story is told.",
     questions: [
       "Describe the session or the specific moment when you first thought — this player is different. Not better necessarily, different. What exactly happened, and what did you see?",
       "What is this player's most significant quality that would never appear in a statistics report or standard coaching assessment?",
       "Tell me about a moment when this player genuinely surprised you — positively or negatively. What did it reveal about who they actually are?",
       "What does this player need to hear — something that might be uncomfortable to say and that you may not have said yet — that would genuinely change the trajectory of their development?",
       "If you had to describe this player in five words, what would those words be? Then pick just one of them and tell me the story behind why you chose it.",
+      "Which club values does this player demonstrate most strongly? Give a specific example of one in action.",
+      "What are the two or three development areas you most want their story to reflect — the challenges they are actively working through right now?",
+      "What themes, lessons, or messages do you want woven into this player's story? Think about what you want them to carry with them from this chapter of their journey.",
     ],
   },
   education: {

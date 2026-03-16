@@ -5,7 +5,7 @@ import { SkipForward, CheckCircle2 } from "lucide-react";
 import { VoiceRecorder } from "@/components/VoiceRecorder";
 import { MediaUploader } from "@/components/MediaUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
-import { U9_STAGES, computeCharacterProfile } from "@/data/u9Questions";
+import { U9_PLAYER_STAGES, computeCharacterProfile } from "@/data/u9Questions";
 import type { U9Question, U9Stage } from "@/data/u9Questions";
 import { MindsetProfiler } from "@/components/MindsetProfiler";
 import { useSaveJourneyResponses, useCompleteJourney } from "@workspace/api-client-react";
@@ -25,13 +25,10 @@ interface FlatQuestion {
   questionIndex: number;
 }
 
-const ALL_QUESTIONS: FlatQuestion[] = U9_STAGES.flatMap((stage, si) =>
+const ALL_QUESTIONS: FlatQuestion[] = U9_PLAYER_STAGES.flatMap((stage, si) =>
   stage.questions.map((q, qi) => ({ stage, stageIndex: si, question: q, questionIndex: qi }))
 );
 const TOTAL = ALL_QUESTIONS.length;
-
-const PLAYER_QUESTIONS = ALL_QUESTIONS.filter(q => !q.stage.isCoaching);
-const COACHING_START_IDX = PLAYER_QUESTIONS.length;
 
 // ── Select option chip ──────────────────────────────────────────────────
 function SelectChip({
@@ -87,7 +84,6 @@ export default function JourneyU9() {
   const [skipped, setSkipped] = useState<Set<number>>(new Set());
   const [isSaving, setIsSaving] = useState(false);
   const [direction, setDirection] = useState(1);
-  const [showHandover, setShowHandover] = useState(false);
 
   // Review mode (skipped questions)
   const [reviewMode, setReviewMode] = useState(false);
@@ -109,7 +105,7 @@ export default function JourneyU9() {
           setProfilerResult(result);
           setProfilerDone(true);
           setShowProfiler(false);
-          setShowHandover(true);
+          enterReviewOrComplete();
         }}
       />
     );
@@ -117,9 +113,7 @@ export default function JourneyU9() {
 
   const { stage, question, questionIndex } = ALL_QUESTIONS[currentIdx];
   const stageColor = stage.colour;
-  const isCoachingQ = !!stage.isCoaching;
-  const isLastMain = currentIdx === TOTAL - 1;
-  const isPlayerToCoachingTransition = currentIdx === COACHING_START_IDX - 1;
+  const isLastQuestion = currentIdx === TOTAL - 1;
 
   // ── Answer helpers ─────────────────────────────────────────────────
   const getSelected = (idx: number): string[] => {
@@ -160,7 +154,7 @@ export default function JourneyU9() {
     const q = ALL_QUESTIONS[idx]?.question;
     if (!q) return false;
     if (q.type === "photo") return (a?.mediaUrls?.length ?? 0) > 0;
-    if (q.type === "select" || q.type === "multiselect" || q.type === "coaching-multiselect")
+    if (q.type === "select" || q.type === "multiselect")
       return getSelected(idx).length > 0;
     return !!(a?.text?.trim() || a?.audioUrl);
   };
@@ -168,30 +162,27 @@ export default function JourneyU9() {
   const canAdvance = () => {
     const q = ALL_QUESTIONS[currentIdx]?.question;
     if (!q) return true;
-    if (q.type === "photo") return true; // photo is optional
-    if (q.type === "coaching-text") return true; // coach can leave blank
+    if (q.type === "photo") return true;
     return hasAnswer(currentIdx) || skipped.has(currentIdx);
   };
 
   // ── Navigation ─────────────────────────────────────────────────────
   const skipCurrent = () => {
     setSkipped(prev => new Set([...prev, currentIdx]));
-    if (isPlayerToCoachingTransition) {
-      if (!profilerDone) { setShowProfiler(true); } else { setShowHandover(true); }
+    if (isLastQuestion) {
+      if (!profilerDone) { setShowProfiler(true); } else { enterReviewOrComplete(); }
       return;
     }
-    if (isLastMain) { enterReviewOrComplete(); return; }
     setDirection(1);
     setCurrentIdx(i => i + 1);
   };
 
   const goNext = () => {
     if (!canAdvance()) return;
-    if (isPlayerToCoachingTransition && !stage.isCoaching) {
-      if (!profilerDone) { setShowProfiler(true); } else { setShowHandover(true); }
+    if (isLastQuestion) {
+      if (!profilerDone) { setShowProfiler(true); } else { enterReviewOrComplete(); }
       return;
     }
-    if (isLastMain) { enterReviewOrComplete(); return; }
     setDirection(1);
     setCurrentIdx(i => i + 1);
   };
@@ -202,7 +193,6 @@ export default function JourneyU9() {
       else setReviewMode(false);
       return;
     }
-    if (showHandover) { setShowHandover(false); return; }
     if (currentIdx > 0) {
       setDirection(-1);
       setCurrentIdx(i => i - 1);
@@ -214,7 +204,7 @@ export default function JourneyU9() {
     .filter(({ idx }) => skipped.has(idx));
 
   const enterReviewOrComplete = () => {
-    const skippedList = getSkippedList().filter(q => !q.stage.isCoaching);
+    const skippedList = getSkippedList();
     if (skippedList.length > 0) {
       setReviewMode(true);
       setReviewIdx(0);
@@ -226,10 +216,10 @@ export default function JourneyU9() {
   const finishJourney = async () => {
     setIsSaving(true);
 
-    for (let si = 0; si < U9_STAGES.length; si++) {
-      const s = U9_STAGES[si];
+    for (let si = 0; si < U9_PLAYER_STAGES.length; si++) {
+      const s = U9_PLAYER_STAGES[si];
       const stageAnswers = s.questions.map((_, qi) => {
-        const flatIdx = U9_STAGES.slice(0, si).reduce((acc, prev) => acc + prev.questions.length, 0) + qi;
+        const flatIdx = U9_PLAYER_STAGES.slice(0, si).reduce((acc, prev) => acc + prev.questions.length, 0) + qi;
         return answers[flatIdx];
       });
       saveJourneyStage(s.id, stageAnswers);
@@ -242,12 +232,11 @@ export default function JourneyU9() {
     );
 
     const responses = [
-      ...U9_STAGES.flatMap((s, si) =>
+      ...U9_PLAYER_STAGES.flatMap((s, si) =>
         s.questions.map((q, qi) => {
-          const flatIdx = U9_STAGES.slice(0, si).reduce((acc, prev) => acc + prev.questions.length, 0) + qi;
+          const flatIdx = U9_PLAYER_STAGES.slice(0, si).reduce((acc, prev) => acc + prev.questions.length, 0) + qi;
           const a = answers[flatIdx];
           const rawText = a?.text ?? "";
-          // Convert ||| separator to readable comma list
           const answerText = rawText.includes("|||") ? rawText.split("|||").join(", ") : rawText;
           return {
             stage: s.id,
@@ -287,78 +276,9 @@ export default function JourneyU9() {
     finally { setIsSaving(false); }
   };
 
-  // ── HANDOVER SCREEN ────────────────────────────────────────────────
-  if (showHandover) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
-            className="w-full h-full object-cover opacity-10 mix-blend-overlay" />
-          <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 50% 0%, #0d948820 0%, transparent 60%)` }} />
-        </div>
-
-        <div className="sticky top-0 z-30 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/6">
-          <div className="flex items-center justify-between px-4 h-12">
-            <button onClick={goBack} className="flex items-center gap-1 text-white/40 text-xs py-2 -ml-1">← Back</button>
-            <span className="text-[#0d9488] text-xs font-bold uppercase tracking-widest">Coach Section</span>
-            <div className="w-14" />
-          </div>
-        </div>
-
-        <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center">
-          <motion.div
-            initial={{ scale: 0, rotate: -20 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 200 }}
-            className="text-8xl mb-6"
-          >👨‍🏫</motion.div>
-
-          <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            className="text-3xl font-display font-black text-white mb-3 leading-tight">
-            Amazing job, {playerData.playerName.split(" ")[0]}! 🎉
-          </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-            className="text-white/55 text-base leading-relaxed mb-8 max-w-sm">
-            You've answered all your questions! Now it's time to hand the phone to your <strong className="text-white">coach</strong> so they can add their special notes to your book.
-          </motion.p>
-
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-            className="rounded-2xl p-5 mb-8 w-full max-w-sm text-left space-y-3"
-            style={{ background: "#0d948818", border: "1px solid #0d948840" }}>
-            <p className="text-[#0d9488] text-xs font-bold uppercase tracking-widest">For the coach</p>
-            <p className="text-white/65 text-sm leading-relaxed">
-              We have a few questions for you about <strong className="text-white">{playerData.playerName.split(" ")[0]}'s</strong> development, club values, and what you'd like their story to reflect. It only takes 5 minutes.
-            </p>
-          </motion.div>
-        </div>
-
-        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-6 pt-3"
-          style={{ background: "linear-gradient(to top, #0a0a0a 70%, transparent)" }}>
-          <div className="max-w-sm mx-auto">
-            <motion.button
-              whileTap={{ scale: 0.96 }}
-              onClick={() => { setShowHandover(false); setCurrentIdx(COACHING_START_IDX); }}
-              className="w-full py-4 rounded-2xl font-black text-lg uppercase tracking-widest font-display"
-              style={{ background: "#0d9488", color: "#fff", boxShadow: "0 8px 32px #0d948855" }}
-            >
-              Start Coach Section →
-            </motion.button>
-            <button
-              onClick={finishJourney}
-              disabled={isSaving}
-              className="w-full mt-2 py-2.5 text-white/30 hover:text-white/60 text-xs font-semibold transition-colors"
-            >
-              {isSaving ? "Saving…" : "Skip coach section & finish →"}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   // ── REVIEW MODE ────────────────────────────────────────────────────
   if (reviewMode) {
-    const skippedList = getSkippedList().filter(q => !q.stage.isCoaching);
+    const skippedList = getSkippedList();
     const currentReview = skippedList[reviewIdx];
     if (!currentReview) { finishJourney(); return null; }
     const rStageColor = currentReview.stage.colour;
@@ -466,16 +386,11 @@ export default function JourneyU9() {
   const hasCurrentAnswer = hasAnswer(currentIdx);
   const isCurrentSkipped = skipped.has(currentIdx);
   const isPhotoQ = question.type === "photo";
-  const isCoachTextQ = question.type === "coaching-text";
-  const isSelectType = question.type === "select" || question.type === "multiselect" || question.type === "coaching-multiselect";
-  const isMulti = question.type === "multiselect" || question.type === "coaching-multiselect";
+  const isSelectType = question.type === "select" || question.type === "multiselect";
+  const isMulti = question.type === "multiselect";
   const selectedOpts = getSelected(currentIdx);
   const nextDisabled = !canAdvance() || isSaving;
   const progressPct = (currentIdx / TOTAL) * 100;
-  const playerProgressPct = Math.min((currentIdx / COACHING_START_IDX) * 100, 100);
-  const coachProgressPct = currentIdx >= COACHING_START_IDX
-    ? ((currentIdx - COACHING_START_IDX) / (TOTAL - COACHING_START_IDX)) * 100
-    : 0;
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
@@ -495,23 +410,18 @@ export default function JourneyU9() {
 
           {/* Progress dots */}
           <div className="flex items-center gap-1">
-            {ALL_QUESTIONS.map((fq, i) => {
+            {ALL_QUESTIONS.map((_, i) => {
               const isSkippedDot = skipped.has(i);
               const isAnswered = hasAnswer(i);
               const isCurrent = i === currentIdx;
-              const isCoach = !!fq.stage.isCoaching;
               return (
-                <div key={i}>
-                  {/* Separator before coaching section */}
-                  {i === COACHING_START_IDX && <div className="w-2 border-t border-white/20 mx-1" />}
-                  <div className="w-1.5 h-1.5 rounded-full transition-all duration-300"
-                    style={{
-                      background: isSkippedDot ? "#f59e0b"
-                        : isAnswered ? (isCoach ? "#0d9488" : stageColor)
-                        : isCurrent ? "white"
-                        : "rgba(255,255,255,0.12)"
-                    }} />
-                </div>
+                <div key={i} className="w-1.5 h-1.5 rounded-full transition-all duration-300"
+                  style={{
+                    background: isSkippedDot ? "#f59e0b"
+                      : isAnswered ? stageColor
+                      : isCurrent ? "white"
+                      : "rgba(255,255,255,0.12)"
+                  }} />
               );
             })}
           </div>
@@ -522,17 +432,11 @@ export default function JourneyU9() {
           </button>
         </div>
 
-        {/* Dual progress bars: player | coach */}
-        <div className="flex gap-1 px-4 pb-2">
-          <div className="flex-1 h-1 bg-white/8 rounded-full overflow-hidden">
+        {/* Progress bar */}
+        <div className="px-4 pb-2">
+          <div className="h-1 bg-white/8 rounded-full overflow-hidden">
             <motion.div className="h-full rounded-full" style={{ background: stageColor }}
-              animate={{ width: isCoachingQ ? "100%" : `${playerProgressPct}%` }}
-              transition={{ duration: 0.4, ease: "easeOut" }} />
-          </div>
-          <div className="w-1" />
-          <div className="flex-none w-16 h-1 bg-white/8 rounded-full overflow-hidden">
-            <motion.div className="h-full rounded-full" style={{ background: "#0d9488" }}
-              animate={{ width: `${coachProgressPct}%` }}
+              animate={{ width: `${progressPct}%` }}
               transition={{ duration: 0.4, ease: "easeOut" }} />
           </div>
         </div>
@@ -554,15 +458,9 @@ export default function JourneyU9() {
             <div className="flex items-center gap-2 mb-5">
               <div className="w-8 h-8 rounded-xl flex items-center justify-center text-base"
                 style={{ background: `${stageColor}25` }}>{stage.emoji}</div>
-              <div>
-                <span className="text-xs font-bold uppercase tracking-widest block" style={{ color: stageColor }}>
-                  {stage.title}
-                  {isCoachingQ && <span className="ml-2 px-1.5 py-0.5 rounded-md text-[9px] bg-[#0d9488]/20 text-[#0d9488] align-middle">COACH</span>}
-                </span>
-                {isCoachingQ && (
-                  <span className="text-white/30 text-[10px]">Question {questionIndex + 1} of {stage.questions.length}</span>
-                )}
-              </div>
+              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: stageColor }}>
+                {stage.title}
+              </span>
             </div>
 
             <div className="flex-1 flex flex-col gap-4">
@@ -661,24 +559,8 @@ export default function JourneyU9() {
                 </>
               )}
 
-              {/* ── COACHING-TEXT ── */}
-              {question.type === "coaching-text" && (
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                  <textarea rows={4} placeholder="Type your notes here…"
-                    value={answers[currentIdx]?.text ?? ""}
-                    onChange={e => updateCurrent({ text: e.target.value })}
-                    className="w-full bg-white/5 border border-[#0d9488]/30 focus:border-[#0d9488]/60 rounded-2xl px-4 py-3 text-white text-sm placeholder:text-white/20 focus:outline-none transition-colors resize-none leading-relaxed"
-                  />
-                  {answers[currentIdx]?.text?.trim() && (
-                    <div className="flex items-center justify-center gap-1.5 mt-2" style={{ color: "#0d9488" }}>
-                      <CheckCircle2 size={13} /><span className="text-xs font-bold">Saved</span>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-
-              {/* Skip link — player questions only */}
-              {!isCoachingQ && !isPhotoQ && !hasCurrentAnswer && !isCurrentSkipped && (
+              {/* Skip link */}
+              {!isPhotoQ && !hasCurrentAnswer && !isCurrentSkipped && (
                 <motion.button
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
                   type="button" onClick={skipCurrent}
@@ -689,7 +571,7 @@ export default function JourneyU9() {
                 </motion.button>
               )}
 
-              {skipped.size > 0 && !isCoachingQ && (
+              {skipped.size > 0 && (
                 <p className="text-amber-400/40 text-[10px] text-center">
                   {skipped.size} skipped — you'll get a chance to answer before finishing
                 </p>
@@ -711,12 +593,11 @@ export default function JourneyU9() {
             style={{ background: stageColor, color: isLight(stageColor) ? "#000" : "#fff", boxShadow: `0 8px 32px ${stageColor}55` }}
           >
             {isSaving ? "Saving…"
-              : isLastMain ? (isCoachingQ ? "Finish Notes →" : "Finish My Story! 🎉")
-              : isPlayerToCoachingTransition ? "Next: Coach Notes →"
+              : isLastQuestion ? "Finish My Story! 🎉"
               : "Next Question →"
             }
           </motion.button>
-          {nextDisabled && !isSaving && !isPhotoQ && !isCoachTextQ && (
+          {nextDisabled && !isSaving && !isPhotoQ && (
             <p className="text-white/30 text-[10px] text-center mt-2">
               {isSelectType ? "Pick at least one option" : "Answer or tap Skip below"}
             </p>
