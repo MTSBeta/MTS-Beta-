@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { LogOut, ChevronLeft, ChevronRight, Mic2, MessageSquare, Timer, CheckCircle2 } from "lucide-react";
+import { LogOut, ChevronLeft, ChevronRight, Mic2, MessageSquare, Timer, CheckCircle2, Palette, Lock, Volume2 } from "lucide-react";
 import { PlayerJersey } from "@/components/PlayerJersey";
 import { LikenessUploader } from "@/components/LikenessUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
@@ -13,6 +13,15 @@ const TIPS = [
   { Icon: MessageSquare, title: "Go deep", body: "Some questions feel unusual. That's on purpose. Real answers, not a performance." },
   { Icon: Timer, title: "No timer", body: "Pause between stages, come back later. There's no rush and no deadline." },
   { Icon: CheckCircle2, title: "No wrong answers", body: "Whatever's true for you is exactly what we're looking for." },
+];
+
+const CHAPTER_PHOTOS = [
+  "academy-7.jpg",
+  "academy-6.jpg",
+  "academy-3.jpg",
+  "academy-5b.png",
+  "academy-4.jpg",
+  "academy-2.jpg",
 ];
 
 const KIT_IMAGES: Record<string, string> = {
@@ -500,7 +509,7 @@ export default function Welcome() {
           {!isMuted && (
             <button onClick={handleMute}
               className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-sm min-h-[44px] px-1">
-              <span>🔊</span>
+              <Volume2 size={14} />
               <span>Mute</span>
             </button>
           )}
@@ -589,7 +598,9 @@ export default function Welcome() {
           className="rounded-3xl bg-white/4 border border-white/8 p-5"
         >
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xl">🎨</span>
+            <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center shrink-0">
+              <Palette size={16} strokeWidth={1.5} className="text-white/50" />
+            </div>
             <div>
               <p className="text-white font-bold text-base">Get illustrated</p>
               <p className="text-white/40 text-xs">Your story becomes a book. Give us your likeness.</p>
@@ -670,7 +681,7 @@ export default function Welcome() {
                 animate="center"
                 exit="exit"
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="w-full rounded-3xl p-6 flex flex-col justify-between"
+                className="relative overflow-hidden w-full rounded-3xl p-6 flex flex-col justify-between"
                 style={{
                   background: activeChapter === 0
                     ? `linear-gradient(135deg, ${selectedAcademy.primaryColor}35, ${selectedAcademy.primaryColor}10)`
@@ -682,53 +693,69 @@ export default function Welcome() {
                   minHeight: 220,
                 }}
               >
-                {/* Chapter number + lock */}
-                <div className="flex items-start justify-between mb-3">
-                  <div
-                    className="text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full"
-                    style={{
-                      background: activeChapter === 0 ? selectedAcademy.primaryColor : "rgba(255,255,255,0.08)",
-                      color: activeChapter === 0 ? btnText : "rgba(255,255,255,0.4)"
-                    }}
-                  >
-                    Chapter {activeChapter + 1} of {JOURNEY_STAGES.length}
-                  </div>
-                  {activeChapter > 0 && (
-                    <span className="text-white/20 text-lg">🔒</span>
-                  )}
+                {/* Photo background */}
+                <div className="absolute inset-0 pointer-events-none z-0">
+                  <img
+                    src={`${import.meta.env.BASE_URL}images/academy/${CHAPTER_PHOTOS[activeChapter]}`}
+                    alt=""
+                    className="w-full h-full object-cover"
+                    style={{ filter: "brightness(0.14) saturate(0.4)", transform: "scale(1.08)", objectPosition: "center 35%" }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a]/50 via-transparent to-[#0a0a0a]/70" />
                   {activeChapter === 0 && (
-                    <span
-                      className="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full"
-                      style={{ background: `${selectedAcademy.primaryColor}25`, color: selectedAcademy.primaryColor }}
-                    >
-                      START HERE
-                    </span>
+                    <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${selectedAcademy.primaryColor}20, transparent 60%)` }} />
                   )}
                 </div>
-
-                {/* Chapter + title */}
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 rounded-2xl flex flex-col items-center justify-center shrink-0"
-                    style={{ background: `${selectedAcademy.primaryColor}15`, border: `1px solid ${selectedAcademy.primaryColor}30` }}>
-                    <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-white/35">CH</span>
-                    <span className="text-lg font-display font-black text-white leading-none">{String(activeChapter + 1).padStart(2, "0")}</span>
+                {/* Card content — sits above photo bg */}
+                <div className="relative z-[1] flex flex-col h-full">
+                  {/* Chapter number + lock */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div
+                      className="text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full"
+                      style={{
+                        background: activeChapter === 0 ? selectedAcademy.primaryColor : "rgba(255,255,255,0.08)",
+                        color: activeChapter === 0 ? btnText : "rgba(255,255,255,0.4)"
+                      }}
+                    >
+                      Chapter {activeChapter + 1} of {JOURNEY_STAGES.length}
+                    </div>
+                    {activeChapter > 0 && (
+                      <Lock size={14} strokeWidth={1.5} className="text-white/20" />
+                    )}
+                    {activeChapter === 0 && (
+                      <span
+                        className="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full"
+                        style={{ background: `${selectedAcademy.primaryColor}25`, color: selectedAcademy.primaryColor }}
+                      >
+                        START HERE
+                      </span>
+                    )}
                   </div>
-                  <div>
-                    <h3 className={`font-black text-xl leading-tight ${activeChapter > 0 ? "text-white/50" : "text-white"}`}>
-                      {activeStage.title}
-                    </h3>
-                    <p className={`text-xs mt-1 leading-relaxed ${activeChapter > 0 ? "text-white/25" : "text-white/55"}`}>
-                      {activeStage.description}
+
+                  {/* Chapter + title */}
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-12 h-12 rounded-2xl flex flex-col items-center justify-center shrink-0"
+                      style={{ background: `${selectedAcademy.primaryColor}15`, border: `1px solid ${selectedAcademy.primaryColor}30` }}>
+                      <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-white/35">CH</span>
+                      <span className="text-lg font-display font-black text-white leading-none">{String(activeChapter + 1).padStart(2, "0")}</span>
+                    </div>
+                    <div>
+                      <h3 className={`font-black text-xl leading-tight ${activeChapter > 0 ? "text-white/50" : "text-white"}`}>
+                        {activeStage.title}
+                      </h3>
+                      <p className={`text-xs mt-1 leading-relaxed ${activeChapter > 0 ? "text-white/25" : "text-white/55"}`}>
+                        {activeStage.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Unlocks message */}
+                  {activeChapter > 0 && (
+                    <p className="text-white/20 text-[11px] font-medium italic">
+                      Unlocks after completing chapter {activeChapter}
                     </p>
-                  </div>
+                  )}
                 </div>
-
-                {/* Unlocks message */}
-                {activeChapter > 0 && (
-                  <p className="text-white/20 text-[11px] font-medium italic">
-                    Unlocks after completing chapter {activeChapter}
-                  </p>
-                )}
               </motion.div>
             </AnimatePresence>
 

@@ -136,6 +136,37 @@ export default function Home() {
           </p>
         </motion.div>
 
+        {/* ── PHOTO STRIP ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35, duration: 0.9 }}
+          className="w-full max-w-2xl flex gap-1.5 mb-8"
+          style={{ height: 88 }}
+        >
+          {[
+            { src: "academy-7.jpg", pos: "center 35%" },
+            { src: "academy-3.jpg", pos: "center 40%" },
+            { src: "academy-6.jpg", pos: "center 30%" },
+          ].map((img, i) => (
+            <div
+              key={i}
+              className="relative overflow-hidden flex-1"
+              style={{
+                borderRadius: i === 0 ? "14px 6px 6px 14px" : i === 2 ? "6px 14px 14px 6px" : "6px",
+              }}
+            >
+              <img
+                src={`${import.meta.env.BASE_URL}images/academy/${img.src}`}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{ objectPosition: img.pos, filter: "brightness(0.22) saturate(0.5)", transform: "scale(1.06)" }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/80 via-transparent to-[#0a0a0a]/30" />
+            </div>
+          ))}
+        </motion.div>
+
         <AnimatePresence mode="wait">
 
           {/* ── STEP 1: League selection ── */}

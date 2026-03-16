@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { LogOut, Mic2, Dna, BookOpen } from "lucide-react";
+import { LogOut, Mic2, Dna, BookOpen, Volume2 } from "lucide-react";
 import { usePlayerContext } from "@/context/PlayerContext";
 
 function isLight(hex: string) {
@@ -270,7 +270,7 @@ export default function WelcomeU9() {
           {!isMuted && (
             <button onClick={handleMute}
               className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-sm min-h-[44px] px-1">
-              <span>🔊</span>
+              <Volume2 size={14} />
               <span>Mute</span>
             </button>
           )}
@@ -328,6 +328,37 @@ export default function WelcomeU9() {
               #{playerData.shirtNumber}
             </span>
           </div>
+        </motion.div>
+
+        {/* Photo strip */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.42, duration: 0.9 }}
+          className="flex gap-1.5 mb-5 w-full"
+          style={{ height: 64 }}
+        >
+          {[
+            { src: "academy-8.jpg", pos: "center 40%" },
+            { src: "academy-4.jpg", pos: "center 50%" },
+            { src: "academy-5b.png", pos: "center 35%" },
+          ].map((img, i) => (
+            <div
+              key={i}
+              className="relative overflow-hidden flex-1"
+              style={{
+                borderRadius: i === 0 ? "12px 4px 4px 12px" : i === 2 ? "4px 12px 12px 4px" : "4px",
+              }}
+            >
+              <img
+                src={`${import.meta.env.BASE_URL}images/academy/${img.src}`}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{ objectPosition: img.pos, filter: "brightness(0.20) saturate(0.45)", transform: "scale(1.08)" }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/80 via-transparent to-[#0a0a0a]/30" />
+            </div>
+          ))}
         </motion.div>
 
         {/* Quick info strip */}
