@@ -7,8 +7,6 @@ import { LikenessUploader } from "@/components/LikenessUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { POSITIONS } from "@/data/positions";
 import { JOURNEY_STAGES } from "@/data/questions";
-import OnboardingIntro from "@/components/OnboardingIntro";
-import { DEFAULT_ASSISTANT } from "@/data/assistantProfiles";
 import { ensureMusicPlaying, stopMusic, isMusicPlaying } from "@/lib/globalAudio";
 import { getAcademyMascot } from "@/data/mascots";
 import { publicAssetUrl } from "@/lib/publicAssetUrl";
@@ -535,14 +533,6 @@ export default function Welcome() {
               {soundOn ? <Volume2 size={14} /> : <VolumeX size={14} />}
               <span>{soundOn ? "Mute" : "Sound"}</span>
             </button>
-            {revealPhase >= 4 && (
-              <OnboardingIntro
-                assistantId={DEFAULT_ASSISTANT}
-                playerFirstName={firstName}
-                accentColor={selectedAcademy.primaryColor}
-                mascotName={getAcademyMascot(selectedAcademy.key)}
-              />
-            )}
           </div>
         </div>
 

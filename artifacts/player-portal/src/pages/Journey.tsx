@@ -6,6 +6,7 @@ import { useLocation } from "wouter";
 import { ChevronLeft, SkipForward, Mic } from "lucide-react";
 import { VoiceRecorder } from "@/components/VoiceRecorder";
 import { MediaUploader } from "@/components/MediaUploader";
+import OnboardingIntro from "@/components/OnboardingIntro";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { useSoundEnabled } from "@/context/SoundContext";
 import { useAssistant } from "@/context/AssistantContext";
@@ -16,6 +17,8 @@ import { POSITIONS } from "@/data/positions";
 import { selectPositionQuestions } from "@/utils/questionSelector";
 import { useSaveJourneyResponses, useCompleteJourney } from "@workspace/api-client-react";
 import type { AnswerEntry } from "@/context/PlayerContext";
+import { DEFAULT_ASSISTANT } from "@/data/assistantProfiles";
+import { getAcademyMascot } from "@/data/mascots";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -620,6 +623,16 @@ export default function Journey() {
           totalStages={totalStages}
           onBegin={() => { if (currentStep === 0) stopMusic(); setShowStageIntro(false); }}
         />
+
+        {/* Voice intro — only on the very first chapter */}
+        {currentStep === 0 && selectedAcademy && playerData && (
+          <OnboardingIntro
+            assistantId={DEFAULT_ASSISTANT}
+            playerFirstName={playerData.playerName.split(" ")[0]}
+            accentColor={primaryColor}
+            mascotName={getAcademyMascot(selectedAcademy.key)}
+          />
+        )}
       </div>
     );
   }
