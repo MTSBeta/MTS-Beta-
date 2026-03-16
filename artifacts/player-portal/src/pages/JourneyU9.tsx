@@ -199,11 +199,13 @@ export default function JourneyU9() {
     }
   };
 
-  const getSkippedList = () => ALL_QUESTIONS
-    .map((q, idx) => ({ ...q, idx }))
-    .filter(({ idx }) => skipped.has(idx));
+  function getSkippedList() {
+    return ALL_QUESTIONS
+      .map((q, idx) => ({ ...q, idx }))
+      .filter(({ idx }) => skipped.has(idx));
+  }
 
-  const enterReviewOrComplete = () => {
+  function enterReviewOrComplete() {
     const skippedList = getSkippedList();
     if (skippedList.length > 0) {
       setReviewMode(true);
@@ -211,7 +213,7 @@ export default function JourneyU9() {
     } else {
       finishJourney();
     }
-  };
+  }
 
   const finishJourney = async () => {
     setIsSaving(true);
