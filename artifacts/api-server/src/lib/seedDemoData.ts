@@ -94,6 +94,26 @@ const DEMO_PLAYERS = [
     parentCode: "PAR-DEMO-008",
     status: "registered",
   },
+  {
+    playerName: "Archie Mills",
+    age: 8,
+    shirtNumber: 7,
+    position: "Forward",
+    ageGroup: "U9",
+    accessCode: "PLY-DEM0U9",
+    parentCode: "PAR-DEM0U9",
+    status: "registered",
+  },
+  {
+    playerName: "Finley Grant",
+    age: 13,
+    shirtNumber: 4,
+    position: "Centre Midfielder",
+    ageGroup: "U13",
+    accessCode: "PLY-DEMU13",
+    parentCode: "PAR-DEMU13",
+    status: "registered",
+  },
 ];
 
 function journeyResponsesFor(
@@ -493,17 +513,6 @@ function staffSubmissionsFor(
 
 export async function seedDemoData() {
   try {
-    const existing = await db
-      .select({ id: playersTable.id })
-      .from(playersTable)
-      .where(eq(playersTable.accessCode, DEMO_MARKER_CODE))
-      .limit(1);
-
-    if (existing.length > 0) {
-      console.log("[demo-seed] Demo data already seeded — skipping.");
-      return;
-    }
-
     const academyResult = await db.execute(
       sql`SELECT id, key, name FROM academies WHERE key = ${DEMO_ACADEMY_KEY} LIMIT 1`
     );
@@ -527,9 +536,20 @@ export async function seedDemoData() {
     }
 
     const adminStaff = adminResult[0];
-    console.log(`[demo-seed] Seeding demo data for ${academy.name} with admin ${adminStaff.email}`);
 
     for (const playerData of DEMO_PLAYERS) {
+      const alreadyExists = await db
+        .select({ id: playersTable.id })
+        .from(playersTable)
+        .where(eq(playersTable.accessCode, playerData.accessCode))
+        .limit(1);
+
+      if (alreadyExists.length > 0) {
+        continue;
+      }
+
+      console.log(`[demo-seed] Inserting missing demo player: ${playerData.playerName}`);
+
       const [player] = await db
         .insert(playersTable)
         .values({
