@@ -1,0 +1,129 @@
+STAFF LOGINS
+Staff ID,Academy,Email,Full Name,Role,Active,Coach Access Code
+6,admin@arsenal-demo.co.uk,Rachel Ahmed,academy_admin,t,Arsenal,COACH-ARS-003
+12,admin@arsenal.co.uk,Demo Admin,academy_admin,t,Arsenal,COACH-ARS-003
+57,demo@arsenal-academy.co.uk,Arsenal Demo Admin,academy_admin,t,Arsenal,COACH-ARS-003
+7,coach@arsenal-demo.co.uk,Tony Reid,staff,t,Arsenal,COACH-ARS-003
+11,coach@arsenal.co.uk,Demo Coach,staff,t,Arsenal,COACH-ARS-003
+9,edu@arsenal-demo.co.uk,Richard Osei,staff,t,Arsenal,COACH-ARS-003
+8,psych@arsenal-demo.co.uk,Dr. Liz Murray,staff,t,Arsenal,COACH-ARS-003
+10,welfare@arsenal-demo.co.uk,Chloe Barnes,staff,t,Arsenal,COACH-ARS-003
+16,admin@aston-villa.co.uk,Aston Villa Admin,academy_admin,t,Aston Villa,COACH-AST-009
+17,admin@birmingham-city.co.uk,Birmingham City Admin,academy_admin,t,Birmingham City,COACH-BIR-001
+18,admin@blackburn.co.uk,Blackburn Rovers Admin,academy_admin,t,Blackburn Rovers,COACH-BLA-032
+19,admin@bournemouth.co.uk,Bournemouth Admin,academy_admin,t,Bournemouth,COACH-BOU-010
+20,admin@brentford.co.uk,Brentford Admin,academy_admin,t,Brentford,COACH-BRE-011
+21,admin@brighton.co.uk,Brighton & Hove Albion Admin,academy_admin,t,Brighton & Hove Albion,COACH-BRI-012
+22,admin@bristol-city.co.uk,Bristol City Admin,academy_admin,t,Bristol City,COACH-BRI-040
+23,admin@burnley.co.uk,Burnley Admin,academy_admin,t,Burnley,COACH-BUR-027
+24,admin@cardiff.co.uk,Cardiff City Admin,academy_admin,t,Cardiff City,COACH-CAR-035
+25,admin@chelsea.co.uk,Chelsea Admin,academy_admin,t,Chelsea,COACH-CHE-002
+26,admin@coventry.co.uk,Coventry City Admin,academy_admin,t,Coventry City,COACH-COV-030
+27,admin@crystal-palace.co.uk,Crystal Palace Admin,academy_admin,t,Crystal Palace,COACH-CRY-013
+28,admin@derby.co.uk,Derby County Admin,academy_admin,t,Derby County,COACH-DER-036
+29,admin@everton.co.uk,Everton Admin,academy_admin,t,Everton,COACH-EVE-014
+30,admin@fulham.co.uk,Fulham Admin,academy_admin,t,Fulham,COACH-FUL-015
+31,admin@hull.co.uk,Hull City Admin,academy_admin,t,Hull City,COACH-HUL-034
+32,admin@ipswich.co.uk,Ipswich Town Admin,academy_admin,t,Ipswich Town,COACH-IPS-016
+33,admin@leeds.co.uk,Leeds United Admin,academy_admin,t,Leeds United,COACH-LEE-022
+34,admin@leicester.co.uk,Leicester City Admin,academy_admin,t,Leicester City,COACH-LEI-017
+35,admin@liverpool.co.uk,Liverpool Admin,academy_admin,t,Liverpool,COACH-LIV-004
+36,admin@luton.co.uk,Luton Town Admin,academy_admin,t,Luton Town,COACH-LUT-038
+37,admin@manchester-city.co.uk,Manchester City Admin,academy_admin,t,Manchester City,COACH-MAN-005
+38,admin@manchester-united.co.uk,Manchester United Admin,academy_admin,t,Manchester United,COACH-MAN-006
+1,admin@manutd-demo.co.uk,Tom Fletcher,academy_admin,t,Manchester United,COACH-MAN-006
+2,coach@manutd-demo.co.uk,Marcus Greenwood,staff,t,Manchester United,COACH-MAN-006
+4,edu@manutd-demo.co.uk,James Harrison,staff,t,Manchester United,COACH-MAN-006
+3,psych@manutd-demo.co.uk,Dr. Sarah Clarke,staff,t,Manchester United,COACH-MAN-006
+5,welfare@manutd-demo.co.uk,Emma Wilson,staff,t,Manchester United,COACH-MAN-006
+39,admin@middlesbrough.co.uk,Middlesbrough Admin,academy_admin,t,Middlesbrough,COACH-MID-026
+40,admin@millwall.co.uk,Millwall Admin,academy_admin,t,Millwall,COACH-MIL-037
+41,admin@newcastle.co.uk,Newcastle United Admin,academy_admin,t,Newcastle United,COACH-NEW-008
+42,admin@norwich.co.uk,Norwich City Admin,academy_admin,t,Norwich City,COACH-NOR-028
+43,admin@nottingham-forest.co.uk,Nottingham Forest Admin,academy_admin,t,Nottingham Forest,COACH-NOT-018
+44,admin@portsmouth.co.uk,Portsmouth Admin,academy_admin,t,Portsmouth,COACH-POR-042
+45,admin@qpr.co.uk,Queens Park Rangers Admin,academy_admin,t,Queens Park Rangers,COACH-QPR-039
+46,admin@sheffield-united.co.uk,Sheffield United Admin,academy_admin,t,Sheffield United,COACH-SHE-024
+47,admin@sheffield-wednesday.co.uk,Sheffield Wednesday Admin,academy_admin,t,Sheffield Wednesday,COACH-SHE-031
+48,admin@southampton.co.uk,Southampton Admin,academy_admin,t,Southampton,COACH-SOU-019
+49,admin@stoke.co.uk,Stoke City Admin,academy_admin,t,Stoke City,COACH-STO-033
+50,admin@sunderland.co.uk,Sunderland Admin,academy_admin,t,Sunderland,COACH-SUN-023
+51,admin@swansea.co.uk,Swansea City Admin,academy_admin,t,Swansea City,COACH-SWA-041
+52,admin@tottenham.co.uk,Tottenham Hotspur Admin,academy_admin,t,Tottenham Hotspur,COACH-TOT-007
+53,admin@watford.co.uk,Watford Admin,academy_admin,t,Watford,COACH-WAT-029
+54,admin@west-brom.co.uk,West Bromwich Albion Admin,academy_admin,t,West Bromwich Albion,COACH-WES-025
+55,admin@west-ham.co.uk,West Ham United Admin,academy_admin,t,West Ham United,COACH-WES-020
+56,admin@wolves.co.uk,Wolverhampton Wanderers Admin,academy_admin,t,Wolverhampton Wanderers,COACH-WOL-021
+
+PLAYER LOGINS
+Player ID,Player Name,Player Code,Parent Code,Status,Academy Key,Academy Name
+b512e654-ddbb-4a1c-84b8-f474ce4572eb,Archie Mills,PLY-DEM0U9,PAR-DEM0U9,registered,arsenal,Arsenal
+574c2c65-0ae7-473d-961b-68e874b58566,Callum Hughes,PLY-DEMO-005,PAR-DEMO-005,journey_started,arsenal,Arsenal
+66080e75-e9cf-4ab9-8a1f-58e66ff281bc,Declan Murphy,PLY-DEMO-006,PAR-DEMO-006,journey_started,arsenal,Arsenal
+83d9d8cd-1572-4069-9d4a-60a9111a177f,Declan Rice,PLY-DR16,PAR-DR16,story_complete,arsenal,Arsenal
+98e93094-916d-4709-b391-076e3f8b8b7c,Ethan Clarke,PLY-DEMO-003,PAR-DEMO-003,journey_complete,arsenal,Arsenal
+0f2bc03e-d3e4-463e-9bca-0e7c1115fd9d,Finley Grant,PLY-DEMU13,PAR-DEMU13,registered,arsenal,Arsenal
+bb154c38-be6e-4e74-a016-1f52b35cf37a,Jamie Torres,PLY-DEMO-002,PAR-DEMO-002,story_complete,arsenal,Arsenal
+95fbbad3-f860-45d7-b5b1-99a8caa8d657,Luca Ferrari,PLY-DEMO-007,PAR-DEMO-007,registered,arsenal,Arsenal
+98a35abb-843f-4995-a7fc-c4907bb609d6,Marcus Webb,PLY-DEMO-001,PAR-DEMO-001,links_generated,arsenal,Arsenal
+7599bc4f-d783-4641-9721-8bc66abb9ddf,Noah Patel,PLY-DEMO-004,PAR-DEMO-004,journey_complete,arsenal,Arsenal
+98726ac0-6046-4969-ac34-4499a9e6a1d4,Tyler Brooks,PLY-DEMO-008,PAR-DEMO-008,registered,arsenal,Arsenal
+cb499411-29d8-48fd-9ed2-4db892be038b,Marcus Thompson  test,PLY-7BD36FE7,PAR-DA125701,registered,aston-villa,
+1f596116-e73a-44a4-ae2a-061500b6019d,Marcus Thompson,PLY-879434BE,PAR-2AAFA8FC,registered,birmingham-city,
+d4839a62-0c96-49ad-9e0f-8beab80fd91a,Marcus Thompson,PLY-6B1BA8E0,PAR-F92451A7,registered,birmingham-city,
+b2b20702-eef4-485a-b7f4-8ff612eed764,Marcus Thompson,PLY-C7FADFF1,PAR-0F0D9000,registered,birmingham-city,
+e8a836b9-24be-4c39-a9a4-ed9ae8633c34,Marcus Thompson test,PLY-C941A8E9,PAR-C6863361,registered,birmingham-city,
+b55a0061-cd82-4fae-a0aa-04d9483a5e29,Taku Tester,PLY-F3C97B18,PAR-05DCB8A1,registered,birmingham-city,
+bf39350b-d5de-4c75-b606-63ebcce91530,Test Player,4321,,not_started,birmingham-city,
+b1c3ca45-73a8-4a26-b05a-14b96e016f03,Taku Test,PLY-341CAFE9,PAR-059AB050,registered,manchester-city,
+3404629a-52bb-4b33-8e9d-426d38b0fa1b,Marcus Rashford,PLY-MR12,PAR-MR12,story_complete,manchester-united,
+448d82c5-10b7-4100-9519-b4b26de6ee1b,Marcus Thompson,PLY-86AD0987,PAR-7E3AC24B,registered,manchester-united,
+cad605a0-406b-48a8-a899-cf55f0215cc9,Marcus Thompson test,PLY-FB06A827,PAR-05F7C41B,registered,manchester-united,
+60897b16-eb3a-4668-88c0-ac5803cebfa4,Marcus Thompson test,PLY-0A75C710,PAR-21F78A2E,registered,manchester-united,
+72077977-d6d5-44e3-8bf7-ab468f5ca804,Taku Test,PLY-F7A07FE8,PAR-7F62BD88,registered,wolves,
+8e2a5aa6-8241-4ebc-858f-c68feb2ccbab,Taku test,PLY-D098CDAC,PAR-6BB9E081,registered,wolves,
+
+ACADEMY COACH ACCESS CODES
+Academy ID,Academy Name,Coach Access Code
+3,Arsenal,COACH-ARS-003
+9,Aston Villa,COACH-AST-009
+1,Birmingham City,COACH-BIR-001
+32,Blackburn Rovers,COACH-BLA-032
+10,Bournemouth,COACH-BOU-010
+11,Brentford,COACH-BRE-011
+12,Brighton & Hove Albion,COACH-BRI-012
+40,Bristol City,COACH-BRI-040
+27,Burnley,COACH-BUR-027
+35,Cardiff City,COACH-CAR-035
+2,Chelsea,COACH-CHE-002
+30,Coventry City,COACH-COV-030
+13,Crystal Palace,COACH-CRY-013
+36,Derby County,COACH-DER-036
+14,Everton,COACH-EVE-014
+15,Fulham,COACH-FUL-015
+34,Hull City,COACH-HUL-034
+16,Ipswich Town,COACH-IPS-016
+22,Leeds United,COACH-LEE-022
+17,Leicester City,COACH-LEI-017
+4,Liverpool,COACH-LIV-004
+38,Luton Town,COACH-LUT-038
+5,Manchester City,COACH-MAN-005
+6,Manchester United,COACH-MAN-006
+26,Middlesbrough,COACH-MID-026
+37,Millwall,COACH-MIL-037
+8,Newcastle United,COACH-NEW-008
+28,Norwich City,COACH-NOR-028
+18,Nottingham Forest,COACH-NOT-018
+42,Portsmouth,COACH-POR-042
+39,Queens Park Rangers,COACH-QPR-039
+24,Sheffield United,COACH-SHE-024
+31,Sheffield Wednesday,COACH-SHE-031
+19,Southampton,COACH-SOU-019
+33,Stoke City,COACH-STO-033
+23,Sunderland,COACH-SUN-023
+41,Swansea City,COACH-SWA-041
+7,Tottenham Hotspur,COACH-TOT-007
+29,Watford,COACH-WAT-029
+25,West Bromwich Albion,COACH-WES-025
+20,West Ham United,COACH-WES-020
+21,Wolverhampton Wanderers,COACH-WOL-021
