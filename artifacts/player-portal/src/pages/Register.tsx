@@ -13,6 +13,7 @@ const schema = z.object({
   age: z.coerce.number().min(6, "Must be at least 6").max(21, "Must be 21 or under"),
   shirtNumber: z.coerce.number().min(1, "Invalid").max(99, "Invalid"),
   position: z.string().min(1, "Tap your position on the pitch above"),
+  secondPosition: z.string().optional(),
   accessCode: z.string().min(3, "Access code required"),
 });
 
@@ -33,10 +34,12 @@ export default function Register() {
 
   if (!selectedAcademy) { navigate("/"); return null; }
 
-  const { register, handleSubmit, control, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, control, watch, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { position: "" },
+    defaultValues: { position: "", secondPosition: "" },
   });
+
+  const primaryPosition = watch("position");
 
   const { mutate, isPending, isError } = useRegisterPlayer({
     mutation: {
@@ -48,7 +51,15 @@ export default function Register() {
   });
 
   const onSubmit = (data: FormData) => {
-    mutate({ data: { playerName: data.playerName, age: data.age, shirtNumber: data.shirtNumber, academyKey: selectedAcademy.key, position: data.position, accessCode: data.accessCode } });
+    mutate({ data: {
+      playerName: data.playerName,
+      age: data.age,
+      shirtNumber: data.shirtNumber,
+      academyKey: selectedAcademy.key,
+      position: data.position,
+      secondPosition: data.secondPosition || undefined,
+      accessCode: data.accessCode,
+    }});
   };
 
   const isLight = (() => {
@@ -151,14 +162,41 @@ export default function Register() {
               </div>
             </div>
 
-            {/* Position picker */}
+            {/* Primary position picker */}
             <div>
-              <FieldLabel>Position</FieldLabel>
               <Controller
                 name="position"
                 control={control}
                 render={({ field }) => (
-                  <PitchPositionPicker value={field.value} onChange={field.onChange} error={errors.position?.message} />
+                  <PitchPositionPicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.position?.message}
+                    label="Primary Position"
+                    accent="amber"
+                  />
+                )}
+              />
+            </div>
+
+            {/* Second position picker (optional) */}
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <p className="text-white/50 text-xs font-bold uppercase tracking-widest">Second Position</p>
+                <span className="text-white/25 text-xs">(optional)</span>
+              </div>
+              <p className="text-white/30 text-xs mb-3">Some players are versatile — tap a second position if that's you.</p>
+              <Controller
+                name="secondPosition"
+                control={control}
+                render={({ field }) => (
+                  <PitchPositionPicker
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                    disabledId={primaryPosition}
+                    label=""
+                    accent="sky"
+                  />
                 )}
               />
             </div>

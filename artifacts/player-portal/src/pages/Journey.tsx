@@ -258,9 +258,16 @@ export default function Journey() {
 
   const [currentStep, setCurrentStep] = useState(0);
 
-  const stage = PLAYER_STAGES[currentStep];
+  const activeStages = PLAYER_STAGES.map(s => ({
+    ...s,
+    questions: s.questions.filter(q =>
+      !q.requiresSecondPosition || !!playerData?.secondPosition
+    ),
+  }));
+
+  const stage = activeStages[currentStep];
   const qCount = stage.questions.length;
-  const totalStages = PLAYER_STAGES.length;
+  const totalStages = activeStages.length;
   const primaryColor = selectedAcademy?.primaryColor ?? "#6d28d9";
   const btnText = isLight(primaryColor) ? "#000" : "#fff";
 
@@ -322,7 +329,7 @@ export default function Journey() {
   };
 
   // All skipped questions across all stages (for review)
-  const allSkipped = PLAYER_STAGES.flatMap((s, si) =>
+  const allSkipped = activeStages.flatMap((s, si) =>
     s.questions.map((q, qi) => ({ s, si, q, qi, key: skipKey(s.id, qi) }))
       .filter(({ key }) => skippedSet.has(key))
   );
@@ -337,7 +344,7 @@ export default function Journey() {
       answerText: string; audioUrl: string | null; mediaUrls: string[];
     }[] = [];
 
-    for (const s of PLAYER_STAGES) {
+    for (const s of activeStages) {
       const stageAnswers = all[s.id] ?? [];
       for (let qi = 0; qi < s.questions.length; qi++) {
         runningNum++;
@@ -379,7 +386,7 @@ export default function Journey() {
       let runningNum = 0;
       const responses: { stage: string; questionNumber: number; questionText: string; answerText: string; audioUrl: string | null; mediaUrls: string[] }[] = [];
       for (let si = 0; si <= currentStep; si++) {
-        const s = PLAYER_STAGES[si];
+        const s = activeStages[si];
         const stageAnswers = allAnswers[s.id] ?? [];
         for (let qi = 0; qi < s.questions.length; qi++) {
           runningNum++;
@@ -442,7 +449,7 @@ export default function Journey() {
       let runningNum = 0;
       const responses: { stage: string; questionNumber: number; questionText: string; answerText: string; audioUrl: string | null; mediaUrls: string[] }[] = [];
       for (let si = 0; si < currentStep; si++) {
-        const s = PLAYER_STAGES[si];
+        const s = activeStages[si];
         const stageAnswers = allAnswers[s.id] ?? [];
         for (let qi = 0; qi < s.questions.length; qi++) {
           runningNum++;
@@ -603,7 +610,7 @@ export default function Journey() {
         </div>
 
         <div className="flex gap-0.5 px-4 pb-2">
-          {PLAYER_STAGES.map((_, i) => (
+          {activeStages.map((_, i) => (
             <div key={i} className="h-1 flex-1 rounded-full transition-all duration-500"
               style={{
                 background: i < currentStep ? `${primaryColor}90` : i === currentStep ? primaryColor : "rgba(255,255,255,0.08)"

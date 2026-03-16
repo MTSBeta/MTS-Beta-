@@ -21,4 +21,5 @@ export interface RegisterPlayerInput {
   shirtNumber: number;
   academyKey: string;
   position: string;
+  secondPosition?: string;
 }

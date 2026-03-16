@@ -14,6 +14,7 @@ export interface Player {
   academyKey: string;
   academyName: string;
   position: string;
+  secondPosition?: string | null;
   accessCode: string;
   status: string;
   createdAt: string;

@@ -104,6 +104,7 @@ export interface CreatePlayerPayload {
   age: number;
   shirtNumber: number;
   position: string;
+  secondPosition?: string;
 }
 
 export interface CreatedPlayer {
@@ -114,6 +115,7 @@ export interface CreatedPlayer {
   age: number;
   shirtNumber: number;
   position: string;
+  secondPosition?: string | null;
   ageGroup: string;
   academyKey: string;
   academyName: string;

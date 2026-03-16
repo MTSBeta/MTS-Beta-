@@ -44,6 +44,7 @@ export const RegisterPlayerBody = zod.object({
   shirtNumber: zod.number().min(1).max(registerPlayerBodyShirtNumberMax),
   academyKey: zod.string(),
   position: zod.string(),
+  secondPosition: zod.string().optional(),
   accessCode: zod.string().optional(),
 });
 
@@ -62,6 +63,7 @@ export const GetPlayerResponse = zod.object({
   academyKey: zod.string(),
   academyName: zod.string(),
   position: zod.string(),
+  secondPosition: zod.string().nullish(),
   accessCode: zod.string(),
   status: zod.string(),
   createdAt: zod.string(),
@@ -224,6 +226,7 @@ export const AdminGetPlayerResponse = zod.object({
     academyKey: zod.string(),
     academyName: zod.string(),
     position: zod.string(),
+    secondPosition: zod.string().nullish(),
     accessCode: zod.string(),
     status: zod.string(),
     createdAt: zod.string(),

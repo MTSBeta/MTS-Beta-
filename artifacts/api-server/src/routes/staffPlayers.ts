@@ -73,7 +73,7 @@ router.get("/staff/players", staffAuth, async (req, res) => {
 
 router.post("/staff/players", staffAuth, requireRole("academy_admin"), async (req, res) => {
   const staffUser = req.staffUser!;
-  const { playerName, age, shirtNumber, position } = req.body;
+  const { playerName, age, shirtNumber, position, secondPosition } = req.body;
 
   if (!playerName?.trim() || !age || !position) {
     res.status(400).json({ error: "playerName, age, and position are required" });
@@ -108,6 +108,7 @@ router.post("/staff/players", staffAuth, requireRole("academy_admin"), async (re
       academyKey: postAcademy.key,
       academyName: postAcademy.name,
       position,
+      secondPosition: secondPosition || null,
       accessCode,
       parentCode,
       ageGroup,
@@ -123,6 +124,7 @@ router.post("/staff/players", staffAuth, requireRole("academy_admin"), async (re
     age: player.age,
     shirtNumber: player.shirtNumber,
     position: player.position,
+    secondPosition: player.secondPosition ?? null,
     ageGroup: player.ageGroup,
     academyKey: player.academyKey,
     academyName: player.academyName,

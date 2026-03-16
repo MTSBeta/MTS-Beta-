@@ -13,6 +13,7 @@ export interface JourneyQuestion {
   type?: JourneyQuestionType;
   options?: string[];
   profileKey?: "traits" | "strengths" | "workEthic" | "mindset" | "goals" | "dreams" | "clubValues" | "storyThemes" | "developmentAreas";
+  requiresSecondPosition?: boolean;
 }
 
 export interface JourneyStage {
@@ -66,6 +67,14 @@ export const JOURNEY_STAGES: JourneyStage[] = [
         emoji: "🎮",
         text: "Describe how you actually play — not your position, your game. The way you move, how you think on the pitch.",
         prompts: ["What are you best at?", "What part of your game is still developing?", "How would a teammate describe you?"],
+      },
+      {
+        type: "voice-text",
+        emoji: "🔄",
+        text: "You play in more than one position. Tell me about how your game changes — what shifts mentally and physically when you switch roles.",
+        hint: "Versatile players are rare. Understanding what actually changes in your thinking is part of your story.",
+        prompts: ["Which role feels more natural?", "What does each position bring out in you?", "Has playing both made you a better player overall?"],
+        requiresSecondPosition: true,
       },
       {
         type: "voice-text",

@@ -14,7 +14,7 @@ router.post("/players", async (req, res) => {
     return;
   }
 
-  const { playerName, age, shirtNumber, academyKey, position, accessCode: submittedCode } = parsed.data;
+  const { playerName, age, shirtNumber, academyKey, position, secondPosition, accessCode: submittedCode } = parsed.data;
 
   // Get academy with only existing columns
   const academyResult = await db.execute(
@@ -46,6 +46,7 @@ router.post("/players", async (req, res) => {
       academyKey,
       academyName: academy.name,
       position,
+      secondPosition: secondPosition || null,
       accessCode: playerAccessCode,
       parentCode,
       status: "registered",
@@ -61,6 +62,7 @@ router.post("/players", async (req, res) => {
       academyKey: player.academyKey,
       academyName: player.academyName,
       position: player.position,
+      secondPosition: player.secondPosition ?? null,
       accessCode: player.accessCode,
       status: player.status,
       createdAt: player.createdAt.toISOString(),
@@ -91,6 +93,7 @@ router.get("/players/by-code/:code", async (req, res) => {
       academyKey: player.academyKey,
       academyName: player.academyName,
       position: player.position,
+      secondPosition: player.secondPosition ?? null,
       accessCode: player.accessCode,
       status: player.status,
       createdAt: player.createdAt.toISOString(),

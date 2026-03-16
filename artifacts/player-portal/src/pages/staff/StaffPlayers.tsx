@@ -54,6 +54,7 @@ function AddPlayerModal({ onClose, onCreated, primaryColor }: {
   const [age, setAge] = useState("");
   const [shirtNumber, setShirtNumber] = useState("");
   const [position, setPosition] = useState("");
+  const [secondPosition, setSecondPosition] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [created, setCreated] = useState<CreatedPlayer | null>(null);
@@ -77,6 +78,7 @@ function AddPlayerModal({ onClose, onCreated, primaryColor }: {
         age: ageNum,
         shirtNumber: shirtNumber ? parseInt(shirtNumber) : 0,
         position,
+        secondPosition: secondPosition || undefined,
       });
       setCreated(player);
       onCreated(player);
@@ -164,20 +166,37 @@ function AddPlayerModal({ onClose, onCreated, primaryColor }: {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-white/50 uppercase tracking-wider font-display">
-                  Position
-                </label>
-                <select
-                  value={position}
-                  onChange={(e) => setPosition(e.target.value)}
-                  className="w-full h-11 rounded-xl bg-white/5 border border-white/10 px-4 text-white text-sm focus:outline-none focus:border-white/30 transition-colors appearance-none cursor-pointer"
-                >
-                  <option value="">Select position</option>
-                  {POSITIONS.map((p) => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
-                </select>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-white/50 uppercase tracking-wider font-display">
+                    Primary Position
+                  </label>
+                  <select
+                    value={position}
+                    onChange={(e) => { setPosition(e.target.value); if (secondPosition === e.target.value) setSecondPosition(""); }}
+                    className="w-full h-11 rounded-xl bg-white/5 border border-white/10 px-4 text-white text-sm focus:outline-none focus:border-white/30 transition-colors appearance-none cursor-pointer"
+                  >
+                    <option value="">Select…</option>
+                    {POSITIONS.map((p) => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-white/50 uppercase tracking-wider font-display">
+                    Second <span className="text-white/30 normal-case font-normal">(opt.)</span>
+                  </label>
+                  <select
+                    value={secondPosition}
+                    onChange={(e) => setSecondPosition(e.target.value)}
+                    className="w-full h-11 rounded-xl bg-white/5 border border-white/10 px-4 text-white text-sm focus:outline-none focus:border-white/30 transition-colors appearance-none cursor-pointer"
+                  >
+                    <option value="">None</option>
+                    {POSITIONS.filter((p) => p !== position).map((p) => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <AnimatePresence>
