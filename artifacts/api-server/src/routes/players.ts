@@ -77,10 +77,13 @@ router.post("/players", async (req, res) => {
 router.get("/players/by-code/:code", async (req, res) => {
   const { code } = req.params;
 
+  const normalizedInput = normalizeCode(code);
   const [player] = await db
     .select()
     .from(playersTable)
-    .where(eq(playersTable.accessCode, normalizeCode(code)))
+    .where(
+      sql`UPPER(REPLACE(REPLACE(${playersTable.accessCode}, 'O', '0'), 'I', '1')) = ${normalizedInput}`
+    )
     .limit(1);
 
   if (!player) {
