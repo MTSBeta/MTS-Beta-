@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useLocation } from "wouter";
 import { LogOut } from "lucide-react";
 import { PlayerJersey } from "@/components/PlayerJersey";
+import { LikenessUploader } from "@/components/LikenessUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { POSITIONS } from "@/data/positions";
 import { U9_STAGES } from "@/data/u9Questions";
@@ -115,9 +116,9 @@ export default function WelcomeU9() {
             transition={{ delay: 0.5 }}
             className="mb-4"
           >
-            <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold mb-3 px-1">Your 3-part story</p>
+            <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold mb-3 px-1">Your story — 5 chapters</p>
             <div className="space-y-2">
-              {U9_STAGES.map((stage, i) => (
+              {U9_STAGES.filter(s => !s.isCoaching).map((stage, i) => (
                 <motion.div
                   key={stage.id}
                   initial={{ opacity: 0, x: -16 }}
@@ -137,6 +138,24 @@ export default function WelcomeU9() {
                 </motion.div>
               ))}
             </div>
+
+            {/* Coach note */}
+            <motion.div
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.95 }}
+              className="flex items-center gap-4 p-4 rounded-2xl mt-2"
+              style={{ background: "rgba(13,148,136,0.08)", border: "1px dashed rgba(13,148,136,0.25)" }}
+            >
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0"
+                style={{ background: "rgba(13,148,136,0.15)" }}>
+                👨‍🏫
+              </div>
+              <div>
+                <p className="text-[#0d9488] font-bold text-base">Coach Notes</p>
+                <p className="text-white/30 text-xs">Your coach fills this in — adds special messages to your book</p>
+              </div>
+            </motion.div>
           </motion.div>
 
           {/* ── TIPS ── */}
@@ -160,6 +179,21 @@ export default function WelcomeU9() {
                 </div>
               ))}
             </div>
+          </motion.div>
+
+          {/* ── LIKENESS PHOTOS ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.82 }}
+            className="rounded-2xl p-4 mb-4"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
+          >
+            <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold mb-1">Optional — add your photos now</p>
+            <p className="text-white/30 text-xs mb-4 leading-relaxed">
+              We'll ask for these inside the journey too — but you can add them here first if you like!
+            </p>
+            <LikenessUploader primaryColor={primaryColor} />
           </motion.div>
 
         </div>
