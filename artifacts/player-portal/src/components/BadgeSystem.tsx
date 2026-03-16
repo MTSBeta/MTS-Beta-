@@ -31,8 +31,9 @@ export function RoleBadge({ role }: { role: string }) {
 
 export function StatusBadge({ status }: { status: string }) {
   const statusConfig: Record<string, { label: string; icon: string; color: string }> = {
+    registered: { label: "Registered", icon: "○", color: "bg-gray-900/30 border-gray-600 text-gray-300" },
     journey_started: { label: "In Progress", icon: "⏱️", color: "bg-blue-900/30 border-blue-600 text-blue-200" },
-    journey_complete: { label: "Journey Complete", icon: "✓", color: "bg-green-900/30 border-green-600 text-green-200" },
+    journey_complete: { label: "Journey Done", icon: "✓", color: "bg-green-900/30 border-green-600 text-green-200" },
     links_generated: { label: "Links Ready", icon: "🔗", color: "bg-cyan-900/30 border-cyan-600 text-cyan-200" },
     story_complete: { label: "Story Complete", icon: "📖", color: "bg-emerald-900/30 border-emerald-600 text-emerald-200" },
     not_started: { label: "Not Started", icon: "○", color: "bg-gray-900/30 border-gray-600 text-gray-200" },

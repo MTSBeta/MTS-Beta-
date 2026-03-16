@@ -107,13 +107,29 @@ lib/
 
 ## Demo Credentials
 
-### Staff Accounts
-- **Coach (Arsenal)**: `coach@arsenal.co.uk` / `test123` (role: staff)
-- **Admin (Arsenal)**: `admin@arsenal.co.uk` / `admin123` (role: academy_admin)
+### Staff Portal — Arsenal Demo
+- **Email**: `demo@arsenal-academy.co.uk`
+- **Password**: `Demo2024!`
+- **Role**: academy_admin (full access)
 
-### Player Registration
-- **Coach Access Code**: `COACH-ARS-003` (Arsenal) — validates player registration
-- One coach code per academy in format `COACH-XXX-NNN`
+### Demo Players (Arsenal Academy)
+8 players seeded at various journey stages:
+| Player | Status | Access Code | Parent Code |
+|--------|--------|------------|------------|
+| Marcus Webb | story_complete | PLY-DEMO-001 | PAR-DEMO-001 |
+| Jamie Torres | story_complete | PLY-DEMO-002 | PAR-DEMO-002 |
+| Ethan Clarke | journey_complete | PLY-DEMO-003 | PAR-DEMO-003 |
+| Noah Patel | journey_complete | PLY-DEMO-004 | PAR-DEMO-004 |
+| Callum Hughes | journey_started | PLY-DEMO-005 | PAR-DEMO-005 |
+| Declan Murphy | journey_started | PLY-DEMO-006 | PAR-DEMO-006 |
+| Luca Ferrari | registered | PLY-DEMO-007 | PAR-DEMO-007 |
+| Tyler Brooks | registered | PLY-DEMO-008 | PAR-DEMO-008 |
+
+Marcus Webb and Jamie Torres have: full journey (30 responses) + parent submission + coaching & psychology staff observations.
+
+### Academy Staff Registration
+- **Arsenal Access Code**: `COACH-ARS-003` — used during `/admin-signup` to create new staff accounts
+- Format for all academies: `COACH-XXX-NNN`
 
 ### Admin Dashboard
 - **Passcode**: `metime2024`

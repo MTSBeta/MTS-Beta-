@@ -136,15 +136,7 @@ export default function StaffDashboard() {
                             </div>
                           </div>
                         </div>
-                        <span
-                          className={`text-xs font-bold px-2 py-1 rounded-md ${
-                            player.status === "completed"
-                              ? "bg-green-500/20 text-green-400"
-                              : "bg-yellow-500/20 text-yellow-400"
-                          }`}
-                        >
-                          {player.status}
-                        </span>
+                        <StatusBadge status={player.status} />
                       </div>
                     </Link>
                   ))}

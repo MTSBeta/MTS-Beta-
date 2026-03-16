@@ -8,9 +8,11 @@ import { fetchStaffPlayers, createPlayer, type StaffPlayer, type CreatedPlayer }
 import { StatusBadge } from "@/components/BadgeSystem";
 
 const STATUS_STYLES: Record<string, string> = {
-  completed: "bg-green-500/20 text-green-400",
-  registered: "bg-blue-500/20 text-blue-400",
-  in_progress: "bg-yellow-500/20 text-yellow-400",
+  registered: "bg-gray-500/20 text-gray-300",
+  journey_started: "bg-blue-500/20 text-blue-400",
+  journey_complete: "bg-green-500/20 text-green-400",
+  links_generated: "bg-cyan-500/20 text-cyan-400",
+  story_complete: "bg-emerald-500/20 text-emerald-400",
 };
 
 const POSITIONS = [
@@ -491,9 +493,7 @@ export default function StaffPlayers() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${STATUS_STYLES[player.status] || "bg-white/10 text-white/50"}`}>
-                        {player.status.replace("_", " ")}
-                      </span>
+                      <StatusBadge status={player.status} />
                       <ChevronRight size={16} className="text-white/20" />
                     </div>
                   </div>

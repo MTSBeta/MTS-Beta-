@@ -12,6 +12,8 @@ import {
   Edit3,
   Save,
   X,
+  Copy,
+  Check,
 } from "lucide-react";
 import { StaffLayout } from "@/layouts/StaffLayout";
 import { useStaffAuth } from "@/hooks/useStaffAuth";
@@ -24,6 +26,30 @@ import {
 import { STAFF_QUESTIONS, ROLE_LABELS } from "@/data/staffQuestions";
 
 const SUBMISSION_ROLES = ["football_coaching", "psychology", "education", "player_care"];
+
+function CopyChip({ label, value, primaryColor }: { label: string; value: string; primaryColor: string }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+  return (
+    <button
+      onClick={handleCopy}
+      className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/8 transition-all group"
+    >
+      <div className="text-left">
+        <div className="text-[10px] font-bold uppercase tracking-wider text-white/40">{label}</div>
+        <div className="text-white font-mono text-sm tracking-widest">{value}</div>
+      </div>
+      <div className="ml-1 text-white/30 group-hover:text-white/60 transition-colors">
+        {copied ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
+      </div>
+    </button>
+  );
+}
 
 export default function StaffPlayerProfile() {
   const [, params] = useRoute("/staff/players/:id");
@@ -197,6 +223,16 @@ export default function StaffPlayerProfile() {
                   </span>
                 ))}
               </div>
+              {(player.accessCode || player.parentCode) && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {player.accessCode && (
+                    <CopyChip label="Player Code" value={player.accessCode} primaryColor={primaryColor} />
+                  )}
+                  {player.parentCode && (
+                    <CopyChip label="Parent Code" value={player.parentCode} primaryColor={primaryColor} />
+                  )}
+                </div>
+              )}
             </div>
             <div className="text-right shrink-0">
               <div className="text-sm font-display font-bold text-white">

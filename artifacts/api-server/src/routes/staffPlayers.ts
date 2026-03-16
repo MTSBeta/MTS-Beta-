@@ -238,6 +238,7 @@ router.get("/staff/players/:id", staffAuth, async (req, res) => {
       academyName: player.academyName,
       position: player.position,
       ageGroup: player.ageGroup,
+      accessCode: player.accessCode,
       parentCode: player.parentCode,
       status: player.status,
       createdAt: player.createdAt.toISOString(),
