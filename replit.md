@@ -24,7 +24,10 @@ A white-labelled football academy player development portal. Young players compl
 ```text
 artifacts/
 ├── api-server/         # Express API server
-│   └── src/routes/     # academies, players, journey, parent, coach, admin
+│   └── src/
+│       ├── routes/     # academies, players, journey, parent, coach, admin, staff*
+│       ├── middlewares/ # staffAuth (JWT auth + role gating)
+│       └── lib/        # auth (bcrypt+JWT), codeGenerator, seedAcademies
 └── player-portal/      # React + Vite frontend
     └── src/
         ├── pages/      # Home, Register, Welcome, Journey, Invite, Complete, ParentForm, CoachForm, Admin
@@ -36,7 +39,7 @@ lib/
 ├── api-client-react/   # Generated React Query hooks
 ├── api-zod/            # Generated Zod schemas
 └── db/
-    └── src/schema/     # academies, players, journeyResponses, parentResponses, coachResponses
+    └── src/schema/     # academies, players, journeyResponses, parentResponses, academyStaff, staffSubmissions
 ```
 
 ## Routes
@@ -65,19 +68,39 @@ lib/
 - `GET /api/admin/players?passcode=X` — Admin list players
 - `GET /api/admin/players/:id?passcode=X` — Admin full player profile
 
+### Staff API Routes (JWT-protected)
+- `POST /api/staff/login` — Staff login (email + password → JWT)
+- `GET /api/staff/me` — Current staff profile
+- `GET /api/staff/players` — List players for staff's academy (filter by age_group, status, search)
+- `GET /api/staff/players/:id` — Full player detail (journey, parent responses, staff submissions)
+- `POST /api/staff/submissions` — Create staff submission
+- `PUT /api/staff/submissions/:id` — Update staff submission (own only, unless admin)
+- `GET /api/staff/team` — List team members (admin only)
+- `POST /api/staff/team` — Create staff member (admin only, max 8 active)
+- `PUT /api/staff/team/:id` — Update staff member (admin only)
+- `DELETE /api/staff/team/:id` — Delete staff member (admin only)
+
 ## Database Tables
 
-- `academies` — Academy config (key, name, colours, welcome message)
-- `players` — Player registrations (name, age, position, codes)
+- `academies` — Academy config (key, name, colours, welcome message, max_staff_accounts)
+- `players` — Player registrations (name, age, position, codes, age_group, parent_code)
 - `player_journey_responses` — 6-stage journey answers (30 responses per player)
 - `parent_responses` — Parent form answers (5 per player)
 - `coach_responses` — Coach form answers (5 per player)
+- `academy_staff` — Staff accounts (email, password_hash, academy_id, system_role, job_title, etc.)
+- `staff_submissions` — Staff observations per player (role-based: coaching, psychology, education, player_care)
 
 ## Academy Keys (used in database)
 `birmingham-city`, `chelsea`, `arsenal`, `liverpool`, `manchester-city`, `manchester-united`, `tottenham`, `newcastle`
 
 ## Admin Access
 Default passcode: `metime2024` (set via `ADMIN_PASSCODE` env var)
+
+## Staff Auth
+- JWT-based authentication via `STAFF_JWT_SECRET` env var
+- Passwords hashed with bcryptjs
+- Roles: `academy_admin`, `staff`
+- Max 8 active staff per academy (configurable via `max_staff_accounts` column)
 
 ## Journey Stages
 1. Dream — aspirations and inspiration

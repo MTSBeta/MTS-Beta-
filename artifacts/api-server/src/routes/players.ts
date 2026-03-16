@@ -28,6 +28,7 @@ router.post("/players", async (req, res) => {
   }
 
   const accessCode = generateCode("PLY");
+  const parentCode = generateCode("PAR");
 
   const [player] = await db
     .insert(playersTable)
@@ -39,6 +40,7 @@ router.post("/players", async (req, res) => {
       academyName: academy.name,
       position,
       accessCode,
+      parentCode,
       status: "registered",
     })
     .returning();

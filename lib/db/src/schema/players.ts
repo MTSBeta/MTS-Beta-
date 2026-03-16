@@ -11,6 +11,8 @@ export const playersTable = pgTable("players", {
   academyName: varchar("academy_name", { length: 200 }).notNull(),
   position: varchar("position", { length: 10 }).notNull(),
   accessCode: varchar("access_code", { length: 20 }).notNull().unique(),
+  ageGroup: varchar("age_group", { length: 50 }),
+  parentCode: varchar("parent_code", { length: 20 }).unique(),
   status: varchar("status", { length: 50 }).notNull().default("registered"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

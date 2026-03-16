@@ -1,4 +1,4 @@
-import { pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, serial, integer, text, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -10,6 +10,7 @@ export const academiesTable = pgTable("academies", {
   primaryColor: varchar("primary_color", { length: 20 }).notNull(),
   secondaryColor: varchar("secondary_color", { length: 20 }).notNull(),
   welcomeMessage: text("welcome_message").notNull(),
+  maxStaffAccounts: integer("max_staff_accounts").notNull().default(8),
 });
 
 export const insertAcademySchema = createInsertSchema(academiesTable).omit({ id: true });

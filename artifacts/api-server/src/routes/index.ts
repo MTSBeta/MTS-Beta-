@@ -6,6 +6,11 @@ import journeyRouter from "./journey.js";
 import stakeholdersRouter from "./stakeholders.js";
 import adminRouter from "./admin.js";
 import storageRouter from "./storage.js";
+import parentRouter from "./parent.js";
+import staffAuthRouter from "./staffAuth.js";
+import staffPlayersRouter from "./staffPlayers.js";
+import staffSubmissionsRouter from "./staffSubmissions.js";
+import staffTeamRouter from "./staffTeam.js";
 
 const router: IRouter = Router();
 
@@ -16,5 +21,10 @@ router.use(journeyRouter);
 router.use(stakeholdersRouter);
 router.use(adminRouter);
 router.use(storageRouter);
+router.use(parentRouter);
+router.use(staffAuthRouter);
+router.use(staffPlayersRouter);
+router.use(staffSubmissionsRouter);
+router.use(staffTeamRouter);
 
 export default router;
