@@ -363,14 +363,14 @@ export default function Home() {
               {
                 label: "U9 Player Journey",
                 age: "Age 8 · Right Winger",
-                code: "DEMO-U9",
+                code: "PLY-DEMOU9",
                 badge: "U9",
                 color: "#EF0107",
               },
               {
                 label: "U13 Player Journey",
                 age: "Age 13 · Att. Midfielder",
-                code: "DEMO-U13",
+                code: "PLY-DEM013",
                 badge: "U13",
                 color: "#EF0107",
               },
