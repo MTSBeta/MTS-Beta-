@@ -6,6 +6,7 @@ import { PlayerProvider } from "@/context/PlayerContext";
 import NotFound from "@/pages/not-found";
 
 import Home from "@/pages/Home";
+import Auth from "@/pages/Auth";
 import Register from "@/pages/Register";
 import Welcome from "@/pages/Welcome";
 import Journey from "@/pages/Journey";
@@ -26,6 +27,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/auth" component={Auth} />
       <Route path="/register" component={Register} />
       <Route path="/welcome" component={Welcome} />
       <Route path="/journey" component={Journey} />

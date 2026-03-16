@@ -59,6 +59,36 @@ router.post("/players", async (req, res) => {
   );
 });
 
+router.get("/players/by-code/:code", async (req, res) => {
+  const { code } = req.params;
+
+  const [player] = await db
+    .select()
+    .from(playersTable)
+    .where(eq(playersTable.accessCode, code.toUpperCase()))
+    .limit(1);
+
+  if (!player) {
+    res.status(404).json({ error: "Access code not found" });
+    return;
+  }
+
+  res.json(
+    GetPlayerResponse.parse({
+      id: player.id,
+      playerName: player.playerName,
+      age: player.age,
+      shirtNumber: player.shirtNumber,
+      academyKey: player.academyKey,
+      academyName: player.academyName,
+      position: player.position,
+      accessCode: player.accessCode,
+      status: player.status,
+      createdAt: player.createdAt.toISOString(),
+    })
+  );
+});
+
 router.get("/players/:playerId", async (req, res) => {
   const { playerId } = req.params;
 

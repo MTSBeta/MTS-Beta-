@@ -50,7 +50,7 @@ export default function Home() {
   };
 
   const handleStart = () => {
-    if (selectedAcademy) navigate("/register");
+    if (selectedAcademy) navigate("/auth");
   };
 
   return (

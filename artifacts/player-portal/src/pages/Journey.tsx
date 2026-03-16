@@ -141,6 +141,30 @@ export default function Journey() {
     }
   };
 
+  const saveAndExit = async () => {
+    saveJourneyStage(stage.id, localAnswers);
+    if (playerData && currentStep > 0) {
+      const allAnswers = { ...journeyAnswers, [stage.id]: localAnswers };
+      const responses = JOURNEY_STAGES.slice(0, currentStep).flatMap((s, si) => {
+        const stageAnswers = allAnswers[s.id] ?? [];
+        return s.questions.map((q, qi) => ({
+          stage: s.id,
+          questionNumber: si * 5 + qi + 1,
+          questionText: q.text,
+          answerText: (stageAnswers[qi] as AnswerEntry)?.text ?? "",
+          audioUrl: (stageAnswers[qi] as AnswerEntry)?.audioUrl ?? null,
+          mediaUrls: (stageAnswers[qi] as AnswerEntry)?.mediaUrls ?? [],
+        }));
+      });
+      if (responses.length > 0) {
+        try {
+          await saveMutation.mutateAsync({ playerId: playerData.id, data: { responses } });
+        } catch {}
+      }
+    }
+    navigate("/welcome");
+  };
+
   if (!playerData) return null;
 
   return (
@@ -156,7 +180,19 @@ export default function Journey() {
             <span className="text-xs font-semibold text-white/40 uppercase tracking-widest">
               Stage {currentStep + 1} of {totalStages}
             </span>
-            <span className="text-xs text-white/40">{playerData.playerName}</span>
+            <button
+              type="button"
+              onClick={saveAndExit}
+              className="flex items-center gap-1.5 text-xs text-white/35 hover:text-white/70 transition-colors"
+              title="Save progress and exit"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17,21 17,13 7,13 7,21"/>
+                <polyline points="7,3 7,8 15,8"/>
+              </svg>
+              Save & Exit
+            </button>
           </div>
           <ProgressDots total={totalStages} current={currentStep} />
         </motion.div>
