@@ -56,8 +56,17 @@
 }
 
 @layer base {
+  html {
+    /* Use dynamic viewport height so keyboard open/close doesn't cause layout shifts */
+    height: -webkit-fill-available;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   body {
-    @apply bg-background text-foreground antialiased font-sans min-h-screen selection:bg-white/20;
+    @apply bg-background text-foreground antialiased font-sans selection:bg-white/20;
+    min-height: 100vh;
+    min-height: 100dvh;
     background-image: 
       radial-gradient(circle at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 70%),
       radial-gradient(circle at 50% 100%, rgba(255,255,255,0.02) 0%, transparent 50%);
@@ -76,21 +85,22 @@
     touch-action: manipulation;
   }
 
-  /* Prevent text-size adjustment on orientation change */
-  html {
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-  }
-
   /* iOS momentum scrolling for scrollable containers */
   .overflow-y-auto, .overflow-y-scroll {
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Ensure textareas never cause iOS zoom (must be >= 16px) */
+  /* Prevent zoom on input focus on iOS — must be >= 16px */
   textarea, input[type="text"], input[type="email"],
-  input[type="number"], input[type="search"], input[type="tel"] {
+  input[type="number"], input[type="search"], input[type="tel"],
+  input[type="password"] {
     font-size: max(16px, 1rem);
+  }
+
+  /* Hide scrollbars on mobile while keeping scroll functionality */
+  @media (max-width: 768px) {
+    ::-webkit-scrollbar { display: none; }
+    * { scrollbar-width: none; }
   }
 }
 

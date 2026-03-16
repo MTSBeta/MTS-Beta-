@@ -184,8 +184,12 @@ export default function MetyButton() {
                       onChange={e => setInput(e.target.value)}
                       onKeyDown={handleKey}
                       placeholder="Ask me anything..."
-                      className="flex-1 bg-transparent text-white text-[12px] outline-none placeholder-white/25"
+                      className="flex-1 bg-transparent text-white outline-none placeholder-white/25"
+                      style={{ fontSize: "16px" }}
                       disabled={loading}
+                      autoComplete="off"
+                      autoCorrect="off"
+                      spellCheck={false}
                     />
                     <button
                       onClick={sendMessage}

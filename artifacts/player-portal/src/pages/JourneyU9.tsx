@@ -394,6 +394,7 @@ export default function JourneyU9() {
                       updated[currentReview.idx] = { ...updated[currentReview.idx], text: e.target.value };
                       return updated;
                     })}
+                    onFocus={e => setTimeout(() => e.target.scrollIntoView({ behavior: "smooth", block: "center" }), 350)}
                     className="w-full bg-black/50 border border-white/22 rounded-2xl px-4 py-3 text-white text-sm placeholder:text-white/45 focus:outline-none focus:border-white/40 backdrop-blur-sm transition-colors resize-none"
                   />
                 </>
@@ -614,6 +615,7 @@ export default function JourneyU9() {
                     <textarea rows={3} placeholder="Write here if you like…"
                       value={answers[currentIdx]?.text ?? ""}
                       onChange={e => updateCurrent({ text: e.target.value })}
+                      onFocus={e => setTimeout(() => e.target.scrollIntoView({ behavior: "smooth", block: "center" }), 350)}
                       className="w-full bg-black/50 border border-white/22 rounded-2xl px-4 py-3 text-white text-sm placeholder:text-white/45 focus:outline-none focus:border-white/40 backdrop-blur-sm transition-colors resize-none leading-relaxed"
                     />
                   </motion.div>

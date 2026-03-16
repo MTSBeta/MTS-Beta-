@@ -543,6 +543,7 @@ export default function Journey() {
                     placeholder="Write your answer here…"
                     value={ra.text}
                     onChange={e => setReviewAnswers(prev => ({ ...prev, [key]: { ...ra, text: e.target.value } }))}
+                    onFocus={e => setTimeout(() => e.target.scrollIntoView({ behavior: "smooth", block: "center" }), 350)}
                     className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white text-base placeholder:text-white/20 focus:outline-none focus:border-white/25 transition-colors resize-none"
                   />
                   <VoiceRecorder
@@ -867,6 +868,7 @@ export default function Journey() {
                         placeholder="Tell us more…"
                         value={followUpAnswer}
                         onChange={e => setFollowUpAnswer(e.target.value)}
+                        onFocus={e => setTimeout(() => e.target.scrollIntoView({ behavior: "smooth", block: "center" }), 350)}
                         className="w-full border border-white/22 focus:border-white/40 bg-black/50 backdrop-blur-sm rounded-2xl px-4 py-3 text-white text-base placeholder:text-white/45 focus:outline-none transition-all resize-none leading-relaxed"
                       />
                     </motion.div>
@@ -885,6 +887,7 @@ export default function Journey() {
                       }
                       value={currentAnswer.text}
                       onChange={e => updateCurrentAnswer({ text: e.target.value })}
+                      onFocus={e => setTimeout(() => e.target.scrollIntoView({ behavior: "smooth", block: "center" }), 350)}
                       className={`w-full border rounded-2xl px-4 py-4 text-white text-base placeholder:text-white/45 focus:outline-none transition-all resize-none leading-relaxed backdrop-blur-sm ${
                         qError
                           ? "border-red-500/55 bg-black/55"

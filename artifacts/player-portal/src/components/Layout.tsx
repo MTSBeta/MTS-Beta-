@@ -17,7 +17,8 @@ export function Layout({ children, hideLogo = false }: { children: React.ReactNo
   const handleLogout = () => { clearContext(); navigate("/"); };
 
   return (
-    <div className="min-h-screen w-full relative flex flex-col overflow-x-hidden bg-[#0a0a0a]" style={customStyles}>
+    <div className="w-full relative flex flex-col overflow-x-hidden bg-[#0a0a0a]"
+      style={{ ...customStyles, minHeight: "100dvh" }}>
       {/* Background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <img src={publicAssetUrl("images/hero-bg.png")} alt=""
@@ -25,9 +26,12 @@ export function Layout({ children, hideLogo = false }: { children: React.ReactNo
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/70 to-transparent" />
       </div>
 
-      {/* Slim topbar */}
+      {/* Slim topbar — with safe area top for notched devices */}
       {!hideLogo && (
-        <header className="relative z-20 w-full flex items-center justify-between px-4 h-12 border-b border-white/5">
+        <header
+          className="relative z-20 w-full flex items-center justify-between px-4 border-b border-white/5"
+          style={{ paddingTop: "env(safe-area-inset-top)", minHeight: "calc(env(safe-area-inset-top) + 48px)" }}
+        >
           <div className="flex items-center gap-2">
             {selectedAcademy ? (
               <>
@@ -40,7 +44,7 @@ export function Layout({ children, hideLogo = false }: { children: React.ReactNo
                   />
                 ) : (
                   <div
-                    className="w-6 h-6 rounded-md flex items-center justify-center text-[9px] font-black text-white shrink-0"
+                    className="w-6 h-6 rounded-md flex items-center justify-center text-xs font-black text-white shrink-0"
                     style={{ background: selectedAcademy.primaryColor }}
                   >
                     {selectedAcademy.logoText}
@@ -63,9 +67,9 @@ export function Layout({ children, hideLogo = false }: { children: React.ReactNo
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               onClick={handleLogout}
-              className="flex items-center gap-1.5 text-white/30 hover:text-white/60 text-xs transition-colors py-2 px-2 -mr-2"
+              className="flex items-center gap-1.5 text-white/40 active:text-white/70 text-xs transition-colors min-h-[44px] px-3 -mr-3"
             >
-              <LogOut size={13} />
+              <LogOut size={14} />
               <span>Log out</span>
             </motion.button>
           )}

@@ -231,6 +231,7 @@ export default function Welcome() {
   const [activeChapter, setActiveChapter] = useState(0);
   const [chapterDir, setChapterDir] = useState(1);
   const carouselTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const carouselTouchX = useRef<number | null>(null);
 
   useEffect(() => { setTimeout(() => setReady(true), 200); }, []);
 
@@ -696,8 +697,18 @@ export default function Welcome() {
             <span className="text-xs text-white/25 font-mono">do them in order</span>
           </div>
 
-          {/* Carousel card */}
-          <div className="relative overflow-hidden rounded-3xl" style={{ minHeight: 220 }}>
+          {/* Carousel card — swipeable */}
+          <div
+            className="relative overflow-hidden rounded-3xl"
+            style={{ minHeight: 220 }}
+            onTouchStart={e => { carouselTouchX.current = e.touches[0].clientX; }}
+            onTouchEnd={e => {
+              if (carouselTouchX.current === null) return;
+              const diff = carouselTouchX.current - e.changedTouches[0].clientX;
+              carouselTouchX.current = null;
+              if (Math.abs(diff) > 40) goChapter(diff > 0 ? 1 : -1);
+            }}
+          >
             <AnimatePresence mode="wait" initial={false} custom={chapterDir}>
               <motion.div
                 key={activeChapter}
@@ -789,20 +800,22 @@ export default function Welcome() {
               </motion.div>
             </AnimatePresence>
 
-            {/* Prev / Next arrows */}
+            {/* Prev / Next arrows — min 44px touch target */}
             <button
               onClick={() => goChapter(-1)}
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:bg-white/15"
+              className="absolute left-2 top-1/2 -translate-y-1/2 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center active:bg-white/20 transition-all"
               style={{ background: "rgba(255,255,255,0.08)" }}
+              aria-label="Previous chapter"
             >
-              <ChevronLeft size={16} className="text-white/60" />
+              <ChevronLeft size={18} className="text-white/60" />
             </button>
             <button
               onClick={() => goChapter(1)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:bg-white/15"
+              className="absolute right-2 top-1/2 -translate-y-1/2 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center active:bg-white/20 transition-all"
               style={{ background: "rgba(255,255,255,0.08)" }}
+              aria-label="Next chapter"
             >
-              <ChevronRight size={16} className="text-white/60" />
+              <ChevronRight size={18} className="text-white/60" />
             </button>
           </div>
 
