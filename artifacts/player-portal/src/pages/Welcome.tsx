@@ -220,6 +220,8 @@ export default function Welcome() {
   const [chapterDir, setChapterDir] = useState(1);
   const carouselTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  useEffect(() => { setTimeout(() => setReady(true), 200); }, []);
+
   useEffect(() => {
     const t0 = setTimeout(() => setRevealPhase(1), 200);
     const t1 = setTimeout(() => setRevealPhase(2), 1500);
@@ -460,7 +462,13 @@ export default function Welcome() {
       <div className="fixed inset-0 z-0 pointer-events-none">
         <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
           className="w-full h-full object-cover opacity-20 mix-blend-overlay" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a0a]/60 to-[#0a0a0a]" />
+        <div className="absolute inset-0"
+          style={{ background: `radial-gradient(ellipse at 50% 30%, ${selectedAcademy.primaryColor}30 0%, transparent 65%)` }} />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/60 via-transparent to-transparent" />
+        {ready && STARS.map((s, i) => (
+          <Star key={i} {...s} color={selectedAcademy.primaryColor} />
+        ))}
       </div>
 
       {/* ── HERO CARD ── */}
@@ -498,56 +506,34 @@ export default function Welcome() {
           )}
         </div>
 
-        {/* Jersey + player card */}
+        {/* PlayerReveal card + identity */}
         <div className="relative flex flex-col items-center px-5 pb-8 pt-2">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full blur-[70px] opacity-20 pointer-events-none"
-            style={{ backgroundColor: selectedAcademy.primaryColor }} />
-
-          {/* Jersey — uses real kit image if available */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.85, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 180, damping: 18, delay: 0.1 }}
-            className="relative z-10 mb-2"
+            initial={{ opacity: 0, y: 30, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ type: "spring", stiffness: 160, damping: 18, delay: 0.15 }}
+            className="mb-4"
           >
-            {kitUrl && !kitImageFailed ? (
-              <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-                className="relative"
-              >
-                <motion.div
-                  className="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-full blur-xl"
-                  style={{ backgroundColor: selectedAcademy.primaryColor, width: "70%", height: 18 }}
-                  animate={{ opacity: [0.35, 0.55, 0.35], scaleX: [1, 0.9, 1] }}
-                  transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <img
-                  src={kitUrl}
-                  alt={`${selectedAcademy.name} kit`}
-                  className="w-44 h-auto object-contain drop-shadow-2xl relative z-10"
-                  onError={() => setKitImageFailed(true)}
-                />
-              </motion.div>
-            ) : (
-              <PlayerJersey
-                surname={surname}
-                number={playerData.shirtNumber}
-                primaryColor={selectedAcademy.primaryColor}
-                secondaryColor={selectedAcademy.secondaryColor}
-              />
-            )}
+            <PlayerReveal
+              crestUrl={selectedAcademy.crestUrl ?? undefined}
+              logoText={selectedAcademy.logoText ?? undefined}
+              shortName={selectedAcademy.shortName}
+              playerName={playerData.playerName}
+              shirtNumber={playerData.shirtNumber}
+              primaryColor={selectedAcademy.primaryColor}
+            />
           </motion.div>
 
           {/* Player identity */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
+            transition={{ delay: 0.35 }}
             className="relative z-10 text-center"
           >
-            <h1 className="text-4xl font-display font-black text-white uppercase tracking-tight leading-none mb-1">
-              {playerData.playerName}
+            <h1 className="font-display font-black uppercase tracking-tight leading-none mb-1"
+              style={{ fontSize: "clamp(2rem, 10vw, 3rem)", color: "white" }}>
+              {firstName}
             </h1>
             <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: selectedAcademy.primaryColor }}>
               {posInfo?.archetype || "The Player"}
