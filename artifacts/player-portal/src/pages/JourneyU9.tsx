@@ -111,7 +111,7 @@ export default function JourneyU9() {
     );
   }
 
-  const { stage, question, questionIndex } = ALL_QUESTIONS[currentIdx];
+  const { stage, stageIndex, question, questionIndex } = ALL_QUESTIONS[currentIdx];
   const stageColor = stage.colour;
   const isLastQuestion = currentIdx === TOTAL - 1;
 
