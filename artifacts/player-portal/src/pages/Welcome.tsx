@@ -11,6 +11,7 @@ import OnboardingIntro from "@/components/OnboardingIntro";
 import { DEFAULT_ASSISTANT } from "@/data/assistantProfiles";
 import { ensureMusicPlaying, stopMusic } from "@/lib/globalAudio";
 import { getAcademyMascot } from "@/data/mascots";
+import { publicAssetUrl } from "@/lib/publicAssetUrl";
 
 const TIPS = [
   { Icon: Mic2, title: "Talk, don't type", body: "Every question has a voice note. Use it — your actual voice tells more of the story." },
@@ -457,7 +458,7 @@ export default function Welcome() {
 
       {/* ── BG texture ── */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
+        <img src={publicAssetUrl("images/hero-bg.png")} alt=""
           className="w-full h-full object-cover opacity-20 mix-blend-overlay" />
         <div className="absolute inset-0"
           style={{ background: `radial-gradient(ellipse at 50% 30%, ${selectedAcademy.primaryColor}30 0%, transparent 65%)` }} />
@@ -694,7 +695,7 @@ export default function Welcome() {
                 {/* Photo background */}
                 <div className="absolute inset-0 pointer-events-none z-0">
                   <img
-                    src={`${import.meta.env.BASE_URL}images/academy/${CHAPTER_PHOTOS[activeChapter]}`}
+                    src={publicAssetUrl(`images/academy/${CHAPTER_PHOTOS[activeChapter]}`)}
                     alt=""
                     className="w-full h-full object-cover"
                     style={{ filter: "brightness(0.14) saturate(0.4)", transform: "scale(1.08)", objectPosition: "center 35%" }}

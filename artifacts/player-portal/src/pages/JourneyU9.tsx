@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { SkipForward, CheckCircle2, Camera } from "lucide-react";
+import { publicAssetUrl } from "@/lib/publicAssetUrl";
 import { VoiceRecorder } from "@/components/VoiceRecorder";
 import { MediaUploader } from "@/components/MediaUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
@@ -292,7 +293,7 @@ export default function JourneyU9() {
       <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
         <div className="fixed inset-0 z-0 pointer-events-none">
           <img
-            src={stadiumImage ? `${import.meta.env.BASE_URL}${stadiumImage}` : `${import.meta.env.BASE_URL}images/hero-bg.png`}
+            src={stadiumImage ? publicAssetUrl(stadiumImage) : publicAssetUrl("images/hero-bg.png")}
             alt=""
             className="w-full h-full object-cover"
             style={stadiumImage ? { opacity: 0.65, filter: "brightness(0.6) saturate(0.75)" } : { opacity: 0.1 }}
@@ -414,7 +415,7 @@ export default function JourneyU9() {
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
       <div className="fixed inset-0 z-0 pointer-events-none">
         <img
-          src={stadiumImage ? `${import.meta.env.BASE_URL}${stadiumImage}` : `${import.meta.env.BASE_URL}images/hero-bg.png`}
+          src={stadiumImage ? publicAssetUrl(stadiumImage) : publicAssetUrl("images/hero-bg.png")}
           alt=""
           className="w-full h-full object-cover"
           style={stadiumImage ? { opacity: 0.65, filter: "brightness(0.6) saturate(0.75)" } : { opacity: 0.1 }}

@@ -1,3 +1,5 @@
+import { publicAssetUrl } from "./publicAssetUrl";
+
 const w = globalThis as unknown as Record<string, HTMLAudioElement | null | undefined>;
 const KEY = "__metyMusicAudio";
 
@@ -21,7 +23,7 @@ export function ensureMusicPlaying(): void {
   let audio = get();
   if (audio && !audio.paused) return;
   if (!audio) {
-    audio = new Audio(`${import.meta.env.BASE_URL}audio/love-me-again.mp3`);
+    audio = new Audio(publicAssetUrl("audio/love-me-again.mp3"));
     audio.volume = 0.15;
     audio.currentTime = 12;
     audio.addEventListener("ended", () => { set(null); });

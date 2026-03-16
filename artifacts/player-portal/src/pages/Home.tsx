@@ -1,3 +1,4 @@
+import { publicAssetUrl } from "@/lib/publicAssetUrl";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
@@ -123,7 +124,7 @@ export default function Home() {
           className="text-center mb-10 space-y-3"
         >
           <img
-            src={`${import.meta.env.BASE_URL}images/metime-logo.png`}
+            src={publicAssetUrl("images/metime-logo.png")}
             alt="Me Time Stories"
             className="h-20 w-auto mx-auto object-contain mb-2"
             style={{ mixBlendMode: "screen" }}
@@ -157,7 +158,7 @@ export default function Home() {
               }}
             >
               <img
-                src={`${import.meta.env.BASE_URL}images/academy/${img.src}`}
+                src={publicAssetUrl(`images/academy/${img.src}`)}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
                 style={{ objectPosition: img.pos, filter: "brightness(0.22) saturate(0.5)", transform: "scale(1.06)" }}
@@ -188,7 +189,7 @@ export default function Home() {
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-purple-900/20 to-transparent" />
                 <div className="relative z-10 flex flex-col items-center gap-4">
                   <motion.img 
-                    src={`${import.meta.env.BASE_URL}logos/premier-league-logo.png`}
+                    src={publicAssetUrl("logos/premier-league-logo.png")}
                     alt="Premier League"
                     className="h-12 w-auto object-contain drop-shadow-lg"
                     style={{ maxWidth: "120px" }}
@@ -218,7 +219,7 @@ export default function Home() {
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-sky-900/20 to-transparent" />
                 <div className="relative z-10 flex flex-col items-center gap-4">
                   <img 
-                    src={`${import.meta.env.BASE_URL}logos/efl-championship-logo.png`}
+                    src={publicAssetUrl("logos/efl-championship-logo.png")}
                     alt="EFL Championship"
                     className="h-16 w-auto object-contain drop-shadow-lg"
                   />
@@ -298,7 +299,7 @@ export default function Home() {
                       {/* Stadium background image */}
                       {academy.stadiumImage && (
                         <img
-                          src={`${import.meta.env.BASE_URL}${academy.stadiumImage}`}
+                          src={publicAssetUrl(`${academy.stadiumImage}`)}
                           alt=""
                           aria-hidden="true"
                           className="absolute inset-0 w-full h-full object-cover rounded-2xl"

@@ -1,3 +1,4 @@
+import { publicAssetUrl } from "@/lib/publicAssetUrl";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRoute } from "wouter";
@@ -113,7 +114,7 @@ export default function Stakeholder() {
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
       {/* BG */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
+        <img src={publicAssetUrl("images/hero-bg.png")} alt=""
           className="w-full h-full object-cover opacity-15 mix-blend-overlay" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0a0a]" />
       </div>

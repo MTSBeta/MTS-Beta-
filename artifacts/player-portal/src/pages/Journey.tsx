@@ -1,3 +1,4 @@
+import { publicAssetUrl } from "@/lib/publicAssetUrl";
 import { useState, useEffect, useRef } from "react";
 import { stopMusic } from "@/lib/globalAudio";
 import { motion, AnimatePresence } from "framer-motion";
@@ -461,14 +462,14 @@ export default function Journey() {
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
           {selectedAcademy?.stadiumImage ? (
             <img
-              src={`${import.meta.env.BASE_URL}${selectedAcademy.stadiumImage}`}
+              src={publicAssetUrl(`${selectedAcademy.stadiumImage}`)}
               alt=""
               aria-hidden="true"
               className="absolute inset-0 w-full h-full object-cover"
               style={{ opacity: 0.65, filter: "brightness(0.6) saturate(0.75)" }}
             />
           ) : (
-            <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
+            <img src={publicAssetUrl("images/hero-bg.png")} alt=""
               className="w-full h-full object-cover opacity-10 mix-blend-overlay" />
           )}
           <div
@@ -564,14 +565,14 @@ export default function Journey() {
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
           {selectedAcademy?.stadiumImage ? (
             <img
-              src={`${import.meta.env.BASE_URL}${selectedAcademy.stadiumImage}`}
+              src={publicAssetUrl(`${selectedAcademy.stadiumImage}`)}
               alt=""
               aria-hidden="true"
               className="absolute inset-0 w-full h-full object-cover"
               style={{ opacity: 0.65, filter: "brightness(0.6) saturate(0.75)" }}
             />
           ) : (
-            <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
+            <img src={publicAssetUrl("images/hero-bg.png")} alt=""
               className="w-full h-full object-cover opacity-10 mix-blend-overlay" />
           )}
           <div
@@ -645,7 +646,7 @@ export default function Journey() {
         {/* Stadium image */}
         {selectedAcademy?.stadiumImage ? (
           <img
-            src={`${import.meta.env.BASE_URL}${selectedAcademy.stadiumImage}`}
+            src={publicAssetUrl(`${selectedAcademy.stadiumImage}`)}
             alt=""
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover"
@@ -653,7 +654,7 @@ export default function Journey() {
           />
         ) : (
           <img
-            src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
+            src={publicAssetUrl("images/hero-bg.png")}
             alt=""
             className="w-full h-full object-cover opacity-10 mix-blend-overlay"
           />

@@ -1,3 +1,4 @@
+import { publicAssetUrl } from "@/lib/publicAssetUrl";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
@@ -39,7 +40,7 @@ export default function Complete() {
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col overflow-hidden">
       {/* BG */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
+        <img src={publicAssetUrl("images/hero-bg.png")} alt=""
           className="w-full h-full object-cover opacity-15 mix-blend-overlay" />
         {/* Club color radial burst */}
         <div className="absolute inset-0" style={{
@@ -154,7 +155,7 @@ export default function Complete() {
           className="flex flex-col items-center gap-1 mt-8"
         >
           <img
-            src={`${import.meta.env.BASE_URL}images/metime-logo.png`}
+            src={publicAssetUrl("images/metime-logo.png")}
             alt="Me Time Stories"
             className="h-10 w-auto object-contain"
             style={{ mixBlendMode: "screen" }}

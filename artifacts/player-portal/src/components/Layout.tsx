@@ -1,3 +1,4 @@
+import { publicAssetUrl } from "@/lib/publicAssetUrl";
 import React from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
@@ -19,7 +20,7 @@ export function Layout({ children, hideLogo = false }: { children: React.ReactNo
     <div className="min-h-screen w-full relative flex flex-col overflow-x-hidden bg-[#0a0a0a]" style={customStyles}>
       {/* Background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
+        <img src={publicAssetUrl("images/hero-bg.png")} alt=""
           className="w-full h-full object-cover opacity-20 mix-blend-overlay" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/70 to-transparent" />
       </div>
@@ -49,7 +50,7 @@ export function Layout({ children, hideLogo = false }: { children: React.ReactNo
               </>
             ) : (
               <img
-                src={`${import.meta.env.BASE_URL}images/metime-logo.png`}
+                src={publicAssetUrl("images/metime-logo.png")}
                 alt="Me Time Stories"
                 className="h-7 w-auto object-contain"
                 style={{ mixBlendMode: "screen" }}

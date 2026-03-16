@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { LogOut, Mic2, Dna, BookOpen, Volume2 } from "lucide-react";
 import { usePlayerContext } from "@/context/PlayerContext";
+import { publicAssetUrl } from "@/lib/publicAssetUrl";
 
 function isLight(hex: string) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -196,7 +197,7 @@ export default function WelcomeU9() {
 
   useEffect(() => {
     // Play theme music at 15% volume for 2 minutes (skip first 12 seconds)
-    const audio = new Audio(`${import.meta.env.BASE_URL}audio/love-me-again.mp3`);
+    const audio = new Audio(publicAssetUrl("audio/love-me-again.mp3"));
     audio.volume = 0.15; // 15% volume - subtle background
     audio.currentTime = 12; // Skip first 12 seconds
     audioRef.current = audio;
@@ -236,7 +237,7 @@ export default function WelcomeU9() {
       <div className="fixed inset-0 z-0 pointer-events-none">
         {/* Stadium BG */}
         <img
-          src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
+          src={publicAssetUrl("images/hero-bg.png")} alt=""
           className="w-full h-full object-cover opacity-20 mix-blend-overlay"
         />
         {/* Club color radial glow */}
@@ -351,7 +352,7 @@ export default function WelcomeU9() {
               }}
             >
               <img
-                src={`${import.meta.env.BASE_URL}images/academy/${img.src}`}
+                src={publicAssetUrl(`images/academy/${img.src}`)}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
                 style={{ objectPosition: img.pos, filter: "brightness(0.20) saturate(0.45)", transform: "scale(1.08)" }}
