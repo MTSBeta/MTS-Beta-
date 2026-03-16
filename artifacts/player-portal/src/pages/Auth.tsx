@@ -66,8 +66,8 @@ export default function Auth() {
 
       {/* Topbar */}
       <div className="relative z-10 flex items-center px-4 h-12 border-b border-white/5">
-        <button onClick={() => navigate("/")} className="flex items-center gap-1 text-white/40 hover:text-white/70 text-xs transition-colors py-2 -ml-1">
-          <ChevronLeft size={15} />
+        <button onClick={() => navigate("/")} className="flex items-center gap-1 text-white/40 hover:text-white/70 text-sm transition-colors min-h-[44px] px-1 -ml-1">
+          <ChevronLeft size={18} />
           Back
         </button>
       </div>

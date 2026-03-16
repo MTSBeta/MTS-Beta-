@@ -56,7 +56,7 @@ function SelectChip({
       type="button"
       whileTap={{ scale: 0.95 }}
       onClick={handleClick}
-      className="px-3 py-1.5 rounded-full text-sm font-semibold border transition-all text-left"
+      className="px-4 py-2.5 rounded-full text-sm font-semibold border transition-all text-left min-h-[44px] flex items-center"
       style={
         selected
           ? { background: accentColor, borderColor: accentColor, color: isLight(accentColor) ? "#000" : "#fff" }
@@ -199,7 +199,7 @@ function QuestionCard({
                   : "Write your answer here, or use the voice note below..."}
                 value={answer.text}
                 onChange={e => onTextChange(e.target.value)}
-                className={`w-full border rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/20 focus:outline-none transition-colors resize-none leading-relaxed ${error ? "border-red-500/50" : isCoachingQ ? "border-teal-500/20 focus:border-teal-500/40 bg-teal-900/10" : "border-white/10 focus:border-white/30 bg-white/5"}`}
+                className={`w-full border rounded-xl px-4 py-3 text-white text-base placeholder:text-white/20 focus:outline-none transition-colors resize-none leading-relaxed ${error ? "border-red-500/50" : isCoachingQ ? "border-teal-500/20 focus:border-teal-500/40 bg-teal-900/10" : "border-white/10 focus:border-white/30 bg-white/5"}`}
               />
               {!isCoachingQ && (
                 <div className="flex flex-col gap-2">
@@ -236,9 +236,9 @@ function QuestionCard({
             <button
               type="button"
               onClick={onSkip}
-              className="flex items-center gap-1.5 text-white/25 hover:text-amber-400/70 text-xs transition-colors group"
+              className="flex items-center gap-2 text-white/30 hover:text-amber-400/70 text-sm transition-colors group py-2.5 px-1 -mx-1 min-h-[44px]"
             >
-              <SkipForward size={12} className="group-hover:text-amber-400/70" />
+              <SkipForward size={14} className="group-hover:text-amber-400/70 shrink-0" />
               <span>Skip for now — answer later</span>
             </button>
           )
@@ -475,8 +475,8 @@ export default function Journey() {
         <div className="sticky top-0 z-30 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/6">
           <div className="flex items-center justify-between px-4 h-12">
             <button onClick={() => setShowReview(false)}
-              className="flex items-center gap-1 text-white/40 hover:text-white/70 text-xs transition-colors py-2 -ml-1">
-              <ChevronLeft size={15} />Back
+              className="flex items-center gap-1 text-white/40 hover:text-white/70 text-sm transition-colors min-h-[44px] px-1 -ml-1">
+              <ChevronLeft size={18} />Back
             </button>
             <span className="text-white/40 text-xs font-bold uppercase tracking-widest">
               {allSkipped.length} question{allSkipped.length !== 1 ? "s" : ""} left
@@ -522,7 +522,7 @@ export default function Journey() {
                     placeholder="Write your answer here…"
                     value={ra.text}
                     onChange={e => setReviewAnswers(prev => ({ ...prev, [key]: { ...ra, text: e.target.value } }))}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-white/30 transition-colors resize-none"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-base placeholder:text-white/20 focus:outline-none focus:border-white/30 transition-colors resize-none"
                   />
                   <VoiceRecorder
                     onAudioReady={(blob, url) => setReviewAnswers(prev => ({ ...prev, [key]: { ...ra, audioBlob: blob, audioUrl: url } }))}
@@ -536,8 +536,8 @@ export default function Journey() {
             </p>
           </div>
         </div>
-        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-6 pt-3"
-          style={{ background: "linear-gradient(to top, #0a0a0a 70%, transparent)" }}>
+        <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pt-3"
+          style={{ background: "linear-gradient(to top, #0a0a0a 70%, transparent)", paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}>
           <div className="max-w-xl mx-auto space-y-2">
             <motion.button whileTap={{ scale: 0.97 }}
               onClick={() => completeJourney(reviewAnswers)}
@@ -575,9 +575,9 @@ export default function Journey() {
           <button
             onClick={currentStep === 0 ? saveAndExit : goBack}
             disabled={isSaving}
-            className="flex items-center gap-1 text-white/40 hover:text-white/70 text-xs transition-colors py-2 -ml-1 disabled:opacity-30"
+            className="flex items-center gap-1 text-white/40 hover:text-white/70 text-sm transition-colors min-h-[44px] px-1 -ml-1 disabled:opacity-30"
           >
-            <ChevronLeft size={15} />
+            <ChevronLeft size={18} />
             {currentStep === 0 ? "Exit" : "Back"}
           </button>
 
@@ -587,7 +587,7 @@ export default function Journey() {
             <span className="text-white/20 text-xs font-mono">{totalStages}</span>
             <span className="text-lg ml-1">{stage.emoji}</span>
             {totalSkippedCount > 0 && (
-              <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-black bg-amber-500/20 text-amber-400">
+              <span className="ml-1 px-2 py-1 rounded-full text-xs font-black bg-amber-500/20 text-amber-400">
                 {totalSkippedCount} skipped
               </span>
             )}
@@ -596,7 +596,7 @@ export default function Journey() {
           <button
             onClick={saveAndExit}
             disabled={isSaving}
-            className="text-white/30 hover:text-white/60 text-xs transition-colors py-2 -mr-1 disabled:opacity-30"
+            className="text-white/30 hover:text-white/60 text-sm transition-colors min-h-[44px] px-1 -mr-1 disabled:opacity-30"
           >
             Save & Exit
           </button>
@@ -662,8 +662,8 @@ export default function Journey() {
       </div>
 
       {/* Sticky bottom nav */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pb-6 pt-3"
-        style={{ background: "linear-gradient(to top, #0a0a0a 70%, transparent)" }}>
+      <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pt-3"
+        style={{ background: "linear-gradient(to top, #0a0a0a 70%, transparent)", paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}>
         <div className="max-w-xl mx-auto">
           <motion.button
             whileTap={{ scale: 0.97 }}

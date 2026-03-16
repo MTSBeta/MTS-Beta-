@@ -72,8 +72,8 @@ export default function Register() {
 
       {/* Topbar */}
       <div className="relative z-10 flex items-center px-4 h-12 border-b border-white/5">
-        <button onClick={() => navigate("/auth")} className="flex items-center gap-1 text-white/40 hover:text-white/70 text-xs transition-colors py-2 -ml-1">
-          <ChevronLeft size={15} />
+        <button onClick={() => navigate("/auth")} className="flex items-center gap-1 text-white/40 hover:text-white/70 text-sm transition-colors min-h-[44px] px-1 -ml-1">
+          <ChevronLeft size={18} />
           Back
         </button>
         <div className="flex-1 flex justify-center">
@@ -185,8 +185,8 @@ export default function Register() {
       </div>
 
       {/* Sticky submit */}
-      <div className="fixed bottom-0 left-0 right-0 z-20 px-4 pb-6 pt-3"
-        style={{ background: "linear-gradient(to top, #0a0a0a 70%, transparent)" }}>
+      <div className="fixed bottom-0 left-0 right-0 z-20 px-4 pt-3"
+        style={{ background: "linear-gradient(to top, #0a0a0a 70%, transparent)", paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}>
         <div className="max-w-sm mx-auto">
           <motion.button
             whileTap={{ scale: 0.97 }}

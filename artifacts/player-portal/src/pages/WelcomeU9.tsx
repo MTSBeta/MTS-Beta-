@@ -269,16 +269,16 @@ export default function WelcomeU9() {
         <div className="flex items-center gap-3">
           {!isMuted && (
             <button onClick={handleMute}
-              className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-xs">
+              className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-sm min-h-[44px] px-1">
               <span>🔊</span>
               <span>Mute</span>
             </button>
           )}
           <button
             onClick={() => { audioRef.current?.pause(); clearContext(); navigate("/"); }}
-            className="flex items-center gap-1.5 text-white/25 hover:text-white/55 text-xs transition-colors"
+            className="flex items-center gap-1.5 text-white/25 hover:text-white/55 text-sm transition-colors min-h-[44px] px-1"
           >
-            <LogOut size={12} /><span>Log out</span>
+            <LogOut size={14} /><span>Log out</span>
           </button>
         </div>
       </div>
@@ -361,8 +361,8 @@ export default function WelcomeU9() {
 
       {/* ── STICKY CTA ── */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-30 px-5 pb-8 pt-6"
-        style={{ background: "linear-gradient(to top, #0a0a0a 55%, transparent)" }}
+        className="fixed bottom-0 left-0 right-0 z-30 px-5 pt-6"
+        style={{ background: "linear-gradient(to top, #0a0a0a 55%, transparent)", paddingBottom: "max(2rem, env(safe-area-inset-bottom))" }}
       >
         <div className="max-w-sm mx-auto space-y-3">
           <motion.button

@@ -173,7 +173,7 @@ export default function Home() {
                   placeholder="Search your club…"
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-white/30 transition-colors"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-3 text-white text-base placeholder:text-white/30 focus:outline-none focus:border-white/30 transition-colors"
                 />
               </div>
 

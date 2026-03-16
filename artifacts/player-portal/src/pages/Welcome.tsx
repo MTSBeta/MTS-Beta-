@@ -308,8 +308,8 @@ export default function Welcome() {
         {/* Top bar */}
         <div className="relative flex items-center justify-between px-5 pt-5 pb-2">
           <button onClick={handleLogout}
-            className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-xs">
-            <LogOut size={13} />
+            className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-sm min-h-[44px] px-1">
+            <LogOut size={15} />
             <span>Log out</span>
           </button>
 
@@ -326,7 +326,7 @@ export default function Welcome() {
 
           {!isMuted && (
             <button onClick={handleMute}
-              className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-xs">
+              className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-sm min-h-[44px] px-1">
               <span>🔊</span>
               <span>Mute</span>
             </button>
@@ -618,8 +618,8 @@ export default function Welcome() {
         initial={{ opacity: 0, y: 32 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.1, type: "spring", stiffness: 200 }}
-        className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 pt-4"
-        style={{ background: "linear-gradient(to top, #0a0a0a 60%, transparent)" }}
+        className="fixed bottom-0 left-0 right-0 z-50 px-4 pt-4"
+        style={{ background: "linear-gradient(to top, #0a0a0a 60%, transparent)", paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
       >
         <div className="max-w-lg mx-auto">
           <motion.button
