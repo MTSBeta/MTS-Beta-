@@ -8,6 +8,7 @@ import { VoiceRecorder } from "@/components/VoiceRecorder";
 import { MediaUploader } from "@/components/MediaUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { useSoundEnabled } from "@/context/SoundContext";
+import { useAssistant } from "@/context/AssistantContext";
 import { useSoundSystem } from "@/hooks/useSoundSystem";
 import { PLAYER_STAGES, computeCharacterProfile } from "@/data/questions";
 import type { JourneyQuestion } from "@/data/questions";
@@ -167,6 +168,7 @@ export default function Journey() {
   const { playerData, selectedAcademy, journeyAnswers, saveJourneyStage } = usePlayerContext();
   const { enabled: soundEnabled } = useSoundEnabled();
   const sound = useSoundSystem({ enabled: soundEnabled });
+  const { setActiveQuestion } = useAssistant();
 
   const [currentStep, setCurrentStep] = useState(0);
   const [currentQI, setCurrentQI] = useState(0);
@@ -254,6 +256,20 @@ export default function Journey() {
   const currentQuestion = stage.questions[currentQI];
   const currentAnswer = localAnswers[currentQI] ?? { text: "", audioUrl: null, audioBlob: null, mediaUrls: [] };
   const isSkippedCurrent = isSkipped(stage.id, currentQI);
+
+  useEffect(() => {
+    if (currentQuestion) {
+      setActiveQuestion({
+        text: currentQuestion.text,
+        hint: currentQuestion.hint,
+        prompts: currentQuestion.prompts,
+        options: currentQuestion.options,
+        type: currentQuestion.type,
+        stageName: stage.title,
+      });
+    }
+    return () => { setActiveQuestion(null); };
+  }, [currentQI, currentStep]);
 
   const updateCurrentAnswer = (patch: Partial<AnswerEntry>) => {
     setLocalAnswers(prev => {

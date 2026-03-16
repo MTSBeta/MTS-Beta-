@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { StaffAuthProvider } from "@/context/StaffAuthContext";
 import { SoundProvider } from "@/context/SoundContext";
+import { AssistantProvider } from "@/context/AssistantContext";
 import { ProtectedStaffRoute } from "@/components/ProtectedStaffRoute";
 import NotFound from "@/pages/not-found";
 import MetyButton from "@/components/MetyButton";
@@ -100,6 +101,7 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <AssistantProvider>
       <PlayerProvider>
         <StaffAuthProvider>
           <SoundProvider>
@@ -113,6 +115,7 @@ function App() {
           </SoundProvider>
         </StaffAuthProvider>
       </PlayerProvider>
+      </AssistantProvider>
     </QueryClientProvider>
   );
 }

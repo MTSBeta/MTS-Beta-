@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { X, Send } from "lucide-react";
 import { usePlayerContext } from "@/context/PlayerContext";
+import { useAssistant } from "@/context/AssistantContext";
 import { getAcademyMascot } from "@/data/mascots";
 
 const PLAYER_PATHS = ["/welcome", "/welcome-u9", "/journey", "/journey-u9", "/complete", "/invite"];
@@ -32,20 +33,22 @@ export default function MetyButton() {
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const { selectedAcademy } = usePlayerContext();
+  const { activeQuestion } = useAssistant();
 
   const isPlayerPage = PLAYER_PATHS.some(p => location === p || location.startsWith(p + "/"));
 
   const mascotName = getAcademyMascot(selectedAcademy?.key ?? "");
   const initial = mascotName.charAt(0).toUpperCase();
   const accentColor = selectedAcademy?.primaryColor ?? "#EAB308";
-  const hint = PAGE_HINTS[location] ?? "Ask me anything about your journey.";
+
+  const openingMessage = activeQuestion
+    ? `I can see you're on: "${activeQuestion.text}"${activeQuestion.hint ? ` — ${activeQuestion.hint}` : ""}. What do you need help with?`
+    : (PAGE_HINTS[location] ?? "Ask me anything about your journey.");
 
   useEffect(() => {
     if (!isPlayerPage) return;
     if (open) {
-      if (messages.length === 0) {
-        setMessages([{ role: "assistant", text: hint }]);
-      }
+      setMessages([{ role: "assistant", text: openingMessage }]);
       setTimeout(() => inputRef.current?.focus(), 150);
     }
   }, [open]);
@@ -66,7 +69,7 @@ export default function MetyButton() {
       const res = await fetch(`${base}/api/assistant/ask`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: q, page: location, mascotName }),
+        body: JSON.stringify({ question: q, page: location, mascotName, activeQuestion }),
       });
       const data = await res.json();
       const answer = data.answer ?? "I'm not sure — check with your coach!";

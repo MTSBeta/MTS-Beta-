@@ -6,6 +6,7 @@ import { publicAssetUrl } from "@/lib/publicAssetUrl";
 import { VoiceRecorder } from "@/components/VoiceRecorder";
 import { MediaUploader } from "@/components/MediaUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
+import { useAssistant } from "@/context/AssistantContext";
 import { U9_PLAYER_STAGES, computeCharacterProfile } from "@/data/u9Questions";
 import type { U9Question, U9Stage } from "@/data/u9Questions";
 import { MindsetProfiler } from "@/components/MindsetProfiler";
@@ -94,8 +95,24 @@ export default function JourneyU9() {
 
   const saveMutation = useSaveJourneyResponses();
   const completeMutation = useCompleteJourney();
+  const { setActiveQuestion } = useAssistant();
 
   useEffect(() => { if (!playerData) navigate("/"); }, [playerData]);
+
+  useEffect(() => {
+    const entry = ALL_QUESTIONS[currentIdx];
+    if (entry) {
+      setActiveQuestion({
+        text: entry.question.text,
+        hint: entry.question.hint,
+        prompts: entry.question.prompts,
+        options: entry.question.options,
+        type: entry.question.type,
+        stageName: entry.stage.title,
+      });
+    }
+    return () => { setActiveQuestion(null); };
+  }, [currentIdx]);
   if (!playerData) return null;
 
   // ── MINDSET PROFILER ──────────────────────────────────────────────────────

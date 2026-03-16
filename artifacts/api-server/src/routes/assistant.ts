@@ -3,35 +3,58 @@ import { openai } from "@workspace/integrations-openai-ai-server";
 
 const router = Router();
 
+interface ActiveQuestion {
+  text: string;
+  hint?: string;
+  prompts?: string[];
+  options?: string[];
+  type?: string;
+  stageName?: string;
+}
+
 const PAGE_CONTEXT: Record<string, string> = {
-  "/welcome": "The player is on the Welcome page, about to start their MeTime Stories journey. They can see chapter previews and a 'Begin My Story' button.",
+  "/welcome":    "The player is on the Welcome page, about to start their MeTime Stories journey. They can see chapter previews and a 'Begin My Story' button.",
   "/welcome-u9": "The player is on the Welcome page for U9s (younger players), about to start their MeTime Stories journey.",
-  "/journey": "The player is actively answering scenario-based questions about their football life and personality — things like decision-making on the pitch, their mindset, goals, and values.",
+  "/journey":    "The player is actively answering scenario-based questions about their football life and personality.",
   "/journey-u9": "The younger player (U9) is answering simplified photo-based questions about themselves and their football.",
-  "/invite": "The player is on the Invite page, where they can send unique links to parents, friends, or coaches to contribute to their story.",
-  "/complete": "The player has finished all their questions and their story is being compiled. They're waiting to hear back from their coach or academy.",
+  "/invite":     "The player is on the Invite page, where they can send unique links to parents, friends, or coaches to contribute to their story.",
+  "/complete":   "The player has finished all their questions and their story is being compiled.",
 };
 
-function getSystemPrompt(page: string, mascotName: string): string {
+function getSystemPrompt(page: string, mascotName: string, activeQuestion?: ActiveQuestion): string {
   const pageCtx = PAGE_CONTEXT[page] ?? "The player is using the MeTime Stories Football Academy Player Portal.";
 
-  return `You are ${mascotName}, a helpful football academy assistant inside the MeTime Stories app. 
+  let questionCtx = "";
+  if (activeQuestion) {
+    questionCtx = `\n\nThe player is currently on this specific question:\nQuestion: "${activeQuestion.text}"`;
+    if (activeQuestion.hint) questionCtx += `\nHint shown to player: "${activeQuestion.hint}"`;
+    if (activeQuestion.stageName) questionCtx += `\nSection: ${activeQuestion.stageName}`;
+    if (activeQuestion.prompts?.length) questionCtx += `\nPrompts shown: ${activeQuestion.prompts.join(", ")}`;
+    if (activeQuestion.options?.length) questionCtx += `\nOptions available: ${activeQuestion.options.join(", ")}`;
+    if (activeQuestion.type === "voice-text") questionCtx += `\nAnswer format: player speaks or types a free response.`;
+    if (activeQuestion.type === "multiselect") questionCtx += `\nAnswer format: player picks multiple options from the list.`;
+    if (activeQuestion.type === "select") questionCtx += `\nAnswer format: player picks one option from the list.`;
+    questionCtx += `\n\nYour job is to help them understand what this question is asking and how to answer it well. Give specific, concrete guidance for THIS question — not generic advice.`;
+  }
+
+  return `You are ${mascotName}, a helpful football academy assistant inside the MeTime Stories app.
 You help young academy players understand and complete their player journey.
 
-Current page context: ${pageCtx}
+Current page context: ${pageCtx}${questionCtx}
 
-Keep answers short, warm, and clear — 2 to 4 sentences max. 
+Keep answers short, warm, and clear — 2 to 4 sentences max.
 Use plain, friendly language suitable for a young football player (age 9–18).
 Don't use bullet points or headers — just a natural, conversational reply.
-If you don't know something specific, give practical, encouraging advice.
-Stay focused on the MeTime Stories experience: answering questions, building their story, inviting stakeholders.`;
+Never say you can't help — always give a useful, specific answer or suggestion.
+Stay focused on the MeTime Stories experience.`;
 }
 
 router.post("/assistant/ask", async (req, res) => {
-  const { question, page, mascotName } = req.body as {
+  const { question, page, mascotName, activeQuestion } = req.body as {
     question?: string;
     page?: string;
     mascotName?: string;
+    activeQuestion?: ActiveQuestion;
   };
 
   if (!question || !question.trim()) {
@@ -39,7 +62,7 @@ router.post("/assistant/ask", async (req, res) => {
   }
 
   try {
-    const systemPrompt = getSystemPrompt(page ?? "/", mascotName ?? "Mety");
+    const systemPrompt = getSystemPrompt(page ?? "/", mascotName ?? "Mety", activeQuestion);
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
