@@ -65,7 +65,7 @@ export function stopMusic(): void {
 export function duckMusic(): void {
   const audio = get();
   if (!audio) return;
-  const target = 0.04;
+  const target = 0.075;
   const step = () => {
     const a = get();
     if (!a) return;
