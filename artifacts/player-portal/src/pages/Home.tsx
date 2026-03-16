@@ -97,10 +97,12 @@ export default function Home() {
               >
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-purple-900/20 to-transparent" />
                 <div className="relative z-10 flex flex-col items-center gap-4">
-                  <svg width="48" height="48" viewBox="0 0 120 120" fill="none" className="drop-shadow-lg">
-                    <rect width="120" height="120" rx="12" fill="#3D0059" />
-                    <text x="60" y="70" textAnchor="middle" fontSize="48" fontWeight="900" fontFamily="Arial Black, sans-serif" fill="#FFB61E">PL</text>
-                  </svg>
+                  <img 
+                    src={`${import.meta.env.BASE_URL}logos/premier-league-logo.png`}
+                    alt="Premier League"
+                    className="h-12 w-auto object-contain drop-shadow-lg"
+                    style={{ maxWidth: "120px" }}
+                  />
                   <div className="text-center">
                     <div className="text-white font-black text-xl md:text-2xl uppercase tracking-wider font-display">Premier League</div>
                     <div className="text-white/40 text-sm mt-1">20 academies</div>
@@ -284,13 +286,23 @@ export default function Home() {
           )}
 
         </AnimatePresence>
-        {/* Staff Login entry */}
+        {/* Login entries */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-12 pt-8 border-t border-white/8 w-full max-w-2xl flex justify-center"
+          className="mt-12 pt-8 border-t border-white/8 w-full max-w-2xl flex flex-col items-center gap-3"
         >
+          {/* Demo credentials */}
+          <div className="text-center mb-2">
+            <div className="text-white/40 text-xs font-mono mb-2">Demo Credentials:</div>
+            <div className="space-y-1 text-white/50 text-xs font-mono">
+              <div>Staff: <span className="text-white/70">coach@arsenal.co.uk</span> / <span className="text-white/70">test123</span></div>
+              <div>Admin: <span className="text-white/70">admin@arsenal.co.uk</span> / <span className="text-white/70">admin123</span></div>
+            </div>
+          </div>
+
+          {/* Staff Login Button */}
           <button
             onClick={() => navigate("/staff-login")}
             className="group flex items-center gap-3 px-6 py-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
@@ -306,6 +318,24 @@ export default function Home() {
               </div>
               <div className="text-white/35 text-xs">
                 Access the staff portal
+              </div>
+            </div>
+          </button>
+
+          {/* Admin Login Button */}
+          <button
+            onClick={() => navigate("/admin-login")}
+            className="group flex items-center gap-3 px-6 py-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+          >
+            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center group-hover:bg-white/15 transition-colors">
+              <span className="text-base">⚙️</span>
+            </div>
+            <div className="text-left">
+              <div className="text-white text-sm font-bold font-display uppercase tracking-wider">
+                Website Admin
+              </div>
+              <div className="text-white/35 text-xs">
+                Manage academy settings
               </div>
             </div>
           </button>
