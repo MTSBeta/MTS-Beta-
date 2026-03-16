@@ -3,7 +3,8 @@ import { db } from "@workspace/db";
 import {
   playersTable,
   playerJourneyResponsesTable,
-  parentResponsesTable,
+  stakeholderLinksTable,
+  stakeholderResponsesTable,
   staffSubmissionsTable,
   academyStaffTable,
   academiesTable,
@@ -166,11 +167,23 @@ router.get("/staff/players/:id", staffAuth, async (req, res) => {
     .where(eq(playerJourneyResponsesTable.playerId, id))
     .orderBy(playerJourneyResponsesTable.questionNumber);
 
-  const parentResponses = await db
+  // Load all stakeholder links for this player with their responses
+  const stakeholderLinks = await db
     .select()
-    .from(parentResponsesTable)
-    .where(eq(parentResponsesTable.playerId, id))
-    .orderBy(parentResponsesTable.questionNumber);
+    .from(stakeholderLinksTable)
+    .where(eq(stakeholderLinksTable.playerId, id));
+
+  const stakeholderResponses = await db
+    .select()
+    .from(stakeholderResponsesTable)
+    .where(eq(stakeholderResponsesTable.playerId, id))
+    .orderBy(stakeholderResponsesTable.questionNumber);
+
+  // Build parentSubmission from the 'parent' stakeholder link
+  const parentLink = stakeholderLinks.find((l) => l.type === "parent");
+  const parentResponses = parentLink
+    ? stakeholderResponses.filter((r) => r.stakeholderLinkId === parentLink.id)
+    : [];
 
   const submissions = await db
     .select({
