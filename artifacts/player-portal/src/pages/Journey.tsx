@@ -45,14 +45,14 @@ function PromptChips({ prompts, color }: { prompts: string[]; color: string }) {
       {prompts.map((p, i) => (
         <span
           key={i}
-          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium border"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border"
           style={{
-            background: `${color}12`,
-            borderColor: `${color}25`,
-            color: "rgba(255,255,255,0.55)",
+            background: `${color}1c`,
+            borderColor: `${color}50`,
+            color: "rgba(255,255,255,0.80)",
           }}
         >
-          <span className="w-1 h-1 rounded-full inline-block opacity-60" style={{ background: color }} />
+          <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: color, opacity: 0.8 }} />
           {p}
         </span>
       ))}
@@ -79,11 +79,11 @@ function SelectChip({ label, selected, onClick, color, isCoaching }: {
       type="button"
       whileTap={{ scale: 0.94 }}
       onClick={handleClick}
-      className="px-4 py-3 rounded-2xl text-sm font-semibold border transition-all text-left min-h-[52px] flex items-center gap-2"
+      className="px-4 py-3.5 rounded-2xl text-sm font-semibold border transition-all text-left min-h-[52px] flex items-center gap-2 backdrop-blur-sm"
       style={
         selected
           ? { background: accent, borderColor: accent, color: isLight(accent) ? "#000" : "#fff" }
-          : { background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }
+          : { background: "rgba(0,0,0,0.50)", borderColor: "rgba(255,255,255,0.20)", color: "rgba(255,255,255,0.92)" }
       }
     >
       {selected && (
@@ -472,7 +472,7 @@ export default function Journey() {
           )}
           <div
             className="absolute inset-0"
-            style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.08) 40%, rgba(10,10,10,0.60) 100%)" }}
+            style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0.22) 0%, rgba(10,10,10,0.45) 50%, rgba(10,10,10,0.80) 100%)" }}
           />
           <div
             className="absolute inset-0"
@@ -571,7 +571,7 @@ export default function Journey() {
           )}
           <div
             className="absolute inset-0"
-            style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.08) 40%, rgba(10,10,10,0.60) 100%)" }}
+            style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0.22) 0%, rgba(10,10,10,0.45) 50%, rgba(10,10,10,0.80) 100%)" }}
           />
           <div
             className="absolute inset-0"
@@ -658,7 +658,7 @@ export default function Journey() {
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(to bottom, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.08) 40%, rgba(10,10,10,0.60) 100%)",
+            background: "linear-gradient(to bottom, rgba(10,10,10,0.22) 0%, rgba(10,10,10,0.45) 50%, rgba(10,10,10,0.80) 100%)",
           }}
         />
 
@@ -768,12 +768,12 @@ export default function Journey() {
             </div>
 
             {/* Question text */}
-            <div className="mb-4">
-              <h2 className="text-2xl font-display font-black text-white leading-tight mb-2">
+            <div className="mb-5">
+              <h2 className="text-[1.55rem] font-display font-bold text-white leading-[1.3] tracking-tight mb-3">
                 {currentQuestion.text}
               </h2>
               {currentQuestion.hint && (
-                <p className="text-white/40 text-sm leading-relaxed">{currentQuestion.hint}</p>
+                <p className="text-white/65 text-sm leading-relaxed">{currentQuestion.hint}</p>
               )}
               {currentQuestion.prompts && currentQuestion.prompts.length > 0 && !isSelectType && (
                 <PromptChips prompts={currentQuestion.prompts} color={accentColor} />
@@ -820,7 +820,7 @@ export default function Journey() {
                         placeholder="Tell us more…"
                         value={followUpAnswer}
                         onChange={e => setFollowUpAnswer(e.target.value)}
-                        className="w-full border border-white/10 focus:border-white/25 bg-white/4 rounded-2xl px-4 py-3 text-white text-base placeholder:text-white/20 focus:outline-none transition-all resize-none leading-relaxed"
+                        className="w-full border border-white/22 focus:border-white/40 bg-black/50 backdrop-blur-sm rounded-2xl px-4 py-3 text-white text-base placeholder:text-white/45 focus:outline-none transition-all resize-none leading-relaxed"
                       />
                     </motion.div>
                   )}
@@ -838,14 +838,14 @@ export default function Journey() {
                       }
                       value={currentAnswer.text}
                       onChange={e => updateCurrentAnswer({ text: e.target.value })}
-                      className={`w-full border rounded-2xl px-4 py-4 text-white text-base placeholder:text-white/20 focus:outline-none transition-all resize-none leading-relaxed ${
+                      className={`w-full border rounded-2xl px-4 py-4 text-white text-base placeholder:text-white/45 focus:outline-none transition-all resize-none leading-relaxed backdrop-blur-sm ${
                         qError
-                          ? "border-red-500/50 bg-red-500/5"
+                          ? "border-red-500/55 bg-black/55"
                           : isCoachingQ
-                          ? "border-teal-500/15 focus:border-teal-500/35 bg-white/4"
+                          ? "border-teal-500/30 focus:border-teal-500/55 bg-black/55"
                           : answered
-                          ? `border-white/15 focus:border-white/30 bg-white/4`
-                          : "border-white/10 focus:border-white/25 bg-white/4"
+                          ? `border-white/28 focus:border-white/48 bg-black/55`
+                          : "border-white/22 focus:border-white/40 bg-black/50"
                       }`}
                     />
                     {!isCoachingQ && (
