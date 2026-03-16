@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { ChevronLeft, Search, ShieldCheck } from "lucide-react";
+import { ChevronLeft, Search } from "lucide-react";
 import { PREMIER_LEAGUE, CHAMPIONSHIP, type AcademyConfig } from "@/data/academies";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { Layout } from "@/components/Layout";
@@ -282,20 +282,30 @@ export default function Home() {
           )}
 
         </AnimatePresence>
-
-        {/* ── Staff login link ── */}
+        {/* Staff Login entry */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="mt-12 pt-8 border-t border-white/5 w-full flex justify-center"
+          transition={{ delay: 0.5 }}
+          className="mt-12 pt-8 border-t border-white/8 w-full max-w-2xl flex justify-center"
         >
           <button
             onClick={() => navigate("/staff-login")}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/4 border border-white/8 text-white/40 hover:text-white/70 hover:bg-white/7 hover:border-white/15 transition-all text-sm font-medium"
+            className="group flex items-center gap-3 px-6 py-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
           >
-            <ShieldCheck size={14} />
-            Academy Staff Login
+            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center group-hover:bg-white/15 transition-colors">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <div className="text-left">
+              <div className="text-white text-sm font-bold font-display uppercase tracking-wider">
+                Academy Staff Login
+              </div>
+              <div className="text-white/35 text-xs">
+                Access the staff portal
+              </div>
+            </div>
           </button>
         </motion.div>
 

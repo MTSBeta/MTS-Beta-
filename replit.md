@@ -30,10 +30,14 @@ artifacts/
 │       └── lib/        # auth (bcrypt+JWT), codeGenerator, seedAcademies
 └── player-portal/      # React + Vite frontend
     └── src/
-        ├── pages/      # Home, Register, Welcome, Journey, Invite, Complete, ParentForm, CoachForm, Admin
-        ├── components/ # Layout, Button, Input, Textarea, etc.
-        ├── context/    # PlayerContext (selected academy, player data, journey answers)
-        └── data/       # academies.ts, positions.ts, questions.ts
+        ├── pages/      # Home, Register, Welcome, Journey, Invite, Complete, ParentForm, CoachForm, Admin, ParentView
+        │   └── staff/  # StaffLogin, StaffDashboard, StaffPlayers, StaffPlayerProfile, StaffTeam, StaffSettings
+        ├── layouts/    # StaffLayout (sidebar nav with academy branding)
+        ├── components/ # Layout, Button, Input, Textarea, ProtectedStaffRoute, etc.
+        ├── context/    # PlayerContext, StaffAuthContext (JWT auth)
+        ├── hooks/      # useStaffAuth
+        ├── lib/        # utils.ts, staffApi.ts (staff API client with JWT)
+        └── data/       # academies.ts, positions.ts, questions.ts, staffQuestions.ts
 lib/
 ├── api-spec/           # OpenAPI spec + Orval codegen
 ├── api-client-react/   # Generated React Query hooks
@@ -44,16 +48,24 @@ lib/
 
 ## Routes
 
-### Frontend Routes
-- `/` — Landing: academy selection
+### Frontend Routes — Player Journey
+- `/` — Landing: academy selection + "Academy Staff Login" entry point
 - `/register` — Player registration form
 - `/welcome` — Post-registration welcome screen
 - `/journey` — 6-stage multi-step reflection form
 - `/invite` — Parent & coach link generation
 - `/complete` — Completion summary
-- `/parent/:code` — Parent perspective form
+- `/parent/:code` — Parent perspective form (secure link, no login required)
 - `/coach/:code` — Coach perspective form
 - `/admin` — Admin dashboard (passcode-gated)
+
+### Frontend Routes — Staff Portal
+- `/staff-login` — Staff email + password login
+- `/staff-dashboard` — Staff welcome card, player counts, recent activity (protected)
+- `/staff/players` — Filterable/searchable player list with age group, position, status (protected)
+- `/staff/players/:id` — Full player profile with journey, parent, staff submissions, completion tracker (protected)
+- `/staff/team` — Admin-only team management: list/create staff, toggle active/inactive (protected)
+- `/staff/settings` — Admin-only placeholder settings page (protected)
 
 ### API Routes
 - `GET /api/academies` — List all academies
