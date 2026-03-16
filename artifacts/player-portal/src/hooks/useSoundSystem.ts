@@ -14,7 +14,7 @@ interface SoundConfig {
 export function useSoundSystem(config: Partial<SoundConfig> = {}) {
   const audioContextRef = useRef<AudioContext | null>(null);
   const settingsRef = useRef<SoundConfig>({
-    volume: 0.4, // restrained FIFA-style volume
+    volume: 0.1, // 10% - subtle FIFA-style volume
     enabled: true,
     ...config,
   });
@@ -42,7 +42,7 @@ export function useSoundSystem(config: Partial<SoundConfig> = {}) {
           gain.connect(ctx.destination);
           osc.frequency.value = 1200; // crisp high tone
           gain.gain.setValueAtTime(settingsRef.current.volume, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
           osc.start(now);
           osc.stop(now + 0.08);
           break;
@@ -56,7 +56,7 @@ export function useSoundSystem(config: Partial<SoundConfig> = {}) {
           gain.connect(ctx.destination);
           osc.frequency.value = 800;
           gain.gain.setValueAtTime(settingsRef.current.volume, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
           osc.start(now);
           osc.stop(now + 0.12);
           break;
@@ -71,7 +71,7 @@ export function useSoundSystem(config: Partial<SoundConfig> = {}) {
           osc.frequency.setValueAtTime(600, now);
           osc.frequency.linearRampToValueAtTime(1000, now + 0.15);
           gain.gain.setValueAtTime(settingsRef.current.volume * 0.8, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
           osc.start(now);
           osc.stop(now + 0.15);
           break;
@@ -88,7 +88,7 @@ export function useSoundSystem(config: Partial<SoundConfig> = {}) {
             osc.frequency.value = freq;
             const startTime = now + idx * 0.08;
             gain.gain.setValueAtTime(settingsRef.current.volume * 0.7, startTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.1);
             osc.start(startTime);
             osc.stop(startTime + 0.1);
           });
@@ -105,7 +105,7 @@ export function useSoundSystem(config: Partial<SoundConfig> = {}) {
           osc.frequency.setValueAtTime(400, now);
           osc.frequency.linearRampToValueAtTime(300, now + 0.1);
           gain.gain.setValueAtTime(settingsRef.current.volume * 0.5, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
           osc.start(now);
           osc.stop(now + 0.1);
           break;

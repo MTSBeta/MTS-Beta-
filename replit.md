@@ -142,7 +142,8 @@ Each position (GK, RB, CB, LB, CDM, CM, CAM, RW, ST, LW, CF) maps to: `displayNa
 ## Audio Configuration
 
 ### Welcome Screen Theme
-- **Track**: Love Me Again (John Newman) at 30% volume
+- **Track**: Love Me Again (John Newman)
+- **Volume**: 15% (0.15)
 - **Duration**: 2 minutes (120 seconds) unless user clicks mute
 - **Mute button**: 🔊 Mute button in top bar (appears only while audio is playing)
 - **Location**: `/public/audio/love-me-again.mp3`
@@ -159,7 +160,7 @@ Lightweight Web Audio API-based sound system with four sound types:
 - Hook: `useSoundSystem()` in `/src/hooks/useSoundSystem.ts` — generates sounds via Web Audio API, no external files
 - Context: `SoundContext` in `/src/context/SoundContext.tsx` — global enable/disable
 - Integrated in: Journey.tsx (choice selections), SelectChip component (interactive choices)
-- Volume: 0.4 (40%) restrained FIFA-style
+- Volume: 10% (0.1) — subtle, non-intrusive
 - Can be toggled via SoundContext `setEnabled(boolean)`
 
 ## Common Commands

@@ -195,9 +195,9 @@ export default function WelcomeU9() {
   useEffect(() => { setTimeout(() => setReady(true), 200); }, []);
 
   useEffect(() => {
-    // Play theme music at 30% volume for 2 minutes
+    // Play theme music at 15% volume for 2 minutes
     const audio = new Audio(`${import.meta.env.BASE_URL}audio/love-me-again.mp3`);
-    audio.volume = 0.3; // 30% volume - restrained, not jumpscare
+    audio.volume = 0.15; // 15% volume - subtle background
     audioRef.current = audio;
     audio.play().catch(() => {});
     timeoutRef.current = setTimeout(() => { 
