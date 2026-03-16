@@ -44,6 +44,7 @@ export const RegisterPlayerBody = zod.object({
   shirtNumber: zod.number().min(1).max(registerPlayerBodyShirtNumberMax),
   academyKey: zod.string(),
   position: zod.string(),
+  accessCode: zod.string().optional(),
 });
 
 /**

@@ -3,7 +3,7 @@ import { db } from "@workspace/db";
 import { playersTable, academiesTable } from "@workspace/db/schema";
 import { RegisterPlayerBody, GetPlayerResponse } from "@workspace/api-zod";
 import { generateCode } from "../lib/codeGenerator.js";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 const router: IRouter = Router();
 
@@ -16,19 +16,20 @@ router.post("/players", async (req, res) => {
 
   const { playerName, age, shirtNumber, academyKey, position, accessCode: submittedCode } = parsed.data;
 
-  const [academy] = await db
-    .select()
-    .from(academiesTable)
-    .where(eq(academiesTable.key, academyKey))
-    .limit(1);
+  // Get academy with only existing columns
+  const academyResult = await db.execute(
+    sql`SELECT id, key, name, access_code FROM academies WHERE key = ${academyKey} LIMIT 1`
+  );
 
-  if (!academy) {
+  if (!academyResult.rows || academyResult.rows.length === 0) {
     res.status(400).json({ error: "Invalid academy key" });
     return;
   }
 
+  const academy = academyResult.rows[0];
+
   // Validate coach access code matches academy
-  if (!submittedCode || submittedCode.toUpperCase() !== academy.accessCode?.toUpperCase()) {
+  if (!submittedCode || submittedCode.toUpperCase() !== academy.access_code?.toUpperCase()) {
     res.status(400).json({ error: "Invalid access code" });
     return;
   }
