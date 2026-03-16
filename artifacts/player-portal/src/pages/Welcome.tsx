@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { LogOut, ChevronLeft, ChevronRight } from "lucide-react";
+import { LogOut, ChevronLeft, ChevronRight, Mic2, MessageSquare, Timer, CheckCircle2 } from "lucide-react";
 import { PlayerJersey } from "@/components/PlayerJersey";
 import { LikenessUploader } from "@/components/LikenessUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
@@ -9,10 +9,10 @@ import { POSITIONS } from "@/data/positions";
 import { JOURNEY_STAGES } from "@/data/questions";
 
 const TIPS = [
-  { emoji: "🎙️", title: "Talk, don't type", body: "Every question has a voice note. Use it — your actual voice tells more of the story." },
-  { emoji: "💬", title: "Go deep", body: "Some questions feel unusual. That's on purpose. Real answers, not a performance." },
-  { emoji: "⏸️", title: "No timer", body: "Pause between stages, come back later. There's no rush and no deadline." },
-  { emoji: "✅", title: "No wrong answers", body: "Whatever's true for you is exactly what we're looking for." },
+  { Icon: Mic2, title: "Talk, don't type", body: "Every question has a voice note. Use it — your actual voice tells more of the story." },
+  { Icon: MessageSquare, title: "Go deep", body: "Some questions feel unusual. That's on purpose. Real answers, not a performance." },
+  { Icon: Timer, title: "No timer", body: "Pause between stages, come back later. There's no rush and no deadline." },
+  { Icon: CheckCircle2, title: "No wrong answers", body: "Whatever's true for you is exactly what we're looking for." },
 ];
 
 const KIT_IMAGES: Record<string, string> = {
@@ -631,7 +631,7 @@ export default function Welcome() {
                     : "1px solid rgba(255,255,255,0.07)"
                 }}
               >
-                <span className="text-3xl">{tip.emoji}</span>
+                <tip.Icon size={22} strokeWidth={1.5} className="text-white/70" />
                 <div>
                   <p className="text-white font-bold text-sm mb-1">{tip.title}</p>
                   <p className="text-white/50 text-xs leading-relaxed">{tip.body}</p>
@@ -706,9 +706,13 @@ export default function Welcome() {
                   )}
                 </div>
 
-                {/* Emoji + title */}
+                {/* Chapter + title */}
                 <div className="flex items-center gap-4 mb-3">
-                  <span className="text-5xl">{activeStage.emoji}</span>
+                  <div className="w-12 h-12 rounded-2xl flex flex-col items-center justify-center shrink-0"
+                    style={{ background: `${selectedAcademy.primaryColor}15`, border: `1px solid ${selectedAcademy.primaryColor}30` }}>
+                    <span className="text-[8px] font-mono font-bold uppercase tracking-wider text-white/35">CH</span>
+                    <span className="text-lg font-display font-black text-white leading-none">{String(activeChapter + 1).padStart(2, "0")}</span>
+                  </div>
                   <div>
                     <h3 className={`font-black text-xl leading-tight ${activeChapter > 0 ? "text-white/50" : "text-white"}`}>
                       {activeStage.title}

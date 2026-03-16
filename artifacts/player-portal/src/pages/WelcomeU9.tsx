@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { LogOut } from "lucide-react";
+import { LogOut, Mic2, Dna, BookOpen } from "lucide-react";
 import { usePlayerContext } from "@/context/PlayerContext";
 
 function isLight(hex: string) {
@@ -338,12 +338,14 @@ export default function WelcomeU9() {
           className="flex items-center gap-6 mb-2"
         >
           {[
-            { emoji: "🎙️", label: "Talk or type" },
-            { emoji: "🧬", label: "Player DNA quiz" },
-            { emoji: "📖", label: "Your book" },
+            { Icon: Mic2, label: "Talk or type" },
+            { Icon: Dna, label: "Player DNA quiz" },
+            { Icon: BookOpen, label: "Your book" },
           ].map((item, i) => (
-            <div key={i} className="flex flex-col items-center gap-1">
-              <span className="text-2xl">{item.emoji}</span>
+            <div key={i} className="flex flex-col items-center gap-2">
+              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center">
+                <item.Icon size={18} strokeWidth={1.5} className="text-white/60" />
+              </div>
               <span className="text-white/30 text-[9px] font-bold uppercase tracking-wide">{item.label}</span>
             </div>
           ))}
@@ -355,7 +357,7 @@ export default function WelcomeU9() {
           transition={{ delay: 0.65 }}
           className="text-white/30 text-xs"
         >
-          No wrong answers — just be yourself! 😊
+          No wrong answers — just be yourself!
         </motion.p>
       </div>
 

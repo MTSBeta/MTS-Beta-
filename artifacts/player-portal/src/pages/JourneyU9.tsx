@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { SkipForward, CheckCircle2 } from "lucide-react";
+import { SkipForward, CheckCircle2, Camera } from "lucide-react";
 import { VoiceRecorder } from "@/components/VoiceRecorder";
 import { MediaUploader } from "@/components/MediaUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
@@ -310,20 +310,22 @@ export default function JourneyU9() {
               exit={{ opacity: 0, x: -40 }} transition={{ duration: 0.25 }}
               className="flex-1 flex flex-col max-w-sm mx-auto w-full px-4 pt-6 gap-5">
               <div className="text-center">
-                <div className="text-4xl mb-2">⏭️</div>
+                <div className="mb-3 flex items-center justify-center w-14 h-14 rounded-2xl bg-white/5 border border-white/10 mx-auto">
+                  <SkipForward size={26} className="text-white/50" />
+                </div>
                 <h2 className="text-xl font-display font-black text-white">One you skipped!</h2>
-                <p className="text-white/40 text-sm mt-1">Have a go now if you can 😊</p>
+                <p className="text-white/40 text-sm mt-1">Have a go now if you can</p>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center text-base"
-                  style={{ background: `${rStageColor}25` }}>{currentReview.stage.emoji}</div>
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs text-white"
+                  style={{ background: `${rStageColor}25` }}>{currentReview.stageIndex + 1}</div>
                 <span className="text-xs font-bold uppercase tracking-widest" style={{ color: rStageColor }}>
                   {currentReview.stage.title}
                 </span>
               </div>
               <div>
                 <p className="text-xl font-bold text-white text-center leading-relaxed mb-2">
-                  {currentReview.question.emoji} {currentReview.question.text}
+                  {currentReview.question.text}
                 </p>
                 <p className="text-white/35 text-sm text-center">{currentReview.question.hint}</p>
               </div>
@@ -458,20 +460,23 @@ export default function JourneyU9() {
           >
             {/* Stage badge */}
             <div className="flex items-center gap-2 mb-5">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center text-base"
-                style={{ background: `${stageColor}25` }}>{stage.emoji}</div>
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs text-white"
+                style={{ background: `${stageColor}25` }}>{stageIndex + 1}</div>
               <span className="text-xs font-bold uppercase tracking-widest" style={{ color: stageColor }}>
                 {stage.title}
               </span>
             </div>
 
             <div className="flex-1 flex flex-col gap-4">
-              {/* Question emoji + text */}
+              {/* Question indicator + text */}
               {!isPhotoQ && (
                 <>
-                  <motion.div initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.1, type: "spring", stiffness: 200 }} className="text-5xl text-center">
-                    {question.emoji}
+                  <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.1, type: "spring", stiffness: 200 }} className="flex items-center justify-center gap-2">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center font-display font-black text-white text-base"
+                      style={{ background: `${stageColor}20`, border: `1px solid ${stageColor}30` }}>
+                      {questionIndex + 1}
+                    </div>
                   </motion.div>
                   <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
                     <p className="text-lg font-bold text-white text-center leading-relaxed mb-1">{question.text}</p>
@@ -485,7 +490,9 @@ export default function JourneyU9() {
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
                   className="flex flex-col gap-4">
                   <div className="text-center">
-                    <div className="text-5xl mb-3">📸</div>
+                    <div className="mb-3 flex items-center justify-center w-14 h-14 rounded-2xl mx-auto" style={{ background: `${stageColor}15`, border: `1px solid ${stageColor}30` }}>
+                      <Camera size={26} style={{ color: stageColor }} strokeWidth={1.5} />
+                    </div>
                     <p className="text-xl font-bold text-white mb-1">{question.text}</p>
                     <p className="text-white/40 text-sm leading-relaxed">{question.hint}</p>
                   </div>

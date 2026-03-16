@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { CheckCircle2, Clock, Sparkles } from "lucide-react";
+import { CheckCircle2, Clock, Sparkles, Trophy } from "lucide-react";
 import { usePlayerContext } from "@/context/PlayerContext";
 
 const STAR_POSITIONS = [
@@ -72,7 +72,7 @@ export default function Complete() {
             boxShadow: `0 20px 60px ${primaryColor}50`
           }}
         >
-          🏆
+          <Trophy size={36} strokeWidth={1.5} className="text-white" />
         </motion.div>
 
         {/* Headline */}

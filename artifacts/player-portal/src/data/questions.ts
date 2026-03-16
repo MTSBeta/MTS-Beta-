@@ -118,12 +118,12 @@ export const JOURNEY_STAGES: JourneyStage[] = [
         hint: "Be honest with yourself — there's no wrong answer here.",
         profileKey: "mindset",
         options: [
-          "Put my head down and work harder to prove myself 💪",
-          "Speak to a coach or someone I trust about how I feel 💬",
-          "Lean on family or friends outside football for support ❤️",
-          "Use the frustration as fuel and channel it into my game 🔥",
-          "Give myself time and trust the process will pay off ⏳",
-          "Honestly struggle with it for a while before bouncing back 🌊",
+          "Put my head down and work harder to prove myself",
+          "Speak to a coach or someone I trust about how I feel",
+          "Lean on family or friends outside football for support",
+          "Use the frustration as fuel and channel it into my game",
+          "Give myself time and trust the process will pay off",
+          "Honestly struggle with it for a while before bouncing back",
         ],
       },
       {

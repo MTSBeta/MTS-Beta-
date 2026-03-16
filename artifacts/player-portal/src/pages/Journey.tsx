@@ -129,10 +129,11 @@ function StageIntro({ stage, color, onBegin, stageNum, totalStages }: {
         </p>
 
         <div
-          className="w-24 h-24 rounded-3xl flex items-center justify-center text-5xl shadow-2xl"
-          style={{ background: `${color}20`, border: `1px solid ${color}35` }}
+          className="w-24 h-24 rounded-3xl flex flex-col items-center justify-center shadow-2xl gap-0.5"
+          style={{ background: `${color}15`, border: `1px solid ${color}30` }}
         >
-          {stage.emoji}
+          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em]" style={{ color: `${color}80` }}>CH</span>
+          <span className="text-4xl font-display font-black text-white leading-none">{String(stageNum).padStart(2, "0")}</span>
         </div>
 
         <div>
@@ -437,7 +438,9 @@ export default function Journey() {
         <div ref={reviewScrollRef} className="relative z-10 flex-1 overflow-y-auto pb-36">
           <div className="max-w-xl mx-auto px-4 pt-8 space-y-6">
             <div className="text-center">
-              <div className="text-5xl mb-4">⏭️</div>
+              <div className="mb-4 flex items-center justify-center w-14 h-14 rounded-2xl bg-white/5 border border-white/10 mx-auto">
+                <SkipForward size={26} className="text-white/50" />
+              </div>
               <h1 className="text-2xl font-display font-black text-white mb-2">Almost there!</h1>
               <p className="text-white/50 text-sm leading-relaxed max-w-xs mx-auto">
                 You skipped {allSkipped.length} question{allSkipped.length !== 1 ? "s" : ""}. Answer them now, or finish and we'll build your story from everything you've shared.
@@ -454,7 +457,6 @@ export default function Journey() {
                     border: hasReviewAnswer ? `1px solid ${primaryColor}35` : "1px solid rgba(255,255,255,0.08)"
                   }}>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm">{s.emoji}</span>
                     <span className="text-white/35 text-xs font-bold uppercase tracking-widest">{s.title}</span>
                     {hasReviewAnswer && (
                       <span className="ml-auto text-xs font-bold" style={{ color: primaryColor }}>✓ Answered</span>
@@ -629,7 +631,6 @@ export default function Journey() {
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest"
                 style={{ background: `${accentColor}20`, color: accentColor }}
               >
-                <span>{stage.emoji}</span>
                 {stage.title}
               </span>
               {isCoachingQ && (
@@ -644,14 +645,21 @@ export default function Journey() {
               )}
             </div>
 
-            {/* Emoji */}
-            <div className="mb-5">
+            {/* Question indicator */}
+            <div className="mb-5 flex items-center gap-3">
               <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-lg"
-                style={{ background: `${accentColor}15`, border: `1px solid ${accentColor}25` }}
+                className="w-12 h-12 rounded-xl flex items-center justify-center shadow-md shrink-0"
+                style={{ background: `${accentColor}18`, border: `1px solid ${accentColor}30` }}
               >
-                {currentQuestion.emoji ?? stage.emoji}
+                <span className="font-display font-black text-white text-lg leading-none">{currentQI + 1}</span>
               </div>
+              <div className="flex-1 h-[3px] rounded-full bg-white/5 overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{ width: `${((currentQI + 1) / qCount) * 100}%`, background: accentColor }}
+                />
+              </div>
+              <span className="text-xs font-mono text-white/25 shrink-0">{qCount}</span>
             </div>
 
             {/* Question text */}

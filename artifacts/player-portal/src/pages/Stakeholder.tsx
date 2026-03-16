@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRoute } from "wouter";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2, Mic2 } from "lucide-react";
 import { VoiceRecorder } from "@/components/VoiceRecorder";
 import { MediaUploader } from "@/components/MediaUploader";
 import { getStakeholderQuestions } from "@/data/stakeholderQuestions";
@@ -121,7 +121,7 @@ export default function Stakeholder() {
       {/* Sticky header */}
       <div className="sticky top-0 z-30 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/6">
         <div className="flex items-center justify-between px-4 h-12">
-          <span className="text-xl">{qset.emoji}</span>
+          <span className="w-2 h-2 rounded-full bg-white/30" />
           <ProgressDots total={qset.questions.length} current={answeredCount} />
           <span className="text-white/30 text-xs font-mono">{answeredCount}/{qset.questions.length}</span>
         </div>
@@ -150,7 +150,7 @@ export default function Stakeholder() {
 
           {/* Voice nudge */}
           <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/4 border border-white/8 text-sm">
-            <span className="text-xl shrink-0">🎙️</span>
+            <Mic2 size={18} strokeWidth={1.5} className="text-white/40 shrink-0" />
             <span className="text-white/50">Tap <strong className="text-white/70">Add voice note</strong> on any question — speaking is quicker and often more honest.</span>
           </div>
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Dna } from "lucide-react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -129,9 +130,11 @@ export function MindsetProfiler({ primaryColor, playerName, onComplete }: Props)
             initial={{ scale: 0, rotate: -20 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ type: "spring", stiffness: 180 }}
-            className="w-20 h-20 rounded-3xl mx-auto mb-6 flex items-center justify-center text-4xl"
+            className="w-20 h-20 rounded-3xl mx-auto mb-6 flex items-center justify-center"
             style={{ background: `${GOLD}18`, border: `1px solid ${GOLD}30`, boxShadow: `0 0 40px ${GOLD}25` }}
-          >🧬</motion.div>
+          >
+            <Dna size={34} strokeWidth={1.5} style={{ color: GOLD }} />
+          </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-4" style={{ color: GOLD }}>Player DNA</p>
@@ -150,14 +153,10 @@ export function MindsetProfiler({ primaryColor, playerName, onComplete }: Props)
             className="rounded-2xl p-4 mb-7 space-y-3"
             style={{ background: "rgba(255,255,255,0.035)", border: "1px solid rgba(255,255,255,0.07)" }}
           >
-            {[
-              { icon: "👀", text: "Two statements appear" },
-              { icon: "👆", text: "Pick the one that's more you" },
-              { icon: "🧬", text: "Unlock your Player DNA" },
-            ].map((tip, i) => (
+            {["Two statements appear", "Pick the one that's more you", "Unlock your Player DNA"].map((text, i) => (
               <div key={i} className="flex items-center gap-3">
-                <span className="text-lg shrink-0">{tip.icon}</span>
-                <span className="text-white/55 text-sm font-medium">{tip.text}</span>
+                <span className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shrink-0" style={{ background: `${GOLD}25`, color: GOLD }}>{i + 1}</span>
+                <span className="text-white/55 text-sm font-medium">{text}</span>
               </div>
             ))}
           </motion.div>
@@ -190,9 +189,9 @@ export function MindsetProfiler({ primaryColor, playerName, onComplete }: Props)
             transition={{ type: "spring", stiffness: 160 }}
             className="text-center mb-8"
           >
-            <div className="w-20 h-20 rounded-3xl mx-auto mb-4 flex items-center justify-center text-4xl"
+            <div className="w-20 h-20 rounded-3xl mx-auto mb-4 flex items-center justify-center"
               style={{ background: `${GOLD}18`, border: `1px solid ${GOLD}30`, boxShadow: `0 0 40px ${GOLD}20` }}>
-              🧬
+              <Dna size={34} strokeWidth={1.5} style={{ color: GOLD }} />
             </div>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-2" style={{ color: GOLD }}>Your Player DNA</p>
             <h1 className="text-2xl font-display font-black text-white uppercase leading-tight">
@@ -209,7 +208,7 @@ export function MindsetProfiler({ primaryColor, playerName, onComplete }: Props)
                 <motion.div key={dim.key} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.09 + 0.2 }} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-white/40 text-[10px] font-bold uppercase tracking-wide">{dim.aLabel}</span>
-                    <span className="text-sm">{dim.emoji}</span>
+                    <span className="w-2 h-2 rounded-full" style={{ background: dim.color }} />
                     <span className="text-white/40 text-[10px] font-bold uppercase tracking-wide">{dim.bLabel}</span>
                   </div>
                   <div className="relative h-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.07)" }}>
