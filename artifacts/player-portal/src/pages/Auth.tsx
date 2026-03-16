@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, KeyRound } from "lucide-react";
 import { ClubBadge } from "@/components/ClubBadge";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { ACADEMIES } from "@/data/academies";
@@ -124,7 +124,9 @@ export default function Auth() {
                 onClick={() => setMode("login")}
                 className="w-full flex items-center gap-4 p-5 rounded-2xl text-left border border-white/8 bg-white/4 transition-all"
               >
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl bg-white/8 shrink-0">🔑</div>
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-white/8 shrink-0">
+                  <KeyRound size={20} strokeWidth={1.5} className="text-white/60" />
+                </div>
                 <div>
                   <p className="text-white font-bold text-base">Log back in</p>
                   <p className="text-white/40 text-xs mt-0.5">Use your access code to continue</p>
