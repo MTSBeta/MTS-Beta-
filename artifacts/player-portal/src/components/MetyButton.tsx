@@ -34,7 +34,6 @@ export default function MetyButton() {
   const { selectedAcademy } = usePlayerContext();
 
   const isPlayerPage = PLAYER_PATHS.some(p => location === p || location.startsWith(p + "/"));
-  if (!isPlayerPage) return null;
 
   const mascotName = getAcademyMascot(selectedAcademy?.key ?? "");
   const initial = mascotName.charAt(0).toUpperCase();
@@ -42,6 +41,7 @@ export default function MetyButton() {
   const hint = PAGE_HINTS[location] ?? "Ask me anything about your journey.";
 
   useEffect(() => {
+    if (!isPlayerPage) return;
     if (open) {
       if (messages.length === 0) {
         setMessages([{ role: "assistant", text: hint }]);
@@ -53,6 +53,8 @@ export default function MetyButton() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  if (!isPlayerPage) return null;
 
   async function sendMessage() {
     const q = input.trim();
