@@ -433,12 +433,26 @@ export default function Journey() {
   if (showReview) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
-            className="w-full h-full object-cover opacity-10 mix-blend-overlay" />
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+          {selectedAcademy?.stadiumImage ? (
+            <img
+              src={`${import.meta.env.BASE_URL}${selectedAcademy.stadiumImage}`}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ opacity: 0.32, filter: "brightness(0.35) saturate(0.5)" }}
+            />
+          ) : (
+            <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
+              className="w-full h-full object-cover opacity-10 mix-blend-overlay" />
+          )}
           <div
             className="absolute inset-0"
-            style={{ background: `radial-gradient(ellipse 70% 50% at 50% 100%, ${primaryColor}20 0%, transparent 70%)` }}
+            style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.30) 40%, rgba(10,10,10,0.75) 100%)" }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{ background: `radial-gradient(ellipse 70% 50% at 50% 100%, ${primaryColor}22 0%, transparent 70%)` }}
           />
         </div>
         <div className="sticky top-0 z-30 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/6">
@@ -518,9 +532,27 @@ export default function Journey() {
   if (showStageIntro) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] relative overflow-hidden">
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
-            className="w-full h-full object-cover opacity-10 mix-blend-overlay" />
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+          {selectedAcademy?.stadiumImage ? (
+            <img
+              src={`${import.meta.env.BASE_URL}${selectedAcademy.stadiumImage}`}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ opacity: 0.32, filter: "brightness(0.35) saturate(0.5)" }}
+            />
+          ) : (
+            <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
+              className="w-full h-full object-cover opacity-10 mix-blend-overlay" />
+          )}
+          <div
+            className="absolute inset-0"
+            style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.30) 40%, rgba(10,10,10,0.75) 100%)" }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{ background: `radial-gradient(ellipse 80% 55% at 50% 100%, ${primaryColor}22 0%, transparent 70%)` }}
+          />
         </div>
 
         {/* back button */}
@@ -580,17 +612,37 @@ export default function Journey() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
       {/* Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <img
-          src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
-          alt=""
-          className="w-full h-full object-cover opacity-10 mix-blend-overlay"
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* Stadium image */}
+        {selectedAcademy?.stadiumImage ? (
+          <img
+            src={`${import.meta.env.BASE_URL}${selectedAcademy.stadiumImage}`}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ opacity: 0.32, filter: "brightness(0.35) saturate(0.5)" }}
+          />
+        ) : (
+          <img
+            src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
+            alt=""
+            className="w-full h-full object-cover opacity-10 mix-blend-overlay"
+          />
+        )}
+
+        {/* Dark vignette — keeps text legible over the stadium */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: "linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.30) 40%, rgba(10,10,10,0.75) 100%)",
+          }}
         />
-        {/* Club color ambient glow */}
+
+        {/* Club colour ambient glow */}
         <div
           className="absolute inset-0 transition-all duration-700"
           style={{
-            background: `radial-gradient(ellipse 80% 55% at 50% 100%, ${accentColor}18 0%, transparent 70%)`,
+            background: `radial-gradient(ellipse 80% 55% at 50% 100%, ${accentColor}22 0%, transparent 70%)`,
           }}
         />
       </div>
