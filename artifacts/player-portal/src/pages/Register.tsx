@@ -13,6 +13,7 @@ const schema = z.object({
   age: z.coerce.number().min(6, "Must be at least 6").max(21, "Must be 21 or under"),
   shirtNumber: z.coerce.number().min(1, "Invalid").max(99, "Invalid"),
   position: z.string().min(1, "Tap your position on the pitch above"),
+  accessCode: z.string().min(3, "Access code required"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -47,7 +48,7 @@ export default function Register() {
   });
 
   const onSubmit = (data: FormData) => {
-    mutate({ data: { playerName: data.playerName, age: data.age, shirtNumber: data.shirtNumber, academyKey: selectedAcademy.key, position: data.position } });
+    mutate({ data: { playerName: data.playerName, age: data.age, shirtNumber: data.shirtNumber, academyKey: selectedAcademy.key, position: data.position, accessCode: data.accessCode } });
   };
 
   const isLight = (() => {
@@ -162,9 +163,21 @@ export default function Register() {
               />
             </div>
 
+            {/* Access code */}
+            <div>
+              <FieldLabel>Coach Access Code</FieldLabel>
+              <input
+                {...register("accessCode")}
+                type="text"
+                placeholder="Provided by your coach"
+                className={`${inputClass} ${errors.accessCode ? "border-red-500/50" : ""}`}
+              />
+              <FieldError msg={errors.accessCode?.message} />
+            </div>
+
             {isError && (
               <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3">
-                <p className="text-red-400 text-sm">Registration failed. Please check your details and try again.</p>
+                <p className="text-red-400 text-sm">Registration failed. Check your access code and try again.</p>
               </div>
             )}
           </motion.div>

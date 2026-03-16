@@ -14,6 +14,7 @@ export const academiesTable = pgTable("academies", {
   welcomeMessage: text("welcome_message").notNull(),
   chantUrl: text("chant_url"),
   maxStaffAccounts: integer("max_staff_accounts").notNull().default(8),
+  accessCode: varchar("access_code", { length: 20 }).unique(),
 });
 
 export const insertAcademySchema = createInsertSchema(academiesTable).omit({ id: true });

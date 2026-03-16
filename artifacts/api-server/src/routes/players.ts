@@ -14,7 +14,7 @@ router.post("/players", async (req, res) => {
     return;
   }
 
-  const { playerName, age, shirtNumber, academyKey, position } = parsed.data;
+  const { playerName, age, shirtNumber, academyKey, position, accessCode: submittedCode } = parsed.data;
 
   const [academy] = await db
     .select()
@@ -27,7 +27,13 @@ router.post("/players", async (req, res) => {
     return;
   }
 
-  const accessCode = generateCode("PLY");
+  // Validate coach access code matches academy
+  if (!submittedCode || submittedCode.toUpperCase() !== academy.accessCode?.toUpperCase()) {
+    res.status(400).json({ error: "Invalid access code" });
+    return;
+  }
+
+  const playerAccessCode = generateCode("PLY");
   const parentCode = generateCode("PAR");
 
   const [player] = await db
@@ -39,7 +45,7 @@ router.post("/players", async (req, res) => {
       academyKey,
       academyName: academy.name,
       position,
-      accessCode,
+      accessCode: playerAccessCode,
       parentCode,
       status: "registered",
     })
