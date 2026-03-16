@@ -298,7 +298,7 @@ export default function Home() {
                       {/* Stadium background image */}
                       {academy.stadiumImage && (
                         <img
-                          src={academy.stadiumImage}
+                          src={`${import.meta.env.BASE_URL}${academy.stadiumImage}`}
                           alt=""
                           aria-hidden="true"
                           className="absolute inset-0 w-full h-full object-cover rounded-2xl"
