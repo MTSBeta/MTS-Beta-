@@ -14,7 +14,7 @@ export interface U9Question {
   /** Options for select / multiselect / coaching-multiselect questions */
   options?: string[];
   /** Character profile keys — used to generate summation */
-  profileKey?: "traits" | "strengths" | "workEthic" | "mindset" | "goals" | "dreams" | "clubValues";
+  profileKey?: "traits" | "strengths" | "workEthic" | "mindset" | "goals" | "dreams" | "clubValues" | "storyThemes" | "developmentAreas";
 }
 
 export interface U9Stage {
@@ -266,53 +266,92 @@ export const U9_STAGES: U9Stage[] = [
   // ── STAGE 6: Coaching Notes (COACH ONLY) ──────────────────────────
   {
     id: "Coaching Notes",
-    title: "Coaching Notes",
+    title: "Coach Notes",
     emoji: "👨‍🏫",
-    intro: "This section is for the coaching staff to fill in. Your input shapes the story's values and lessons.",
+    intro: "This section is for coaching staff only. Your insights directly shape the story this player receives — their values, lessons, and the messages that will stay with them.",
     colour: "#0d9488",
     isCoaching: true,
     questions: [
       {
-        type: "coaching-text",
-        emoji: "🌟",
-        text: "What are this player's standout qualities on the pitch?",
-        hint: "What does this player do brilliantly — what makes them special to coach?",
-      },
-      {
         type: "coaching-multiselect",
         emoji: "🏛️",
-        text: "Which club values does this player already demonstrate?",
-        hint: "Select all that apply — these will be woven into the story's themes.",
+        text: "Which club values does this player already demonstrate — on the pitch and in their everyday behaviour?",
+        hint: "Select all that apply. These values will be woven into the story's core themes.",
         profileKey: "clubValues",
         options: [
           "Respect", "Commitment", "Teamwork", "Honesty", "Excellence",
           "Resilience", "Creativity", "Discipline", "Sportsmanship",
           "Leadership", "Courage", "Humility", "Ambition", "Integrity",
+          "Accountability", "Work Ethic", "Inclusivity",
+        ],
+      },
+      {
+        type: "coaching-multiselect",
+        emoji: "📚",
+        text: "What story themes and life lessons do you want woven through this player's personalised book?",
+        hint: "Choose the messages you most want them to carry — these guide the narrative arc.",
+        profileKey: "storyThemes",
+        options: [
+          "Resilience and bouncing back",
+          "The power of hard work over talent",
+          "Family and support systems",
+          "Knowing who you are beyond football",
+          "Leadership and responsibility",
+          "Learning from failure",
+          "The team over the individual",
+          "Mental strength and emotional control",
+          "Staying grounded and humble",
+          "Trusting the process",
+          "Community and giving back",
+          "Courage to be yourself",
+        ],
+      },
+      {
+        type: "coaching-multiselect",
+        emoji: "📈",
+        text: "What are the priority development areas you're working on with this player this season?",
+        hint: "Select all that are in your programme — technical, tactical, physical and psychological.",
+        profileKey: "developmentAreas",
+        options: [
+          "Ball control and first touch",
+          "Passing and decision-making",
+          "Shooting and finishing",
+          "1v1 defending",
+          "Positional understanding",
+          "Off-the-ball movement",
+          "Speed and agility",
+          "Physical strength",
+          "Stamina and fitness",
+          "Managing pressure and nerves",
+          "Confidence and self-belief",
+          "Resilience after mistakes",
+          "Communication on the pitch",
+          "Coachability and listening",
         ],
       },
       {
         type: "coaching-text",
-        emoji: "🎯",
-        text: "What are this player's key development focus areas this season?",
-        hint: "Be specific — what do you most want them to improve technically, tactically, or mentally?",
-      },
-      {
-        type: "coaching-text",
-        emoji: "📖",
-        text: "What key lesson or message would you like woven into their story?",
-        hint: "What do you want them to carry with them? What should their book remind them of?",
+        emoji: "🌟",
+        text: "What makes this player genuinely special? Describe the quality that would never appear in a stats report or assessment document.",
+        hint: "This is the heart of their story — what you see that most people miss.",
       },
       {
         type: "coaching-text",
         emoji: "💡",
-        text: "Describe a recent moment where this player showed real character.",
-        hint: "A game situation, a training moment, or a tough spell they came through.",
+        text: "What is the one key lesson or message you most want this player to take from their book — something that will help shape who they become?",
+        hint: "The single most important thing. The thing you'd say if you only had one sentence.",
       },
       {
         type: "coaching-text",
-        emoji: "📈",
-        text: "What does success look like for this player by the end of this season?",
-        hint: "Paint a picture of where you want them to be — on the pitch and as a person.",
+        emoji: "🎭",
+        text: "Describe a specific moment — in training or a match — where this player showed real character. Paint the scene.",
+        hint: "The more specific, the more powerful. A real story beats a general observation every time.",
+      },
+      {
+        type: "coaching-text",
+        emoji: "🏁",
+        text: "What does success look like for this player by the end of this season — on the pitch, off it, and as a growing person?",
+        hint: "Paint the picture of where you want them to be. This becomes the story's closing chapter.",
       },
     ],
   },
@@ -336,8 +375,10 @@ export function computeCharacterProfile(
   const goals = get("goals");
   const dreams = get("dreams");
   const clubValues = get("clubValues");
+  const storyThemes = get("storyThemes");
+  const developmentAreas = get("developmentAreas");
 
-  const lines: string[] = ["=== CHARACTER PROFILE SUMMATION ==="];
+  const lines: string[] = ["=== CHARACTER & COACHING PROFILE SUMMATION ==="];
   if (traits) lines.push(`Personality traits: ${traits}`);
   if (strengths) lines.push(`Player strengths: ${strengths}`);
   if (workEthic) lines.push(`Work ethic: ${workEthic}`);
@@ -345,6 +386,8 @@ export function computeCharacterProfile(
   if (goals) lines.push(`Season goals: ${goals}`);
   if (dreams) lines.push(`Dream stages: ${dreams}`);
   if (clubValues) lines.push(`Club values demonstrated: ${clubValues}`);
-  lines.push("===================================");
+  if (storyThemes) lines.push(`Story themes (coach-selected): ${storyThemes}`);
+  if (developmentAreas) lines.push(`Development priorities (coach-selected): ${developmentAreas}`);
+  lines.push("==============================================");
   return lines.join("\n");
 }
