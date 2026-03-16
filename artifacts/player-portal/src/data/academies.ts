@@ -8,6 +8,7 @@ export interface AcademyConfig {
   primaryColor: string;
   secondaryColor: string;
   accentColor?: string;
+  crestUrl?: string;
   welcomeMessage: string;
 }
 
@@ -25,6 +26,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#EF0107",
     secondaryColor: "#FFFFFF",
     accentColor: "#063672",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
     welcomeMessage: "Victoria Concordia Crescit. Welcome to the Arsenal Academy family."
   },
   {
@@ -36,6 +38,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "premier-league",
     primaryColor: "#670E36",
     secondaryColor: "#95BFE5",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/8/86/Aston_Villa_F.C._logo.svg",
     welcomeMessage: "In Preparation is Victory. Your Villa story starts here."
   },
   {
@@ -47,6 +50,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "premier-league",
     primaryColor: "#DA291C",
     secondaryColor: "#000000",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/e/e5/AFC_Bournemouth_%282013%29.svg",
     welcomeMessage: "Welcome to the Cherries Academy. Your journey on the south coast starts now."
   },
   {
@@ -59,6 +63,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#E30613",
     secondaryColor: "#FFFFFF",
     accentColor: "#000000",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg",
     welcomeMessage: "Welcome to Brentford Academy. Think differently, play boldly."
   },
   {
@@ -70,6 +75,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "premier-league",
     primaryColor: "#0057B8",
     secondaryColor: "#FFCD00",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_logo.svg",
     welcomeMessage: "Seagulls, your development journey begins at the Amex."
   },
   {
@@ -81,6 +87,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "premier-league",
     primaryColor: "#034694",
     secondaryColor: "#DBA111",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg",
     welcomeMessage: "Welcome to Cobham. Your blue journey starts here."
   },
   {
@@ -92,6 +99,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "premier-league",
     primaryColor: "#1B458F",
     secondaryColor: "#C4122E",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/a/a2/Crystal_Palace_FC_logo_%282022%29.svg",
     welcomeMessage: "Glad All Over. Your Palace Academy story begins today."
   },
   {
@@ -104,6 +112,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#003399",
     secondaryColor: "#FFFFFF",
     accentColor: "#BCA996",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/7/7c/Everton_FC_logo.svg",
     welcomeMessage: "Nil Satis Nisi Optimum — nothing but the best. Welcome to Everton Academy."
   },
   {
@@ -116,6 +125,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#CC0000",
     secondaryColor: "#FFFFFF",
     accentColor: "#000000",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/e/eb/Fulham_FC_%28shield%29.svg",
     welcomeMessage: "Welcome to Fulham Academy. The Thames runs through our history."
   },
   {
@@ -127,6 +137,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "premier-league",
     primaryColor: "#003781",
     secondaryColor: "#FFFFFF",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/4/43/Ipswich_Town.svg",
     welcomeMessage: "Welcome to Portman Road. Suffolk's finest, your story starts here."
   },
   {
@@ -138,6 +149,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "premier-league",
     primaryColor: "#003090",
     secondaryColor: "#FDBE11",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/2/2d/Leicester_City_crest.svg",
     welcomeMessage: "Welcome to the King Power. Your Foxes journey begins."
   },
   {
@@ -150,6 +162,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#C8102E",
     secondaryColor: "#F6EB61",
     accentColor: "#00B2A9",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg",
     welcomeMessage: "You'll Never Walk Alone. Begin your Anfield legacy."
   },
   {
@@ -161,6 +174,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "premier-league",
     primaryColor: "#6CABDD",
     secondaryColor: "#1C2C5B",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
     welcomeMessage: "Cityzens, your path to greatness starts at the City Football Academy."
   },
   {
@@ -173,6 +187,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#DA291C",
     secondaryColor: "#FBE122",
     accentColor: "#000000",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg",
     welcomeMessage: "Welcome to Carrington. Build your United story."
   },
   {
@@ -185,6 +200,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#241F20",
     secondaryColor: "#FFFFFF",
     accentColor: "#41B6E6",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg",
     welcomeMessage: "Howay the Lads! Forge your path at the Newcastle Academy."
   },
   {
@@ -196,6 +212,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "premier-league",
     primaryColor: "#DD0000",
     secondaryColor: "#FFFFFF",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/e/e5/Nottingham_Forest_F.C._logo.svg",
     welcomeMessage: "Welcome to the Garibaldi. Forest roots run deep — so will your story."
   },
   {
@@ -208,6 +225,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#D71920",
     secondaryColor: "#FFFFFF",
     accentColor: "#130C0E",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/c/c9/FC_Southampton.svg",
     welcomeMessage: "Welcome to Staplewood. The Saints Academy has shaped legends."
   },
   {
@@ -219,6 +237,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "premier-league",
     primaryColor: "#132257",
     secondaryColor: "#FFFFFF",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg",
     welcomeMessage: "To Dare Is To Do. Step into your Spurs future."
   },
   {
@@ -231,6 +250,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#7A263A",
     secondaryColor: "#1BB1E7",
     accentColor: "#F5D439",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg",
     welcomeMessage: "Forever Blowing Bubbles. Welcome to the West Ham Academy."
   },
   {
@@ -242,6 +262,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "premier-league",
     primaryColor: "#FDB913",
     secondaryColor: "#231F20",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg",
     welcomeMessage: "Welcome to the Wolves Academy. Old Gold runs through everything we do."
   },
 
@@ -256,6 +277,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "championship",
     primaryColor: "#1B2D7E",
     secondaryColor: "#FFFFFF",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/6/68/Birmingham_City_FC_logo.svg",
     welcomeMessage: "Keep Right On! Welcome to your Birmingham City development journey."
   },
   {
@@ -267,6 +289,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "championship",
     primaryColor: "#1D428A",
     secondaryColor: "#FFCD00",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/5/54/Leeds_United_F.C._logo.svg",
     welcomeMessage: "Marching On Together. Leeds Academy — ambition without limits."
   },
   {
@@ -291,6 +314,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#EE2737",
     secondaryColor: "#FFFFFF",
     accentColor: "#000000",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/9/9c/Sheffield_United_FC_logo.svg",
     welcomeMessage: "United as One. Sheffield United Academy starts your Blades journey."
   },
   {
@@ -302,6 +326,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "championship",
     primaryColor: "#122F67",
     secondaryColor: "#FFFFFF",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg",
     welcomeMessage: "Throstle pride runs deep. West Brom Academy — your story, your chapter."
   },
   {
@@ -313,6 +338,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "championship",
     primaryColor: "#EE2020",
     secondaryColor: "#FFFFFF",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/2/2c/Middlesbrough_FC_crest.svg",
     welcomeMessage: "Boro born and Boro bred. The Riverside Academy is your launchpad."
   },
   {
@@ -324,6 +350,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "championship",
     primaryColor: "#6C1D45",
     secondaryColor: "#99D6EA",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/6/6d/Burnley_FC_Logo.svg",
     welcomeMessage: "Clarets together. Burnley Academy — roots in the community, eyes on the top."
   },
   {
@@ -335,6 +362,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "championship",
     primaryColor: "#00A650",
     secondaryColor: "#FFF200",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/1/17/Norwich_City_FC_logo.svg",
     welcomeMessage: "On the Ball City! Norwich Academy — the Canary in you is ready to fly."
   },
   {
@@ -347,6 +375,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#FBEE23",
     secondaryColor: "#ED2127",
     accentColor: "#000000",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/e/e2/Watford.svg",
     welcomeMessage: "Come On You 'Orns! Watford Academy — building the future of the Hornets."
   },
   {
@@ -359,6 +388,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#59CBE8",
     secondaryColor: "#FFFFFF",
     accentColor: "#034694",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/7/7b/Coventry_City_FC_crest.svg",
     welcomeMessage: "Sky Blue Army! Coventry Academy — your journey in sky blue."
   },
   {
@@ -370,6 +400,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "championship",
     primaryColor: "#0066B3",
     secondaryColor: "#FFFFFF",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/a/a5/Sheffield_Wednesday.svg",
     welcomeMessage: "Owls forever. Sheffield Wednesday Academy — wise players, bold futures."
   },
   {
@@ -382,6 +413,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#009EE0",
     secondaryColor: "#FFFFFF",
     accentColor: "#EF3829",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/0/0f/Blackburn_Rovers.svg",
     welcomeMessage: "Rovers forever. Blackburn Academy — blue and white, through and through."
   },
   {
@@ -394,6 +426,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#E03A3E",
     secondaryColor: "#FFFFFF",
     accentColor: "#1B2F6B",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/2/29/Stoke_City_FC.svg",
     welcomeMessage: "Delilah! Stoke City Academy — Potteries grit, Premier League ambition."
   },
   {
@@ -417,6 +450,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#0070B5",
     secondaryColor: "#FFFFFF",
     accentColor: "#D4011D",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/3/3c/Cardiff_City_crest.svg",
     welcomeMessage: "Bluebirds rising. Cardiff Academy — your story in the Welsh capital."
   },
   {
@@ -429,6 +463,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#FFFFFF",
     secondaryColor: "#241F21",
     accentColor: "#B1B3B3",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/4/4a/Derby_County_crest.svg",
     welcomeMessage: "Pride of the Midlands. Derby Academy — your Ram story begins."
   },
   {
@@ -440,6 +475,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "championship",
     primaryColor: "#001D5E",
     secondaryColor: "#FFFFFF",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/7/71/Millwall_FC_logo.png",
     welcomeMessage: "No One Likes Us, We Don't Care. Millwall Academy — lion-hearted players."
   },
   {
@@ -451,6 +487,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "championship",
     primaryColor: "#F78F1E",
     secondaryColor: "#001F5B",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/9/9d/Luton_Town_logo.svg",
     welcomeMessage: "Come On You Hatters! Luton Academy — keep on keeping on."
   },
   {
@@ -462,6 +499,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "championship",
     primaryColor: "#1D5BA4",
     secondaryColor: "#FFFFFF",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/3/31/Queens_Park_Rangers_crest.svg",
     welcomeMessage: "QPR Academy — Hoops ambition, no limits."
   },
   {
@@ -473,6 +511,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "championship",
     primaryColor: "#E00000",
     secondaryColor: "#FFFFFF",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/f/f5/Bristol_City_crest.svg",
     welcomeMessage: "Seize The Day. Bristol City Academy — the city's red heart beats for you."
   },
   {
@@ -484,6 +523,7 @@ export const ACADEMIES: AcademyConfig[] = [
     tier: "championship",
     primaryColor: "#121212",
     secondaryColor: "#FFFFFF",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/f/f9/Swansea_City_AFC_logo.svg",
     welcomeMessage: "Swans together. Swansea City Academy — your Welsh journey on the Liberty."
   },
   {
@@ -496,6 +536,7 @@ export const ACADEMIES: AcademyConfig[] = [
     primaryColor: "#001489",
     secondaryColor: "#FFFFFF",
     accentColor: "#C8102E",
+    crestUrl: "https://upload.wikimedia.org/wikipedia/en/3/38/Portsmouth_FC_logo.svg",
     welcomeMessage: "Play Up Pompey! Portsmouth Academy — Fratton spirit in every step."
   }
 ];

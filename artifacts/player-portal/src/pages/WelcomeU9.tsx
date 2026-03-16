@@ -38,8 +38,13 @@ export default function WelcomeU9() {
       {/* Topbar */}
       <div className="relative z-10 flex items-center justify-between px-4 h-12 border-b border-white/5">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-md flex items-center justify-center text-[9px] font-black text-white"
-            style={{ background: primaryColor }}>{selectedAcademy.logoText}</div>
+          {selectedAcademy.crestUrl ? (
+            <img src={selectedAcademy.crestUrl} alt={selectedAcademy.shortName}
+              className="w-6 h-6 object-contain shrink-0" loading="lazy" />
+          ) : (
+            <div className="w-6 h-6 rounded-md flex items-center justify-center text-[9px] font-black text-white"
+              style={{ background: primaryColor }}>{selectedAcademy.logoText}</div>
+          )}
           <span className="text-white/40 text-xs font-bold uppercase tracking-widest">{selectedAcademy.shortName}</span>
         </div>
         <button onClick={() => { clearContext(); navigate("/"); }}

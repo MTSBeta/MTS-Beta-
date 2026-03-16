@@ -79,12 +79,21 @@ export default function Register() {
         <div className="flex-1 flex justify-center">
           <span className="text-white/40 text-xs font-bold uppercase tracking-widest">Create Profile</span>
         </div>
-        <div
-          className="w-6 h-6 rounded-md flex items-center justify-center text-[9px] font-black text-white"
-          style={{ background: selectedAcademy.primaryColor }}
-        >
-          {selectedAcademy.logoText}
-        </div>
+        {selectedAcademy.crestUrl ? (
+          <img
+            src={selectedAcademy.crestUrl}
+            alt={selectedAcademy.shortName}
+            className="w-6 h-6 object-contain shrink-0"
+            loading="lazy"
+          />
+        ) : (
+          <div
+            className="w-6 h-6 rounded-md flex items-center justify-center text-[9px] font-black text-white"
+            style={{ background: selectedAcademy.primaryColor }}
+          >
+            {selectedAcademy.logoText}
+          </div>
+        )}
       </div>
 
       {/* Form */}

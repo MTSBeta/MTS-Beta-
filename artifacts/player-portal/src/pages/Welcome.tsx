@@ -65,9 +65,13 @@ export default function Welcome() {
             <span>Log out</span>
           </button>
           <div
-            className="px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase"
+            className="flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase"
             style={{ background: `${selectedAcademy.primaryColor}30`, color: selectedAcademy.primaryColor, border: `1px solid ${selectedAcademy.primaryColor}50` }}
           >
+            {selectedAcademy.crestUrl ? (
+              <img src={selectedAcademy.crestUrl} alt={selectedAcademy.shortName}
+                className="w-4 h-4 object-contain" loading="lazy" />
+            ) : null}
             {selectedAcademy.logoText}
           </div>
         </div>
