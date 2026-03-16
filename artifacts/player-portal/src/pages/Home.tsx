@@ -97,11 +97,13 @@ export default function Home() {
               >
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-purple-900/20 to-transparent" />
                 <div className="relative z-10 flex flex-col items-center gap-4">
-                  <img 
+                  <motion.img 
                     src={`${import.meta.env.BASE_URL}logos/premier-league-logo.png`}
                     alt="Premier League"
                     className="h-12 w-auto object-contain drop-shadow-lg"
                     style={{ maxWidth: "120px" }}
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   />
                   <div className="text-center">
                     <div className="text-white font-black text-xl md:text-2xl uppercase tracking-wider font-display">Premier League</div>
