@@ -1,67 +1,151 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { Layout } from "@/components/Layout";
+import { CheckCircle2, Clock, Sparkles } from "lucide-react";
 import { usePlayerContext } from "@/context/PlayerContext";
-import { Button } from "@/components/ui/Button";
+
+const STAR_POSITIONS = [
+  { x: "10%", y: "15%", delay: 0.3, size: 3 },
+  { x: "88%", y: "10%", delay: 0.5, size: 2 },
+  { x: "75%", y: "30%", delay: 0.7, size: 4 },
+  { x: "20%", y: "45%", delay: 0.4, size: 2 },
+  { x: "92%", y: "55%", delay: 0.9, size: 3 },
+  { x: "5%", y: "70%", delay: 0.6, size: 2 },
+  { x: "60%", y: "80%", delay: 0.8, size: 3 },
+  { x: "35%", y: "88%", delay: 1.0, size: 2 },
+];
+
+function isLight(hex: string) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 160;
+}
 
 export default function Complete() {
   const [_, navigate] = useLocation();
   const { playerData, selectedAcademy } = usePlayerContext();
+  const [show, setShow] = useState(false);
 
-  if (!playerData) {
-    navigate("/");
-    return null;
-  }
+  useEffect(() => { setTimeout(() => setShow(true), 100); }, []);
+
+  if (!playerData) { navigate("/"); return null; }
+
+  const primaryColor = selectedAcademy?.primaryColor ?? "#6d28d9";
+  const btnText = isLight(primaryColor) ? "#000" : "#fff";
+  const firstName = playerData.playerName.split(" ")[0];
 
   return (
-    <Layout>
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-3xl mx-auto flex flex-col items-center mt-12 text-center"
-      >
-        <h1 className="text-4xl md:text-6xl font-display font-black text-white mb-6 uppercase tracking-tight">
-          Your Story Is Taking Shape
-        </h1>
-        
-        <div className="glass-panel p-8 md:p-12 rounded-3xl w-full mb-8 relative overflow-hidden">
-          <div className="relative z-10 flex flex-col items-center">
-            <div className="w-24 h-24 rounded-full bg-[var(--academy-primary)] flex items-center justify-center text-white font-display text-3xl font-black mb-6 shadow-2xl">
-              {selectedAcademy?.logoText || "FB"}
-            </div>
-            
-            <h2 className="text-2xl text-white font-bold mb-2">{playerData.playerName}</h2>
-            <div className="flex gap-4 text-white/60 font-medium mb-8">
-              <span>{playerData.academyName}</span>
-              <span>•</span>
-              <span>{playerData.position}</span>
-            </div>
+    <div className="min-h-screen bg-[#0a0a0a] flex flex-col overflow-hidden">
+      {/* BG */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
+          className="w-full h-full object-cover opacity-15 mix-blend-overlay" />
+        {/* Club color radial burst */}
+        <div className="absolute inset-0" style={{
+          background: `radial-gradient(ellipse at 50% 30%, ${primaryColor}25 0%, transparent 65%)`
+        }} />
+      </div>
 
-            <div className="w-full max-w-md bg-black/40 rounded-2xl p-6 border border-white/10 mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-white/80 font-medium">Player Journey</span>
-                <span className="text-green-400 font-bold flex items-center gap-2">✓ Complete</span>
-              </div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-white/80 font-medium">Parent &amp; Friend Perspectives</span>
-                <span className="text-white/40 font-bold">Awaiting responses...</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-white/80 font-medium">Academy Staff Perspectives</span>
-                <span className="text-white/40 font-bold">Awaiting responses...</span>
+      {/* Floating star particles */}
+      {STAR_POSITIONS.map((s, i) => (
+        <motion.div
+          key={i}
+          className="fixed z-10 rounded-full pointer-events-none"
+          style={{ left: s.x, top: s.y, width: s.size * 2, height: s.size * 2, background: primaryColor }}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={show ? { opacity: [0, 0.7, 0], scale: [0, 1, 0], y: [0, -40] } : {}}
+          transition={{ delay: s.delay, duration: 2, ease: "easeOut" }}
+        />
+      ))}
+
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-5 py-12 max-w-sm mx-auto w-full text-center">
+
+        {/* Trophy icon */}
+        <motion.div
+          initial={{ scale: 0, rotate: -10 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.1 }}
+          className="w-24 h-24 rounded-3xl flex items-center justify-center text-5xl mb-6 shadow-2xl"
+          style={{
+            background: `linear-gradient(135deg, ${primaryColor}, ${primaryColor}80)`,
+            boxShadow: `0 20px 60px ${primaryColor}50`
+          }}
+        >
+          🏆
+        </motion.div>
+
+        {/* Headline */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <h1 className="text-4xl font-display font-black text-white uppercase tracking-tight leading-none mb-2">
+            That's a wrap,
+          </h1>
+          <h1 className="text-4xl font-display font-black uppercase tracking-tight leading-none mb-4"
+            style={{ color: primaryColor }}>
+            {firstName}.
+          </h1>
+          <p className="text-white/50 text-base leading-relaxed mb-8">
+            Your story is building. We'll compile everything — your journey, your crew's perspective, your academy's view — into something special.
+          </p>
+        </motion.div>
+
+        {/* Status card */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="w-full rounded-2xl overflow-hidden mb-8"
+          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+        >
+          {[
+            { label: "Your journey", status: "done", icon: <CheckCircle2 size={15} className="text-green-400" /> },
+            { label: "Family & friends", status: "pending", icon: <Clock size={15} className="text-white/30" /> },
+            { label: "Academy staff", status: "pending", icon: <Clock size={15} className="text-white/30" /> },
+          ].map((item, i) => (
+            <div key={i} className={`flex items-center justify-between px-5 py-4 ${i < 2 ? "border-b border-white/6" : ""}`}>
+              <span className={`text-sm font-medium ${item.status === "done" ? "text-white" : "text-white/50"}`}>
+                {item.label}
+              </span>
+              <div className="flex items-center gap-1.5 text-xs">
+                {item.icon}
+                <span className={item.status === "done" ? "text-green-400" : "text-white/25"}>
+                  {item.status === "done" ? "Complete" : "Waiting…"}
+                </span>
               </div>
             </div>
+          ))}
+        </motion.div>
 
-            <p className="text-lg text-white/80 italic font-medium">
-              We are compiling your responses to build your unique football development profile.
-            </p>
-          </div>
-        </div>
+        {/* Player access code */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="w-full rounded-2xl p-4 mb-8 text-center"
+          style={{ background: `${primaryColor}15`, border: `1px solid ${primaryColor}30` }}
+        >
+          <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold mb-1">Your access code</p>
+          <p className="text-white font-mono font-black text-lg tracking-widest">{playerData.accessCode}</p>
+          <p className="text-white/30 text-xs mt-1">Keep this safe to log back in</p>
+        </motion.div>
 
-        <Button variant="outline" onClick={() => navigate("/")}>
-          Return to Home
-        </Button>
-      </motion.div>
-    </Layout>
+        {/* Home button */}
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => navigate("/")}
+          className="w-full py-4 rounded-2xl font-black text-base uppercase tracking-widest font-display"
+          style={{ background: primaryColor, color: btnText, boxShadow: `0 8px 32px ${primaryColor}55` }}
+        >
+          Back to Home
+        </motion.button>
+      </div>
+    </div>
   );
 }
