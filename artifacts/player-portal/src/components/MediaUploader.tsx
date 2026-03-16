@@ -131,10 +131,7 @@ export function MediaUploader({ onMediaChange, existingUrls = [] }: MediaUploade
           {uploading ? (
             <div className="w-4 h-4 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
           ) : (
-            <>
-              <Plus size={16} />
-              <span className="text-[9px] font-medium">Receipt</span>
-            </>
+            <Plus size={16} />
           )}
         </button>
       </div>
