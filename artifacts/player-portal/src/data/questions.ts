@@ -28,6 +28,11 @@ export interface JourneyQuestion {
   positionIds?: string[];
   /** Conditional follow-up questions keyed to specific option selections */
   followUps?: FollowUpBranch[];
+  /**
+   * Runtime-computed label set by the question selector (e.g. "Centre Back", "Right Back", "CB / RB").
+   * Never stored in question data — always attached by selectPositionQuestions().
+   */
+  positionLabel?: string;
 }
 
 export interface JourneyStage {

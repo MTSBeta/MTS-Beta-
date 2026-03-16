@@ -9,6 +9,8 @@ import { useSoundEnabled } from "@/context/SoundContext";
 import { useSoundSystem } from "@/hooks/useSoundSystem";
 import { PLAYER_STAGES, computeCharacterProfile } from "@/data/questions";
 import type { JourneyQuestion } from "@/data/questions";
+import { POSITIONS } from "@/data/positions";
+import { selectPositionQuestions } from "@/utils/questionSelector";
 import { useSaveJourneyResponses, useCompleteJourney } from "@workspace/api-client-react";
 import type { AnswerEntry } from "@/context/PlayerContext";
 
@@ -170,15 +172,37 @@ export default function Journey() {
   const [qDir, setQDir] = useState(1); // 1=forward, -1=backward
 
   const playerPosition = playerData?.position ?? "";
+  const playerSecondPosition = playerData?.secondPosition ?? null;
 
-  const activeStages = PLAYER_STAGES.map(s => ({
-    ...s,
-    questions: s.questions.filter(q => {
-      if (q.requiresSecondPosition && !playerData?.secondPosition) return false;
-      if (q.positionIds && !q.positionIds.includes(playerPosition)) return false;
-      return true;
-    }),
-  }));
+  // Resolve human-readable position labels for display
+  const primaryPosLabel =
+    POSITIONS.find(p => p.id === playerPosition)?.displayName ?? playerPosition;
+  const secondaryPosLabel = playerSecondPosition
+    ? (POSITIONS.find(p => p.id === playerSecondPosition)?.displayName ?? playerSecondPosition)
+    : undefined;
+
+  const activeStages = PLAYER_STAGES.map(s => {
+    // ── "Your Football Mind" uses the full blending selector ──────────────
+    if (s.id === "Your Football Mind") {
+      const blendedQs = selectPositionQuestions(s.questions, {
+        primaryPosition: playerPosition,
+        secondaryPosition: playerSecondPosition,
+        primaryLabel: primaryPosLabel,
+        secondaryLabel: secondaryPosLabel,
+      });
+      return { ...s, questions: blendedQs };
+    }
+
+    // ── All other stages: standard filtering ──────────────────────────────
+    return {
+      ...s,
+      questions: s.questions.filter(q => {
+        if (q.requiresSecondPosition && !playerData?.secondPosition) return false;
+        if (q.positionIds && !q.positionIds.includes(playerPosition)) return false;
+        return true;
+      }),
+    };
+  });
 
   const stage = activeStages[currentStep];
   const qCount = stage.questions.length;
@@ -701,13 +725,19 @@ export default function Journey() {
             className="flex-1 flex flex-col px-5 pt-6 pb-4 max-w-xl mx-auto w-full"
           >
             {/* Stage + question badge */}
-            <div className="flex items-center gap-2 mb-5">
+            <div className="flex items-center flex-wrap gap-2 mb-5">
               <span
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest"
                 style={{ background: `${accentColor}20`, color: accentColor }}
               >
                 {stage.title}
               </span>
+              {/* Position label — shown on Football Mind questions */}
+              {currentQuestion.positionLabel && (
+                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide bg-white/8 text-white/55 border border-white/10">
+                  {currentQuestion.positionLabel}
+                </span>
+              )}
               {isCoachingQ && (
                 <span className="px-2 py-1 rounded-full text-[10px] font-black tracking-widest uppercase bg-teal-500/15 text-teal-400">
                   Coach section
