@@ -320,7 +320,7 @@ export default function Journey() {
         setIsSaving(true);
         const allAnswers = { ...journeyAnswers, [stage.id]: localAnswers };
         let runningNum = 0;
-        const responses: typeof buildResponses extends (...args: any[]) => infer R ? R : any = [];
+        const responses: { stage: string; questionNumber: number; questionText: string; answerText: string; audioUrl: string | null; mediaUrls: string[] }[] = [];
         for (let si = 0; si <= currentStep; si++) {
           const s = activeStages[si];
           const stageAnswers = allAnswers[s.id] ?? [];
