@@ -6,6 +6,7 @@ import { PREMIER_LEAGUE, CHAMPIONSHIP, type AcademyConfig } from "@/data/academi
 import { usePlayerContext } from "@/context/PlayerContext";
 import { Layout } from "@/components/Layout";
 import { ClubBadge } from "@/components/ClubBadge";
+import { LeagueBadge } from "@/components/BadgeSystem";
 
 type Tier = "premier-league" | "championship" | null;
 
@@ -165,15 +166,7 @@ export default function Home() {
                   Back
                 </button>
                 <div className="flex items-center gap-2">
-                  <div
-                    className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border"
-                    style={selectedTier === "premier-league"
-                      ? { background: "rgba(109,28,204,0.2)", borderColor: "rgba(109,28,204,0.5)", color: "#c084fc" }
-                      : { background: "rgba(14,116,144,0.2)", borderColor: "rgba(14,116,144,0.5)", color: "#67e8f9" }
-                    }
-                  >
-                    {selectedTier === "premier-league" ? "Premier League" : "EFL Championship"}
-                  </div>
+                  {selectedTier && <LeagueBadge league={selectedTier as "premier-league" | "championship"} />}
                 </div>
               </div>
 

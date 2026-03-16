@@ -6,6 +6,7 @@ import { StaffLayout } from "@/layouts/StaffLayout";
 import { useStaffAuth } from "@/hooks/useStaffAuth";
 import { fetchStaffPlayers, type StaffPlayer } from "@/lib/staffApi";
 import { ROLE_LABELS } from "@/data/staffQuestions";
+import { RoleBadge, StatusBadge } from "@/components/BadgeSystem";
 
 export default function StaffDashboard() {
   const { staffUser } = useStaffAuth();
@@ -39,10 +40,11 @@ export default function StaffDashboard() {
           <h1 className="text-3xl font-display font-black text-white uppercase tracking-wide">
             Welcome back, {staffUser?.name?.split(" ")[0]}
           </h1>
-          <p className="text-white/40 text-sm mt-1">
-            {ROLE_LABELS[staffUser?.role || ""] || staffUser?.role} &middot;{" "}
-            {staffUser?.academyName}
-          </p>
+          <div className="flex flex-wrap items-center gap-3 mt-3">
+            {staffUser?.role && <RoleBadge role={staffUser.role} />}
+            <span className="text-white/30">•</span>
+            <span className="text-white/60 text-sm">{staffUser?.academyName}</span>
+          </div>
         </motion.div>
 
         {loading ? (

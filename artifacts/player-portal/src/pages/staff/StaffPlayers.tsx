@@ -5,6 +5,7 @@ import { Search, Loader2, ChevronRight, Filter } from "lucide-react";
 import { StaffLayout } from "@/layouts/StaffLayout";
 import { useStaffAuth } from "@/hooks/useStaffAuth";
 import { fetchStaffPlayers, type StaffPlayer } from "@/lib/staffApi";
+import { StatusBadge } from "@/components/BadgeSystem";
 
 const STATUS_STYLES: Record<string, string> = {
   completed: "bg-green-500/20 text-green-400",
@@ -166,13 +167,7 @@ export default function StaffPlayers() {
                         {player.ageGroup || `U${player.age}`}
                       </td>
                       <td className="p-4">
-                        <span
-                          className={`text-xs font-bold px-2.5 py-1 rounded-md ${
-                            STATUS_STYLES[player.status] || "bg-white/10 text-white/50"
-                          }`}
-                        >
-                          {player.status.replace("_", " ")}
-                        </span>
+                        <StatusBadge status={player.status} />
                       </td>
                       <td className="p-4 text-right">
                         <Link href={`/staff/players/${player.id}`}>
