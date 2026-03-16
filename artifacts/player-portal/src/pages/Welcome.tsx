@@ -1,7 +1,7 @@
-import { useRef, useEffect, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { LogOut, Music2, VolumeX } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { PlayerJersey } from "@/components/PlayerJersey";
 import { LikenessUploader } from "@/components/LikenessUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
@@ -27,32 +27,16 @@ export default function Welcome() {
   const { selectedAcademy, playerData, clearContext } = usePlayerContext();
   const tipsRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [chantPlaying, setChantPlaying] = useState(false);
-  const [chantBlocked, setChantBlocked] = useState(false);
-
   const chantUrl = selectedAcademy?.chantUrl ?? null;
-
-  const toggleChant = useCallback(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (chantPlaying) {
-      audio.pause();
-      setChantPlaying(false);
-    } else {
-      audio.play().then(() => { setChantPlaying(true); setChantBlocked(false); }).catch(() => setChantPlaying(false));
-    }
-  }, [chantPlaying]);
 
   useEffect(() => {
     if (!chantUrl) return;
     const audio = new Audio(chantUrl);
-    audio.volume = 0.55;
-    audio.loop = true;
+    audio.volume = 0.7;
     audioRef.current = audio;
-    audio.play()
-      .then(() => setChantPlaying(true))
-      .catch(() => setChantBlocked(true));
-    return () => { audio.pause(); audio.src = ""; };
+    audio.play().catch(() => {});
+    const stop = setTimeout(() => { audio.pause(); audio.src = ""; }, 6000);
+    return () => { clearTimeout(stop); audio.pause(); audio.src = ""; };
   }, [chantUrl]);
 
   if (!selectedAcademy || !playerData) {
@@ -97,55 +81,15 @@ export default function Welcome() {
             <span>Log out</span>
           </button>
 
-          <div className="flex items-center gap-2">
-            {/* Chant button */}
-            {selectedAcademy.chantUrl && (
-              <AnimatePresence mode="wait">
-                <motion.button
-                  key={chantPlaying ? "playing" : "stopped"}
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.8, opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                  onClick={toggleChant}
-                  title={chantPlaying ? "Mute chant" : chantBlocked ? "Tap to play club chant" : "Play club chant"}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all"
-                  style={chantPlaying
-                    ? { background: `${selectedAcademy.primaryColor}25`, color: selectedAcademy.primaryColor, border: `1px solid ${selectedAcademy.primaryColor}50` }
-                    : { background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.35)", border: "1px solid rgba(255,255,255,0.10)" }
-                  }
-                >
-                  {chantPlaying ? (
-                    <>
-                      <motion.span
-                        animate={{ scale: [1, 1.3, 1] }}
-                        transition={{ repeat: Infinity, duration: 0.9 }}
-                      >
-                        <Music2 size={11} />
-                      </motion.span>
-                      <span>chant</span>
-                    </>
-                  ) : (
-                    <>
-                      <VolumeX size={11} />
-                      <span>{chantBlocked ? "play chant" : "chant off"}</span>
-                    </>
-                  )}
-                </motion.button>
-              </AnimatePresence>
-            )}
-
-            {/* Club badge */}
-            <div
-              className="flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase"
-              style={{ background: `${selectedAcademy.primaryColor}30`, color: selectedAcademy.primaryColor, border: `1px solid ${selectedAcademy.primaryColor}50` }}
-            >
-              {selectedAcademy.crestUrl ? (
-                <img src={selectedAcademy.crestUrl} alt={selectedAcademy.shortName}
-                  className="w-4 h-4 object-contain" loading="lazy" />
-              ) : null}
-              {selectedAcademy.logoText}
-            </div>
+          <div
+            className="flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black tracking-widest uppercase"
+            style={{ background: `${selectedAcademy.primaryColor}30`, color: selectedAcademy.primaryColor, border: `1px solid ${selectedAcademy.primaryColor}50` }}
+          >
+            {selectedAcademy.crestUrl ? (
+              <img src={selectedAcademy.crestUrl} alt={selectedAcademy.shortName}
+                className="w-4 h-4 object-contain" loading="lazy" />
+            ) : null}
+            {selectedAcademy.logoText}
           </div>
         </div>
 
