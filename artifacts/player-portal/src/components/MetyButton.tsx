@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { X, Send } from "lucide-react";
@@ -10,6 +10,15 @@ import { duckMusic, restoreMusic } from "@/lib/globalAudio";
 // Assistant appears on journey pages and beyond — NOT on the welcome/home screen
 // (music is playing there and the button would clash with the sound toggle)
 const PLAYER_PATHS = ["/journey", "/journey-u9", "/complete", "/invite"];
+
+// Pages where the assistant auto-opens on first visit with an intro
+const AUTO_OPEN_PATHS = ["/journey", "/journey-u9"];
+
+const AUTO_INTRO_MESSAGE =
+  "Welcome to your story. I'm here if you need me — just ask. " +
+  "Answer each question as honestly as you can, there are no wrong answers. " +
+  "You can type or record a voice note, whichever feels easier. " +
+  "Tap anywhere outside to close me, then let's get started.";
 
 const PAGE_HINTS: Record<string, string> = {
   "/welcome":    "Browse the chapters below, then tap Begin My Story when you're ready. Got a question? Ask me anything.",
@@ -39,6 +48,7 @@ export default function MetyButton() {
   const { activeQuestion } = useAssistant();
 
   const isPlayerPage = PLAYER_PATHS.some(p => location === p || location.startsWith(p + "/"));
+  const hasAutoOpened = useRef(false);
 
   const mascotName = getAcademyMascot(selectedAcademy?.key ?? "");
   const initial = mascotName.charAt(0).toUpperCase();
@@ -48,10 +58,29 @@ export default function MetyButton() {
     ? `I can see you're on: "${activeQuestion.text}"${activeQuestion.hint ? ` — ${activeQuestion.hint}` : ""}. What do you need help with?`
     : (PAGE_HINTS[location] ?? "Ask me anything about your journey.");
 
+  // Helper — open with a specific message (used for auto-intro)
+  const openWithMessage = useCallback((msg: string) => {
+    setMessages([{ role: "assistant", text: msg }]);
+    setOpen(true);
+  }, []);
+
+  // Auto-open with intro message the first time a player hits a journey page
+  useEffect(() => {
+    const isJourneyPage = AUTO_OPEN_PATHS.some(p => location === p || location.startsWith(p + "/"));
+    if (!isJourneyPage || hasAutoOpened.current) return;
+    hasAutoOpened.current = true;
+    const timer = setTimeout(() => openWithMessage(AUTO_INTRO_MESSAGE), 1500);
+    return () => clearTimeout(timer);
+  }, [location, openWithMessage]);
+
+  // Duck/restore music and populate opening hint when manually toggled
   useEffect(() => {
     if (!isPlayerPage) return;
     if (open) {
-      setMessages([{ role: "assistant", text: openingMessage }]);
+      // Only set the hint message if there's no existing conversation
+      if (messages.length === 0) {
+        setMessages([{ role: "assistant", text: openingMessage }]);
+      }
       setTimeout(() => inputRef.current?.focus(), 150);
       duckMusic();
     } else {
