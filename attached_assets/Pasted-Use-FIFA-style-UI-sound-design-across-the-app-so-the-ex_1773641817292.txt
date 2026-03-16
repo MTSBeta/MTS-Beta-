@@ -1,0 +1,217 @@
+Use FIFA-style UI sound design across the app so the experience feels premium, modern, sporty, and responsive.
+
+Sound direction
+
+We want the interface sounds to feel like a polished football game menu:
+
+clean
+
+crisp
+
+futuristic
+
+minimal
+
+athletic
+
+premium
+
+not cartoonish
+
+not childish
+
+not overly aggressive
+
+The sounds should feel like a mix of:
+
+soft digital clicks
+
+subtle synthetic taps
+
+light whooshes
+
+muted confirmation hits
+
+short menu blips
+
+sleek transition sweeps
+
+Overall sound character
+
+The sound palette should feel:
+
+modern sports-tech
+
+sleek and fast
+
+slightly futuristic
+
+elegant and controlled
+
+satisfying but not distracting
+
+Avoid:
+
+cheesy arcade sounds
+
+loud button smashes
+
+childish pop effects
+
+casino-like noises
+
+overly robotic sci-fi effects
+
+anything comedic
+
+Sound types to add
+1. Hover sound
+
+For hovering over buttons, cards, and menu items:
+
+very soft digital tick
+
+light airy blip
+
+almost feather-light
+
+should feel responsive, not repetitive
+
+2. Click / selection sound
+
+For selecting a menu item or pressing a button:
+
+short crisp click
+
+subtle electronic tap
+
+slightly stronger than hover
+
+satisfying and confident
+
+should feel like a premium sports game UI
+
+3. Screen transition sound
+
+For moving between pages, tabs, or panels:
+
+soft whoosh
+
+smooth swipe sound
+
+clean transition sweep
+
+subtle sense of movement and momentum
+
+4. Success / completion sound
+
+For successful saves, submitted forms, or completed steps:
+
+clean uplifting confirmation tone
+
+short layered chime with a soft digital finish
+
+should feel rewarding but restrained
+
+5. Error / warning sound
+
+For invalid form inputs or permission issues:
+
+soft low digital pulse
+
+subtle negative tone
+
+clear but not harsh
+
+6. Profile / card open sound
+
+For opening a player profile or dashboard card:
+
+light tech “pop-in” sound
+
+subtle glassy click with a short whoosh tail
+
+Interaction mapping
+
+Apply sounds to:
+
+homepage menu buttons
+
+academy cards
+
+player profile cards
+
+dashboard navigation
+
+tabs
+
+filters
+
+save buttons
+
+submission buttons
+
+screen transitions
+
+modal open/close
+
+dropdown selection
+
+Sound behaviour rules
+
+keep volume low to medium
+
+sounds must be short
+
+no sound should feel annoying after repeated use
+
+use slight variation if possible so repeated actions do not feel mechanical
+
+support mute on/off in settings
+
+do not autoplay ambient sound
+
+prioritise usability and polish
+
+Design reference
+
+Aim for:
+“FIFA / EA Sports-style menu UI sound design with clean synthetic clicks, subtle navigation ticks, polished transition whooshes, and premium confirmation tones.”
+
+Technical implementation
+
+If sound files are not yet available:
+
+create a sound system wrapper first
+
+centralise audio usage in one utility or hook
+
+make it easy to swap sounds later
+
+support events like:
+
+hover
+
+click
+
+transition
+
+success
+
+error
+
+modal open
+
+Example:
+
+playSound("hover")
+
+playSound("select")
+
+playSound("transition")
+
+playSound("success")
+
+Final instruction
+
+Implement a lightweight, premium football-game-inspired UI sound system across the app, with restrained FIFA-style menu sounds that make the product feel sharp, modern, and high-end.
