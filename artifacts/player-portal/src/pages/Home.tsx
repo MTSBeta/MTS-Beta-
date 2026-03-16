@@ -284,7 +284,7 @@ export default function Home() {
                       transition={{ delay: idx * 0.03, type: "spring", stiffness: 300, damping: 24 }}
                       onClick={() => handleClubSelect(academy)}
                       className={`
-                        relative flex flex-col items-center gap-2 p-3 pt-4 rounded-2xl border transition-all duration-300
+                        relative flex flex-col items-center gap-2 p-3 pt-4 rounded-2xl border transition-all duration-300 overflow-hidden
                         ${isSelected
                           ? "border-white/50 bg-white/10 scale-105 shadow-lg"
                           : "border-white/8 bg-white/3 hover:bg-white/8 hover:border-white/20"
@@ -303,19 +303,29 @@ export default function Home() {
                           aria-hidden="true"
                           className="absolute inset-0 w-full h-full object-cover rounded-2xl"
                           style={{
-                            opacity: isSelected ? 0.22 : 0.11,
-                            filter: "saturate(0.3) brightness(0.6)",
-                            mixBlendMode: "luminosity",
+                            opacity: isSelected ? 0.55 : 0.38,
+                            filter: "brightness(0.45) saturate(0.6)",
                             transition: "opacity 0.3s",
                           }}
                         />
                       )}
 
+                      {/* Dark gradient overlay so badge/name stay readable */}
+                      <div
+                        className="absolute inset-0 rounded-2xl"
+                        style={{
+                          background: "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 100%)",
+                        }}
+                      />
+
                       {/* Glow layer when selected */}
                       {isSelected && (
                         <div
-                          className="absolute inset-0 rounded-2xl opacity-20 blur-lg"
-                          style={{ background: academy.primaryColor }}
+                          className="absolute inset-0 rounded-2xl"
+                          style={{
+                            background: `linear-gradient(135deg, ${academy.primaryColor}30 0%, transparent 60%)`,
+                            boxShadow: `inset 0 0 20px ${academy.primaryColor}25`,
+                          }}
                         />
                       )}
 
