@@ -490,15 +490,32 @@ export default function JourneyU9() {
               {/* Question indicator + text */}
               {!isPhotoQ && (
                 <>
-                  <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.1, type: "spring", stiffness: 200 }} className="flex items-center justify-center gap-2">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center font-display font-black text-white text-base"
-                      style={{ background: `${stageColor}20`, border: `1px solid ${stageColor}30` }}>
-                      {questionIndex + 1}
+                  {/* Pulsing level badge */}
+                  <motion.div initial={{ scale: 0.85, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+                    className="flex flex-col items-center gap-1.5">
+                    <div className="relative flex items-center justify-center w-12 h-12">
+                      <motion.div
+                        className="absolute inset-0 rounded-full"
+                        style={{ border: `1.5px solid ${stageColor}` }}
+                        animate={{ scale: [1, 1.25, 1], opacity: [0.45, 0, 0.45] }}
+                        transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                      />
+                      <div
+                        className="w-10 h-10 rounded-full flex items-center justify-center"
+                        style={{ background: `${stageColor}20`, border: `1.5px solid ${stageColor}50` }}
+                      >
+                        <span className="font-display font-black text-white text-base leading-none">{questionIndex + 1}</span>
+                      </div>
                     </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: stageColor }}>
+                      Q {currentIdx + 1} / {TOTAL}
+                    </span>
                   </motion.div>
+
                   <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-                    <p className="text-[1.45rem] font-display font-bold text-white text-center leading-[1.3] tracking-tight mb-2">{question.text}</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/30 text-center mb-2">◆ Your challenge</p>
+                    <p className="text-[1.38rem] font-display font-bold text-white text-center leading-[1.3] mb-2">{question.text}</p>
                     <p className="text-white/65 text-sm text-center leading-relaxed">{question.hint}</p>
                   </motion.div>
                 </>

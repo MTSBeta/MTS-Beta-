@@ -756,26 +756,51 @@ export default function Journey() {
 
             {/* Question indicator */}
             <div className="mb-5 flex items-center gap-3">
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center shadow-md shrink-0"
-                style={{ background: `${accentColor}18`, border: `1px solid ${accentColor}30` }}
-              >
-                <span className="font-display font-black text-white text-lg leading-none">{currentQI + 1}</span>
-              </div>
-              <div className="flex-1 h-[3px] rounded-full bg-white/5 overflow-hidden">
-                <div
-                  className="h-full rounded-full transition-all duration-500"
-                  style={{ width: `${((currentQI + 1) / qCount) * 100}%`, background: accentColor }}
+              {/* Pulsing circular level badge */}
+              <div className="relative flex items-center justify-center shrink-0 w-12 h-12">
+                <motion.div
+                  className="absolute inset-0 rounded-full"
+                  style={{ border: `1.5px solid ${accentColor}` }}
+                  animate={{ scale: [1, 1.25, 1], opacity: [0.45, 0, 0.45] }}
+                  transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
                 />
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center"
+                  style={{ background: `${accentColor}20`, border: `1.5px solid ${accentColor}50` }}
+                >
+                  <span className="font-display font-black text-white text-base leading-none">{currentQI + 1}</span>
+                </div>
               </div>
-              <span className="text-xs font-mono text-white/25 shrink-0">{qCount}</span>
+              {/* Progress bar + labels */}
+              <div className="flex-1 flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: accentColor }}>
+                    Question {currentQI + 1} of {qCount}
+                  </span>
+                  {currentQI > 0 && (
+                    <span className="text-[10px] font-mono text-white/28">
+                      {Math.round((currentQI / qCount) * 100)}% done
+                    </span>
+                  )}
+                </div>
+                <div className="h-[3px] rounded-full bg-white/8 overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{ width: `${((currentQI + 1) / qCount) * 100}%`, background: accentColor }}
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Question text */}
             <div className="mb-5">
-              <h2 className="text-[1.55rem] font-display font-bold text-white leading-[1.3] tracking-tight mb-3">
+              {/* Gamification micro-label */}
+              <div className="flex items-center gap-1.5 mb-2">
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-white/35">◆ Your challenge</span>
+              </div>
+              <p className="text-[1.52rem] font-display font-bold text-white leading-[1.32] mb-3">
                 {currentQuestion.text}
-              </h2>
+              </p>
               {currentQuestion.hint && (
                 <p className="text-white/65 text-sm leading-relaxed">{currentQuestion.hint}</p>
               )}
