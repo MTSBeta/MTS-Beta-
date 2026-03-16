@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
 import { LogOut } from "lucide-react";
@@ -27,15 +27,36 @@ export default function Welcome() {
   const { selectedAcademy, playerData, clearContext } = usePlayerContext();
   const tipsRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
-    // Play theme music at 30% volume
+    // Play theme music at 30% volume for 2 minutes
     const audio = new Audio(`${import.meta.env.BASE_URL}audio/love-me-again.mp3`);
     audio.volume = 0.3; // 30% volume - restrained, not jumpscare
     audioRef.current = audio;
     audio.play().catch(() => {});
-    const stop = setTimeout(() => { audio.pause(); audio.src = ""; }, 8000);
-    return () => { clearTimeout(stop); audio.pause(); audio.src = ""; };
+    timeoutRef.current = setTimeout(() => { 
+      audio.pause(); 
+      audio.src = ""; 
+    }, 120000); // 2 minutes
+    return () => { 
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      audio.pause(); 
+      audio.src = ""; 
+    };
   }, []);
+
+  const handleMute = () => {
+    setIsMuted(true);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
 
   if (!selectedAcademy || !playerData) {
     navigate("/");
@@ -89,6 +110,14 @@ export default function Welcome() {
             ) : null}
             {selectedAcademy.logoText}
           </div>
+
+          {!isMuted && (
+            <button onClick={handleMute}
+              className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-xs">
+              <span>🔊</span>
+              <span>Mute</span>
+            </button>
+          )}
         </div>
 
         {/* Jersey + player card */}

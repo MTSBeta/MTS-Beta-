@@ -188,18 +188,39 @@ export default function WelcomeU9() {
   const [_, navigate] = useLocation();
   const { selectedAcademy, playerData, clearContext } = usePlayerContext();
   const [ready, setReady] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => { setTimeout(() => setReady(true), 200); }, []);
 
   useEffect(() => {
-    // Play theme music at 30% volume
+    // Play theme music at 30% volume for 2 minutes
     const audio = new Audio(`${import.meta.env.BASE_URL}audio/love-me-again.mp3`);
     audio.volume = 0.3; // 30% volume - restrained, not jumpscare
     audioRef.current = audio;
     audio.play().catch(() => {});
-    const stop = setTimeout(() => { audio.pause(); audio.src = ""; }, 8000);
-    return () => { clearTimeout(stop); audio.pause(); audio.src = ""; };
+    timeoutRef.current = setTimeout(() => { 
+      audio.pause(); 
+      audio.src = ""; 
+    }, 120000); // 2 minutes
+    return () => { 
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      audio.pause(); 
+      audio.src = ""; 
+    };
   }, []);
+
+  const handleMute = () => {
+    setIsMuted(true);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
 
   if (!selectedAcademy || !playerData) { navigate("/"); return null; }
 
@@ -244,12 +265,21 @@ export default function WelcomeU9() {
           )}
           <span className="text-white/35 text-xs font-bold uppercase tracking-widest">{selectedAcademy.shortName}</span>
         </div>
-        <button
-          onClick={() => { audioRef.current?.pause(); clearContext(); navigate("/"); }}
-          className="flex items-center gap-1.5 text-white/25 hover:text-white/55 text-xs transition-colors"
-        >
-          <LogOut size={12} /><span>Log out</span>
-        </button>
+        <div className="flex items-center gap-3">
+          {!isMuted && (
+            <button onClick={handleMute}
+              className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-xs">
+              <span>🔊</span>
+              <span>Mute</span>
+            </button>
+          )}
+          <button
+            onClick={() => { audioRef.current?.pause(); clearContext(); navigate("/"); }}
+            className="flex items-center gap-1.5 text-white/25 hover:text-white/55 text-xs transition-colors"
+          >
+            <LogOut size={12} /><span>Log out</span>
+          </button>
+        </div>
       </div>
 
       {/* ── HERO CONTENT ── */}

@@ -132,8 +132,9 @@ Each position (GK, RB, CB, LB, CDM, CM, CAM, RW, ST, LW, CF) maps to: `displayNa
 
 - **Welcome Screen Theme**: `love-me-again.mp3` (John Newman) at 30% volume
   - Plays on `/welcome` and `/welcome-u9` pages
-  - Duration: ~8 seconds
+  - Duration: 2 minutes (120 seconds) unless user clicks mute
   - Volume: 0.3 (restrained, not jumpscare-style)
+  - Mute button: 🔊 Mute button in top bar (appears only while audio is playing)
   - Location: `/public/audio/love-me-again.mp3`
 
 ## Common Commands
