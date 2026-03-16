@@ -54,14 +54,6 @@ const DIMENSIONS: {
   { key: "learning",   aLabel: "Coach-Led",           bLabel: "Self-Discovery",        emoji: "📚", color: "#f97316" },
 ];
 
-// 5-point choice options — value: -2 → strongly A, +2 → strongly B
-const CHOICE_OPTS = [
-  { value: -2, aLabel: "YES!", bLabel: "" },
-  { value: -1, aLabel: "KIND OF", bLabel: "" },
-  { value:  0, aLabel: "BOTH!", bLabel: "BOTH!" },
-  { value:  1, aLabel: "", bLabel: "KIND OF" },
-  { value:  2, aLabel: "", bLabel: "YES!" },
-];
 
 function describeScore(pct: number, aLabel: string, bLabel: string): string {
   if (pct < 20) return `Strongly ${aLabel}`;
@@ -308,6 +300,38 @@ export function MindsetProfiler({ primaryColor, playerName, onComplete }: Props)
   const aColor = "#f59e0b";
   const bColor = primaryColor;
 
+  const ChoiceBtn = ({
+    value, label, color, side,
+  }: { value: number; label: string; color: string; side: "a" | "b" | "mid" }) => {
+    const isSelected = selected === value;
+    const dimmed = selected !== null && !isSelected;
+    const isMid = side === "mid";
+    return (
+      <motion.button
+        type="button"
+        whileTap={{ scale: 0.93 }}
+        onClick={() => handleChoice(value)}
+        disabled={advancing}
+        className="rounded-xl font-black text-xs uppercase tracking-wide transition-all flex items-center justify-center gap-1"
+        style={{
+          padding: isMid ? "10px 0" : "10px 0",
+          background: isSelected
+            ? isMid ? "rgba(255,255,255,0.25)" : color
+            : dimmed ? "rgba(255,255,255,0.02)"
+            : isMid ? "rgba(255,255,255,0.07)" : `${color}22`,
+          border: `1.5px solid ${isSelected ? (isMid ? "rgba(255,255,255,0.4)" : color) : dimmed ? "rgba(255,255,255,0.04)" : isMid ? "rgba(255,255,255,0.15)" : `${color}50`}`,
+          color: isSelected ? "#fff" : dimmed ? "rgba(255,255,255,0.25)" : isMid ? "rgba(255,255,255,0.6)" : color,
+          opacity: dimmed ? 0.3 : 1,
+          flex: isMid ? "0 0 auto" : 1,
+          width: isMid ? "100%" : undefined,
+        }}
+      >
+        {isSelected && !isMid && <span>✓</span>}
+        {label}
+      </motion.button>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -320,7 +344,6 @@ export function MindsetProfiler({ primaryColor, playerName, onComplete }: Props)
           <span className="text-white/35 text-xs font-bold uppercase tracking-widest">Player DNA</span>
           <span className="font-black text-white/40 text-sm font-mono">{qIdx + 1}<span className="text-white/20"> / {total}</span></span>
         </div>
-        {/* Progress bar */}
         <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
           <motion.div
             className="h-full rounded-full"
@@ -332,7 +355,7 @@ export function MindsetProfiler({ primaryColor, playerName, onComplete }: Props)
       </div>
 
       {/* Question */}
-      <div className="relative z-10 flex-1 flex flex-col justify-center px-5 gap-4 pb-6">
+      <div className="relative z-10 flex-1 flex flex-col justify-center px-5 pb-6">
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div
             key={qIdx}
@@ -341,119 +364,96 @@ export function MindsetProfiler({ primaryColor, playerName, onComplete }: Props)
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: dir * -50 }}
             transition={{ duration: 0.22 }}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-3"
           >
             {/* Emoji + label */}
-            <div className="text-center">
+            <div className="text-center mb-1">
               <motion.div
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.05, type: "spring", stiffness: 220 }}
-                className="text-6xl mb-3"
+                className="text-5xl mb-2"
               >{q.emoji}</motion.div>
-              <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Which one is more YOU?</p>
+              <p className="text-white/35 text-[11px] font-bold uppercase tracking-widest">Which sounds more like you?</p>
             </div>
 
             {/* Option A card */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.08 }}
-              className="rounded-2xl px-5 py-4 text-center"
+              transition={{ delay: 0.07 }}
+              className="rounded-2xl px-4 py-3 relative overflow-hidden"
               style={{
-                background: selected !== null && selected < 0 ? `${aColor}25` : "rgba(255,255,255,0.05)",
-                border: selected !== null && selected < 0 ? `1.5px solid ${aColor}70` : "1.5px solid rgba(255,255,255,0.08)",
+                background: selected !== null && selected < 0 ? `${aColor}20` : "rgba(255,255,255,0.04)",
+                border: selected !== null && selected < 0 ? `2px solid ${aColor}80` : "2px solid rgba(255,255,255,0.07)",
                 transition: "all 0.25s",
               }}
             >
-              <p className="text-white font-bold text-lg leading-snug">{q.a}</p>
-              {selected !== null && selected < 0 && (
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs font-black mt-1" style={{ color: aColor }}>
-                  {selected === -2 ? "Definitely you! ✓" : "Kind of you ✓"}
-                </motion.p>
-              )}
+              <div className="flex items-start gap-2">
+                <span className="text-[10px] font-black uppercase rounded-md px-1.5 py-0.5 shrink-0 mt-0.5"
+                  style={{ background: `${aColor}30`, color: aColor }}>A</span>
+                <p className="text-white font-semibold text-base leading-snug">{q.a}</p>
+              </div>
             </motion.div>
 
-            {/* 5-choice strip */}
+            {/* A-side choice buttons */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1 }}
+              className="flex gap-2"
+            >
+              <ChoiceBtn value={-2} label="That's me! ⭐" color={aColor} side="a" />
+              <ChoiceBtn value={-1} label="Kind of me" color={aColor} side="a" />
+            </motion.div>
+
+            {/* BOTH — centre */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.12 }}
-              className="space-y-2"
             >
-              <div className="flex gap-1.5">
-                {CHOICE_OPTS.map((opt, i) => {
-                  const isA = opt.value < 0;
-                  const isB = opt.value > 0;
-                  const isMid = opt.value === 0;
-                  const isSelected = selected === opt.value;
-                  const dimmed = selected !== null && !isSelected;
+              <ChoiceBtn value={0} label="🤝 Both feel like me!" color="white" side="mid" />
+            </motion.div>
 
-                  const baseColor = isA ? aColor : isB ? bColor : "rgba(255,255,255,0.5)";
-
-                  return (
-                    <motion.button
-                      key={i}
-                      type="button"
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => handleChoice(opt.value)}
-                      disabled={advancing}
-                      className="flex-1 rounded-xl py-3 flex flex-col items-center gap-1 transition-all"
-                      style={{
-                        background: isSelected
-                          ? isA ? aColor : isB ? bColor : "rgba(255,255,255,0.3)"
-                          : dimmed
-                          ? "rgba(255,255,255,0.02)"
-                          : isA ? `${aColor}18` : isB ? `${bColor}18` : "rgba(255,255,255,0.06)",
-                        border: `1.5px solid ${isSelected ? "transparent" : dimmed ? "rgba(255,255,255,0.04)" : isA ? `${aColor}40` : isB ? `${bColor}40` : "rgba(255,255,255,0.15)"}`,
-                        opacity: dimmed ? 0.35 : 1,
-                      }}
-                    >
-                      <span className="text-xs font-black uppercase tracking-wide leading-none"
-                        style={{ color: isSelected ? "#fff" : dimmed ? "rgba(255,255,255,0.3)" : baseColor }}>
-                        {isMid ? "BOTH" : isA ? (opt.value === -2 ? "YES!" : "KIND\nOF") : (opt.value === 2 ? "YES!" : "KIND\nOF")}
-                      </span>
-                    </motion.button>
-                  );
-                })}
-              </div>
-
-              {/* A ←→ B axis labels */}
-              <div className="flex justify-between px-1">
-                <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: `${aColor}80` }}>← OPTION A</span>
-                <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: `${bColor}80` }}>OPTION B →</span>
-              </div>
+            {/* B-side choice buttons */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1 }}
+              className="flex gap-2"
+            >
+              <ChoiceBtn value={1} label="Kind of me" color={bColor} side="b" />
+              <ChoiceBtn value={2} label="That's me! ⭐" color={bColor} side="b" />
             </motion.div>
 
             {/* Option B card */}
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.08 }}
-              className="rounded-2xl px-5 py-4 text-center"
+              transition={{ delay: 0.07 }}
+              className="rounded-2xl px-4 py-3"
               style={{
-                background: selected !== null && selected > 0 ? `${bColor}20` : "rgba(255,255,255,0.05)",
-                border: selected !== null && selected > 0 ? `1.5px solid ${bColor}60` : "1.5px solid rgba(255,255,255,0.08)",
+                background: selected !== null && selected > 0 ? `${bColor}18` : "rgba(255,255,255,0.04)",
+                border: selected !== null && selected > 0 ? `2px solid ${bColor}70` : "2px solid rgba(255,255,255,0.07)",
                 transition: "all 0.25s",
               }}
             >
-              <p className="text-white font-bold text-lg leading-snug">{q.b}</p>
-              {selected !== null && selected > 0 && (
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs font-black mt-1" style={{ color: bColor }}>
-                  {selected === 2 ? "Definitely you! ✓" : "Kind of you ✓"}
-                </motion.p>
-              )}
+              <div className="flex items-start gap-2">
+                <span className="text-[10px] font-black uppercase rounded-md px-1.5 py-0.5 shrink-0 mt-0.5"
+                  style={{ background: `${bColor}30`, color: bColor }}>B</span>
+                <p className="text-white font-semibold text-base leading-snug">{q.b}</p>
+              </div>
             </motion.div>
 
-            {/* Skip hint */}
             {selected === null && (
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-                className="text-center text-white/20 text-[10px]"
+                transition={{ delay: 0.9 }}
+                className="text-center text-white/20 text-[10px] mt-1"
               >
-                Tap YES! / KIND OF / BOTH — no wrong answers
+                Tap the buttons that match you — no wrong answers!
               </motion.p>
             )}
           </motion.div>

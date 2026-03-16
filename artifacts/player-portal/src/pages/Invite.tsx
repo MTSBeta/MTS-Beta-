@@ -114,8 +114,9 @@ function Counter({ label, sub, value, onChange, min, max, color }: {
 export default function Invite() {
   const [_, navigate] = useLocation();
   const { playerData, selectedAcademy, stakeholderLinks, setStakeholderLinks } = usePlayerContext();
-  const [parentCount, setParentCount] = useState(1);
-  const [friendCount, setFriendCount] = useState(2);
+  const isU9 = (playerData?.age ?? 99) <= 8;
+  const [parentCount, setParentCount] = useState(isU9 ? 2 : 1);
+  const [friendCount, setFriendCount] = useState(isU9 ? 0 : 2);
   const [step, setStep] = useState<"setup" | "links">(stakeholderLinks.length > 0 ? "links" : "setup");
   const createMutation = useCreateStakeholderLinks();
 
@@ -180,17 +181,38 @@ export default function Invite() {
                   <CheckCircle2 size={32} />
                 </div>
                 <h1 className="text-3xl font-display font-black text-white leading-tight">
-                  Story saved.<br />
-                  <span style={{ color: primaryColor }}>Now get your crew.</span>
+                  {isU9 ? <>Story saved! 🎉<br /><span style={{ color: primaryColor }}>Share with the grown-ups.</span></> : <>Story saved.<br /><span style={{ color: primaryColor }}>Now get your crew.</span></>}
                 </h1>
                 <p className="text-white/45 text-sm mt-3 leading-relaxed">
-                  The people who know you best add their view. Choose how many links to generate.
+                  {isU9
+                    ? "Send links to your parents and coaches. They add their thoughts to make the story even more special."
+                    : "The people who know you best add their view. Choose how many links to generate."
+                  }
                 </p>
               </div>
 
               {/* Counters */}
-              <Counter label="Parents / Guardians" sub="Mum, dad, carer…" value={parentCount} onChange={setParentCount} min={1} max={4} color={primaryColor} />
-              <Counter label="Friends" sub="Mates who really know you" value={friendCount} onChange={setFriendCount} min={0} max={6} color={primaryColor} />
+              <Counter
+                label="Parents / Guardians"
+                sub={isU9 ? "Mum, dad, carer, grandparent…" : "Mum, dad, carer…"}
+                value={parentCount}
+                onChange={setParentCount}
+                min={1} max={4}
+                color={primaryColor}
+              />
+              {!isU9 && (
+                <Counter label="Friends" sub="Mates who really know you" value={friendCount} onChange={setFriendCount} min={0} max={6} color={primaryColor} />
+              )}
+              {isU9 && (
+                <Counter
+                  label="Other Adults"
+                  sub="Older sibling, aunt/uncle, family friend…"
+                  value={friendCount}
+                  onChange={setFriendCount}
+                  min={0} max={4}
+                  color={primaryColor}
+                />
+              )}
 
               {/* Auto-included */}
               <div className="rounded-2xl p-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>

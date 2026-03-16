@@ -77,7 +77,8 @@ export default function JourneyU9() {
 
   const primaryColor = selectedAcademy?.primaryColor ?? "#6d28d9";
 
-  const [showProfiler, setShowProfiler] = useState(true);
+  const [showProfiler, setShowProfiler] = useState(false);
+  const [profilerDone, setProfilerDone] = useState(false);
   const [profilerResult, setProfilerResult] = useState("");
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState<AnswerEntry[]>(
@@ -106,7 +107,9 @@ export default function JourneyU9() {
         playerName={playerData.playerName}
         onComplete={(result) => {
           setProfilerResult(result);
+          setProfilerDone(true);
           setShowProfiler(false);
+          setShowHandover(true);
         }}
       />
     );
@@ -173,7 +176,10 @@ export default function JourneyU9() {
   // ── Navigation ─────────────────────────────────────────────────────
   const skipCurrent = () => {
     setSkipped(prev => new Set([...prev, currentIdx]));
-    if (isPlayerToCoachingTransition) { setShowHandover(true); return; }
+    if (isPlayerToCoachingTransition) {
+      if (!profilerDone) { setShowProfiler(true); } else { setShowHandover(true); }
+      return;
+    }
     if (isLastMain) { enterReviewOrComplete(); return; }
     setDirection(1);
     setCurrentIdx(i => i + 1);
@@ -182,7 +188,7 @@ export default function JourneyU9() {
   const goNext = () => {
     if (!canAdvance()) return;
     if (isPlayerToCoachingTransition && !stage.isCoaching) {
-      setShowHandover(true);
+      if (!profilerDone) { setShowProfiler(true); } else { setShowHandover(true); }
       return;
     }
     if (isLastMain) { enterReviewOrComplete(); return; }
