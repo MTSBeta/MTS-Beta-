@@ -464,7 +464,7 @@ export default function Journey() {
               alt=""
               aria-hidden="true"
               className="absolute inset-0 w-full h-full object-cover"
-              style={{ opacity: 0.32, filter: "brightness(0.35) saturate(0.5)" }}
+              style={{ opacity: 0.65, filter: "brightness(0.6) saturate(0.75)" }}
             />
           ) : (
             <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
@@ -472,7 +472,7 @@ export default function Journey() {
           )}
           <div
             className="absolute inset-0"
-            style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.30) 40%, rgba(10,10,10,0.75) 100%)" }}
+            style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.08) 40%, rgba(10,10,10,0.60) 100%)" }}
           />
           <div
             className="absolute inset-0"
@@ -563,7 +563,7 @@ export default function Journey() {
               alt=""
               aria-hidden="true"
               className="absolute inset-0 w-full h-full object-cover"
-              style={{ opacity: 0.32, filter: "brightness(0.35) saturate(0.5)" }}
+              style={{ opacity: 0.65, filter: "brightness(0.6) saturate(0.75)" }}
             />
           ) : (
             <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
@@ -571,7 +571,7 @@ export default function Journey() {
           )}
           <div
             className="absolute inset-0"
-            style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.30) 40%, rgba(10,10,10,0.75) 100%)" }}
+            style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.08) 40%, rgba(10,10,10,0.60) 100%)" }}
           />
           <div
             className="absolute inset-0"
@@ -644,7 +644,7 @@ export default function Journey() {
             alt=""
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ opacity: 0.32, filter: "brightness(0.35) saturate(0.5)" }}
+            style={{ opacity: 0.65, filter: "brightness(0.6) saturate(0.75)" }}
           />
         ) : (
           <img
@@ -658,7 +658,7 @@ export default function Journey() {
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.30) 40%, rgba(10,10,10,0.75) 100%)",
+            background: "linear-gradient(to bottom, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.08) 40%, rgba(10,10,10,0.60) 100%)",
           }}
         />
 
