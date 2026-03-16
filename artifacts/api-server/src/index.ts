@@ -1,5 +1,6 @@
 import app from "./app";
 import { seedAcademies } from "./lib/seedAcademies.js";
+import { seedAdminAccounts } from "./lib/seedAdminAccounts.js";
 
 const rawPort = process.env["PORT"];
 
@@ -18,4 +19,5 @@ if (Number.isNaN(port) || port <= 0) {
 app.listen(port, async () => {
   console.log(`Server listening on port ${port}`);
   await seedAcademies();
+  await seedAdminAccounts();
 });
