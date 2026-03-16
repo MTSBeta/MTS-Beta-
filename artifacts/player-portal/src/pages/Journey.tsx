@@ -36,12 +36,18 @@ function SelectChip({
 }: {
   label: string; selected: boolean; onClick: () => void; color: string; isCoaching?: boolean;
 }) {
-  const { enabled: soundEnabled } = useSoundEnabled();
-  const sound = useSoundSystem({ enabled: soundEnabled });
+  const soundContext = useSoundEnabled();
+  const sound = useSoundSystem({ enabled: soundContext.enabled });
   const accentColor = isCoaching ? "#0d9488" : color;
   
   const handleClick = () => {
-    if (soundEnabled) sound.play(selected ? "click" : "select");
+    try {
+      if (soundContext.enabled) {
+        sound.play(selected ? "click" : "select");
+      }
+    } catch (e) {
+      console.debug("Sound playback skipped");
+    }
     onClick();
   };
   

@@ -98,12 +98,14 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <PlayerProvider>
         <StaffAuthProvider>
-          <TooltipProvider>
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-              <Router />
-            </WouterRouter>
-            <Toaster />
-          </TooltipProvider>
+          <SoundProvider>
+            <TooltipProvider>
+              <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+                <Router />
+              </WouterRouter>
+              <Toaster />
+            </TooltipProvider>
+          </SoundProvider>
         </StaffAuthProvider>
       </PlayerProvider>
     </QueryClientProvider>

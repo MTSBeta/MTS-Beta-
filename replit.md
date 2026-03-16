@@ -105,8 +105,19 @@ lib/
 ## Academy Keys (used in database)
 `birmingham-city`, `chelsea`, `arsenal`, `liverpool`, `manchester-city`, `manchester-united`, `tottenham`, `newcastle`
 
-## Admin Access
-Default passcode: `metime2024` (set via `ADMIN_PASSCODE` env var)
+## Demo Credentials
+
+### Staff Accounts
+- **Coach (Arsenal)**: `coach@arsenal.co.uk` / `test123` (role: staff)
+- **Admin (Arsenal)**: `admin@arsenal.co.uk` / `admin123` (role: academy_admin)
+
+### Player Registration
+- **Coach Access Code**: `COACH-ARS-003` (Arsenal) — validates player registration
+- One coach code per academy in format `COACH-XXX-NNN`
+
+### Admin Dashboard
+- **Passcode**: `metime2024`
+- Access at `/admin?passcode=metime2024`
 
 ## Staff Auth
 - JWT-based authentication via `STAFF_JWT_SECRET` env var
