@@ -31,6 +31,7 @@ export interface StaffUser {
   name: string;
   email: string;
   role: string;
+  questionRole: string | null;
   jobTitle: string;
   isActive: boolean;
 }
@@ -121,6 +122,7 @@ export async function fetchStaffPlayerProfile(playerId: string): Promise<StaffPl
 
 export interface StaffSubmissionPayload {
   playerId: string;
+  role?: string;
   responses: Array<{
     questionNumber: number;
     questionText: string;
@@ -149,9 +151,14 @@ export async function updateStaffSubmission(id: number, data: StaffSubmissionPay
 export interface StaffMember {
   id: number;
   name: string;
+  fullName: string;
   email: string;
   role: string;
+  systemRole: string;
+  questionRole: string | null;
   jobTitle: string;
+  teamName: string | null;
+  ageGroup: string | null;
   isActive: boolean;
   createdAt: string;
 }
@@ -166,8 +173,11 @@ export interface CreateStaffPayload {
   name: string;
   email: string;
   password: string;
-  role: string;
+  systemRole: string;
+  questionRole: string | null;
   jobTitle: string;
+  teamName?: string;
+  ageGroup?: string;
 }
 
 export async function createStaffMember(data: CreateStaffPayload): Promise<StaffMember> {

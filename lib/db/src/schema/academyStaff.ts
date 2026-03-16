@@ -12,6 +12,7 @@ export const academyStaffTable = pgTable("academy_staff", {
   teamName: varchar("team_name", { length: 100 }),
   ageGroup: varchar("age_group", { length: 50 }),
   systemRole: varchar("system_role", { length: 30 }).notNull().default("staff"),
+  questionRole: varchar("question_role", { length: 50 }),
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

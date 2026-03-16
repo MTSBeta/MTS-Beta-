@@ -27,7 +27,6 @@ router.get("/staff/team", staffAuth, requireRole("academy_admin"), async (req, r
     .where(eq(academyStaffTable.academyId, staffUser.academyId))
     .orderBy(academyStaffTable.fullName);
 
-  // Return both camelCase variants so old & new frontend code both work
   res.json(rows.map(r => ({
     ...r,
     name: r.fullName,
@@ -37,7 +36,7 @@ router.get("/staff/team", staffAuth, requireRole("academy_admin"), async (req, r
 
 router.post("/staff/team", staffAuth, requireRole("academy_admin"), async (req, res) => {
   const staffUser = req.staffUser!;
-  const { email, password, fullName: fullNameField, name, systemRole, role, jobTitle, teamName, ageGroup } = req.body;
+  const { email, password, fullName: fullNameField, name, systemRole, role, questionRole, jobTitle, teamName, ageGroup } = req.body;
   const fullName = fullNameField ?? name;
 
   if (!email || !password || !fullName) {
@@ -88,7 +87,8 @@ router.post("/staff/team", staffAuth, requireRole("academy_admin"), async (req, 
       email: email.toLowerCase().trim(),
       authUserId,
       fullName,
-      systemRole: systemRole ?? role ?? "staff",
+      systemRole: systemRole ?? "staff",
+      questionRole: questionRole ?? null,
       jobTitle: jobTitle ?? null,
       teamName: teamName ?? null,
       ageGroup: ageGroup ?? null,
@@ -134,10 +134,11 @@ router.put("/staff/team/:id", staffAuth, requireRole("academy_admin"), async (re
     return;
   }
 
-  const { systemRole, role, jobTitle, teamName, ageGroup, isActive, fullName, name } = req.body;
+  const { systemRole, role, questionRole, jobTitle, teamName, ageGroup, isActive, fullName, name } = req.body;
   const updateData: Record<string, unknown> = {};
   if (systemRole !== undefined) updateData.systemRole = systemRole;
   if (role !== undefined) updateData.systemRole = role;
+  if (questionRole !== undefined) updateData.questionRole = questionRole;
   if (jobTitle !== undefined) updateData.jobTitle = jobTitle;
   if (teamName !== undefined) updateData.teamName = teamName;
   if (ageGroup !== undefined) updateData.ageGroup = ageGroup;

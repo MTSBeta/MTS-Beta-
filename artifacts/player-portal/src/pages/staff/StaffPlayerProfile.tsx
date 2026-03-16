@@ -34,7 +34,12 @@ export default function StaffPlayerProfile() {
   const [profile, setProfile] = useState<ProfileType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({ journey: true });
+  const isAdmin = staffUser?.role === "academy_admin";
+  const myQuestionRole = staffUser?.questionRole ?? null;
+
+  const defaultOpen: Record<string, boolean> = { journey: true };
+  if (!isAdmin && myQuestionRole) defaultOpen[myQuestionRole] = true;
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>(defaultOpen);
   const [editingRole, setEditingRole] = useState<string | null>(null);
   const [formAnswers, setFormAnswers] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
@@ -92,9 +97,9 @@ export default function StaffPlayerProfile() {
     setSaving(true);
     try {
       if (editingSubmissionId) {
-        await updateStaffSubmission(editingSubmissionId, { playerId, responses });
+        await updateStaffSubmission(editingSubmissionId, { playerId, role: editingRole, responses });
       } else {
-        await createStaffSubmission({ playerId, responses });
+        await createStaffSubmission({ playerId, role: editingRole, responses });
       }
       const updated = await fetchStaffPlayerProfile(playerId);
       setProfile(updated);
@@ -109,7 +114,7 @@ export default function StaffPlayerProfile() {
   const canEditRole = (role: string) => {
     if (!staffUser) return false;
     if (staffUser.role === "academy_admin") return true;
-    return staffUser.role === role;
+    return staffUser.questionRole === role;
   };
 
   if (loading) {
@@ -292,6 +297,7 @@ export default function StaffPlayerProfile() {
           const questions = STAFF_QUESTIONS[role];
           const isEditing = editingRole === role;
           const mySubmission = roleSubmissions.find((s) => s.staffId === staffUser?.id);
+          const isMySection = canEditRole(role);
 
           return (
             <SectionAccordion
@@ -303,6 +309,7 @@ export default function StaffPlayerProfile() {
               primaryColor={primaryColor}
               badge={roleSubmissions.length > 0 ? `${roleSubmissions.length} submitted` : "Pending"}
               badgeColor={roleSubmissions.length > 0 ? "green" : "yellow"}
+              mySection={!isAdmin && isMySection}
             >
               {roleSubmissions.map((sub) => (
                 <div key={sub.id} className="mb-4 last:mb-0">
@@ -421,6 +428,7 @@ function SectionAccordion({
   primaryColor,
   badge,
   badgeColor,
+  mySection,
   children,
 }: {
   title: string;
@@ -430,6 +438,7 @@ function SectionAccordion({
   primaryColor: string;
   badge?: string;
   badgeColor?: "green" | "yellow" | "blue";
+  mySection?: boolean;
   children: React.ReactNode;
 }) {
   const badgeStyles: Record<string, string> = {
@@ -439,15 +448,22 @@ function SectionAccordion({
   };
 
   return (
-    <div className="glass-panel rounded-2xl overflow-hidden">
+    <div className={`glass-panel rounded-2xl overflow-hidden ${mySection ? "ring-1" : ""}`}
+      style={mySection ? { borderColor: `${primaryColor}40`, boxShadow: `0 0 0 1px ${primaryColor}30` } : {}}>
       <button
         onClick={onToggle}
         className="w-full flex items-center justify-between p-5 hover:bg-white/[0.02] transition-colors text-left"
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <h2 className="text-base font-display font-bold text-white uppercase tracking-wide">
             {title}
           </h2>
+          {mySection && (
+            <span className="text-[10px] font-black px-2 py-0.5 rounded-md"
+              style={{ background: `${primaryColor}25`, color: primaryColor }}>
+              YOUR SECTION
+            </span>
+          )}
           {badge && (
             <span
               className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${

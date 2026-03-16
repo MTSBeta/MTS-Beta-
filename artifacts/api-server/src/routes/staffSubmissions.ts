@@ -6,6 +6,8 @@ import { staffAuth } from "../middlewares/staffAuth.js";
 
 const router: IRouter = Router();
 
+const VALID_ROLES = ["football_coaching", "psychology", "education", "player_care"];
+
 async function getAcademyKey(academyId: number): Promise<string | null> {
   const [academy] = await db
     .select({ key: academiesTable.key })
@@ -24,19 +26,27 @@ async function playerBelongsToAcademy(playerId: string, academyKey: string): Pro
   return !!player;
 }
 
-const VALID_SUBMISSION_ROLES = ["coaching", "psychology", "education", "player_care"];
-
 router.post("/staff/submissions", staffAuth, async (req, res) => {
   const staffUser = req.staffUser!;
-  const { playerId, role, category, content, metadata } = req.body;
+  const { playerId, role: bodyRole, responses } = req.body;
 
-  if (!playerId || !role || !content) {
-    res.status(400).json({ error: "playerId, role, and content are required" });
+  if (!playerId) {
+    res.status(400).json({ error: "playerId is required" });
+    return;
+  }
+  if (!Array.isArray(responses) || responses.length === 0) {
+    res.status(400).json({ error: "responses array is required" });
     return;
   }
 
-  if (!VALID_SUBMISSION_ROLES.includes(role)) {
-    res.status(400).json({ error: `Invalid role. Must be one of: ${VALID_SUBMISSION_ROLES.join(", ")}` });
+  const role = bodyRole ?? staffUser.questionRole;
+  if (!role || !VALID_ROLES.includes(role)) {
+    res.status(400).json({ error: `Invalid or missing role. Must be one of: ${VALID_ROLES.join(", ")}` });
+    return;
+  }
+
+  if (staffUser.systemRole !== "academy_admin" && staffUser.questionRole !== role) {
+    res.status(403).json({ error: "You can only submit observations for your assigned question set" });
     return;
   }
 
@@ -46,19 +56,16 @@ router.post("/staff/submissions", staffAuth, async (req, res) => {
     return;
   }
 
+  const content = (responses as { questionNumber: number; questionText: string; answerText: string }[])
+    .map(r => `Q${r.questionNumber}: ${r.answerText}`)
+    .join("\n");
+
   const [submission] = await db
     .insert(staffSubmissionsTable)
-    .values({
-      staffId: staffUser.id,
-      playerId,
-      role,
-      category: category ?? null,
-      content,
-      metadata: metadata ?? {},
-    })
+    .values({ staffId: staffUser.id, playerId, role, content, metadata: { responses } })
     .returning();
 
-  res.status(201).json(submission);
+  res.status(201).json({ id: submission.id });
 });
 
 router.put("/staff/submissions/:id", staffAuth, async (req, res) => {
@@ -92,19 +99,23 @@ router.put("/staff/submissions/:id", staffAuth, async (req, res) => {
     return;
   }
 
-  const { content, category, metadata } = req.body;
-  const updateData: Record<string, unknown> = { updatedAt: new Date() };
-  if (content !== undefined) updateData.content = content;
-  if (category !== undefined) updateData.category = category;
-  if (metadata !== undefined) updateData.metadata = metadata;
+  const { responses } = req.body;
+  if (!Array.isArray(responses) || responses.length === 0) {
+    res.status(400).json({ error: "responses array is required" });
+    return;
+  }
+
+  const content = (responses as { questionNumber: number; questionText: string; answerText: string }[])
+    .map(r => `Q${r.questionNumber}: ${r.answerText}`)
+    .join("\n");
 
   const [updated] = await db
     .update(staffSubmissionsTable)
-    .set(updateData)
+    .set({ content, metadata: { responses }, updatedAt: new Date() })
     .where(eq(staffSubmissionsTable.id, submissionId))
     .returning();
 
-  res.json(updated);
+  res.json({ id: updated.id });
 });
 
 export default router;

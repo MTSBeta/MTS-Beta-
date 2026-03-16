@@ -13,6 +13,7 @@ declare global {
         email: string;
         fullName: string;
         systemRole: string;
+        questionRole: string | null;
         jobTitle: string | null;
         teamName: string | null;
         ageGroup: string | null;
@@ -56,6 +57,7 @@ export async function staffAuth(req: Request, res: Response, next: NextFunction)
     email: staff.email,
     fullName: staff.fullName,
     systemRole: staff.systemRole,
+    questionRole: staff.questionRole ?? null,
     jobTitle: staff.jobTitle,
     teamName: staff.teamName,
     ageGroup: staff.ageGroup,

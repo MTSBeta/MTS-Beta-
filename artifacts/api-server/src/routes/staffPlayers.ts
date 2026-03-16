@@ -190,13 +190,32 @@ router.get("/staff/players/:id", staffAuth, async (req, res) => {
     .where(eq(staffSubmissionsTable.playerId, id))
     .orderBy(staffSubmissionsTable.createdAt);
 
-  const submissionsByRole: Record<string, typeof submissions> = {};
-  for (const s of submissions) {
-    if (!submissionsByRole[s.role]) {
-      submissionsByRole[s.role] = [];
-    }
-    submissionsByRole[s.role].push(s);
-  }
+  type ResponseItem = { questionNumber: number; questionText: string; answerText: string };
+  const flatSubmissions = submissions.map(s => {
+    const meta = (s.metadata ?? {}) as Record<string, unknown>;
+    const responses: ResponseItem[] = Array.isArray(meta.responses)
+      ? (meta.responses as ResponseItem[])
+      : [];
+    return {
+      id: s.id,
+      staffId: s.staffId,
+      staffName: s.staffName ?? "Unknown",
+      role: s.role,
+      responses,
+      createdAt: s.createdAt.toISOString(),
+      updatedAt: s.updatedAt?.toISOString(),
+    };
+  });
+
+  const rolesWithSubmissions = new Set(flatSubmissions.map(s => s.role));
+  const completionStatus = {
+    journey: journeyResponses.length > 0,
+    parent: parentResponses.length > 0,
+    footballCoaching: rolesWithSubmissions.has("football_coaching"),
+    psychology: rolesWithSubmissions.has("psychology"),
+    education: rolesWithSubmissions.has("education"),
+    playerCare: rolesWithSubmissions.has("player_care"),
+  };
 
   res.json({
     player: {
@@ -220,13 +239,18 @@ router.get("/staff/players/:id", staffAuth, async (req, res) => {
       audioUrl: r.audioUrl,
       mediaUrls: (r.mediaUrls as string[]) ?? [],
     })),
-    parentResponses: parentResponses.map((r) => ({
-      questionNumber: r.questionNumber,
-      questionText: r.questionText,
-      answerText: r.answerText,
-      submittedAt: r.submittedAt.toISOString(),
-    })),
-    staffSubmissions: submissionsByRole,
+    parentSubmission: parentResponses.length > 0
+      ? {
+          submitted: true,
+          responses: parentResponses.map((r) => ({
+            questionNumber: r.questionNumber,
+            questionText: r.questionText,
+            answerText: r.answerText,
+          })),
+        }
+      : null,
+    staffSubmissions: flatSubmissions,
+    completionStatus,
   });
 });
 

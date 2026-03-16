@@ -19,6 +19,7 @@ function buildUser(staff: typeof academyStaffTable.$inferSelect, academy: typeof
     email: staff.email,
     role: staff.systemRole,
     systemRole: staff.systemRole,
+    questionRole: staff.questionRole ?? null,
     jobTitle: staff.jobTitle ?? "",
     teamName: staff.teamName ?? null,
     ageGroup: staff.ageGroup ?? null,
