@@ -43,10 +43,11 @@ function SelectChip({
       onClick={onToggle}
       className="px-3 py-2.5 rounded-xl text-sm font-semibold text-left transition-all border"
       style={{
-        background: selected ? `${color}25` : "rgba(255,255,255,0.04)",
-        borderColor: selected ? color : "rgba(255,255,255,0.1)",
-        color: selected ? "white" : "rgba(255,255,255,0.55)",
+        background: selected ? `${color}25` : "rgba(0,0,0,0.50)",
+        borderColor: selected ? color : "rgba(255,255,255,0.20)",
+        color: selected ? "white" : "rgba(255,255,255,0.92)",
         boxShadow: selected ? `0 0 12px ${color}30` : "none",
+        backdropFilter: "blur(8px)",
       }}
     >
       <span className="flex items-center gap-2">
@@ -73,6 +74,7 @@ export default function JourneyU9() {
   const { playerData, selectedAcademy, saveJourneyStage } = usePlayerContext();
 
   const primaryColor = selectedAcademy?.primaryColor ?? "#6d28d9";
+  const stadiumImage = selectedAcademy?.stadiumImage ?? null;
 
   const [showProfiler, setShowProfiler] = useState(false);
   const [profilerDone, setProfilerDone] = useState(false);
@@ -289,8 +291,14 @@ export default function JourneyU9() {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
         <div className="fixed inset-0 z-0 pointer-events-none">
-          <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
-            className="w-full h-full object-cover opacity-10 mix-blend-overlay" />
+          <img
+            src={stadiumImage ? `${import.meta.env.BASE_URL}${stadiumImage}` : `${import.meta.env.BASE_URL}images/hero-bg.png`}
+            alt=""
+            className="w-full h-full object-cover"
+            style={stadiumImage ? { opacity: 0.65, filter: "brightness(0.6) saturate(0.75)" } : { opacity: 0.1 }}
+          />
+          <div className="absolute inset-0"
+            style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0.22) 0%, rgba(10,10,10,0.45) 50%, rgba(10,10,10,0.80) 100%)" }} />
         </div>
         <div className="sticky top-0 z-30 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/6">
           <div className="flex items-center justify-between px-4 h-12">
@@ -362,7 +370,7 @@ export default function JourneyU9() {
                       updated[currentReview.idx] = { ...updated[currentReview.idx], text: e.target.value };
                       return updated;
                     })}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-white/30 transition-colors resize-none"
+                    className="w-full bg-black/50 border border-white/22 rounded-2xl px-4 py-3 text-white text-sm placeholder:text-white/45 focus:outline-none focus:border-white/40 backdrop-blur-sm transition-colors resize-none"
                   />
                 </>
               )}
@@ -399,9 +407,14 @@ export default function JourneyU9() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
-          className="w-full h-full object-cover opacity-10 mix-blend-overlay" />
-        <div className="absolute inset-0" style={{ background: `radial-gradient(ellipse at 50% 0%, ${stageColor}20 0%, transparent 60%)` }} />
+        <img
+          src={stadiumImage ? `${import.meta.env.BASE_URL}${stadiumImage}` : `${import.meta.env.BASE_URL}images/hero-bg.png`}
+          alt=""
+          className="w-full h-full object-cover"
+          style={stadiumImage ? { opacity: 0.65, filter: "brightness(0.6) saturate(0.75)" } : { opacity: 0.1 }}
+        />
+        <div className="absolute inset-0"
+          style={{ background: "linear-gradient(to bottom, rgba(10,10,10,0.22) 0%, rgba(10,10,10,0.45) 50%, rgba(10,10,10,0.80) 100%)" }} />
       </div>
 
       {/* ── Header ── */}
@@ -479,8 +492,8 @@ export default function JourneyU9() {
                     </div>
                   </motion.div>
                   <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-                    <p className="text-lg font-bold text-white text-center leading-relaxed mb-1">{question.text}</p>
-                    <p className="text-white/35 text-sm text-center leading-relaxed">{question.hint}</p>
+                    <p className="text-[1.45rem] font-display font-bold text-white text-center leading-[1.3] tracking-tight mb-2">{question.text}</p>
+                    <p className="text-white/65 text-sm text-center leading-relaxed">{question.hint}</p>
                   </motion.div>
                 </>
               )}
@@ -556,7 +569,7 @@ export default function JourneyU9() {
                     <textarea rows={3} placeholder="Write here if you like…"
                       value={answers[currentIdx]?.text ?? ""}
                       onChange={e => updateCurrent({ text: e.target.value })}
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-white/25 transition-colors resize-none leading-relaxed"
+                      className="w-full bg-black/50 border border-white/22 rounded-2xl px-4 py-3 text-white text-sm placeholder:text-white/45 focus:outline-none focus:border-white/40 backdrop-blur-sm transition-colors resize-none leading-relaxed"
                     />
                   </motion.div>
                   {hasCurrentAnswer && (
