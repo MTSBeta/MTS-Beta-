@@ -1,0 +1,45 @@
+Improve the visual design of the Player DNA question screen so it feels like a premium football academy product rather than a prototype.
+
+Design goals:
+- more elegant and high-end
+- stronger central focus
+- cleaner visual hierarchy
+- more cohesive answer system
+- less empty space
+- more FIFA-style premium sports UI polish
+
+Make these changes:
+
+1. Turn the question area into a more deliberate central card with subtle glassmorphism, soft border, and restrained glow.
+2. Reduce the content width so the experience feels more focused and intimate.
+3. Make the A/B choice system feel like one connected spectrum control, not separate unrelated buttons.
+4. Keep the 5 response options, but style them as a unified segmented selector:
+   - Very much me
+   - A bit more me
+   - Both feel true
+   - A bit more me
+   - Very much me
+5. Improve colour discipline:
+   - dark charcoal/black base
+   - warm academy gold accent
+   - deep premium red as secondary contrast
+   - avoid overly saturated bright red
+6. Improve typography hierarchy:
+   - smaller refined section label
+   - clearer progress area
+   - larger more premium question text
+   - cleaner statement text
+   - softer helper text
+7. Make the icon area more premium, either by placing the icon inside a glowing badge or removing it entirely if it adds little value.
+8. Make the A and B statements feel like two ends of a spectrum with subtle directional styling.
+9. Add micro-interactions:
+   - hover glow
+   - smooth transitions
+   - soft scale on select
+   - animated progress bar movement
+10. Make the centre option feel like a deliberate valid choice, not a leftover neutral button.
+11. Keep the design mobile friendly and avoid overly wide button rows on desktop.
+12. Preserve the premium dark sports aesthetic and make it feel closer to a modern football game menu.
+
+Overall reference:
+Think elite academy meets FIFA-style UI: sleek, modern, restrained, competitive, premium, and emotionally intelligent.

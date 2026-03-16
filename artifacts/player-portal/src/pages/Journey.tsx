@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { ChevronLeft, SkipForward } from "lucide-react";
+import { ChevronLeft, SkipForward, Mic } from "lucide-react";
 import { VoiceRecorder } from "@/components/VoiceRecorder";
 import { MediaUploader } from "@/components/MediaUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
@@ -21,55 +21,6 @@ function isLight(hex: string) {
   return (r * 299 + g * 587 + b * 114) / 1000 > 160;
 }
 
-function PromptChips({ prompts }: { prompts: string[] }) {
-  return (
-    <div className="flex flex-wrap gap-1.5 mt-2">
-      {prompts.map((p, i) => (
-        <span key={i} className="inline-block px-2.5 py-1 rounded-full text-xs font-medium text-white/45 bg-white/6 border border-white/10">{p}</span>
-      ))}
-    </div>
-  );
-}
-
-function SelectChip({
-  label, selected, onClick, color, isCoaching
-}: {
-  label: string; selected: boolean; onClick: () => void; color: string; isCoaching?: boolean;
-}) {
-  const soundContext = useSoundEnabled();
-  const sound = useSoundSystem({ enabled: soundContext.enabled });
-  const accentColor = isCoaching ? "#0d9488" : color;
-  
-  const handleClick = () => {
-    try {
-      if (soundContext.enabled) {
-        sound.play(selected ? "click" : "select");
-      }
-    } catch (e) {
-      console.debug("Sound playback skipped");
-    }
-    onClick();
-  };
-  
-  return (
-    <motion.button
-      type="button"
-      whileTap={{ scale: 0.95 }}
-      onClick={handleClick}
-      className="px-4 py-2.5 rounded-full text-sm font-semibold border transition-all text-left min-h-[44px] flex items-center"
-      style={
-        selected
-          ? { background: accentColor, borderColor: accentColor, color: isLight(accentColor) ? "#000" : "#fff" }
-          : { background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.65)" }
-      }
-    >
-      {selected ? "✓ " : ""}{label}
-    </motion.button>
-  );
-}
-
-// ── Toggle multi-select stored as ||| delimited string ────────────────────────
-
 function toggleOption(current: string, option: string, isMulti: boolean): string {
   if (!isMulti) return option;
   const opts = current ? current.split("|||") : [];
@@ -84,166 +35,122 @@ function selectedOptions(text: string): string[] {
 
 type ReviewEntry = { text: string; audioUrl: string | null; audioBlob: Blob | null };
 
-// ── Question card ─────────────────────────────────────────────────────────────
+// ── Prompt chips ─────────────────────────────────────────────────────────────
 
-function QuestionCard({
-  question, qi, answer, skipped, error, primaryColor, isCoaching: stageCoaching,
-  onTextChange, onAudioReady, onMediaChange, onSkip, onUnskip,
-}: {
-  question: JourneyQuestion;
-  qi: number;
-  answer: AnswerEntry;
-  skipped: boolean;
-  error: boolean;
-  primaryColor: string;
-  isCoaching?: boolean;
-  onTextChange: (val: string) => void;
-  onAudioReady: (blob: Blob, url: string) => void;
-  onMediaChange: (paths: string[]) => void;
-  onSkip: () => void;
-  onUnskip: () => void;
+function PromptChips({ prompts, color }: { prompts: string[]; color: string }) {
+  return (
+    <div className="flex flex-wrap gap-2 mt-3">
+      {prompts.map((p, i) => (
+        <span
+          key={i}
+          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium border"
+          style={{
+            background: `${color}12`,
+            borderColor: `${color}25`,
+            color: "rgba(255,255,255,0.55)",
+          }}
+        >
+          <span className="w-1 h-1 rounded-full inline-block opacity-60" style={{ background: color }} />
+          {p}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// ── Select chip ──────────────────────────────────────────────────────────────
+
+function SelectChip({ label, selected, onClick, color, isCoaching }: {
+  label: string; selected: boolean; onClick: () => void; color: string; isCoaching?: boolean;
 }) {
-  const qType = question.type ?? "voice-text";
-  const isCoachingQ = stageCoaching || qType === "staff-text" || qType === "staff-multiselect";
-  const isSelect = qType === "select";
-  const isMultiselect = qType === "multiselect" || qType === "staff-multiselect";
-  const isSelectType = isSelect || isMultiselect;
-  const isVoiceText = qType === "voice-text" || qType === "staff-text";
-  const accentColor = isCoachingQ ? "#0d9488" : primaryColor;
-  const selected = selectedOptions(answer.text);
-  const answered = isSelectType ? answer.text.trim() !== "" : !!(answer.text.trim() || answer.audioUrl);
+  const soundCtx = useSoundEnabled();
+  const sound = useSoundSystem({ enabled: soundCtx.enabled });
+  const accent = isCoaching ? "#0d9488" : color;
+
+  const handleClick = () => {
+    try { if (soundCtx.enabled) sound.play(selected ? "click" : "select"); } catch {}
+    onClick();
+  };
 
   return (
-    <motion.div
-      key={qi}
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: qi * 0.06 }}
-      className={`rounded-2xl p-5 space-y-3 transition-all ${error ? "ring-1 ring-red-500/50" : ""} ${skipped ? "opacity-55" : ""}`}
-      style={{
-        background: skipped
-          ? "rgba(255,255,255,0.02)"
-          : isCoachingQ
-          ? "rgba(13,148,136,0.07)"
-          : answered
-          ? `${primaryColor}0A`
-          : "rgba(255,255,255,0.04)",
-        border: skipped
-          ? "1px dashed rgba(255,255,255,0.1)"
-          : isCoachingQ
-          ? answered ? "1px solid rgba(13,148,136,0.5)" : "1px solid rgba(13,148,136,0.2)"
-          : answered
-          ? `1px solid ${primaryColor}30`
-          : "1px solid rgba(255,255,255,0.08)",
-      }}
+    <motion.button
+      type="button"
+      whileTap={{ scale: 0.94 }}
+      onClick={handleClick}
+      className="px-4 py-3 rounded-2xl text-sm font-semibold border transition-all text-left min-h-[52px] flex items-center gap-2"
+      style={
+        selected
+          ? { background: accent, borderColor: accent, color: isLight(accent) ? "#000" : "#fff" }
+          : { background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }
+      }
     >
-      {/* Question header */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            {isCoachingQ && (
-              <span className="px-1.5 py-0.5 rounded text-[9px] font-black tracking-widest uppercase bg-teal-500/20 text-teal-400">Coach</span>
-            )}
-            {question.emoji && <span className="text-base">{question.emoji}</span>}
-            <span className="text-white/20 font-mono text-xs">{qi + 1}.</span>
-          </div>
-          <p className={`text-base font-semibold leading-relaxed ${skipped ? "text-white/40 line-through" : "text-white"}`}>
-            {question.text}
-          </p>
-          {question.hint && !skipped && (
-            <p className="text-white/35 text-xs mt-1 leading-relaxed">{question.hint}</p>
-          )}
-          {!skipped && !isSelectType && question.prompts && question.prompts.length > 0 && (
-            <PromptChips prompts={question.prompts} />
-          )}
+      {selected && (
+        <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ background: "rgba(0,0,0,0.2)" }}>
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+            <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </span>
+      )}
+      {label}
+    </motion.button>
+  );
+}
+
+// ── Stage intro card ─────────────────────────────────────────────────────────
+
+function StageIntro({ stage, color, onBegin, stageNum, totalStages }: {
+  stage: { emoji: string; title: string; subtitle: string };
+  color: string;
+  onBegin: () => void;
+  stageNum: number;
+  totalStages: number;
+}) {
+  const btnText = isLight(color) ? "#000" : "#fff";
+  return (
+    <motion.div
+      key="stage-intro"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 1.04 }}
+      transition={{ duration: 0.4 }}
+      className="flex flex-col items-center justify-center min-h-screen px-8 text-center"
+    >
+      {/* Glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse 80% 60% at 50% 100%, ${color}25 0%, transparent 70%)`,
+        }}
+      />
+
+      <div className="relative z-10 flex flex-col items-center gap-6 max-w-sm">
+        <p className="text-white/30 text-xs font-bold uppercase tracking-widest font-display">
+          Chapter {stageNum} of {totalStages}
+        </p>
+
+        <div
+          className="w-24 h-24 rounded-3xl flex items-center justify-center text-5xl shadow-2xl"
+          style={{ background: `${color}20`, border: `1px solid ${color}35` }}
+        >
+          {stage.emoji}
         </div>
-        {answered && !skipped && (
-          <span className="text-xs font-bold shrink-0 mt-0.5" style={{ color: accentColor }}>✓</span>
-        )}
-        {skipped && (
-          <button
-            onClick={onUnskip}
-            className="text-amber-400/60 hover:text-amber-400 text-[10px] font-bold uppercase tracking-wider shrink-0 mt-0.5 transition-colors"
-          >
-            Undo
-          </button>
-        )}
+
+        <div>
+          <h1 className="text-4xl font-display font-black text-white uppercase tracking-tight mb-3 leading-none">
+            {stage.title}
+          </h1>
+          <p className="text-white/50 text-base leading-relaxed">{stage.subtitle}</p>
+        </div>
+
+        <motion.button
+          whileTap={{ scale: 0.97 }}
+          onClick={onBegin}
+          className="w-full py-4 rounded-2xl font-display font-black text-sm uppercase tracking-widest mt-2"
+          style={{ background: color, color: btnText, boxShadow: `0 8px 40px ${color}50` }}
+        >
+          Begin →
+        </motion.button>
       </div>
-
-      {/* Answer area */}
-      {!skipped && (
-        <>
-          {/* Select / Multiselect chips */}
-          {isSelectType && question.options && (
-            <div className="flex flex-wrap gap-2 pt-1">
-              {question.options.map(opt => (
-                <SelectChip
-                  key={opt}
-                  label={opt}
-                  selected={selected.includes(opt)}
-                  isCoaching={isCoachingQ}
-                  color={primaryColor}
-                  onClick={() => onTextChange(toggleOption(answer.text, opt, isMultiselect))}
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Text area (voice-text and staff-text) */}
-          {isVoiceText && (
-            <>
-              <textarea
-                rows={3}
-                placeholder={isCoachingQ
-                  ? "Type your observations here…"
-                  : "Write your answer here, or use the voice note below..."}
-                value={answer.text}
-                onChange={e => onTextChange(e.target.value)}
-                className={`w-full border rounded-xl px-4 py-3 text-white text-base placeholder:text-white/20 focus:outline-none transition-colors resize-none leading-relaxed ${error ? "border-red-500/50" : isCoachingQ ? "border-teal-500/20 focus:border-teal-500/40 bg-teal-900/10" : "border-white/10 focus:border-white/30 bg-white/5"}`}
-              />
-              {!isCoachingQ && (
-                <div className="flex flex-col gap-2">
-                  <VoiceRecorder
-                    onAudioReady={onAudioReady}
-                    existingUrl={answer.audioUrl}
-                  />
-                  <MediaUploader
-                    onMediaChange={onMediaChange}
-                    existingUrls={answer.mediaUrls}
-                  />
-                </div>
-              )}
-            </>
-          )}
-
-          {error && (
-            <p className="text-xs text-red-400">
-              {isSelectType ? "Please select at least one option." : "Please write a response or record a voice note."}
-            </p>
-          )}
-        </>
-      )}
-
-      {/* Skip controls — only for non-coaching questions */}
-      {!isCoachingQ && (
-        skipped ? (
-          <div className="flex items-center gap-2 text-amber-400/50 text-xs">
-            <SkipForward size={12} />
-            <span>Skipped — you can answer this at the end</span>
-          </div>
-        ) : (
-          !answered && (
-            <button
-              type="button"
-              onClick={onSkip}
-              className="flex items-center gap-2 text-white/30 hover:text-amber-400/70 text-sm transition-colors group py-2.5 px-1 -mx-1 min-h-[44px]"
-            >
-              <SkipForward size={14} className="group-hover:text-amber-400/70 shrink-0" />
-              <span>Skip for now — answer later</span>
-            </button>
-          )
-        )
-      )}
     </motion.div>
   );
 }
@@ -257,6 +164,9 @@ export default function Journey() {
   const sound = useSoundSystem({ enabled: soundEnabled });
 
   const [currentStep, setCurrentStep] = useState(0);
+  const [currentQI, setCurrentQI] = useState(0);
+  const [showStageIntro, setShowStageIntro] = useState(true);
+  const [qDir, setQDir] = useState(1); // 1=forward, -1=backward
 
   const activeStages = PLAYER_STAGES.map(s => ({
     ...s,
@@ -271,15 +181,18 @@ export default function Journey() {
   const primaryColor = selectedAcademy?.primaryColor ?? "#6d28d9";
   const btnText = isLight(primaryColor) ? "#000" : "#fff";
 
+  // Global question counters
+  const totalQ = activeStages.reduce((acc, s) => acc + s.questions.length, 0);
+  const doneQ = activeStages.slice(0, currentStep).reduce((acc, s) => acc + s.questions.length, 0) + currentQI + 1;
+
   const [localAnswers, setLocalAnswers] = useState<AnswerEntry[]>(
     Array(qCount).fill(null).map(() => ({ text: "", audioUrl: null, audioBlob: null, mediaUrls: [] }))
   );
-  const [errors, setErrors] = useState<boolean[]>(Array(qCount).fill(false));
+  const [qError, setQError] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-
-  const [skippedSet, setSkippedSet] = useState<Set<string>>(new Set());
   const [showReview, setShowReview] = useState(false);
   const [reviewAnswers, setReviewAnswers] = useState<Record<string, ReviewEntry>>({});
+  const [skippedSet, setSkippedSet] = useState<Set<string>>(new Set());
   const reviewScrollRef = useRef<HTMLDivElement>(null);
 
   const saveMutation = useSaveJourneyResponses();
@@ -287,55 +200,49 @@ export default function Journey() {
 
   useEffect(() => { if (!playerData) navigate("/"); }, [playerData]);
 
+  // Load saved answers when stage changes
   useEffect(() => {
     if (showReview) return;
-    const newCount = stage.questions.length;
     const saved = journeyAnswers[stage.id];
     setLocalAnswers(
       saved
         ? (saved as AnswerEntry[])
-        : Array(newCount).fill(null).map(() => ({ text: "", audioUrl: null, audioBlob: null, mediaUrls: [] }))
+        : Array(stage.questions.length).fill(null).map(() => ({ text: "", audioUrl: null, audioBlob: null, mediaUrls: [] }))
     );
-    setErrors(Array(newCount).fill(false));
-  }, [currentStep, stage.id, showReview]);
+    setQError(false);
+  }, [currentStep, showReview]);
 
   const skipKey = (stageId: string, qi: number) => `${stageId}__${qi}`;
   const isSkipped = (stageId: string, qi: number) => skippedSet.has(skipKey(stageId, qi));
+  const totalSkippedCount = skippedSet.size;
 
-  const markSkipped = (qi: number) => {
-    setSkippedSet(prev => new Set([...prev, skipKey(stage.id, qi)]));
+  const currentQuestion = stage.questions[currentQI];
+  const currentAnswer = localAnswers[currentQI] ?? { text: "", audioUrl: null, audioBlob: null, mediaUrls: [] };
+  const isSkippedCurrent = isSkipped(stage.id, currentQI);
+
+  const updateCurrentAnswer = (patch: Partial<AnswerEntry>) => {
     setLocalAnswers(prev => {
       const updated = [...prev];
-      updated[qi] = { text: "", audioUrl: null, audioBlob: null, mediaUrls: [] };
+      updated[currentQI] = { ...updated[currentQI], ...patch };
       return updated;
     });
-    setErrors(prev => { const e = [...prev]; e[qi] = false; return e; });
+    setQError(false);
+  };
+
+  const markCurrentSkipped = () => {
+    setSkippedSet(prev => new Set([...prev, skipKey(stage.id, currentQI)]));
+    setLocalAnswers(prev => {
+      const updated = [...prev];
+      updated[currentQI] = { text: "", audioUrl: null, audioBlob: null, mediaUrls: [] };
+      return updated;
+    });
+    setQError(false);
   };
 
   const unmarkSkipped = (stageId: string, qi: number) => {
-    setSkippedSet(prev => { const next = new Set(prev); next.delete(skipKey(stageId, qi)); return next; });
+    setSkippedSet(prev => { const s = new Set(prev); s.delete(skipKey(stageId, qi)); return s; });
   };
 
-  const updateAnswer = (index: number, patch: Partial<AnswerEntry>) => {
-    setLocalAnswers(prev => {
-      const updated = [...prev];
-      updated[index] = { ...updated[index], ...patch };
-      return updated;
-    });
-    if (patch.text?.trim() || patch.audioUrl) {
-      setErrors(prev => { const e = [...prev]; e[index] = false; return e; });
-      unmarkSkipped(stage.id, index);
-    }
-  };
-
-  // All skipped questions across all stages (for review)
-  const allSkipped = activeStages.flatMap((s, si) =>
-    s.questions.map((q, qi) => ({ s, si, q, qi, key: skipKey(s.id, qi) }))
-      .filter(({ key }) => skippedSet.has(key))
-  );
-  const totalSkippedCount = skippedSet.size;
-
-  // Build responses payload with correct running question numbers
   const buildResponses = (overrides: Record<string, ReviewEntry> = {}) => {
     const all = { ...journeyAnswers, [stage.id]: localAnswers };
     let runningNum = 0;
@@ -343,7 +250,6 @@ export default function Journey() {
       stage: string; questionNumber: number; questionText: string;
       answerText: string; audioUrl: string | null; mediaUrls: string[];
     }[] = [];
-
     for (const s of activeStages) {
       const stageAnswers = all[s.id] ?? [];
       for (let qi = 0; qi < s.questions.length; qi++) {
@@ -365,59 +271,10 @@ export default function Journey() {
     return responses;
   };
 
-  const validateAndAdvance = async () => {
-    // Validate player questions
-    const newErrors = localAnswers.map((a, qi) => {
-      if (isSkipped(stage.id, qi)) return false;
-      const qType = stage.questions[qi]?.type ?? "voice-text";
-      const isSelectType = qType === "select" || qType === "multiselect";
-      if (isSelectType) return !a.text.trim();
-      return !a.text.trim() && !a.audioUrl;
-    });
-    if (newErrors.some(Boolean)) { setErrors(newErrors); return; }
-
-    saveJourneyStage(stage.id, localAnswers);
-
-    const nextStep = currentStep + 1;
-
-    if (nextStep < totalStages) {
-      setIsSaving(true);
-      const allAnswers = { ...journeyAnswers, [stage.id]: localAnswers };
-      let runningNum = 0;
-      const responses: { stage: string; questionNumber: number; questionText: string; answerText: string; audioUrl: string | null; mediaUrls: string[] }[] = [];
-      for (let si = 0; si <= currentStep; si++) {
-        const s = activeStages[si];
-        const stageAnswers = allAnswers[s.id] ?? [];
-        for (let qi = 0; qi < s.questions.length; qi++) {
-          runningNum++;
-          responses.push({
-            stage: s.id, questionNumber: runningNum, questionText: s.questions[qi].text,
-            answerText: (stageAnswers[qi] as AnswerEntry)?.text ?? "",
-            audioUrl: (stageAnswers[qi] as AnswerEntry)?.audioUrl ?? null,
-            mediaUrls: (stageAnswers[qi] as AnswerEntry)?.mediaUrls ?? [],
-          });
-        }
-      }
-      try {
-        await saveMutation.mutateAsync({ playerId: playerData!.id, data: { responses } });
-        setCurrentStep(nextStep);
-      } catch (err) { console.error("Save error", err); }
-      finally { setIsSaving(false); }
-    } else {
-      // Last stage — check for skips
-      if (totalSkippedCount > 0) {
-        setShowReview(true);
-      } else {
-        await completeJourney({});
-      }
-    }
-  };
-
   const completeJourney = async (overrides: Record<string, ReviewEntry>) => {
     setIsSaving(true);
     try {
       const responses = buildResponses(overrides);
-      // Add character profile as a final synthetic response
       const allAnswersByStage = { ...journeyAnswers, [stage.id]: localAnswers };
       const profileSummation = computeCharacterProfile(allAnswersByStage as Record<string, { text: string }[]>);
       if (profileSummation) {
@@ -437,17 +294,97 @@ export default function Journey() {
     finally { setIsSaving(false); }
   };
 
+  const goForward = async () => {
+    const q = currentQuestion;
+    const answer = currentAnswer;
+    const qType = q.type ?? "voice-text";
+
+    if (!isSkippedCurrent) {
+      const isSelectType = qType === "select" || qType === "multiselect";
+      const isEmpty = isSelectType
+        ? !answer.text.trim()
+        : !answer.text.trim() && !answer.audioUrl;
+      if (isEmpty) { setQError(true); return; }
+    }
+    setQError(false);
+
+    const isLastQ = currentQI === qCount - 1;
+    const isLastS = currentStep === totalStages - 1;
+
+    if (!isLastQ) {
+      setQDir(1);
+      setCurrentQI(qi => qi + 1);
+    } else {
+      saveJourneyStage(stage.id, localAnswers);
+      if (!isLastS) {
+        setIsSaving(true);
+        const allAnswers = { ...journeyAnswers, [stage.id]: localAnswers };
+        let runningNum = 0;
+        const responses: typeof buildResponses extends (...args: any[]) => infer R ? R : any = [];
+        for (let si = 0; si <= currentStep; si++) {
+          const s = activeStages[si];
+          const stageAnswers = allAnswers[s.id] ?? [];
+          for (let qi2 = 0; qi2 < s.questions.length; qi2++) {
+            runningNum++;
+            responses.push({
+              stage: s.id, questionNumber: runningNum, questionText: s.questions[qi2].text,
+              answerText: (stageAnswers[qi2] as AnswerEntry)?.text ?? "",
+              audioUrl: (stageAnswers[qi2] as AnswerEntry)?.audioUrl ?? null,
+              mediaUrls: (stageAnswers[qi2] as AnswerEntry)?.mediaUrls ?? [],
+            });
+          }
+        }
+        try {
+          await saveMutation.mutateAsync({ playerId: playerData!.id, data: { responses } });
+          setQDir(1);
+          setCurrentStep(s => s + 1);
+          setCurrentQI(0);
+          setShowStageIntro(true);
+        } catch (err) { console.error("Save error", err); }
+        finally { setIsSaving(false); }
+      } else {
+        if (totalSkippedCount > 0) {
+          setShowReview(true);
+        } else {
+          await completeJourney({});
+        }
+      }
+    }
+  };
+
   const goBack = () => {
     if (showReview) { setShowReview(false); return; }
-    if (currentStep > 0) { saveJourneyStage(stage.id, localAnswers); setCurrentStep(s => s - 1); }
+    if (showStageIntro) {
+      if (currentStep > 0) {
+        const prevQCount = activeStages[currentStep - 1].questions.length;
+        saveJourneyStage(stage.id, localAnswers);
+        setQDir(-1);
+        setCurrentStep(s => s - 1);
+        setCurrentQI(prevQCount - 1);
+        setShowStageIntro(false);
+      } else {
+        saveAndExit();
+      }
+      return;
+    }
+    if (currentQI > 0) {
+      setQDir(-1);
+      setCurrentQI(qi => qi - 1);
+      setQError(false);
+    } else if (currentStep > 0) {
+      setShowStageIntro(true);
+      setQError(false);
+    } else {
+      saveAndExit();
+    }
   };
 
   const saveAndExit = async () => {
     saveJourneyStage(stage.id, localAnswers);
-    if (playerData && currentStep > 0) {
+    if (playerData && (currentStep > 0 || currentQI > 0)) {
       const allAnswers = { ...journeyAnswers, [stage.id]: localAnswers };
       let runningNum = 0;
-      const responses: { stage: string; questionNumber: number; questionText: string; answerText: string; audioUrl: string | null; mediaUrls: string[] }[] = [];
+      const responses: any[] = [];
       for (let si = 0; si < currentStep; si++) {
         const s = activeStages[si];
         const stageAnswers = allAnswers[s.id] ?? [];
@@ -461,14 +398,17 @@ export default function Journey() {
           });
         }
       }
-      if (responses.length > 0) {
-        try { await saveMutation.mutateAsync({ playerId: playerData.id, data: { responses } }); } catch {}
-      }
+      try { await saveMutation.mutateAsync({ playerId: playerData.id, data: { responses } }); } catch {}
     }
     navigate("/welcome");
   };
 
   if (!playerData) return null;
+
+  const allSkipped = activeStages.flatMap((s, si) =>
+    s.questions.map((q, qi) => ({ s, si, q, qi, key: skipKey(s.id, qi) }))
+      .filter(({ key }) => skippedSet.has(key))
+  );
 
   // ══ REVIEW SCREEN ══════════════════════════════════════════════════════════
   if (showReview) {
@@ -476,8 +416,11 @@ export default function Journey() {
       <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
         <div className="fixed inset-0 z-0 pointer-events-none">
           <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
-            className="w-full h-full object-cover opacity-15 mix-blend-overlay" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0a0a]" />
+            className="w-full h-full object-cover opacity-10 mix-blend-overlay" />
+          <div
+            className="absolute inset-0"
+            style={{ background: `radial-gradient(ellipse 70% 50% at 50% 100%, ${primaryColor}20 0%, transparent 70%)` }}
+          />
         </div>
         <div className="sticky top-0 z-30 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/6">
           <div className="flex items-center justify-between px-4 h-12">
@@ -486,18 +429,18 @@ export default function Journey() {
               <ChevronLeft size={18} />Back
             </button>
             <span className="text-white/40 text-xs font-bold uppercase tracking-widest">
-              {allSkipped.length} question{allSkipped.length !== 1 ? "s" : ""} left
+              {allSkipped.length} skipped
             </span>
             <div className="w-14" />
           </div>
         </div>
         <div ref={reviewScrollRef} className="relative z-10 flex-1 overflow-y-auto pb-36">
-          <div className="max-w-xl mx-auto px-4 pt-6 space-y-6">
+          <div className="max-w-xl mx-auto px-4 pt-8 space-y-6">
             <div className="text-center">
-              <div className="text-5xl mb-3">⏭️</div>
+              <div className="text-5xl mb-4">⏭️</div>
               <h1 className="text-2xl font-display font-black text-white mb-2">Almost there!</h1>
               <p className="text-white/50 text-sm leading-relaxed max-w-xs mx-auto">
-                You skipped {allSkipped.length} question{allSkipped.length !== 1 ? "s" : ""}. Answer them now, or complete your journey and we'll leave them blank.
+                You skipped {allSkipped.length} question{allSkipped.length !== 1 ? "s" : ""}. Answer them now, or finish and we'll build your story from everything you've shared.
               </p>
             </div>
             {allSkipped.map(({ s, si, q, qi, key }) => {
@@ -508,57 +451,42 @@ export default function Journey() {
                   className="rounded-2xl p-5 space-y-4"
                   style={{
                     background: hasReviewAnswer ? `${primaryColor}12` : "rgba(255,255,255,0.04)",
-                    border: hasReviewAnswer ? `1px solid ${primaryColor}40` : "1px solid rgba(255,255,255,0.08)"
+                    border: hasReviewAnswer ? `1px solid ${primaryColor}35` : "1px solid rgba(255,255,255,0.08)"
                   }}>
                   <div className="flex items-center gap-2">
                     <span className="text-sm">{s.emoji}</span>
-                    <span className="text-white/35 text-xs font-bold uppercase tracking-widest">
-                      Stage {si + 1} · {s.title}
-                    </span>
+                    <span className="text-white/35 text-xs font-bold uppercase tracking-widest">{s.title}</span>
                     {hasReviewAnswer && (
                       <span className="ml-auto text-xs font-bold" style={{ color: primaryColor }}>✓ Answered</span>
                     )}
                   </div>
-                  <p className="text-sm font-semibold text-white leading-relaxed">
-                    <span className="text-white/20 mr-2 font-mono text-xs">{qi + 1}.</span>
-                    {q.text}
-                  </p>
-                  {q.prompts && q.prompts.length > 0 && <PromptChips prompts={q.prompts} />}
+                  <p className="text-sm font-semibold text-white leading-relaxed">{q.text}</p>
+                  {q.prompts && q.prompts.length > 0 && <PromptChips prompts={q.prompts} color={primaryColor} />}
                   <textarea
-                    rows={2}
+                    rows={3}
                     placeholder="Write your answer here…"
                     value={ra.text}
                     onChange={e => setReviewAnswers(prev => ({ ...prev, [key]: { ...ra, text: e.target.value } }))}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-base placeholder:text-white/20 focus:outline-none focus:border-white/30 transition-colors resize-none"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white text-base placeholder:text-white/20 focus:outline-none focus:border-white/25 transition-colors resize-none"
                   />
                   <VoiceRecorder
-                    onAudioReady={(blob, url) => setReviewAnswers(prev => ({ ...prev, [key]: { ...ra, audioBlob: blob, audioUrl: url } }))}
+                    onAudioReady={(blob, url) => setReviewAnswers(prev => ({ ...prev, [key]: { ...ra, audioBlob: blob ?? null, audioUrl: url } }))}
                     existingUrl={ra.audioUrl}
                   />
                 </motion.div>
               );
             })}
-            <p className="text-white/25 text-xs text-center pb-2">
-              You can complete now and leave any blanks — your story will still be built from everything you've shared.
-            </p>
           </div>
         </div>
         <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pt-3"
           style={{ background: "linear-gradient(to top, #0a0a0a 70%, transparent)", paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}>
-          <div className="max-w-xl mx-auto space-y-2">
+          <div className="max-w-xl mx-auto">
             <motion.button whileTap={{ scale: 0.97 }}
               onClick={() => completeJourney(reviewAnswers)}
               disabled={isSaving}
               className="w-full py-4 rounded-2xl font-black text-base uppercase tracking-widest disabled:opacity-50 font-display"
               style={{ background: primaryColor, color: btnText, boxShadow: `0 8px 32px ${primaryColor}55` }}>
-              {isSaving
-                ? <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>Saving…
-                  </span>
-                : "Complete My Journey →"}
+              {isSaving ? "Saving…" : "Complete My Journey →"}
             </motion.button>
           </div>
         </div>
@@ -566,38 +494,100 @@ export default function Journey() {
     );
   }
 
-  // ══ MAIN JOURNEY ═══════════════════════════════════════════════════════════
+  // ══ STAGE INTRO ════════════════════════════════════════════════════════════
+  if (showStageIntro) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] relative overflow-hidden">
+        <div className="fixed inset-0 z-0 pointer-events-none">
+          <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
+            className="w-full h-full object-cover opacity-10 mix-blend-overlay" />
+        </div>
 
-  return (
-    <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
-          className="w-full h-full object-cover opacity-15 mix-blend-overlay" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0a0a]" />
-      </div>
-
-      {/* Sticky header */}
-      <div className="sticky top-0 z-30 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/6">
-        <div className="flex items-center justify-between px-4 h-12">
+        {/* back button */}
+        <div className="absolute top-0 left-0 right-0 z-20 flex items-center px-4 h-14">
           <button
-            onClick={currentStep === 0 ? saveAndExit : goBack}
-            disabled={isSaving}
-            className="flex items-center gap-1 text-white/40 hover:text-white/70 text-sm transition-colors min-h-[44px] px-1 -ml-1 disabled:opacity-30"
+            onClick={goBack}
+            className="flex items-center gap-1 text-white/40 hover:text-white/70 text-sm transition-colors min-h-[44px]"
           >
             <ChevronLeft size={18} />
             {currentStep === 0 ? "Exit" : "Back"}
           </button>
+        </div>
+
+        <StageIntro
+          stage={stage}
+          color={primaryColor}
+          stageNum={currentStep + 1}
+          totalStages={totalStages}
+          onBegin={() => setShowStageIntro(false)}
+        />
+      </div>
+    );
+  }
+
+  // ══ SINGLE QUESTION VIEW ═══════════════════════════════════════════════════
+
+  const qType = currentQuestion.type ?? "voice-text";
+  const isCoachingQ = qType === "staff-text" || qType === "staff-multiselect";
+  const isSelect = qType === "select";
+  const isMultiselect = qType === "multiselect" || qType === "staff-multiselect";
+  const isSelectType = isSelect || isMultiselect;
+  const isVoiceText = qType === "voice-text" || qType === "staff-text";
+  const accentColor = isCoachingQ ? "#0d9488" : primaryColor;
+  const selected = selectedOptions(currentAnswer.text);
+  const answered = isSelectType
+    ? currentAnswer.text.trim() !== ""
+    : !!(currentAnswer.text.trim() || currentAnswer.audioUrl);
+
+  // Global progress %
+  const progressPct = ((doneQ - 1) / totalQ) * 100;
+
+  const isLastQ = currentQI === qCount - 1;
+  const isLastS = currentStep === totalStages - 1;
+  const isVeryLast = isLastQ && isLastS;
+
+  const slideVariants = {
+    enter: (dir: number) => ({ opacity: 0, x: dir > 0 ? 40 : -40 }),
+    center: { opacity: 1, x: 0 },
+    exit: (dir: number) => ({ opacity: 0, x: dir > 0 ? -40 : 40 }),
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
+      {/* Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <img
+          src={`${import.meta.env.BASE_URL}images/hero-bg.png`}
+          alt=""
+          className="w-full h-full object-cover opacity-10 mix-blend-overlay"
+        />
+        {/* Club color ambient glow */}
+        <div
+          className="absolute inset-0 transition-all duration-700"
+          style={{
+            background: `radial-gradient(ellipse 80% 55% at 50% 100%, ${accentColor}18 0%, transparent 70%)`,
+          }}
+        />
+      </div>
+
+      {/* Header */}
+      <div className="sticky top-0 z-30 bg-[#0a0a0a]/80 backdrop-blur-xl">
+        <div className="flex items-center justify-between px-4 h-12">
+          <button
+            onClick={goBack}
+            disabled={isSaving}
+            className="flex items-center gap-1 text-white/40 hover:text-white/70 text-sm transition-colors min-h-[44px] px-1 -ml-1 disabled:opacity-30"
+          >
+            <ChevronLeft size={18} />
+            Back
+          </button>
 
           <div className="flex items-center gap-2">
-            <span className="text-white/30 text-xs font-mono">{currentStep + 1}</span>
+            <span className="text-white/25 text-xs font-mono tabular-nums">
+              {doneQ}
+            </span>
             <span className="text-white/15 text-xs">/</span>
-            <span className="text-white/20 text-xs font-mono">{totalStages}</span>
-            <span className="text-lg ml-1">{stage.emoji}</span>
-            {totalSkippedCount > 0 && (
-              <span className="ml-1 px-2 py-1 rounded-full text-xs font-black bg-amber-500/20 text-amber-400">
-                {totalSkippedCount} skipped
-              </span>
-            )}
+            <span className="text-white/20 text-xs font-mono tabular-nums">{totalQ}</span>
           </div>
 
           <button
@@ -605,94 +595,217 @@ export default function Journey() {
             disabled={isSaving}
             className="text-white/30 hover:text-white/60 text-sm transition-colors min-h-[44px] px-1 -mr-1 disabled:opacity-30"
           >
-            Save & Exit
+            Exit
           </button>
         </div>
 
-        <div className="flex gap-0.5 px-4 pb-2">
-          {activeStages.map((_, i) => (
-            <div key={i} className="h-1 flex-1 rounded-full transition-all duration-500"
-              style={{
-                background: i < currentStep ? `${primaryColor}90` : i === currentStep ? primaryColor : "rgba(255,255,255,0.08)"
-              }} />
-          ))}
+        {/* Progress bar */}
+        <div className="h-[3px] bg-white/6 mx-0">
+          <motion.div
+            className="h-full rounded-full"
+            style={{ background: accentColor }}
+            animate={{ width: `${progressPct}%` }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          />
         </div>
       </div>
 
-      {/* Scrollable body */}
-      <div className="relative z-10 flex-1 overflow-y-auto pb-32">
-        <AnimatePresence mode="wait">
+      {/* Question body */}
+      <div className="relative z-10 flex-1 flex flex-col overflow-hidden">
+        <AnimatePresence mode="wait" custom={qDir}>
           <motion.div
-            key={stage.id}
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={{ duration: 0.25 }}
-            className="max-w-xl mx-auto px-4 pt-6 space-y-5"
+            key={`${currentStep}-${currentQI}`}
+            custom={qDir}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.28, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="flex-1 flex flex-col px-5 pt-6 pb-4 max-w-xl mx-auto w-full"
           >
-            {/* Stage header */}
-            <div className="text-center pb-2">
-              <span className="text-5xl mb-3 block">{stage.emoji}</span>
-              <h1 className="text-3xl font-display font-black text-white mb-2 leading-tight">{stage.title}</h1>
-              <p className="text-sm leading-relaxed text-white/50">{stage.subtitle}</p>
+            {/* Stage + question badge */}
+            <div className="flex items-center gap-2 mb-5">
+              <span
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest"
+                style={{ background: `${accentColor}20`, color: accentColor }}
+              >
+                <span>{stage.emoji}</span>
+                {stage.title}
+              </span>
+              {isCoachingQ && (
+                <span className="px-2 py-1 rounded-full text-[10px] font-black tracking-widest uppercase bg-teal-500/15 text-teal-400">
+                  Coach section
+                </span>
+              )}
+              {isSkippedCurrent && (
+                <span className="px-2 py-1 rounded-full text-[10px] font-black tracking-widest uppercase bg-amber-500/15 text-amber-400">
+                  Skipped
+                </span>
+              )}
             </div>
 
-            {/* Voice nudge */}
-            <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border text-sm"
-              style={{ background: `${primaryColor}12`, borderColor: `${primaryColor}30` }}>
-              <span className="text-xl shrink-0">🎙️</span>
-              <span className="text-white/55">Tap <strong className="text-white/80">Add voice note</strong> — talking tells more of your story than typing.</span>
+            {/* Emoji */}
+            <div className="mb-5">
+              <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-lg"
+                style={{ background: `${accentColor}15`, border: `1px solid ${accentColor}25` }}
+              >
+                {currentQuestion.emoji ?? stage.emoji}
+              </div>
             </div>
 
-            {/* Questions */}
-            <div className="space-y-4">
-              {stage.questions.map((question, qi) => (
-                <QuestionCard
-                  key={qi}
-                  question={question}
-                  qi={qi}
-                  answer={localAnswers[qi] ?? { text: "", audioUrl: null, audioBlob: null, mediaUrls: [] }}
-                  skipped={isSkipped(stage.id, qi)}
-                  error={errors[qi] ?? false}
-                  primaryColor={primaryColor}
-                  isCoaching={false}
-                  onTextChange={val => updateAnswer(qi, { text: val })}
-                  onAudioReady={(blob, url) => updateAnswer(qi, { audioBlob: blob, audioUrl: url })}
-                  onMediaChange={paths => updateAnswer(qi, { mediaUrls: paths })}
-                  onSkip={() => markSkipped(qi)}
-                  onUnskip={() => unmarkSkipped(stage.id, qi)}
-                />
-              ))}
+            {/* Question text */}
+            <div className="mb-4">
+              <h2 className="text-2xl font-display font-black text-white leading-tight mb-2">
+                {currentQuestion.text}
+              </h2>
+              {currentQuestion.hint && (
+                <p className="text-white/40 text-sm leading-relaxed">{currentQuestion.hint}</p>
+              )}
+              {currentQuestion.prompts && currentQuestion.prompts.length > 0 && !isSelectType && (
+                <PromptChips prompts={currentQuestion.prompts} color={accentColor} />
+              )}
             </div>
+
+            {/* Answer area */}
+            {!isSkippedCurrent && (
+              <div className="flex-1 flex flex-col gap-3">
+                {/* Select / multiselect */}
+                {isSelectType && currentQuestion.options && (
+                  <div className="flex flex-col gap-2">
+                    {currentQuestion.options.map(opt => (
+                      <SelectChip
+                        key={opt}
+                        label={opt}
+                        selected={selected.includes(opt)}
+                        isCoaching={isCoachingQ}
+                        color={accentColor}
+                        onClick={() => {
+                          updateCurrentAnswer({ text: toggleOption(currentAnswer.text, opt, isMultiselect) });
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Voice-text */}
+                {isVoiceText && (
+                  <>
+                    <textarea
+                      rows={4}
+                      placeholder={
+                        isCoachingQ
+                          ? "Type your observations here…"
+                          : "Write your answer here, or record a voice note below…"
+                      }
+                      value={currentAnswer.text}
+                      onChange={e => updateCurrentAnswer({ text: e.target.value })}
+                      className={`w-full border rounded-2xl px-4 py-4 text-white text-base placeholder:text-white/20 focus:outline-none transition-all resize-none leading-relaxed ${
+                        qError
+                          ? "border-red-500/50 bg-red-500/5"
+                          : isCoachingQ
+                          ? "border-teal-500/15 focus:border-teal-500/35 bg-white/4"
+                          : answered
+                          ? `border-white/15 focus:border-white/30 bg-white/4`
+                          : "border-white/10 focus:border-white/25 bg-white/4"
+                      }`}
+                    />
+                    {!isCoachingQ && (
+                      <div className="space-y-2">
+                        <VoiceRecorder
+                          onAudioReady={(blob, url) => updateCurrentAnswer({ audioBlob: blob ?? null, audioUrl: url })}
+                          existingUrl={currentAnswer.audioUrl}
+                        />
+                        <MediaUploader
+                          onMediaChange={paths => updateCurrentAnswer({ mediaUrls: paths })}
+                          existingUrls={currentAnswer.mediaUrls}
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {qError && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-red-400 text-sm font-medium"
+                  >
+                    {isSelectType ? "Pick at least one option to continue." : "Write something or record a voice note to continue."}
+                  </motion.p>
+                )}
+              </div>
+            )}
+
+            {/* Skipped state */}
+            {isSkippedCurrent && (
+              <div className="flex-1 flex flex-col items-center justify-center gap-4 py-8">
+                <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+                  <SkipForward size={22} className="text-amber-400/60" />
+                </div>
+                <p className="text-white/40 text-sm text-center">
+                  You skipped this one — it'll appear at the end if you want to come back to it.
+                </p>
+                <button
+                  onClick={() => unmarkSkipped(stage.id, currentQI)}
+                  className="px-4 py-2 rounded-xl border border-amber-500/30 text-amber-400 text-sm font-semibold hover:bg-amber-500/10 transition-colors"
+                >
+                  Answer this now
+                </button>
+              </div>
+            )}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Sticky bottom nav */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 px-4 pt-3"
-        style={{ background: "linear-gradient(to top, #0a0a0a 70%, transparent)", paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}>
-        <div className="max-w-xl mx-auto">
+      {/* Bottom action area */}
+      <div
+        className="sticky bottom-0 z-30 px-5 pt-2"
+        style={{
+          background: "linear-gradient(to top, #0a0a0a 65%, transparent)",
+          paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))",
+        }}
+      >
+        <div className="max-w-xl mx-auto space-y-2">
+          {/* Skip button (only for non-coaching, non-skipped, unanswered) */}
+          {!isCoachingQ && !isSkippedCurrent && !answered && (
+            <button
+              type="button"
+              onClick={markCurrentSkipped}
+              className="w-full flex items-center justify-center gap-2 text-white/25 hover:text-white/50 text-sm transition-colors py-2 min-h-[44px]"
+            >
+              <SkipForward size={14} />
+              Skip for now
+            </button>
+          )}
+
+          {/* Next / Complete button */}
           <motion.button
             whileTap={{ scale: 0.97 }}
-            onClick={validateAndAdvance}
+            onClick={goForward}
             disabled={isSaving}
-            className="w-full py-4 rounded-2xl font-black text-base uppercase tracking-widest disabled:opacity-50 font-display"
+            className="w-full py-4 rounded-2xl font-display font-black text-sm uppercase tracking-widest transition-all disabled:opacity-50"
             style={{
-              background: primaryColor,
+              background: accentColor,
               color: btnText,
-              boxShadow: `0 8px 32px ${primaryColor}55`,
+              boxShadow: `0 6px 30px ${accentColor}45`,
             }}
           >
-            {isSaving
-              ? <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>Saving…
-                </span>
-              : currentStep < totalStages - 1
-              ? "Next Chapter →"
-              : "Complete My Journey →"}
+            {isSaving ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Saving…
+              </span>
+            ) : isVeryLast ? (
+              "Complete My Story →"
+            ) : isLastQ ? (
+              "Next Chapter →"
+            ) : (
+              "Next →"
+            )}
           </motion.button>
         </div>
       </div>
