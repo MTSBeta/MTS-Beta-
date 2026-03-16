@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { ChevronLeft, Search } from "lucide-react";
+import { ChevronLeft, Search, Copy, Check } from "lucide-react";
 import { PREMIER_LEAGUE, CHAMPIONSHIP, type AcademyConfig } from "@/data/academies";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { Layout } from "@/components/Layout";
@@ -19,6 +19,70 @@ const PL_LION_SVG = (
 );
 
 // EFL Championship logo will be rendered as an img tag below
+
+function DemoPlayerCard({
+  label,
+  age,
+  code,
+  badge,
+  color,
+  onTry,
+}: {
+  label: string;
+  age: string;
+  code: string;
+  badge: string;
+  color: string;
+  onTry: () => void;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(code).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+      <div className="flex items-center gap-2.5">
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-[10px] font-black text-white font-display shrink-0"
+          style={{ background: `${color}25`, border: `1px solid ${color}40` }}
+        >
+          {badge}
+        </div>
+        <div>
+          <div className="text-white text-sm font-bold font-display uppercase tracking-wide leading-tight">
+            {label}
+          </div>
+          <div className="text-white/40 text-xs">{age} · Arsenal</div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between bg-black/30 rounded-xl px-3 py-2 border border-white/8">
+        <span className="text-white font-mono font-bold text-sm tracking-widest">{code}</span>
+        <button
+          onClick={handleCopy}
+          className="ml-2 p-1 rounded-lg hover:bg-white/10 transition-colors text-white/30 hover:text-white/70"
+          title="Copy code"
+        >
+          {copied ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
+        </button>
+      </div>
+
+      <button
+        onClick={onTry}
+        className="w-full h-9 rounded-xl text-xs font-display font-black uppercase tracking-widest transition-all hover:opacity-90 active:scale-95"
+        style={{ background: color, color: "#fff" }}
+      >
+        Try This Demo →
+      </button>
+    </div>
+  );
+}
 
 export default function Home() {
   const [_, navigate] = useLocation();
@@ -276,59 +340,104 @@ export default function Home() {
           )}
 
         </AnimatePresence>
-        {/* Login entries */}
+        {/* Demo + Login section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-12 pt-8 border-t border-white/8 w-full max-w-2xl flex flex-col items-center gap-3"
+          className="mt-12 pt-8 border-t border-white/8 w-full max-w-2xl flex flex-col items-center gap-5"
         >
-          {/* Demo credentials */}
-          <div className="text-center mb-2">
-            <div className="text-white/40 text-xs font-mono mb-2">Demo Credentials:</div>
-            <div className="space-y-1 text-white/50 text-xs font-mono">
-              <div>Staff: <span className="text-white/70">coach@arsenal.co.uk</span> / <span className="text-white/70">test123</span></div>
-              <div>Admin: <span className="text-white/70">admin@arsenal.co.uk</span> / <span className="text-white/70">admin123</span></div>
+          {/* Try a demo heading */}
+          <div className="text-center">
+            <div className="text-xs font-bold text-white/30 uppercase tracking-widest font-display mb-1">
+              Try a Demo
+            </div>
+            <p className="text-white/40 text-xs max-w-xs mx-auto">
+              Select Arsenal, then enter one of these codes to experience the player journey first-hand.
+            </p>
+          </div>
+
+          {/* Demo player cards */}
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              {
+                label: "U9 Player Journey",
+                age: "Age 8 · Right Winger",
+                code: "DEMO-U9",
+                badge: "U9",
+                color: "#EF0107",
+              },
+              {
+                label: "U13 Player Journey",
+                age: "Age 13 · Att. Midfielder",
+                code: "DEMO-U13",
+                badge: "U13",
+                color: "#EF0107",
+              },
+            ].map((demo) => (
+              <DemoPlayerCard
+                key={demo.code}
+                {...demo}
+                onTry={() => {
+                  const arsenal = PREMIER_LEAGUE.find(a => a.key === "arsenal");
+                  if (arsenal) {
+                    setSelectedAcademy(arsenal);
+                    navigate("/auth");
+                  }
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Staff credentials */}
+          <div className="w-full rounded-2xl border border-white/8 bg-white/[0.02] px-5 py-4">
+            <div className="text-xs font-bold text-white/30 uppercase tracking-widest font-display mb-3">
+              Staff Portal Demo
+            </div>
+            <div className="space-y-2 text-xs font-mono">
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-white/40">Coach login</span>
+                <span className="text-white/60">coach@arsenal.co.uk / test123</span>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-white/40">Admin login</span>
+                <span className="text-white/60">admin@arsenal.co.uk / admin123</span>
+              </div>
             </div>
           </div>
 
-          {/* Staff Login Button */}
-          <button
-            onClick={() => navigate("/staff-login")}
-            className="group flex items-center gap-3 px-6 py-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
-          >
-            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center group-hover:bg-white/15 transition-colors">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
-            </div>
-            <div className="text-left">
-              <div className="text-white text-sm font-bold font-display uppercase tracking-wider">
-                Academy Staff Login
+          {/* Login buttons */}
+          <div className="w-full flex flex-col sm:flex-row gap-2">
+            <button
+              onClick={() => navigate("/staff-login")}
+              className="flex-1 group flex items-center gap-3 px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+            >
+              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center group-hover:bg-white/15 transition-colors shrink-0">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
               </div>
-              <div className="text-white/35 text-xs">
-                Access the staff portal
+              <div className="text-left">
+                <div className="text-white text-sm font-bold font-display uppercase tracking-wider">Staff Login</div>
+                <div className="text-white/35 text-xs">Academy staff portal</div>
               </div>
-            </div>
-          </button>
+            </button>
 
-          {/* Admin Login Button */}
-          <button
-            onClick={() => navigate("/admin-login")}
-            className="group flex items-center gap-3 px-6 py-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
-          >
-            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center group-hover:bg-white/15 transition-colors">
-              <span className="text-base">⚙️</span>
-            </div>
-            <div className="text-left">
-              <div className="text-white text-sm font-bold font-display uppercase tracking-wider">
-                Website Admin
+            <button
+              onClick={() => navigate("/admin-login")}
+              className="flex-1 group flex items-center gap-3 px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+            >
+              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center group-hover:bg-white/15 transition-colors shrink-0">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
+                  <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+                </svg>
               </div>
-              <div className="text-white/35 text-xs">
-                Manage academy settings
+              <div className="text-left">
+                <div className="text-white text-sm font-bold font-display uppercase tracking-wider">Website Admin</div>
+                <div className="text-white/35 text-xs">Academy settings</div>
               </div>
-            </div>
-          </button>
+            </button>
+          </div>
         </motion.div>
 
       </div>
