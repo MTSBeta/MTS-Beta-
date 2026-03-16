@@ -34,9 +34,9 @@ export default function Stakeholder() {
   const code = params?.code ?? "";
 
   const [answers, setAnswers] = useState<AnswerEntry[]>(
-    Array(5).fill(null).map(() => ({ text: "", audioUrl: null, mediaUrls: [] }))
+    Array(10).fill(null).map(() => ({ text: "", audioUrl: null, mediaUrls: [] }))
   );
-  const [errors, setErrors] = useState<boolean[]>(Array(5).fill(false));
+  const [errors, setErrors] = useState<boolean[]>(Array(10).fill(false));
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { data: info, isLoading, isError } = useGetStakeholderByCode(code);
@@ -93,7 +93,7 @@ export default function Stakeholder() {
   };
 
   const handleSubmit = async () => {
-    const newErrors = answers.map(a => !a.text.trim() && !a.audioUrl);
+    const newErrors = answers.map((a, i) => i < qset.questions.length && !a.text.trim() && !a.audioUrl);
     if (newErrors.some(Boolean)) { setErrors(newErrors); return; }
 
     const responses = qset.questions.map((q, qi) => ({
@@ -107,7 +107,7 @@ export default function Stakeholder() {
     setIsSubmitted(true);
   };
 
-  const answeredCount = answers.filter(a => a.text.trim() || a.audioUrl).length;
+  const answeredCount = answers.slice(0, qset.questions.length).filter(a => a.text.trim() || a.audioUrl).length;
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col">

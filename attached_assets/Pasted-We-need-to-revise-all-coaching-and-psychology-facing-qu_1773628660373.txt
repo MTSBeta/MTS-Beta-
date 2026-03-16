@@ -1,0 +1,259 @@
+We need to revise all coaching and psychology-facing questions across the platform using a clearer design standard.
+
+What changed from the old questions to the new questions
+
+The old questions were thoughtful, but they leaned too far into:
+
+abstract interpretation
+
+mind-reading
+
+emotionally loaded wording
+
+poetic phrasing
+
+broad psychological conclusions
+
+The new questions should be better because they are:
+
+1. More observable
+
+Old questions often asked the respondent to explain the player’s inner world directly.
+
+New questions should ask for:
+
+behaviour
+
+body language
+
+communication
+
+decision-making
+
+repeated patterns
+
+specific situations
+
+We want staff to answer from what they have actually seen, not what they are guessing.
+
+2. More evidence-based
+
+Old questions invited broad interpretations like:
+
+“what does that tell you about who they are?”
+
+“what shaped them?”
+
+“what does their inner dialogue look like?”
+
+New questions should instead ask:
+
+what happened?
+
+when does this usually happen?
+
+what pattern have you noticed?
+
+what example best shows this?
+
+That gives us stronger, more usable data.
+
+3. Less clinical or therapist-like
+
+Some of the old wording sounded like the respondent was being asked to diagnose or psychoanalyse the child.
+
+The new version should sound more like:
+
+developmental observation
+
+performance psychology
+
+coaching insight
+
+reflective professional input
+
+We want depth, but not amateur therapy language.
+
+4. Easier to answer consistently
+
+The old questions were intelligent, but different staff could interpret them very differently.
+
+The new questions should be:
+
+simpler
+
+tighter
+
+more concrete
+
+easier to answer in a consistent way across different respondents
+
+That improves data quality across the whole platform.
+
+5. More useful for story generation and reporting
+
+Old questions may produce vague answers.
+New questions are designed to produce:
+
+specific moments
+
+repeatable behaviour patterns
+
+growth needs
+
+clearer developmental insights
+
+That makes the responses better for:
+
+story personalisation
+
+academy insight
+
+parent summaries
+
+player development profiles
+
+The design rule going forward
+
+Apply this rule to all coaching, psychology, and staff-facing questions:
+
+Ask for observed behaviour, repeated patterns, and specific examples. Avoid asking respondents to guess private thoughts, assign deep causes, or make sweeping judgments about the child’s identity.
+
+The practical rewrite standard
+
+When rewriting every question, do these things:
+
+Replace abstract wording
+
+Instead of:
+
+relationship with pressure
+
+relationship with failure
+
+inner dialogue
+
+what shaped them
+
+who they are underneath
+
+Use:
+
+what do you observe under pressure
+
+how do they usually respond after mistakes
+
+what behaviour or communication do you notice in difficult moments
+
+what pattern have you seen over time
+
+what situations tend to trigger this response
+
+Replace interpretive phrasing
+
+Avoid:
+
+“what does this tell you about who they are?”
+
+“what shaped them?”
+
+“what is going on internally?”
+
+Use:
+
+“please share one example”
+
+“what pattern have you noticed?”
+
+“what tends to happen next?”
+
+“in what situations does this appear most often?”
+
+Keep the questions deep, but grounded
+
+Do not make them shallow.
+Keep the developmental depth, but make each question answerable through observation.
+
+Example of the shift
+
+Old style:
+What is their relationship with failure, and what does that tell you about who they are?
+
+New style:
+How does this player usually respond after mistakes, setbacks, or disappointing performances? What pattern have you noticed over time?
+
+What changed:
+
+less abstract
+
+less interpretive
+
+more observable
+
+more repeatable
+
+easier to answer well
+
+Another example:
+
+Old style:
+What does this player’s inner dialogue look like?
+
+New style:
+In difficult moments, what does this player appear to communicate to themselves through words, behaviour, or attitude?
+
+What changed:
+
+no mind-reading
+
+still insightful
+
+based on visible evidence
+
+What I want you to do across the platform
+
+Please review all existing coaching, psychology, parent, and staff-facing questions and rewrite them using this standard:
+
+concrete over abstract
+
+observed over assumed
+
+example-based over theory-based
+
+developmental over diagnostic
+
+consistent over poetic
+
+Tone standard for rewritten questions
+
+The tone should be:
+
+thoughtful
+
+professional
+
+warm
+
+development-focused
+
+non-clinical
+
+not overly dramatic
+
+Output I want from you
+
+Please do this for all coaching and psychology questions in the app:
+
+identify the existing question
+
+rewrite it in the new standard
+
+keep the same underlying intent
+
+make it clearer, more observable, and more useful
+
+where possible, ask for a specific example or repeated pattern
+
+If helpful, I can also give you a very clean instruction block that says:
+
+“Rewrite all staff-facing questions from interpretive/abstract wording into observable, example-based developmental questions”
