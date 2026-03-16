@@ -5,6 +5,8 @@ import { ChevronLeft, SkipForward } from "lucide-react";
 import { VoiceRecorder } from "@/components/VoiceRecorder";
 import { MediaUploader } from "@/components/MediaUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
+import { useSoundEnabled } from "@/context/SoundContext";
+import { useSoundSystem } from "@/hooks/useSoundSystem";
 import { PLAYER_STAGES, computeCharacterProfile } from "@/data/questions";
 import type { JourneyQuestion } from "@/data/questions";
 import { useSaveJourneyResponses, useCompleteJourney } from "@workspace/api-client-react";
@@ -34,12 +36,20 @@ function SelectChip({
 }: {
   label: string; selected: boolean; onClick: () => void; color: string; isCoaching?: boolean;
 }) {
+  const { enabled: soundEnabled } = useSoundEnabled();
+  const sound = useSoundSystem({ enabled: soundEnabled });
   const accentColor = isCoaching ? "#0d9488" : color;
+  
+  const handleClick = () => {
+    if (soundEnabled) sound.play(selected ? "click" : "select");
+    onClick();
+  };
+  
   return (
     <motion.button
       type="button"
       whileTap={{ scale: 0.95 }}
-      onClick={onClick}
+      onClick={handleClick}
       className="px-3 py-1.5 rounded-full text-sm font-semibold border transition-all text-left"
       style={
         selected
@@ -237,6 +247,8 @@ function QuestionCard({
 export default function Journey() {
   const [_, navigate] = useLocation();
   const { playerData, selectedAcademy, journeyAnswers, saveJourneyStage } = usePlayerContext();
+  const { enabled: soundEnabled } = useSoundEnabled();
+  const sound = useSoundSystem({ enabled: soundEnabled });
 
   const [currentStep, setCurrentStep] = useState(0);
 

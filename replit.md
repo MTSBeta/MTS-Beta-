@@ -130,12 +130,26 @@ Each position (GK, RB, CB, LB, CDM, CM, CAM, RW, ST, LW, CF) maps to: `displayNa
 
 ## Audio Configuration
 
-- **Welcome Screen Theme**: `love-me-again.mp3` (John Newman) at 30% volume
-  - Plays on `/welcome` and `/welcome-u9` pages
-  - Duration: 2 minutes (120 seconds) unless user clicks mute
-  - Volume: 0.3 (restrained, not jumpscare-style)
-  - Mute button: 🔊 Mute button in top bar (appears only while audio is playing)
-  - Location: `/public/audio/love-me-again.mp3`
+### Welcome Screen Theme
+- **Track**: Love Me Again (John Newman) at 30% volume
+- **Duration**: 2 minutes (120 seconds) unless user clicks mute
+- **Mute button**: 🔊 Mute button in top bar (appears only while audio is playing)
+- **Location**: `/public/audio/love-me-again.mp3`
+
+### Premium FIFA-Style Sound System
+Lightweight Web Audio API-based sound system with four sound types:
+- **click**: Subtle high-pitched sound (deselecting choices)
+- **select**: Medium tone (selecting choices, ~120ms)
+- **navigate**: Ascending tone (stage navigation, next/previous)
+- **success**: Musical interval (form completion)
+- **error**: Descending buzz (validation errors)
+
+**Implementation**:
+- Hook: `useSoundSystem()` in `/src/hooks/useSoundSystem.ts` — generates sounds via Web Audio API, no external files
+- Context: `SoundContext` in `/src/context/SoundContext.tsx` — global enable/disable
+- Integrated in: Journey.tsx (choice selections), SelectChip component (interactive choices)
+- Volume: 0.4 (40%) restrained FIFA-style
+- Can be toggled via SoundContext `setEnabled(boolean)`
 
 ## Common Commands
 
