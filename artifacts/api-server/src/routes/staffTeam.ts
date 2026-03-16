@@ -10,7 +10,7 @@ const router: IRouter = Router();
 router.get("/staff/team", staffAuth, requireRole("academy_admin"), async (req, res) => {
   const staffUser = req.staffUser!;
 
-  const team = await db
+  const rows = await db
     .select({
       id: academyStaffTable.id,
       academyId: academyStaffTable.academyId,
@@ -27,7 +27,12 @@ router.get("/staff/team", staffAuth, requireRole("academy_admin"), async (req, r
     .where(eq(academyStaffTable.academyId, staffUser.academyId))
     .orderBy(academyStaffTable.fullName);
 
-  res.json(team);
+  // Return both camelCase variants so old & new frontend code both work
+  res.json(rows.map(r => ({
+    ...r,
+    name: r.fullName,
+    role: r.systemRole,
+  })));
 });
 
 router.post("/staff/team", staffAuth, requireRole("academy_admin"), async (req, res) => {
