@@ -529,6 +529,10 @@ export default function Journey() {
                   />
                   <VoiceRecorder
                     onAudioReady={(blob, url) => setReviewAnswers(prev => ({ ...prev, [key]: { ...ra, audioBlob: blob ?? null, audioUrl: url } }))}
+                    onTranscript={(text) => setReviewAnswers(prev => {
+                      const cur = (prev[key]?.text ?? "").trim();
+                      return { ...prev, [key]: { ...prev[key], text: cur ? `${cur}\n${text}` : text } };
+                    })}
                     existingUrl={ra.audioUrl}
                   />
                 </motion.div>
@@ -852,6 +856,10 @@ export default function Journey() {
                       <div className="space-y-2">
                         <VoiceRecorder
                           onAudioReady={(blob, url) => updateCurrentAnswer({ audioBlob: blob ?? null, audioUrl: url })}
+                          onTranscript={(text) => {
+                            const current = currentAnswer.text.trim();
+                            updateCurrentAnswer({ text: current ? `${current}\n${text}` : text });
+                          }}
                           existingUrl={currentAnswer.audioUrl}
                         />
                         <MediaUploader
@@ -869,7 +877,7 @@ export default function Journey() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-red-400 text-sm font-medium"
                   >
-                    {isSelectType ? "Pick at least one option to continue." : "Write something or record a voice note to continue."}
+                    {isSelectType ? "Pick at least one option to continue." : "Record a voice note or write something to continue."}
                   </motion.p>
                 )}
               </div>

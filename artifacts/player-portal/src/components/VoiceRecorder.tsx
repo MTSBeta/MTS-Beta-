@@ -4,28 +4,37 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface VoiceRecorderProps {
   onAudioReady: (blob: Blob | null, url: string | null) => void;
+  onTranscript?: (text: string) => void;
   existingUrl?: string | null;
 }
 
 type RecordState = "idle" | "recording" | "paused" | "recorded" | "playing";
 
-export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps) {
+const SpeechRecognitionAPI: typeof window.SpeechRecognition | undefined =
+  (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
+
+export function VoiceRecorder({ onAudioReady, onTranscript, existingUrl }: VoiceRecorderProps) {
   const [state, setState] = useState<RecordState>(existingUrl ? "recorded" : "idle");
   const [duration, setDuration] = useState(0);
   const [playProgress, setPlayProgress] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(existingUrl ?? null);
   const [error, setError] = useState<string | null>(null);
+  const [transcriptCaptured, setTranscriptCaptured] = useState(false);
+  const [isListening, setIsListening] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const recognitionRef = useRef<InstanceType<typeof window.SpeechRecognition> | null>(null);
+  const transcriptRef = useRef<string>("");
 
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
       if (audioUrl && !existingUrl) URL.revokeObjectURL(audioUrl);
+      recognitionRef.current?.stop();
     };
   }, []);
 
@@ -37,8 +46,38 @@ export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps)
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
   };
 
+  const startRecognition = () => {
+    if (!SpeechRecognitionAPI || !onTranscript) return;
+    try {
+      transcriptRef.current = "";
+      const recognition = new SpeechRecognitionAPI();
+      recognition.continuous = true;
+      recognition.interimResults = false;
+      recognition.lang = "en-GB";
+      recognition.onresult = (e) => {
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          if (e.results[i].isFinal) {
+            transcriptRef.current += e.results[i][0].transcript + " ";
+          }
+        }
+      };
+      recognition.onerror = () => {};
+      recognition.onstart = () => setIsListening(true);
+      recognition.onend = () => setIsListening(false);
+      recognition.start();
+      recognitionRef.current = recognition;
+    } catch {
+    }
+  };
+
+  const stopRecognition = () => {
+    try { recognitionRef.current?.stop(); } catch {}
+    recognitionRef.current = null;
+  };
+
   const startRecording = async () => {
     setError(null);
+    setTranscriptCaptured(false);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
@@ -58,12 +97,24 @@ export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps)
         setState("recorded");
         onAudioReady(blob, url);
         streamRef.current?.getTracks().forEach((t) => t.stop());
+
+        if (onTranscript) {
+          setTimeout(() => {
+            const transcript = transcriptRef.current.trim();
+            if (transcript) {
+              onTranscript(transcript);
+              setTranscriptCaptured(true);
+            }
+            transcriptRef.current = "";
+          }, 350);
+        }
       };
 
       recorder.start(100);
       setState("recording");
       setDuration(0);
       startTimer();
+      startRecognition();
     } catch {
       setError("Microphone access denied. Please allow microphone in your browser settings.");
       setState("idle");
@@ -87,6 +138,7 @@ export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps)
   };
 
   const stopRecording = () => {
+    stopRecognition();
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
       mediaRecorderRef.current.stop();
     }
@@ -118,6 +170,8 @@ export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps)
     setState("idle");
     setDuration(0);
     setPlayProgress(0);
+    setTranscriptCaptured(false);
+    transcriptRef.current = "";
     onAudioReady(null, null);
   };
 
@@ -158,7 +212,9 @@ export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps)
               className="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0"
             />
             <span className="text-red-400 text-sm font-mono font-bold w-10 shrink-0">{formatTime(duration)}</span>
-            <span className="text-red-300/60 text-xs flex-1">Recording…</span>
+            <span className="text-red-300/60 text-xs flex-1">
+              {isListening ? "Recording + transcribing…" : "Recording…"}
+            </span>
             <button
               type="button"
               onClick={pauseRecording}
@@ -248,7 +304,8 @@ export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps)
               </button>
             </div>
             <p className="text-xs text-green-400/80 flex items-center gap-1">
-              <span>✓</span> Voice note saved
+              <span>✓</span>
+              {transcriptCaptured ? "Voice note saved — transcript added to text box" : "Voice note saved"}
             </p>
           </motion.div>
         )}

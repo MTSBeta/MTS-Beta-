@@ -360,6 +360,12 @@ export default function JourneyU9() {
                         updated[currentReview.idx] = { ...updated[currentReview.idx], audioBlob: blob, audioUrl: url };
                         return updated;
                       })}
+                      onTranscript={(text) => setAnswers(prev => {
+                        const updated = [...prev];
+                        const current = (updated[currentReview.idx]?.text ?? "").trim();
+                        updated[currentReview.idx] = { ...updated[currentReview.idx], text: current ? `${current}\n${text}` : text };
+                        return updated;
+                      })}
                       existingUrl={answers[currentReview.idx]?.audioUrl}
                     />
                   </div>
@@ -561,6 +567,10 @@ export default function JourneyU9() {
                     <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: stageColor }}>🎙️ Talk it out</p>
                     <VoiceRecorder
                       onAudioReady={(blob, url) => updateCurrent({ audioBlob: blob, audioUrl: url })}
+                      onTranscript={(text) => {
+                        const current = (answers[currentIdx]?.text ?? "").trim();
+                        updateCurrent({ text: current ? `${current}\n${text}` : text });
+                      }}
                       existingUrl={answers[currentIdx]?.audioUrl}
                     />
                   </motion.div>
