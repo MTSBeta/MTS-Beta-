@@ -81,7 +81,7 @@ function Router() {
       </Route>
       <Route path="/staff/settings">
         {() => (
-          <ProtectedStaffRoute adminOnly>
+          <ProtectedStaffRoute>
             <StaffSettings />
           </ProtectedStaffRoute>
         )}

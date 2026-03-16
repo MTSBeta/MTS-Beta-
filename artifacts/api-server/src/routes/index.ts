@@ -11,6 +11,7 @@ import staffAuthRouter from "./staffAuth.js";
 import staffPlayersRouter from "./staffPlayers.js";
 import staffSubmissionsRouter from "./staffSubmissions.js";
 import staffTeamRouter from "./staffTeam.js";
+import staffAcademyRouter from "./staffAcademy.js";
 
 const router: IRouter = Router();
 
@@ -26,5 +27,6 @@ router.use(staffAuthRouter);
 router.use(staffPlayersRouter);
 router.use(staffSubmissionsRouter);
 router.use(staffTeamRouter);
+router.use(staffAcademyRouter);
 
 export default router;

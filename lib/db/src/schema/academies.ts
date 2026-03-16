@@ -9,7 +9,10 @@ export const academiesTable = pgTable("academies", {
   logoText: varchar("logo_text", { length: 20 }).notNull(),
   primaryColor: varchar("primary_color", { length: 20 }).notNull(),
   secondaryColor: varchar("secondary_color", { length: 20 }).notNull(),
+  accentColor: varchar("accent_color", { length: 20 }),
+  crestUrl: text("crest_url"),
   welcomeMessage: text("welcome_message").notNull(),
+  chantUrl: text("chant_url"),
   maxStaffAccounts: integer("max_staff_accounts").notNull().default(8),
 });
 

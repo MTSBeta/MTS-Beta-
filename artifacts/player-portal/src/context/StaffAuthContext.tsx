@@ -6,6 +6,7 @@ interface StaffAuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  updateStaffUser: (updates: Partial<StaffUser>) => void;
 }
 
 const StaffAuthContext = createContext<StaffAuthContextType | undefined>(undefined);
@@ -41,8 +42,17 @@ export function StaffAuthProvider({ children }: { children: ReactNode }) {
     setStaffUser(null);
   }, []);
 
+  const updateStaffUser = useCallback((updates: Partial<StaffUser>) => {
+    setStaffUser((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, ...updates };
+      localStorage.setItem("staff_user", JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
   return (
-    <StaffAuthContext.Provider value={{ staffUser, isLoading, login, logout }}>
+    <StaffAuthContext.Provider value={{ staffUser, isLoading, login, logout, updateStaffUser }}>
       {children}
     </StaffAuthContext.Provider>
   );

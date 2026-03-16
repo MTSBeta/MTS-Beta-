@@ -28,6 +28,11 @@ export interface StaffUser {
   academyName: string;
   academyPrimaryColor: string;
   academySecondaryColor: string;
+  academyAccentColor: string | null;
+  academyCrestUrl: string | null;
+  academyLogoText: string;
+  academyWelcomeMessage: string;
+  academyChantUrl: string | null;
   name: string;
   email: string;
   role: string;
@@ -210,6 +215,36 @@ export async function fetchParentView(code: string): Promise<{
 }> {
   const res = await fetch(`${API_BASE}/parent/${code}`);
   if (!res.ok) throw new Error('Invalid or expired link');
+  return res.json();
+}
+
+export interface AcademyBranding {
+  id: number;
+  name: string;
+  logoText: string;
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string | null;
+  crestUrl: string | null;
+  welcomeMessage: string;
+  chantUrl: string | null;
+}
+
+export async function fetchAcademyBranding(): Promise<AcademyBranding> {
+  const res = await staffFetch('/staff/academy');
+  if (!res.ok) throw new Error('Failed to fetch academy settings');
+  return res.json();
+}
+
+export async function updateAcademyBranding(data: Partial<Omit<AcademyBranding, 'id' | 'name'>>): Promise<AcademyBranding> {
+  const res = await staffFetch('/staff/academy', {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Failed to update settings' }));
+    throw new Error(err.error || 'Failed to update academy settings');
+  }
   return res.json();
 }
 

@@ -25,7 +25,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", href: "/staff-dashboard", icon: <LayoutDashboard size={18} /> },
   { label: "Players", href: "/staff/players", icon: <Users size={18} /> },
   { label: "Team", href: "/staff/team", icon: <UserCog size={18} />, adminOnly: true },
-  { label: "Settings", href: "/staff/settings", icon: <Settings size={18} />, adminOnly: true },
+  { label: "Settings", href: "/staff/settings", icon: <Settings size={18} /> },
 ];
 
 export function StaffLayout({ children }: { children: React.ReactNode }) {
