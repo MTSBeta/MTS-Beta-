@@ -26,6 +26,21 @@ function ProgressDots({ total, current }: { total: number; current: number }) {
   );
 }
 
+function PromptChips({ prompts }: { prompts: string[] }) {
+  return (
+    <div className="flex flex-wrap gap-1.5 mt-1">
+      {prompts.map((p, i) => (
+        <span
+          key={i}
+          className="inline-block px-2.5 py-1 rounded-full text-xs font-medium text-white/50 bg-white/6 border border-white/10"
+        >
+          {p}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export default function Journey() {
   const [_, navigate] = useLocation();
   const { playerData, journeyAnswers, saveJourneyStage } = usePlayerContext();
@@ -46,7 +61,6 @@ export default function Journey() {
     if (!playerData) navigate("/");
   }, [playerData, navigate]);
 
-  // Load answers when step changes
   useEffect(() => {
     const saved = journeyAnswers[stage.id];
     if (saved) {
@@ -65,14 +79,12 @@ export default function Journey() {
       updated[index] = { ...updated[index], ...patch };
       return updated;
     });
-    // Clear error if something answered
     if (patch.text?.trim() || patch.audioUrl) {
       setErrors((prev) => { const e = [...prev]; e[index] = false; return e; });
     }
   };
 
   const validateAndAdvance = async () => {
-    // Require at least a text answer OR voice note for each question
     const newErrors = localAnswers.map(
       (a) => !a.text.trim() && !a.audioUrl
     );
@@ -84,7 +96,6 @@ export default function Journey() {
     setIsSaving(true);
     saveJourneyStage(stage.id, localAnswers);
 
-    // Build all responses so far (collect from context + current)
     const allAnswers = { ...journeyAnswers, [stage.id]: localAnswers };
 
     const responses = JOURNEY_STAGES.slice(0, currentStep + 1).flatMap((s, si) => {
@@ -92,7 +103,7 @@ export default function Journey() {
       return s.questions.map((q, qi) => ({
         stage: s.id,
         questionNumber: si * 5 + qi + 1,
-        questionText: q,
+        questionText: q.text,
         answerText: (stageAnswers[qi] as AnswerEntry)?.text ?? "",
         audioUrl: (stageAnswers[qi] as AnswerEntry)?.audioUrl ?? null,
         mediaUrls: (stageAnswers[qi] as AnswerEntry)?.mediaUrls ?? [],
@@ -107,7 +118,6 @@ export default function Journey() {
         });
         setCurrentStep((s) => s + 1);
       } else {
-        // Final stage — save + complete
         await saveMutation.mutateAsync({
           playerId: playerData!.id,
           data: { responses },
@@ -169,6 +179,12 @@ export default function Journey() {
               <p className="text-white/60 text-sm max-w-md mx-auto">{stage.subtitle}</p>
             </div>
 
+            {/* Voice note nudge banner */}
+            <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5 border border-white/8 text-white/55 text-sm">
+              <span className="text-xl">🎙️</span>
+              <span>Tap <strong className="text-white/80">Add voice note</strong> on any question — talking is easier than typing, and your voice tells more of the story.</span>
+            </div>
+
             {/* Questions */}
             <div className="space-y-6">
               {stage.questions.map((question, qi) => (
@@ -181,13 +197,21 @@ export default function Journey() {
                     errors[qi] ? "border border-red-500/40" : ""
                   }`}
                 >
-                  <p className="text-sm font-medium text-white/90 leading-relaxed">
-                    <span className="text-white/30 mr-2 font-mono text-xs">{qi + 1}.</span>
-                    {question}
-                  </p>
+                  {/* Question number + text */}
+                  <div>
+                    <p className="text-base font-semibold text-white leading-relaxed">
+                      <span className="text-white/25 mr-2 font-mono text-xs">{qi + 1}.</span>
+                      {question.text}
+                    </p>
+
+                    {/* Prompt chips */}
+                    {question.prompts && question.prompts.length > 0 && (
+                      <PromptChips prompts={question.prompts} />
+                    )}
+                  </div>
 
                   <Textarea
-                    placeholder="Type your answer here..."
+                    placeholder="Write your answer here, or use the voice note below..."
                     value={localAnswers[qi]?.text ?? ""}
                     onChange={(e) => updateAnswer(qi, { text: e.target.value })}
                     rows={3}
