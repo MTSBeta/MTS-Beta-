@@ -7,6 +7,7 @@ import { MediaUploader } from "@/components/MediaUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { U9_STAGES, computeCharacterProfile } from "@/data/u9Questions";
 import type { U9Question, U9Stage } from "@/data/u9Questions";
+import { MindsetProfiler } from "@/components/MindsetProfiler";
 import { useSaveJourneyResponses, useCompleteJourney } from "@workspace/api-client-react";
 import type { AnswerEntry } from "@/context/PlayerContext";
 
@@ -76,6 +77,8 @@ export default function JourneyU9() {
 
   const primaryColor = selectedAcademy?.primaryColor ?? "#6d28d9";
 
+  const [showProfiler, setShowProfiler] = useState(true);
+  const [profilerResult, setProfilerResult] = useState("");
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState<AnswerEntry[]>(
     Array(TOTAL).fill(null).map(() => ({ text: "", audioUrl: null, audioBlob: null, mediaUrls: [] }))
@@ -94,6 +97,20 @@ export default function JourneyU9() {
 
   useEffect(() => { if (!playerData) navigate("/"); }, [playerData]);
   if (!playerData) return null;
+
+  // ── MINDSET PROFILER ──────────────────────────────────────────────────────
+  if (showProfiler) {
+    return (
+      <MindsetProfiler
+        primaryColor={primaryColor}
+        playerName={playerData.playerName}
+        onComplete={(result) => {
+          setProfilerResult(result);
+          setShowProfiler(false);
+        }}
+      />
+    );
+  }
 
   const { stage, question, questionIndex } = ALL_QUESTIONS[currentIdx];
   const stageColor = stage.colour;
@@ -236,7 +253,7 @@ export default function JourneyU9() {
           };
         })
       ),
-      // Append summation as a meta response
+      // Append character profile summation
       {
         stage: "Character Profile",
         questionNumber: TOTAL + 1,
@@ -245,6 +262,15 @@ export default function JourneyU9() {
         audioUrl: null,
         mediaUrls: [],
       },
+      // Append mindset profiler results if present
+      ...(profilerResult ? [{
+        stage: "Player Mindset DNA",
+        questionNumber: TOTAL + 2,
+        questionText: "Automated Player Mindset Profiler Results",
+        answerText: profilerResult,
+        audioUrl: null,
+        mediaUrls: [],
+      }] : []),
     ];
 
     try {
