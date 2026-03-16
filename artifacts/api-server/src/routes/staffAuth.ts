@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { academyStaffTable, academiesTable } from "@workspace/db/schema";
 import { eq, sql } from "drizzle-orm";
-import { verifyPassword, signToken } from "../lib/auth.js";
+import { verifyPassword, signToken, hashPassword } from "../lib/auth.js";
 import { staffAuth } from "../middlewares/staffAuth.js";
 
 const router: IRouter = Router();
@@ -31,6 +31,86 @@ function buildUser(staff: typeof academyStaffTable.$inferSelect, academy: typeof
     isActive: staff.isActive,
   };
 }
+
+router.post("/staff/register", async (req, res) => {
+  const { fullName, email, password, academyKey, accessCode } = req.body;
+
+  if (!fullName || !email || !password || !academyKey || !accessCode) {
+    res.status(400).json({ error: "All fields are required" });
+    return;
+  }
+  if (password.length < 8) {
+    res.status(400).json({ error: "Password must be at least 8 characters" });
+    return;
+  }
+
+  const academyResult = await db.execute(
+    sql`SELECT id, key, name, logo_text, primary_color, secondary_color, welcome_message, access_code
+        FROM academies WHERE key = ${academyKey.trim().toLowerCase()} LIMIT 1`
+  );
+
+  if (!academyResult.rows || academyResult.rows.length === 0) {
+    res.status(400).json({ error: "Academy not found" });
+    return;
+  }
+
+  const academyRow = academyResult.rows[0];
+
+  if (!academyRow.access_code || academyRow.access_code !== accessCode.trim()) {
+    res.status(401).json({ error: "Invalid access code for this academy" });
+    return;
+  }
+
+  const [existing] = await db
+    .select({ id: academyStaffTable.id })
+    .from(academyStaffTable)
+    .where(eq(academyStaffTable.email, email.toLowerCase().trim()))
+    .limit(1);
+
+  if (existing) {
+    res.status(400).json({ error: "An account with this email already exists" });
+    return;
+  }
+
+  const authUserId = await hashPassword(password);
+
+  const [newStaff] = await db
+    .insert(academyStaffTable)
+    .values({
+      academyId: academyRow.id as number,
+      email: email.toLowerCase().trim(),
+      authUserId,
+      fullName: fullName.trim(),
+      systemRole: "academy_admin",
+      questionRole: null,
+      jobTitle: "Academy Admin",
+      teamName: null,
+      ageGroup: null,
+    })
+    .returning();
+
+  const academy = {
+    id: academyRow.id,
+    key: academyRow.key,
+    name: academyRow.name,
+    logoText: academyRow.logo_text,
+    primaryColor: academyRow.primary_color,
+    secondaryColor: academyRow.secondary_color,
+    accentColor: null,
+    crestUrl: null,
+    welcomeMessage: academyRow.welcome_message,
+    chantUrl: null,
+  } as any;
+
+  const token = signToken({
+    staffId: newStaff.id,
+    academyId: newStaff.academyId,
+    role: "academy_admin",
+  });
+
+  const user = buildUser(newStaff, academy);
+  res.status(201).json({ token, user, staff: user });
+});
 
 router.post("/staff/login", async (req, res) => {
   const { email, password } = req.body;

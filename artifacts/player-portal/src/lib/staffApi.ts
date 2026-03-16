@@ -46,6 +46,27 @@ export interface StaffLoginResponse {
   user: StaffUser;
 }
 
+export interface AdminRegisterPayload {
+  fullName: string;
+  email: string;
+  password: string;
+  academyKey: string;
+  accessCode: string;
+}
+
+export async function adminRegister(data: AdminRegisterPayload): Promise<StaffLoginResponse> {
+  const res = await fetch(`${API_BASE}/staff/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const d = await res.json().catch(() => ({ error: 'Registration failed' }));
+    throw new Error(d.error || 'Registration failed');
+  }
+  return res.json();
+}
+
 export async function staffLogin(email: string, password: string): Promise<StaffLoginResponse> {
   const res = await fetch(`${API_BASE}/staff/login`, {
     method: 'POST',
@@ -75,6 +96,40 @@ export interface StaffPlayer {
 export async function fetchStaffPlayers(): Promise<StaffPlayer[]> {
   const res = await staffFetch('/staff/players');
   if (!res.ok) throw new Error('Failed to fetch players');
+  return res.json();
+}
+
+export interface CreatePlayerPayload {
+  playerName: string;
+  age: number;
+  shirtNumber: number;
+  position: string;
+}
+
+export interface CreatedPlayer {
+  id: string;
+  accessCode: string;
+  parentCode: string;
+  playerName: string;
+  age: number;
+  shirtNumber: number;
+  position: string;
+  ageGroup: string;
+  academyKey: string;
+  academyName: string;
+  status: string;
+  createdAt: string;
+}
+
+export async function createPlayer(data: CreatePlayerPayload): Promise<CreatedPlayer> {
+  const res = await staffFetch('/staff/players', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Failed to create player' }));
+    throw new Error(err.error || 'Failed to create player');
+  }
   return res.json();
 }
 

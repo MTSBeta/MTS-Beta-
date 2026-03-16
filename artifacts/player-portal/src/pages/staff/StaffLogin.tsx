@@ -121,6 +121,16 @@ export default function StaffLogin() {
             </button>
           </form>
         </div>
+
+        <p className="text-center text-white/30 text-sm mt-6">
+          New academy?{" "}
+          <button
+            onClick={() => navigate("/admin-signup")}
+            className="text-white/60 hover:text-white underline transition-colors"
+          >
+            Register as admin
+          </button>
+        </p>
       </motion.div>
     </div>
   );

@@ -23,6 +23,7 @@ import ParentView from "@/pages/ParentView";
 
 import StaffLogin from "@/pages/staff/StaffLogin";
 import AdminLogin from "@/pages/AdminLogin";
+import AdminSignup from "@/pages/staff/AdminSignup";
 import StaffDashboard from "@/pages/staff/StaffDashboard";
 import StaffPlayers from "@/pages/staff/StaffPlayers";
 import StaffPlayerProfile from "@/pages/staff/StaffPlayerProfile";
@@ -54,6 +55,7 @@ function Router() {
       <Route path="/parent/:code" component={ParentView} />
       <Route path="/staff-login" component={StaffLogin} />
       <Route path="/admin-login" component={AdminLogin} />
+      <Route path="/admin-signup" component={AdminSignup} />
       <Route path="/staff-dashboard">
         {() => (
           <ProtectedStaffRoute>

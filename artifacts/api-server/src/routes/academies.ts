@@ -1,23 +1,25 @@
 import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
-import { academiesTable } from "@workspace/db/schema";
-import { ListAcademiesResponse } from "@workspace/api-zod";
+import { sql } from "drizzle-orm";
 
 const router: IRouter = Router();
 
 router.get("/academies", async (_req, res) => {
-  const rows = await db.select().from(academiesTable).orderBy(academiesTable.name);
-  const data = ListAcademiesResponse.parse(
-    rows.map((r) => ({
-      id: r.id,
-      key: r.key,
-      name: r.name,
-      logoText: r.logoText,
-      primaryColor: r.primaryColor,
-      secondaryColor: r.secondaryColor,
-      welcomeMessage: r.welcomeMessage,
-    }))
+  const result = await db.execute(
+    sql`SELECT id, key, name, logo_text, primary_color, secondary_color, welcome_message
+        FROM academies ORDER BY name`
   );
+
+  const data = (result.rows ?? []).map((r: any) => ({
+    id: r.id,
+    key: r.key,
+    name: r.name,
+    logoText: r.logo_text,
+    primaryColor: r.primary_color,
+    secondaryColor: r.secondary_color,
+    welcomeMessage: r.welcome_message,
+  }));
+
   res.json(data);
 });
 
