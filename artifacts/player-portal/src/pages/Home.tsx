@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { ChevronLeft, Search } from "lucide-react";
+import { ChevronLeft, Search, ShieldCheck } from "lucide-react";
 import { PREMIER_LEAGUE, CHAMPIONSHIP, type AcademyConfig } from "@/data/academies";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { Layout } from "@/components/Layout";
@@ -282,6 +282,23 @@ export default function Home() {
           )}
 
         </AnimatePresence>
+
+        {/* ── Staff login link ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mt-12 pt-8 border-t border-white/5 w-full flex justify-center"
+        >
+          <button
+            onClick={() => navigate("/staff-login")}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/4 border border-white/8 text-white/40 hover:text-white/70 hover:bg-white/7 hover:border-white/15 transition-all text-sm font-medium"
+          >
+            <ShieldCheck size={14} />
+            Academy Staff Login
+          </button>
+        </motion.div>
+
       </div>
     </Layout>
   );

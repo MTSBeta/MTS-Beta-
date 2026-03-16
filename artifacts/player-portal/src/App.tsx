@@ -16,6 +16,8 @@ import Invite from "@/pages/Invite";
 import Stakeholder from "@/pages/Stakeholder";
 import Complete from "@/pages/Complete";
 import Admin from "@/pages/Admin";
+import StaffLogin from "@/pages/StaffLogin";
+import StaffDashboard from "@/pages/StaffDashboard";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,6 +41,8 @@ function Router() {
       <Route path="/stakeholder/:code" component={Stakeholder} />
       <Route path="/complete" component={Complete} />
       <Route path="/admin" component={Admin} />
+      <Route path="/staff-login" component={StaffLogin} />
+      <Route path="/staff" component={StaffDashboard} />
       <Route component={NotFound} />
     </Switch>
   );
