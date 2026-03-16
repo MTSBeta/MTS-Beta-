@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { StaffAuthProvider } from "@/context/StaffAuthContext";
+import { SoundProvider } from "@/context/SoundContext";
 import { ProtectedStaffRoute } from "@/components/ProtectedStaffRoute";
 import NotFound from "@/pages/not-found";
 
