@@ -97,9 +97,11 @@ export default function Home() {
               >
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-purple-900/20 to-transparent" />
                 <div className="relative z-10 flex flex-col items-center gap-4">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-800 to-purple-950 border-2 border-purple-500/40 flex items-center justify-center shadow-xl shadow-purple-900/40">
-                    <span className="text-white font-black text-2xl font-display tracking-tight">PL</span>
-                  </div>
+                  <img 
+                    src="https://upload.wikimedia.org/wikipedia/en/0/0c/Premier_League.svg" 
+                    alt="Premier League"
+                    className="h-16 w-auto object-contain drop-shadow-lg"
+                  />
                   <div className="text-center">
                     <div className="text-white font-black text-xl md:text-2xl uppercase tracking-wider font-display">Premier League</div>
                     <div className="text-white/40 text-sm mt-1">20 academies</div>
@@ -122,9 +124,11 @@ export default function Home() {
               >
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-sky-900/20 to-transparent" />
                 <div className="relative z-10 flex flex-col items-center gap-4">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-sky-800 to-sky-950 border-2 border-sky-500/40 flex items-center justify-center shadow-xl shadow-sky-900/40">
-                    <span className="text-white font-black text-xl font-display tracking-tight leading-none text-center">EFL</span>
-                  </div>
+                  <img 
+                    src="https://upload.wikimedia.org/wikipedia/en/9/9f/EFL_Logo.svg" 
+                    alt="EFL Championship"
+                    className="h-16 w-auto object-contain drop-shadow-lg"
+                  />
                   <div className="text-center">
                     <div className="text-white font-black text-xl md:text-2xl uppercase tracking-wider font-display">Championship</div>
                     <div className="text-white/40 text-sm mt-1">22 academies</div>
