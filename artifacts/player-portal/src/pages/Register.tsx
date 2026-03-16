@@ -40,7 +40,10 @@ export default function Register() {
 
   const { mutate, isPending, isError } = useRegisterPlayer({
     mutation: {
-      onSuccess: (data) => { setPlayerData(data); navigate("/welcome"); },
+      onSuccess: (data) => {
+        setPlayerData(data);
+        navigate(data.age <= 8 ? "/welcome-u9" : "/welcome");
+      },
     },
   });
 

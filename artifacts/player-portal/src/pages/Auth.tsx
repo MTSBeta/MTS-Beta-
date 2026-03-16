@@ -44,8 +44,9 @@ export default function Auth() {
       setPlayerData(player);
       const academy = ACADEMIES.find(a => a.key === player.academyKey);
       if (academy) setSelectedAcademy(academy);
+      const isU9 = player.age <= 8;
       if (player.status === "journey_complete" || player.status === "links_generated") navigate("/invite");
-      else navigate("/welcome");
+      else navigate(isU9 ? "/welcome-u9" : "/welcome");
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {

@@ -9,7 +9,9 @@ import Home from "@/pages/Home";
 import Auth from "@/pages/Auth";
 import Register from "@/pages/Register";
 import Welcome from "@/pages/Welcome";
+import WelcomeU9 from "@/pages/WelcomeU9";
 import Journey from "@/pages/Journey";
+import JourneyU9 from "@/pages/JourneyU9";
 import Invite from "@/pages/Invite";
 import Stakeholder from "@/pages/Stakeholder";
 import Complete from "@/pages/Complete";
@@ -30,7 +32,9 @@ function Router() {
       <Route path="/auth" component={Auth} />
       <Route path="/register" component={Register} />
       <Route path="/welcome" component={Welcome} />
+      <Route path="/welcome-u9" component={WelcomeU9} />
       <Route path="/journey" component={Journey} />
+      <Route path="/journey-u9" component={JourneyU9} />
       <Route path="/invite" component={Invite} />
       <Route path="/stakeholder/:code" component={Stakeholder} />
       <Route path="/complete" component={Complete} />
