@@ -50,27 +50,26 @@ export default function Home() {
 
   return (
     <Layout hideLogo>
-      <div className="w-full max-w-5xl mx-auto flex flex-col items-center pt-12 pb-20 px-4">
+      <div className="w-full max-w-5xl mx-auto flex flex-col items-center pt-8 pb-16 px-4">
 
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12 space-y-4"
+          className="text-center mb-10 space-y-3"
         >
           <img
             src={`${import.meta.env.BASE_URL}images/metime-logo.png`}
             alt="Me Time Stories"
-            className="h-24 w-auto mx-auto object-contain mb-2"
+            className="h-20 w-auto mx-auto object-contain mb-2"
+            style={{ mixBlendMode: "screen" }}
           />
-          <div>
-            <h1 className="text-5xl md:text-7xl font-display font-black bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent tracking-tight uppercase">
-              Player Portal
-            </h1>
-            <p className="text-lg md:text-xl text-gray-600 max-w-xl mx-auto mt-4">
-              Join your academy and start your incredible journey with us. Select your league and academy below.
-            </p>
-          </div>
+          <h1 className="text-4xl md:text-6xl font-display font-black text-white tracking-tight uppercase">
+            Player <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/90 to-white/40">Portal</span>
+          </h1>
+          <p className="text-base md:text-lg text-white/50 max-w-xl mx-auto">
+            Select your league, then choose your academy to begin your story.
+          </p>
         </motion.div>
 
         <AnimatePresence mode="wait">
@@ -82,69 +81,61 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl"
+              className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl"
             >
               {/* Premier League card */}
               <motion.button
-                whileHover={{ scale: 1.05, y: -8 }}
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleTierSelect("premier-league")}
-                className="relative overflow-hidden group flex flex-col items-center justify-start gap-6 p-8 md:p-10 rounded-4xl bg-gradient-to-br from-purple-100 to-blue-100 border-2 border-purple-200 hover:border-purple-400 transition-all duration-300 shadow-lg hover:shadow-2xl"
+                className="relative overflow-hidden group flex flex-col items-center justify-center gap-5 p-8 md:p-10 rounded-3xl border border-white/10 bg-white/5 hover:border-purple-500/50 hover:bg-purple-900/10 transition-all duration-300"
               >
-                {/* Step number badge */}
-                <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 text-white font-black flex items-center justify-center text-lg shadow-lg">
-                  1
-                </div>
-                
-                <div className="relative z-10 flex flex-col items-center gap-4 pt-2">
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-purple-900/20 to-transparent" />
+                <div className="relative z-10 flex flex-col items-center gap-4">
                   <motion.img 
                     src={`${import.meta.env.BASE_URL}logos/premier-league-logo.png`}
                     alt="Premier League"
-                    className="h-16 w-auto object-contain drop-shadow-lg"
-                    style={{ maxWidth: "140px" }}
+                    className="h-12 w-auto object-contain drop-shadow-lg"
+                    style={{ maxWidth: "120px" }}
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   />
                   <div className="text-center">
-                    <div className="text-purple-900 font-black text-2xl md:text-3xl uppercase tracking-wider font-display">Premier League</div>
-                    <div className="text-purple-600 text-sm mt-2 font-semibold">20 academies</div>
+                    <div className="text-white font-black text-xl md:text-2xl uppercase tracking-wider font-display">Premier League</div>
+                    <div className="text-white/40 text-sm mt-1">20 academies</div>
                   </div>
-                  <div className="flex flex-wrap justify-center gap-2 mt-3">
+                  <div className="flex flex-wrap justify-center gap-1.5 mt-1">
                     {["Arsenal", "Chelsea", "Liverpool", "Man City", "Man United"].map(n => (
-                      <span key={n} className="text-xs text-purple-700 bg-purple-200/60 px-3 py-1 rounded-full font-semibold border border-purple-300">{n}</span>
+                      <span key={n} className="text-[10px] text-purple-300/60 bg-purple-900/30 px-2 py-0.5 rounded-full border border-purple-500/20">{n}</span>
                     ))}
-                    <span className="text-xs text-purple-600 px-1">+15 more</span>
+                    <span className="text-[10px] text-white/30 px-1">+15 more</span>
                   </div>
                 </div>
               </motion.button>
 
               {/* Championship card */}
               <motion.button
-                whileHover={{ scale: 1.05, y: -8 }}
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleTierSelect("championship")}
-                className="relative overflow-hidden group flex flex-col items-center justify-start gap-6 p-8 md:p-10 rounded-4xl bg-gradient-to-br from-blue-100 to-cyan-100 border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 shadow-lg hover:shadow-2xl"
+                className="relative overflow-hidden group flex flex-col items-center justify-center gap-5 p-8 md:p-10 rounded-3xl border border-white/10 bg-white/5 hover:border-sky-500/50 hover:bg-sky-900/10 transition-all duration-300"
               >
-                {/* Step number badge */}
-                <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 text-white font-black flex items-center justify-center text-lg shadow-lg">
-                  2
-                </div>
-
-                <div className="relative z-10 flex flex-col items-center gap-4 pt-2">
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-sky-900/20 to-transparent" />
+                <div className="relative z-10 flex flex-col items-center gap-4">
                   <img 
                     src={`${import.meta.env.BASE_URL}logos/efl-championship-logo.png`}
                     alt="EFL Championship"
-                    className="h-20 w-auto object-contain drop-shadow-lg"
+                    className="h-16 w-auto object-contain drop-shadow-lg"
                   />
                   <div className="text-center">
-                    <div className="text-blue-900 font-black text-2xl md:text-3xl uppercase tracking-wider font-display">Championship</div>
-                    <div className="text-blue-600 text-sm mt-2 font-semibold">22 academies</div>
+                    <div className="text-white font-black text-xl md:text-2xl uppercase tracking-wider font-display">Championship</div>
+                    <div className="text-white/40 text-sm mt-1">22 academies</div>
                   </div>
-                  <div className="flex flex-wrap justify-center gap-2 mt-3">
-                    {["Leeds", "West Brom", "Sunderland", "Birmingham"].map((n, i) => (
-                      <span key={i} className="text-xs text-blue-700 bg-blue-200/60 px-3 py-1 rounded-full font-semibold border border-blue-300">{n}</span>
+                  <div className="flex flex-wrap justify-center gap-1.5 mt-1">
+                    {["Leeds", "West Brom", "Sunderland", "Birmingham", "Leeds"].map((n, i) => (
+                      i < 4 && <span key={i} className="text-[10px] text-sky-300/60 bg-sky-900/30 px-2 py-0.5 rounded-full border border-sky-500/20">{n}</span>
                     ))}
-                    <span className="text-xs text-blue-600 px-1">+18 more</span>
+                    <span className="text-[10px] text-white/30 px-1">+18 more</span>
                   </div>
                 </div>
               </motion.button>
@@ -164,9 +155,9 @@ export default function Home() {
               <div className="w-full flex items-center gap-3">
                 <button
                   onClick={() => { setSelectedTier(null); setSelectedAcademy(null); setSearch(""); }}
-                  className="flex items-center gap-1.5 text-gray-600 hover:text-blue-600 transition-colors text-sm font-semibold"
+                  className="flex items-center gap-1.5 text-white/50 hover:text-white transition-colors text-sm"
                 >
-                  <ChevronLeft size={18} />
+                  <ChevronLeft size={16} />
                   Back
                 </button>
                 <div className="flex items-center gap-2">
@@ -176,13 +167,13 @@ export default function Home() {
 
               {/* Search */}
               <div className="w-full max-w-sm relative">
-                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30" />
                 <input
                   type="text"
                   placeholder="Search your club…"
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  className="w-full bg-white border-2 border-blue-200 rounded-2xl pl-10 pr-4 py-3 text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-colors shadow-md"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-white/30 transition-colors"
                 />
               </div>
 
@@ -198,32 +189,30 @@ export default function Home() {
                       transition={{ delay: idx * 0.03, type: "spring", stiffness: 300, damping: 24 }}
                       onClick={() => handleClubSelect(academy)}
                       className={`
-                        relative flex flex-col items-center gap-2 p-4 rounded-3xl border-2 transition-all duration-300
+                        relative flex flex-col items-center gap-2 p-3 pt-4 rounded-2xl border transition-all duration-300
                         ${isSelected
-                          ? "bg-white shadow-xl scale-110"
-                          : "bg-white/70 hover:bg-white border-gray-200 hover:border-blue-400 hover:shadow-lg"
+                          ? "border-white/50 bg-white/10 scale-105 shadow-lg"
+                          : "border-white/8 bg-white/3 hover:bg-white/8 hover:border-white/20"
                         }
                       `}
                       style={isSelected ? {
-                        borderColor: academy.primaryColor,
-                        boxShadow: `0 8px 24px ${academy.primaryColor}30`
+                        boxShadow: `0 0 24px ${academy.primaryColor}55`,
+                        borderColor: `${academy.primaryColor}80`
                       } : {}}
                     >
                       {/* Glow layer when selected */}
                       {isSelected && (
                         <div
-                          className="absolute inset-0 rounded-3xl opacity-10 blur-lg"
+                          className="absolute inset-0 rounded-2xl opacity-20 blur-lg"
                           style={{ background: academy.primaryColor }}
                         />
                       )}
 
                       <div className="relative z-10">
-                        <ClubBadge academy={academy} size={56} selected={isSelected} />
+                        <ClubBadge academy={academy} size={52} selected={isSelected} />
                       </div>
 
-                      <span className={`relative z-10 text-[12px] font-black text-center leading-tight max-w-[90px] ${
-                        isSelected ? "text-gray-900" : "text-gray-700"
-                      }`}>
+                      <span className="relative z-10 text-[11px] font-bold text-white/80 text-center leading-tight max-w-[80px]">
                         {academy.shortName}
                       </span>
 
@@ -292,32 +281,32 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-14 pt-8 border-t-2 border-blue-200 w-full max-w-2xl flex flex-col items-center gap-4"
+          className="mt-12 pt-8 border-t border-white/8 w-full max-w-2xl flex flex-col items-center gap-3"
         >
           {/* Demo credentials */}
-          <div className="text-center mb-3">
-            <div className="text-gray-700 text-xs font-semibold mb-2 uppercase tracking-wider">Demo Credentials:</div>
-            <div className="space-y-1.5 text-gray-600 text-xs font-mono">
-              <div>Staff: <span className="text-blue-600 font-semibold">coach@arsenal.co.uk</span> / <span className="text-blue-600 font-semibold">test123</span></div>
-              <div>Admin: <span className="text-blue-600 font-semibold">admin@arsenal.co.uk</span> / <span className="text-blue-600 font-semibold">admin123</span></div>
+          <div className="text-center mb-2">
+            <div className="text-white/40 text-xs font-mono mb-2">Demo Credentials:</div>
+            <div className="space-y-1 text-white/50 text-xs font-mono">
+              <div>Staff: <span className="text-white/70">coach@arsenal.co.uk</span> / <span className="text-white/70">test123</span></div>
+              <div>Admin: <span className="text-white/70">admin@arsenal.co.uk</span> / <span className="text-white/70">admin123</span></div>
             </div>
           </div>
 
           {/* Staff Login Button */}
           <button
             onClick={() => navigate("/staff-login")}
-            className="group w-full max-w-xs flex items-center gap-3 px-6 py-4 rounded-3xl border-2 border-blue-300 bg-gradient-to-r from-blue-100 to-blue-50 hover:from-blue-200 hover:to-blue-100 hover:border-blue-400 transition-all duration-300 shadow-md hover:shadow-lg"
+            className="group flex items-center gap-3 px-6 py-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
           >
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center group-hover:bg-white/15 transition-colors">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>
             </div>
             <div className="text-left">
-              <div className="text-blue-900 text-sm font-black font-display uppercase tracking-wider">
+              <div className="text-white text-sm font-bold font-display uppercase tracking-wider">
                 Academy Staff Login
               </div>
-              <div className="text-blue-700 text-xs">
+              <div className="text-white/35 text-xs">
                 Access the staff portal
               </div>
             </div>
@@ -326,16 +315,16 @@ export default function Home() {
           {/* Admin Login Button */}
           <button
             onClick={() => navigate("/admin-login")}
-            className="group w-full max-w-xs flex items-center gap-3 px-6 py-4 rounded-3xl border-2 border-purple-300 bg-gradient-to-r from-purple-100 to-purple-50 hover:from-purple-200 hover:to-purple-100 hover:border-purple-400 transition-all duration-300 shadow-md hover:shadow-lg"
+            className="group flex items-center gap-3 px-6 py-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
           >
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform text-lg">
-              ⚙️
+            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center group-hover:bg-white/15 transition-colors">
+              <span className="text-base">⚙️</span>
             </div>
             <div className="text-left">
-              <div className="text-purple-900 text-sm font-black font-display uppercase tracking-wider">
+              <div className="text-white text-sm font-bold font-display uppercase tracking-wider">
                 Website Admin
               </div>
-              <div className="text-purple-700 text-xs">
+              <div className="text-white/35 text-xs">
                 Manage academy settings
               </div>
             </div>
