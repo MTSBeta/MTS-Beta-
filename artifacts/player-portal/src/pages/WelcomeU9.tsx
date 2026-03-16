@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { LogOut } from "lucide-react";
-import { PlayerJersey } from "@/components/PlayerJersey";
 import { usePlayerContext } from "@/context/PlayerContext";
 
 function isLight(hex: string) {
@@ -32,6 +31,159 @@ const STARS = Array.from({ length: 18 }, (_, i) => ({
   delay: Math.random() * 2,
 }));
 
+const REVEAL_PHASES = ["badge", "name", "number"] as const;
+type RevealPhase = typeof REVEAL_PHASES[number];
+const PHASE_DURATIONS: Record<RevealPhase, number> = { badge: 2400, name: 2200, number: 2400 };
+
+function PlayerReveal({
+  crestUrl, logoText, shortName, playerName, shirtNumber, primaryColor, secondaryColor,
+}: {
+  crestUrl?: string; logoText?: string; shortName: string;
+  playerName: string; shirtNumber: number | string; primaryColor: string; secondaryColor?: string;
+}) {
+  const [phaseIdx, setPhaseIdx] = useState(0);
+  const [flashing, setFlashing] = useState(false);
+  const phase = REVEAL_PHASES[phaseIdx];
+  const firstName = playerName.split(" ")[0];
+  const surname = playerName.split(" ").slice(1).join(" ") || firstName;
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setFlashing(true);
+      setTimeout(() => {
+        setPhaseIdx(i => (i + 1) % REVEAL_PHASES.length);
+        setFlashing(false);
+      }, 180);
+    }, PHASE_DURATIONS[phase]);
+    return () => clearTimeout(t);
+  }, [phaseIdx]);
+
+  return (
+    <div className="relative w-72 h-72 flex items-center justify-center select-none">
+      {/* Outer glow ring — pulses on phase */}
+      <motion.div
+        key={`ring-${phaseIdx}`}
+        className="absolute inset-0 rounded-full"
+        style={{ boxShadow: `0 0 0 2px ${primaryColor}40, 0 0 80px ${primaryColor}35` }}
+        initial={{ scale: 0.85, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.4 }}
+      />
+
+      {/* Card background */}
+      <div
+        className="absolute inset-0 rounded-[32px] overflow-hidden"
+        style={{ background: `radial-gradient(circle at 50% 40%, ${primaryColor}22 0%, #0f0f0f 70%)`, border: `1.5px solid ${primaryColor}30` }}
+      >
+        {/* Corner accent lines */}
+        <div className="absolute top-0 left-0 w-10 h-10 border-t-2 border-l-2 rounded-tl-[28px]" style={{ borderColor: `${primaryColor}60` }} />
+        <div className="absolute top-0 right-0 w-10 h-10 border-t-2 border-r-2 rounded-tr-[28px]" style={{ borderColor: `${primaryColor}60` }} />
+        <div className="absolute bottom-0 left-0 w-10 h-10 border-b-2 border-l-2 rounded-bl-[28px]" style={{ borderColor: `${primaryColor}60` }} />
+        <div className="absolute bottom-0 right-0 w-10 h-10 border-b-2 border-r-2 rounded-br-[28px]" style={{ borderColor: `${primaryColor}60` }} />
+        {/* Spotlight beam from top */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-full pointer-events-none"
+          style={{ background: `linear-gradient(to bottom, ${primaryColor}18 0%, transparent 60%)` }} />
+      </div>
+
+      {/* Flash overlay */}
+      <AnimatePresence>
+        {flashing && (
+          <motion.div
+            className="absolute inset-0 rounded-[32px] z-40 pointer-events-none"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.09 }}
+            style={{ background: "white" }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Phase content */}
+      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center px-4">
+        <AnimatePresence mode="wait">
+
+          {phase === "badge" && (
+            <motion.div key="badge"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.3, filter: "blur(4px)" }}
+              transition={{ type: "spring", stiffness: 220, damping: 18 }}
+              className="flex flex-col items-center gap-3"
+            >
+              <p className="text-[9px] font-black uppercase tracking-[0.25em]" style={{ color: `${primaryColor}90` }}>ACADEMY</p>
+              {crestUrl ? (
+                <img src={crestUrl} alt={shortName} className="w-28 h-28 object-contain drop-shadow-2xl" />
+              ) : (
+                <div className="w-28 h-28 rounded-2xl flex items-center justify-center text-3xl font-black text-white shadow-2xl"
+                  style={{ background: primaryColor }}>
+                  {logoText ?? shortName.slice(0,2)}
+                </div>
+              )}
+              <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">{shortName}</p>
+            </motion.div>
+          )}
+
+          {phase === "name" && (
+            <motion.div key="name"
+              initial={{ opacity: 0, y: 40, filter: "blur(6px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -30, filter: "blur(4px)" }}
+              transition={{ duration: 0.28, ease: "easeOut" }}
+              className="flex flex-col items-center gap-1 text-center"
+            >
+              <p className="text-[9px] font-black uppercase tracking-[0.25em]" style={{ color: `${primaryColor}90` }}>PLAYER</p>
+              <h2 className="font-display font-black uppercase leading-none text-white tracking-tight"
+                style={{ fontSize: "clamp(2.4rem, 14vw, 3.4rem)", textShadow: `0 0 40px ${primaryColor}80` }}>
+                {firstName}
+              </h2>
+              <h3 className="font-display font-black uppercase leading-none tracking-tight"
+                style={{ fontSize: "clamp(1.4rem, 8vw, 2rem)", color: `${primaryColor}`, textShadow: `0 0 24px ${primaryColor}60` }}>
+                {surname}
+              </h3>
+            </motion.div>
+          )}
+
+          {phase === "number" && (
+            <motion.div key="number"
+              initial={{ opacity: 0, scale: 2, filter: "blur(12px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, scale: 0.4, filter: "blur(8px)" }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="flex flex-col items-center gap-0"
+            >
+              <p className="text-[9px] font-black uppercase tracking-[0.25em] mb-1" style={{ color: `${primaryColor}90` }}>SHIRT NUMBER</p>
+              <span
+                className="font-display font-black leading-none select-none"
+                style={{
+                  fontSize: "clamp(5rem, 28vw, 7rem)",
+                  color: primaryColor,
+                  textShadow: `0 0 60px ${primaryColor}90, 0 0 20px ${primaryColor}60`,
+                  WebkitTextStroke: `2px ${primaryColor}`,
+                }}
+              >
+                {shirtNumber}
+              </span>
+            </motion.div>
+          )}
+
+        </AnimatePresence>
+      </div>
+
+      {/* Phase dots */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        {REVEAL_PHASES.map((p, i) => (
+          <motion.div
+            key={i}
+            animate={{ width: i === phaseIdx ? 20 : 6, opacity: i === phaseIdx ? 1 : 0.3 }}
+            transition={{ duration: 0.25 }}
+            className="h-1.5 rounded-full"
+            style={{ background: i === phaseIdx ? primaryColor : "rgba(255,255,255,0.4)" }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function WelcomeU9() {
   const [_, navigate] = useLocation();
   const { selectedAcademy, playerData, clearContext } = usePlayerContext();
@@ -42,7 +194,6 @@ export default function WelcomeU9() {
   if (!selectedAcademy || !playerData) { navigate("/"); return null; }
 
   const firstName = playerData.playerName.split(" ")[0];
-  const surname = playerData.playerName.split(" ").slice(1).join(" ") || playerData.playerName;
   const primaryColor = selectedAcademy.primaryColor;
   const btnText = isLight(primaryColor) ? "#000" : "#fff";
 
@@ -94,26 +245,22 @@ export default function WelcomeU9() {
       {/* ── HERO CONTENT ── */}
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center pt-4 pb-40">
 
-        {/* Jersey — the hero */}
+        {/* Player Reveal Carousel */}
         <motion.div
-          initial={{ opacity: 0, y: 40, scale: 0.85 }}
+          initial={{ opacity: 0, y: 30, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ type: "spring", stiffness: 160, damping: 18, delay: 0.15 }}
-          className="relative mb-4"
+          className="mb-4"
         >
-          {/* Glow behind jersey */}
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 rounded-full blur-[60px] opacity-35 pointer-events-none"
-            style={{ backgroundColor: primaryColor }}
+          <PlayerReveal
+            crestUrl={selectedAcademy.crestUrl ?? undefined}
+            logoText={selectedAcademy.logoText ?? undefined}
+            shortName={selectedAcademy.shortName}
+            playerName={playerData.playerName}
+            shirtNumber={playerData.shirtNumber}
+            primaryColor={primaryColor}
+            secondaryColor={selectedAcademy.secondaryColor ?? undefined}
           />
-          <div className="relative z-10 scale-125">
-            <PlayerJersey
-              surname={surname}
-              number={playerData.shirtNumber}
-              primaryColor={primaryColor}
-              secondaryColor={selectedAcademy.secondaryColor}
-            />
-          </div>
         </motion.div>
 
         {/* Name */}
