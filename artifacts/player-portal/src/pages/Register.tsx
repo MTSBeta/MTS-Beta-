@@ -12,7 +12,6 @@ const schema = z.object({
   playerName: z.string().min(2, "Name must be at least 2 characters"),
   age: z.coerce.number().min(6, "Must be at least 6").max(21, "Must be 21 or under"),
   shirtNumber: z.coerce.number().min(1, "Invalid").max(99, "Invalid"),
-  accessCode: z.string().min(3, "Code required"),
   position: z.string().min(1, "Tap your position on the pitch above"),
 });
 
@@ -163,21 +162,9 @@ export default function Register() {
               />
             </div>
 
-            {/* Access code */}
-            <div>
-              <FieldLabel>Academy access code</FieldLabel>
-              <input
-                {...register("accessCode")}
-                type="text"
-                placeholder="Provided by your coach"
-                className={`${inputClass} ${errors.accessCode ? "border-red-500/50" : ""}`}
-              />
-              <FieldError msg={errors.accessCode?.message} />
-            </div>
-
             {isError && (
               <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3">
-                <p className="text-red-400 text-sm">Registration failed. Check your access code and try again.</p>
+                <p className="text-red-400 text-sm">Registration failed. Please check your details and try again.</p>
               </div>
             )}
           </motion.div>
