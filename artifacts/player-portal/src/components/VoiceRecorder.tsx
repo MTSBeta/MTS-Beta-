@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Mic, Square, Play, Pause, Trash2, RotateCcw } from "lucide-react";
+import { Mic, Square, Play, Pause, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface VoiceRecorderProps {
@@ -7,17 +7,17 @@ interface VoiceRecorderProps {
   existingUrl?: string | null;
 }
 
-type RecordState = "idle" | "recording" | "recorded" | "playing";
+type RecordState = "idle" | "recording" | "paused" | "recorded" | "playing";
 
 export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps) {
   const [state, setState] = useState<RecordState>(existingUrl ? "recorded" : "idle");
   const [duration, setDuration] = useState(0);
   const [playProgress, setPlayProgress] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(existingUrl ?? null);
-  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -29,10 +29,19 @@ export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps)
     };
   }, []);
 
+  const startTimer = () => {
+    timerRef.current = setInterval(() => setDuration((d) => d + 1), 1000);
+  };
+
+  const stopTimer = () => {
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+  };
+
   const startRecording = async () => {
     setError(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
       const mimeType = MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "audio/mp4";
       const recorder = new MediaRecorder(stream, { mimeType });
       mediaRecorderRef.current = recorder;
@@ -45,23 +54,35 @@ export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps)
       recorder.onstop = () => {
         const blob = new Blob(chunksRef.current, { type: mimeType });
         const url = URL.createObjectURL(blob);
-        setAudioBlob(blob);
         setAudioUrl(url);
         setState("recorded");
         onAudioReady(blob, url);
-        stream.getTracks().forEach((t) => t.stop());
+        streamRef.current?.getTracks().forEach((t) => t.stop());
       };
 
       recorder.start(100);
       setState("recording");
       setDuration(0);
-
-      timerRef.current = setInterval(() => {
-        setDuration((d) => d + 1);
-      }, 1000);
-    } catch (err) {
+      startTimer();
+    } catch {
       setError("Microphone access denied. Please allow microphone in your browser settings.");
       setState("idle");
+    }
+  };
+
+  const pauseRecording = () => {
+    if (mediaRecorderRef.current?.state === "recording") {
+      mediaRecorderRef.current.pause();
+      stopTimer();
+      setState("paused");
+    }
+  };
+
+  const resumeRecording = () => {
+    if (mediaRecorderRef.current?.state === "paused") {
+      mediaRecorderRef.current.resume();
+      startTimer();
+      setState("recording");
     }
   };
 
@@ -69,24 +90,17 @@ export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps)
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
       mediaRecorderRef.current.stop();
     }
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
+    stopTimer();
   };
 
   const playAudio = () => {
     if (!audioUrl) return;
     if (!audioRef.current) {
       audioRef.current = new Audio(audioUrl);
-      audioRef.current.onended = () => {
-        setState("recorded");
-        setPlayProgress(0);
-      };
+      audioRef.current.onended = () => { setState("recorded"); setPlayProgress(0); };
       audioRef.current.ontimeupdate = () => {
         if (audioRef.current) {
-          const pct = (audioRef.current.currentTime / (audioRef.current.duration || 1)) * 100;
-          setPlayProgress(pct);
+          setPlayProgress((audioRef.current.currentTime / (audioRef.current.duration || 1)) * 100);
         }
       };
     }
@@ -94,19 +108,13 @@ export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps)
     setState("playing");
   };
 
-  const pauseAudio = () => {
-    audioRef.current?.pause();
-    setState("recorded");
-  };
+  const pauseAudio = () => { audioRef.current?.pause(); setState("recorded"); };
 
   const deleteRecording = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
+    audioRef.current?.pause();
+    audioRef.current = null;
     if (audioUrl && !existingUrl) URL.revokeObjectURL(audioUrl);
     setAudioUrl(null);
-    setAudioBlob(null);
     setState("idle");
     setDuration(0);
     setPlayProgress(0);
@@ -118,47 +126,94 @@ export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps)
   return (
     <div className="flex flex-col gap-2">
       <AnimatePresence mode="wait">
+
+        {/* ── IDLE ── */}
         {state === "idle" && (
           <motion.button
-            key="record-btn"
+            key="idle"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             type="button"
             onClick={startRecording}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 hover:bg-white/10 transition-all text-white/60 hover:text-white text-sm font-medium"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 hover:bg-white/10 transition-all text-white/60 hover:text-white text-sm font-medium w-fit"
           >
             <Mic size={16} className="text-red-400" />
             Add voice note
           </motion.button>
         )}
 
+        {/* ── RECORDING ── */}
         {state === "recording" && (
           <motion.div
             key="recording"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex items-center gap-3 px-4 py-2 rounded-xl bg-red-500/10 border border-red-500/30"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30"
           >
             <motion.div
-              animate={{ scale: [1, 1.3, 1] }}
+              animate={{ scale: [1, 1.35, 1] }}
               transition={{ repeat: Infinity, duration: 1 }}
-              className="w-3 h-3 rounded-full bg-red-500"
+              className="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0"
             />
-            <span className="text-red-400 text-sm font-mono font-bold">{formatTime(duration)}</span>
-            <span className="text-red-300/60 text-xs flex-1">Recording...</span>
+            <span className="text-red-400 text-sm font-mono font-bold w-10 shrink-0">{formatTime(duration)}</span>
+            <span className="text-red-300/60 text-xs flex-1">Recording…</span>
+            <button
+              type="button"
+              onClick={pauseRecording}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/70 text-xs font-semibold transition-all"
+              title="Pause recording"
+            >
+              <Pause size={11} />
+              Pause
+            </button>
             <button
               type="button"
               onClick={stopRecording}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-300 text-xs font-semibold transition-all"
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-300 text-xs font-semibold transition-all"
+              title="Stop and save"
             >
-              <Square size={12} />
+              <Square size={11} />
               Stop
             </button>
           </motion.div>
         )}
 
+        {/* ── PAUSED ── */}
+        {state === "paused" && (
+          <motion.div
+            key="paused"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30"
+          >
+            <div className="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0" />
+            <span className="text-amber-400 text-sm font-mono font-bold w-10 shrink-0">{formatTime(duration)}</span>
+            <span className="text-amber-300/60 text-xs flex-1">Paused</span>
+            <button
+              type="button"
+              onClick={resumeRecording}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 text-xs font-semibold transition-all"
+              title="Resume recording"
+            >
+              <Mic size={11} />
+              Resume
+            </button>
+            <button
+              type="button"
+              onClick={stopRecording}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-300 text-xs font-semibold transition-all"
+              title="Stop and save"
+            >
+              <Square size={11} />
+              Save
+            </button>
+          </motion.div>
+        )}
+
+        {/* ── RECORDED / PLAYING ── */}
         {(state === "recorded" || state === "playing") && (
           <motion.div
             key="playback"
@@ -182,13 +237,12 @@ export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps)
                   transition={{ duration: 0.1 }}
                 />
               </div>
-              <span className="text-white/40 text-xs font-mono shrink-0">
-                {formatTime(duration)}
-              </span>
+              <span className="text-white/40 text-xs font-mono shrink-0">{formatTime(duration)}</span>
               <button
                 type="button"
                 onClick={deleteRecording}
                 className="text-white/30 hover:text-red-400 transition-colors"
+                title="Delete and re-record"
               >
                 <Trash2 size={14} />
               </button>
@@ -198,6 +252,7 @@ export function VoiceRecorder({ onAudioReady, existingUrl }: VoiceRecorderProps)
             </p>
           </motion.div>
         )}
+
       </AnimatePresence>
 
       {error && <p className="text-xs text-red-400">{error}</p>}
