@@ -27,17 +27,15 @@ export default function Welcome() {
   const { selectedAcademy, playerData, clearContext } = usePlayerContext();
   const tipsRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const chantUrl = selectedAcademy?.chantUrl ?? null;
-
   useEffect(() => {
-    if (!chantUrl) return;
-    const audio = new Audio(chantUrl);
-    audio.volume = 0.7;
+    // Play theme music at 30% volume
+    const audio = new Audio(`${import.meta.env.BASE_URL}audio/love-me-again.mp3`);
+    audio.volume = 0.3; // 30% volume - restrained, not jumpscare
     audioRef.current = audio;
     audio.play().catch(() => {});
-    const stop = setTimeout(() => { audio.pause(); audio.src = ""; }, 6000);
+    const stop = setTimeout(() => { audio.pause(); audio.src = ""; }, 8000);
     return () => { clearTimeout(stop); audio.pause(); audio.src = ""; };
-  }, [chantUrl]);
+  }, []);
 
   if (!selectedAcademy || !playerData) {
     navigate("/");

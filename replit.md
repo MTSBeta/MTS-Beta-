@@ -128,6 +128,14 @@ Academy config is data-driven. Each academy has: `key`, `name`, `logoText`, `pri
 ## Position Config
 Each position (GK, RB, CB, LB, CDM, CM, CAM, RW, ST, LW, CF) maps to: `displayName`, `traits`, `archetype`, `mentalFocus`. Stored in `src/data/positions.ts` for future story generation use.
 
+## Audio Configuration
+
+- **Welcome Screen Theme**: `love-me-again.mp3` (John Newman) at 30% volume
+  - Plays on `/welcome` and `/welcome-u9` pages
+  - Duration: ~8 seconds
+  - Volume: 0.3 (restrained, not jumpscare-style)
+  - Location: `/public/audio/love-me-again.mp3`
+
 ## Common Commands
 
 ```bash
