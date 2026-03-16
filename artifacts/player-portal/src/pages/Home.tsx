@@ -295,6 +295,22 @@ export default function Home() {
                         borderColor: `${academy.primaryColor}80`
                       } : {}}
                     >
+                      {/* Stadium background image */}
+                      {academy.stadiumImage && (
+                        <img
+                          src={academy.stadiumImage}
+                          alt=""
+                          aria-hidden="true"
+                          className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+                          style={{
+                            opacity: isSelected ? 0.22 : 0.11,
+                            filter: "saturate(0.3) brightness(0.6)",
+                            mixBlendMode: "luminosity",
+                            transition: "opacity 0.3s",
+                          }}
+                        />
+                      )}
+
                       {/* Glow layer when selected */}
                       {isSelected && (
                         <div
