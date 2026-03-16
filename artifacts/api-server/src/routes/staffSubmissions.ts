@@ -45,14 +45,17 @@ router.post("/staff/submissions", staffAuth, async (req, res) => {
     return;
   }
 
-  if (staffUser.systemRole !== "academy_admin" && staffUser.questionRole !== role) {
-    res.status(403).json({ error: "You can only submit observations for your assigned question set" });
-    return;
+  // Non-admin staff can only submit for their assigned pillar
+  if (staffUser.systemRole !== "academy_admin") {
+    if (staffUser.questionRole !== role) {
+      res.status(403).json({ error: "Insufficient permissions. You can only submit observations for your assigned pillar" });
+      return;
+    }
   }
 
   const academyKey = await getAcademyKey(staffUser.academyId);
   if (!academyKey || !(await playerBelongsToAcademy(playerId, academyKey))) {
-    res.status(403).json({ error: "Player does not belong to your academy" });
+    res.status(403).json({ error: "Access denied. Player does not belong to your academy" });
     return;
   }
 
@@ -95,7 +98,7 @@ router.put("/staff/submissions/:id", staffAuth, async (req, res) => {
   }
 
   if (existing.staffId !== staffUser.id && staffUser.systemRole !== "academy_admin") {
-    res.status(403).json({ error: "You can only edit your own submissions" });
+    res.status(403).json({ error: "Insufficient permissions. You can only edit your own submissions" });
     return;
   }
 

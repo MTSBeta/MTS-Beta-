@@ -94,9 +94,9 @@ export default function CoachForm() {
           <div className="w-20 h-20 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 size={40} />
           </div>
-          <h2 className="text-3xl font-display font-bold text-white mb-4">Thank You, Coach</h2>
+          <h2 className="text-3xl font-display font-bold text-white mb-4">Thank You, Staff Member</h2>
           <p className="text-white/70 text-lg">
-            Your assessment has been successfully added to {player.playerName}'s development profile.
+            Your observation has been successfully added to {player.playerName}'s development profile.
           </p>
         </motion.div>
       </Layout>
@@ -108,17 +108,17 @@ export default function CoachForm() {
       <div className="w-full max-w-3xl mx-auto flex flex-col pt-8 pb-12">
         <div className="text-center mb-10">
           <h1 className="text-3xl md:text-5xl font-display font-black text-white mb-4 uppercase">
-            Coach Assessment
+            Staff Assessment
           </h1>
           <p className="text-lg text-white/70 font-medium">
-            Evaluating <span className="text-white font-bold">{player.playerName}</span> • {player.position}
+            Football Coaching Pillar Assessment for <span className="text-white font-bold">{player.playerName}</span> • {player.position}
           </p>
         </div>
 
         <div className="glass-panel p-6 md:p-10 rounded-3xl space-y-8">
           <div className="bg-white/5 border border-white/10 rounded-xl p-5 mb-8 border-l-4 border-[var(--academy-primary,white)]">
             <p className="text-white/80 italic text-sm md:text-base leading-relaxed">
-              Provide an honest, constructive assessment of the player's technical, tactical, and psychological traits to assist in generating a comprehensive development report.
+              Provide your expert observations on this player's development across the four pillars: Football Coaching, Psychology, Education, and Player Care.
             </p>
           </div>
 
@@ -126,7 +126,7 @@ export default function CoachForm() {
             <Textarea
               key={idx}
               label={`Q${idx + 1}. ${question}`}
-              placeholder="Coach's notes..."
+              placeholder="Your observations..."
               value={answers[idx]}
               onChange={(e) => handleAnswerChange(idx, e.target.value)}
               error={errors[idx] ? "Please provide an answer" : undefined}

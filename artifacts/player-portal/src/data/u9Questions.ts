@@ -3,15 +3,15 @@ export type U9QuestionType =
   | "select"
   | "multiselect"
   | "photo"
-  | "coaching-text"
-  | "coaching-multiselect";
+  | "staff-text"
+  | "staff-multiselect";
 
 export interface U9Question {
   text: string;
   hint: string;
   emoji: string;
   type: U9QuestionType;
-  /** Options for select / multiselect / coaching-multiselect questions */
+  /** Options for select / multiselect / staff-multiselect questions */
   options?: string[];
   /** Character profile keys — used to generate summation */
   profileKey?: "traits" | "strengths" | "workEthic" | "mindset" | "goals" | "dreams" | "clubValues" | "storyThemes" | "developmentAreas";
@@ -273,7 +273,7 @@ export const U9_STAGES: U9Stage[] = [
     isCoaching: true,
     questions: [
       {
-        type: "coaching-multiselect",
+        type: "staff-multiselect",
         emoji: "🏛️",
         text: "Which club values does this player already demonstrate — on the pitch and in their everyday behaviour?",
         hint: "Select all that apply. These values will be woven into the story's core themes.",
@@ -286,7 +286,7 @@ export const U9_STAGES: U9Stage[] = [
         ],
       },
       {
-        type: "coaching-multiselect",
+        type: "staff-multiselect",
         emoji: "📚",
         text: "What story themes and life lessons do you want woven through this player's personalised book?",
         hint: "Choose the messages you most want them to carry — these guide the narrative arc.",
@@ -307,7 +307,7 @@ export const U9_STAGES: U9Stage[] = [
         ],
       },
       {
-        type: "coaching-multiselect",
+        type: "staff-multiselect",
         emoji: "📈",
         text: "What are the priority development areas you're working on with this player this season?",
         hint: "Select all that are in your programme — technical, tactical, physical and psychological.",
@@ -330,25 +330,25 @@ export const U9_STAGES: U9Stage[] = [
         ],
       },
       {
-        type: "coaching-text",
+        type: "staff-text",
         emoji: "🌟",
         text: "What makes this player genuinely special? Describe the quality that would never appear in a stats report or assessment document.",
         hint: "This is the heart of their story — what you see that most people miss.",
       },
       {
-        type: "coaching-text",
+        type: "staff-text",
         emoji: "💡",
         text: "What is the one key lesson or message you most want this player to take from their book — something that will help shape who they become?",
         hint: "The single most important thing. The thing you'd say if you only had one sentence.",
       },
       {
-        type: "coaching-text",
+        type: "staff-text",
         emoji: "🎭",
         text: "Describe a specific moment — in training or a match — where this player showed real character. Paint the scene.",
         hint: "The more specific, the more powerful. A real story beats a general observation every time.",
       },
       {
-        type: "coaching-text",
+        type: "staff-text",
         emoji: "🏁",
         text: "What does success look like for this player by the end of this season — on the pitch, off it, and as a growing person?",
         hint: "Paint the picture of where you want them to be. This becomes the story's closing chapter.",

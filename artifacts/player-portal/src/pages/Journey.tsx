@@ -88,11 +88,11 @@ function QuestionCard({
   onUnskip: () => void;
 }) {
   const qType = question.type ?? "voice-text";
-  const isCoachingQ = stageCoaching || qType === "coaching-text" || qType === "coaching-multiselect";
+  const isCoachingQ = stageCoaching || qType === "staff-text" || qType === "staff-multiselect";
   const isSelect = qType === "select";
-  const isMultiselect = qType === "multiselect" || qType === "coaching-multiselect";
+  const isMultiselect = qType === "multiselect" || qType === "staff-multiselect";
   const isSelectType = isSelect || isMultiselect;
-  const isVoiceText = qType === "voice-text" || qType === "coaching-text";
+  const isVoiceText = qType === "voice-text" || qType === "staff-text";
   const accentColor = isCoachingQ ? "#0d9488" : primaryColor;
   const selected = selectedOptions(answer.text);
   const answered = isSelectType ? answer.text.trim() !== "" : !!(answer.text.trim() || answer.audioUrl);
@@ -173,7 +173,7 @@ function QuestionCard({
             </div>
           )}
 
-          {/* Text area (voice-text and coaching-text) */}
+          {/* Text area (voice-text and staff-text) */}
           {isVoiceText && (
             <>
               <textarea

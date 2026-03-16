@@ -9,7 +9,7 @@ import { useAdminListPlayers, useAdminGetPlayer } from "@workspace/api-client-re
 const TYPE_LABEL: Record<string, string> = {
   parent: "Parent / Guardian",
   friend: "Friend",
-  football_coach: "Football Coach",
+  football_coach: "Football Coaching Pillar",
   education: "Education Staff",
   psychology: "Psychology Staff",
   player_care: "Player Care",

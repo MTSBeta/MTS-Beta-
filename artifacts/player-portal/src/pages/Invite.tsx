@@ -9,7 +9,7 @@ import type { StakeholderLink } from "@workspace/api-client-react";
 const ICONS: Record<string, React.ReactNode> = {
   parent: <Users size={16} />,
   friend: <UserCheck size={16} />,
-  football_coach: <Star size={16} />,
+  football_coach: <Star size={16} />, // Football Coaching Pillar
   education: <BookOpen size={16} />,
   psychology: <Brain size={16} />,
   player_care: <Shield size={16} />,

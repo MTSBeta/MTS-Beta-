@@ -1,11 +1,12 @@
 import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
-import { playersTable, coachResponsesTable } from "@workspace/db/schema";
-import { SubmitCoachResponsesBody } from "@workspace/api-zod";
+import { playersTable } from "@workspace/db/schema";
 import { eq } from "drizzle-orm";
 
 const router: IRouter = Router();
 
+// Legacy endpoint - redirects to staff submission flow
+// This endpoint is deprecated but kept for backward compatibility
 router.get("/coach/:coachCode", async (req, res) => {
   const { coachCode } = req.params;
 
@@ -16,7 +17,7 @@ router.get("/coach/:coachCode", async (req, res) => {
     .limit(1);
 
   if (!player) {
-    res.status(404).json({ error: "Invalid coach code" });
+    res.status(404).json({ error: "Invalid staff access code" });
     return;
   }
 
@@ -28,44 +29,12 @@ router.get("/coach/:coachCode", async (req, res) => {
   });
 });
 
+// Legacy endpoint - deprecated, use /staff/submissions instead
 router.post("/coach/:coachCode", async (req, res) => {
-  const { coachCode } = req.params;
-
-  const parsed = SubmitCoachResponsesBody.safeParse(req.body);
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.message });
-    return;
-  }
-
-  const [player] = await db
-    .select()
-    .from(playersTable)
-    .where(eq(playersTable.coachCode, coachCode))
-    .limit(1);
-
-  if (!player) {
-    res.status(404).json({ error: "Invalid coach code" });
-    return;
-  }
-
-  // Delete existing and reinsert
-  await db
-    .delete(coachResponsesTable)
-    .where(eq(coachResponsesTable.playerId, player.id));
-
-  const rows = parsed.data.responses.map((r) => ({
-    playerId: player.id,
-    coachCode,
-    questionNumber: r.questionNumber,
-    questionText: r.questionText,
-    answerText: r.answerText,
-  }));
-
-  if (rows.length > 0) {
-    await db.insert(coachResponsesTable).values(rows);
-  }
-
-  res.status(201).json({ success: true, message: "Coach responses saved successfully" });
+  res.status(410).json({ 
+    error: "This endpoint is deprecated. Please use the staff submission portal instead.",
+    message: "Coach submissions have been unified under the staff submissions system."
+  });
 });
 
 export default router;
