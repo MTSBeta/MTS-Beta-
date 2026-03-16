@@ -4,6 +4,7 @@ import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/Button";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { POSITIONS } from "@/data/positions";
+import { JOURNEY_STAGES } from "@/data/questions";
 
 export default function Welcome() {
   const [_, navigate] = useLocation();
@@ -55,12 +56,12 @@ export default function Welcome() {
               To build your unique football story, you will answer questions across six stages of your development:
             </p>
             <div className="grid grid-cols-2 gap-3 mt-4 text-white/90 font-medium">
-              <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-white/50" /> 1. Dream</div>
-              <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-white/50" /> 2. Storm</div>
-              <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-white/50" /> 3. Rock Bottom</div>
-              <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-white/50" /> 4. Rise</div>
-              <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-white/50" /> 5. Elite Wisdom</div>
-              <div className="flex items-center gap-3"><div className="w-2 h-2 rounded-full bg-white/50" /> 6. Next Level</div>
+              {JOURNEY_STAGES.map((stage, i) => (
+                <div key={stage.id} className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-white/50 flex-shrink-0" />
+                  {i + 1}. {stage.title}
+                </div>
+              ))}
             </div>
           </div>
         </div>

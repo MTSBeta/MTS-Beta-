@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MeTime Stories Football Academies - Elite Youth Development Portal</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+.position-hotspot {
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+cursor: pointer;
+backdrop-filter: blur(8px);
+border: 2px solid rgba(255, 255, 255, 0.2);
+}
+.position-hotspot:hover {
+transform: scale(1.25);
+box-shadow: 0 0 30px rgba(59, 130, 246, 0.8), 0 0 60px rgba(59, 130, 246, 0.4);
+border-color: rgba(59, 130, 246, 0.6);
+}
+.position-hotspot.active {
+background: linear-gradient(135deg, #f59e0b, #dc2626);
+transform: scale(1.35);
+box-shadow: 0 0 40px rgba(245, 158, 11, 0.9), 0 0 80px rgba(245, 158, 11, 0.5);
+border-color: rgba(245, 158, 11, 0.8);
+}
+.position-hotspot.loading {
+background: linear-gradient(135deg, #6366f1, #8b5cf6);
+transform: scale(1.15);
+animation: pulse-loading 0.8s ease-in-out infinite alternate;
+border-color: rgba(99, 102, 241, 0.8);
+}
+@keyframes pulse-loading {
+0% {
+box-shadow: 0 0 20px rgba(99, 102, 241, 0.7), 0 0 40px rgba(99, 102, 241, 0.4);
+transform: scale(1.15);
+}
+100% {
+box-shadow: 0 0 35px rgba(139, 92, 246, 0.9), 0 0 70px rgba(139, 92, 246, 0.6);
+transform: scale(1.2);
+}
+}
+.slide-panel {
+transform: translateX(100%);
+transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.slide-panel.active {
+transform: translateX(0);
+}
+.pitch-field {
+background-image:
+radial-gradient(circle at center, rgba(255, 255, 255, 0.08) 0%, transparent 70%),
+linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+background-size: 100% 100%, 25px 25px, 25px 25px;
+box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.3);
+}
+.glass-effect {
+backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+}
+@media (max-width: 768px) {
+.slide-panel {
+width: 100vw;
+}
+.position-hotspot {
+width: 10vw;
+height: 10vw;
+min-width: 40px;
+min-height: 40px;
+}
+.pitch-field {
+aspect-ratio: 2/3 !important;
+}
+.pitch-field svg {
+transform: rotate(90deg);
+}
+.position-hotspot[data-mobile-position] {
+left: var(--mobile-left) !important;
+top: var(--mobile-top) !important;
+}
+}
+</style>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#3b82f6',
+secondary: '#1e293b'
+},
+borderRadius: {
+'none': '0px',
+'sm': '4px',
+DEFAULT: '8px',
+'md': '12px',
+'lg': '16px',
+'xl': '20px',
+'2xl': '24px',
+'3xl': '32px',
+'full': '9999px',
+'button': '8px'
+}
+}
+}
+}
+</script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+<div class="min-h-screen relative overflow-hidden" style="background-image: url('https://readdy.ai/api/search-image?query=Create%20a%20photorealistic%20football%20stadium%20background%20for%20a%20web%20application%20interface.%20Show%20a%20professional%20football%20pitch%20from%20a%20tactical%20camera%20angle%2C%20with%20clean%20modern%20stadium%20architecture%20in%20the%20background.%20The%20view%20should%20be%20from%20behind%20one%20goal%20looking%20toward%20the%20center%20circle.%20Include%20subtle%20motion%20blur%20in%20the%20background%20to%20create%20depth%2C%20with%20the%20pitch%20sharply%20in%20focus.%20Use%20evening%20lighting%20with%20stadium%20lights%20creating%20dramatic%20shadows%20on%20the%20grass%20texture.%20The%20stadium%20should%20have%20sleek%20modern%20architecture%20with%20glass%20panels%20and%20steel%20structures.%20Ensure%20the%20lighting%20creates%20a%20cinematic%20atmosphere%20with%20warm%20golden%20tones%20mixed%20with%20cool%20blue%20stadium%20lighting.%20The%20pitch%20should%20show%20realistic%20grass%20texture%20with%20clear%20field%20markings%20in%20white.%20Make%20the%20background%20atmospheric%20and%20professional%20suitable%20for%20an%20elite%20football%20mindset%20development%20platform%20interface&width=1920&height=1080&seq=stadium-bg-001&orientation=landscape'); background-size: cover; background-position: center; background-attachment: fixed;">
+<div class="absolute inset-0 bg-gradient-to-br from-gray-900/40 via-transparent to-gray-900/60"></div>
+<header class="relative z-20 flex items-center justify-between p-6 backdrop-blur-sm bg-black/20">
+<div class="flex items-center space-x-4">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/94b1a4a49998ddace7bc633ef4c20f3a.png" alt="MeTime Stories Logo" class="w-12 h-12 object-contain">
+<div>
+<h1 class="text-xl font-bold text-white">MeTime Stories <span class="text-yellow-400">Football Academies</span></h1>
+<p class="text-sm text-blue-200">Elite Youth Development Portal</p>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<nav class="hidden md:flex items-center space-x-6">
+<button class="nav-btn text-white/80 hover:text-white transition-colors text-sm font-medium" data-section="dashboard">
+<i class="ri-dashboard-line mr-2"></i>Dashboard
+</button>
+<button class="nav-btn text-white/80 hover:text-white transition-colors text-sm font-medium" data-section="training">
+<i class="ri-brain-line mr-2"></i>Training Paths
+</button>
+<button class="nav-btn text-white/80 hover:text-white transition-colors text-sm font-medium" data-section="academy">
+<i class="ri-team-line mr-2"></i>Academy Hub
+</button>
+</nav>
+<button id="enquiryBtn" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/80 transition-colors whitespace-nowrap flex items-center space-x-2 text-sm font-medium">
+<i class="ri-send-plane-line text-lg"></i>
+<span>Join Academy</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center bg-white/10 rounded-full hover:bg-white/20 transition-colors md:hidden">
+<i class="ri-menu-line text-white text-lg"></i>
+</button>
+</div>
+</header>
+<main class="relative z-10 px-6 py-8">
+<div id="pitchSection" class="section-content active flex items-center justify-center min-h-[calc(100vh-200px)]">
+<div class="relative w-full max-w-4xl md:max-w-4xl max-w-xs">
+<div class="pitch-field relative bg-gradient-to-br from-green-800/30 via-green-700/20 to-green-900/40 rounded-xl border-2 border-white/40 aspect-[3/2] mx-auto shadow-2xl backdrop-blur-sm">
+</修改前>
+<svg class="absolute inset-0 w-full h-full transition-transform duration-300" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="600" height="400" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+<circle cx="300" cy="200" r="60" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+<line x1="300" y1="0" x2="300" y2="400" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+<rect x="0" y="120" width="80" height="160" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+<rect x="520" y="120" width="80" height="160" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+<rect x="0" y="160" width="30" height="80" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+<rect x="570" y="160" width="30" height="80" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+</svg>
+<div class="position-hotspot absolute w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center shadow-lg md:w-12 md:h-12"
+style="left: 8%; top: 45%;" data-position="gk" data-mobile-position="45% 92%">
+<i class="ri-user-line text-white text-sm"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+GK
+</div>
+</div>
+<div class="position-hotspot absolute w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg"
+style="left: 22%; top: 15%;" data-position="lb" data-mobile-position="15% 78%">
+<i class="ri-user-line text-white text-sm"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+LB
+</div>
+</div>
+<div class="position-hotspot absolute w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg"
+style="left: 25%; top: 35%;" data-position="cb-left" data-mobile-position="35% 75%">
+<i class="ri-user-line text-white text-sm"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+CB
+</div>
+</div>
+<div class="position-hotspot absolute w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg"
+style="left: 25%; top: 55%;" data-position="cb-right" data-mobile-position="55% 75%">
+<i class="ri-user-line text-white text-sm"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+CB
+</div>
+</div>
+<div class="position-hotspot absolute w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg"
+style="left: 22%; top: 75%;" data-position="rb" data-mobile-position="75% 78%">
+<i class="ri-user-line text-white text-sm"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+RB
+</div>
+</div>
+<div class="position-hotspot absolute w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg"
+style="left: 35%; top: 45%;" data-position="dm" data-mobile-position="45% 65%">
+<i class="ri-user-line text-white text-sm"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+DM
+</div>
+</div>
+<div class="position-hotspot absolute w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg"
+style="left: 50%; top: 30%;" data-position="cm-left" data-mobile-position="30% 50%">
+<i class="ri-user-line text-white text-sm"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+CM
+</div>
+</div>
+<div class="position-hotspot absolute w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg"
+style="left: 50%; top: 60%;" data-position="cm-right" data-mobile-position="60% 50%">
+<i class="ri-user-line text-white text-sm"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+CM
+</div>
+</div>
+<div class="position-hotspot absolute w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg"
+style="left: 75%; top: 20%;" data-position="lw" data-mobile-position="20% 25%">
+<i class="ri-user-line text-white text-sm"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+LW
+</div>
+</div>
+<div class="position-hotspot absolute w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg"
+style="left: 75%; top: 70%;" data-position="rw" data-mobile-position="70% 25%">
+<i class="ri-user-line text-white text-sm"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+RW
+</div>
+</div>
+<div class="position-hotspot absolute w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg"
+style="left: 85%; top: 45%;" data-position="st" data-mobile-position="45% 15%">
+<i class="ri-user-line text-white text-sm"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+ST
+</div>
+</div>
+<div class="position-hotspot absolute w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg"
+style="left: 70%; top: 45%;" data-position="cam" data-mobile-position="45% 30%">
+<i class="ri-user-line text-white text-sm"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+CAM
+</div>
+</div>
+<div class="position-hotspot absolute w-7 h-7 bg-yellow-600 rounded-full flex items-center justify-center shadow-lg"
+style="left: 5%; top: 75%;" data-position="sub1" data-mobile-position="75% 95%">
+<i class="ri-user-line text-white text-xs"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+1st SUB
+</div>
+</div>
+<div class="position-hotspot absolute w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center shadow-lg"
+style="left: 5%; top: 85%;" data-position="sub2" data-mobile-position="85% 95%">
+<i class="ri-user-line text-white text-xs"></i>
+<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white bg-black/50 px-2 py-1 rounded whitespace-nowrap">
+2nd SUB
+</div>
+</div>
+</div>
+</div>
+</main>
+<div id="positionPanel" class="slide-panel fixed top-0 right-0 w-96 h-full bg-gray-900/90 backdrop-blur-xl border-l border-white/30 z-30 overflow-y-auto glass-effect">
+<div class="p-6">
+<div class="flex items-center justify-between mb-6">
+<h2 id="positionTitle" class="text-xl font-bold text-white">Position Details</h2>
+<button id="closePanel" class="w-8 h-8 flex items-center justify-center bg-white/10 rounded-full hover:bg-white/20 transition-colors">
+<i class="ri-close-line text-white"></i>
+</button>
+</div>
+<div id="positionContent" class="space-y-6">
+<div class="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-5 border border-white/10 shadow-lg backdrop-blur-sm">
+<h3 class="text-lg font-semibold text-blue-300 mb-3 flex items-center">
+<i class="ri-brain-line mr-2"></i>Mental Challenges
+</h3>
+<p id="challenges" class="text-gray-200 text-sm leading-relaxed"></p>
+</div>
+<div class="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-5 border border-white/10 shadow-lg backdrop-blur-sm">
+<h3 class="text-lg font-semibold text-green-300 mb-3 flex items-center">
+<i class="ri-lightbulb-line mr-2"></i>Core Lessons
+</h3>
+<ul id="lessons" class="text-gray-200 text-sm space-y-2"></ul>
+</div>
+<div class="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-5 border border-white/10 shadow-lg backdrop-blur-sm">
+<h3 class="text-lg font-semibold text-yellow-300 mb-3 flex items-center">
+<i class="ri-quote-text mr-2"></i>Mentor Advice
+</h3>
+<blockquote id="advice" class="text-gray-200 text-sm italic border-l-4 border-yellow-300 pl-4"></blockquote>
+</div>
+<div class="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-5 border border-white/10 shadow-lg backdrop-blur-sm">
+<h3 class="text-lg font-semibold text-purple-300 mb-3 flex items-center">
+<i class="ri-target-line mr-2"></i>Coach Deliverables
+</h3>
+<div id="deliverables" class="space-y-3"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute bottom-6 left-6 text-sm text-white/80 bg-black/30 px-4 py-2 rounded-lg backdrop-blur-sm border border-white/20">
+<i class="ri-cursor-line mr-2"></i>Tap on any player position to explore mindset development
+</div>
+</div>
+</div>
+
+<div id="dashboardSection" class="section-content hidden">
+<div class="max-w-7xl mx-auto">
+<div class="mb-8">
+<h2 class="text-3xl font-bold text-white mb-4">Academy Dashboard</h2>
+<p class="text-gray-300">Track progress, monitor development, and analyze performance across all academy programs</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+<div class="bg-gradient-to-br from-blue-600/20 to-blue-800/20 rounded-xl p-6 border border-blue-500/30 backdrop-blur-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-semibold text-white">Active Players</h3>
+<i class="ri-team-fill text-blue-400 text-2xl"></i>
+</div>
+<div class="text-3xl font-bold text-blue-400 mb-2">247</div>
+<div class="text-sm text-gray-300">+12 this month</div>
+</div>
+
+<div class="bg-gradient-to-br from-green-600/20 to-green-800/20 rounded-xl p-6 border border-green-500/30 backdrop-blur-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-semibold text-white">Training Sessions</h3>
+<i class="ri-calendar-check-fill text-green-400 text-2xl"></i>
+</div>
+<div class="text-3xl font-bold text-green-400 mb-2">1,428</div>
+<div class="text-sm text-gray-300">This week: 156</div>
+</div>
+
+<div class="bg-gradient-to-br from-purple-600/20 to-purple-800/20 rounded-xl p-6 border border-purple-500/30 backdrop-blur-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-semibold text-white">Development Score</h3>
+<i class="ri-trophy-fill text-purple-400 text-2xl"></i>
+</div>
+<div class="text-3xl font-bold text-purple-400 mb-2">8.7/10</div>
+<div class="text-sm text-gray-300">Academy average</div>
+</div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<div class="bg-gray-900/60 rounded-xl p-6 border border-white/10 backdrop-blur-sm">
+<h3 class="text-xl font-semibold text-white mb-4">Position Distribution</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<span class="text-gray-300">Defenders</span>
+<div class="flex items-center space-x-2">
+<div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+<div class="w-3/5 h-full bg-blue-500"></div>
+</div>
+<span class="text-white text-sm">64 players</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-gray-300">Midfielders</span>
+<div class="flex items-center space-x-2">
+<div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+<div class="w-4/5 h-full bg-green-500"></div>
+</div>
+<span class="text-white text-sm">89 players</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-gray-300">Forwards</span>
+<div class="flex items-center space-x-2">
+<div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+<div class="w-2/5 h-full bg-yellow-500"></div>
+</div>
+<span class="text-white text-sm">47 players</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-gray-300">Goalkeepers</span>
+<div class="flex items-center space-x-2">
+<div class="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
+<div class="w-1/5 h-full bg-purple-500"></div>
+</div>
+<span class="text-white text-sm">15 players</span>
+</div>
+</div>
+</div>
+</div>
+
+<div class="bg-gray-900/60 rounded-xl p-6 border border-white/10 backdrop-blur-sm">
+<h3 class="text-xl font-semibold text-white mb-4">Recent Achievements</h3>
+<div class="space-y-4">
+<div class="flex items-center space-x-3 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+<i class="ri-medal-fill text-green-400 text-xl"></i>
+<div>
+<div class="text-white font-medium">Marcus Silva completed advanced striker training</div>
+<div class="text-gray-400 text-sm">2 hours ago</div>
+</div>
+</div>
+<div class="flex items-center space-x-3 p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+<i class="ri-star-fill text-blue-400 text-xl"></i>
+<div>
+<div class="text-white font-medium">Emma Rodriguez achieved 95% accuracy in CB drills</div>
+<div class="text-gray-400 text-sm">5 hours ago</div>
+</div>
+</div>
+<div class="flex items-center space-x-3 p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+<i class="ri-trophy-fill text-yellow-400 text-xl"></i>
+<div>
+<div class="text-white font-medium">U-16 team won regional championship</div>
+<div class="text-gray-400 text-sm">1 day ago</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="trainingSection" class="section-content hidden">
+<div class="max-w-7xl mx-auto">
+<div class="mb-8">
+<h2 class="text-3xl font-bold text-white mb-4">Position-Based Training Paths</h2>
+<p class="text-gray-300">Structured development programs tailored to each playing position with measurable outcomes</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="training-path-card bg-gradient-to-br from-blue-600/20 to-blue-800/20 rounded-xl p-6 border border-blue-500/30 backdrop-blur-sm hover:scale-105 transition-transform cursor-pointer">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-semibold text-white">Goalkeeper Academy</h3>
+<i class="ri-shield-keyhole-fill text-blue-400 text-2xl"></i>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 1: Fundamentals</span>
+<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Complete</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 2: Advanced Techniques</span>
+<span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">In Progress</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 3: Match Psychology</span>
+<span class="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs">Locked</span>
+</div>
+</div>
+<div class="text-center">
+<button class="px-4 py-2 bg-blue-600 text-white rounded-button hover:bg-blue-700 transition-colors whitespace-nowrap text-sm font-medium">
+Continue Training
+</button>
+</div>
+</div>
+
+<div class="training-path-card bg-gradient-to-br from-green-600/20 to-green-800/20 rounded-xl p-6 border border-green-500/30 backdrop-blur-sm hover:scale-105 transition-transform cursor-pointer">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-semibold text-white">Defender Academy</h3>
+<i class="ri-shield-fill text-green-400 text-2xl"></i>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 1: Positioning</span>
+<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Complete</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 2: Leadership</span>
+<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Complete</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 3: Game Reading</span>
+<span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">In Progress</span>
+</div>
+</div>
+<div class="text-center">
+<button class="px-4 py-2 bg-green-600 text-white rounded-button hover:bg-green-700 transition-colors whitespace-nowrap text-sm font-medium">
+Continue Training
+</button>
+</div>
+</div>
+
+<div class="training-path-card bg-gradient-to-br from-purple-600/20 to-purple-800/20 rounded-xl p-6 border border-purple-500/30 backdrop-blur-sm hover:scale-105 transition-transform cursor-pointer">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-semibold text-white">Midfielder Academy</h3>
+<i class="ri-compass-3-fill text-purple-400 text-2xl"></i>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 1: Vision & Passing</span>
+<span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">In Progress</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 2: Game Control</span>
+<span class="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs">Locked</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 3: Creative Playmaking</span>
+<span class="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs">Locked</span>
+</div>
+</div>
+<div class="text-center">
+<button class="px-4 py-2 bg-purple-600 text-white rounded-button hover:bg-purple-700 transition-colors whitespace-nowrap text-sm font-medium">
+Start Training
+</button>
+</div>
+</div>
+
+<div class="training-path-card bg-gradient-to-br from-yellow-600/20 to-orange-800/20 rounded-xl p-6 border border-yellow-500/30 backdrop-blur-sm hover:scale-105 transition-transform cursor-pointer">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-semibold text-white">Forward Academy</h3>
+<i class="ri-flashlight-fill text-yellow-400 text-2xl"></i>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 1: Finishing</span>
+<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Complete</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 2: Movement</span>
+<span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">In Progress</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 3: Pressure Handling</span>
+<span class="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs">Locked</span>
+</div>
+</div>
+<div class="text-center">
+<button class="px-4 py-2 bg-yellow-600 text-white rounded-button hover:bg-yellow-700 transition-colors whitespace-nowrap text-sm font-medium">
+Continue Training
+</button>
+</div>
+</div>
+
+<div class="training-path-card bg-gradient-to-br from-red-600/20 to-red-800/20 rounded-xl p-6 border border-red-500/30 backdrop-blur-sm hover:scale-105 transition-transform cursor-pointer">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-semibold text-white">Winger Academy</h3>
+<i class="ri-flight-takeoff-fill text-red-400 text-2xl"></i>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 1: 1v1 Skills</span>
+<span class="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs">Not Started</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 2: Crossing</span>
+<span class="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs">Locked</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Phase 3: Tactical Awareness</span>
+<span class="px-2 py-1 bg-gray-500/20 text-gray-400 rounded text-xs">Locked</span>
+</div>
+</div>
+<div class="text-center">
+<button class="px-4 py-2 bg-red-600 text-white rounded-button hover:bg-red-700 transition-colors whitespace-nowrap text-sm font-medium">
+Start Training
+</button>
+</div>
+</div>
+
+<div class="training-path-card bg-gradient-to-br from-indigo-600/20 to-indigo-800/20 rounded-xl p-6 border border-indigo-500/30 backdrop-blur-sm hover:scale-105 transition-transform cursor-pointer">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-xl font-semibold text-white">Mental Training Lab</h3>
+<i class="ri-brain-fill text-indigo-400 text-2xl"></i>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Input Analysis</span>
+<span class="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Active</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">AI Generation</span>
+<span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">Processing</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-gray-300">Development Plans</span>
+<span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">Ready</span>
+</div>
+</div>
+<div class="text-center">
+<button class="px-4 py-2 bg-indigo-600 text-white rounded-button hover:bg-indigo-700 transition-colors whitespace-nowrap text-sm font-medium">
+Access Lab
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="academySection" class="section-content hidden">
+<div class="max-w-7xl mx-auto">
+<div class="mb-8">
+<h2 class="text-3xl font-bold text-white mb-4">Academy Ecosystem</h2>
+<p class="text-gray-300">Connect players, coaches, and parents in a comprehensive development environment</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="space-y-6">
+<div class="bg-gradient-to-br from-blue-600/20 to-blue-800/20 rounded-xl p-6 border border-blue-500/30 backdrop-blur-sm">
+<h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+<i class="ri-user-star-fill text-blue-400 mr-3"></i>
+For Players
+</h3>
+<ul class="space-y-3 text-gray-300">
+<li class="flex items-center space-x-2">
+<i class="ri-check-line text-green-400"></i>
+<span>Personalized training programs</span>
+</li>
+<li class="flex items-center space-x-2">
+<i class="ri-check-line text-green-400"></i>
+<span>Progress tracking & analytics</span>
+</li>
+<li class="flex items-center space-x-2">
+<i class="ri-check-line text-green-400"></i>
+<span>Mental resilience building</span>
+</li>
+<li class="flex items-center space-x-2">
+<i class="ri-check-line text-green-400"></i>
+<span>Position-specific development</span>
+</li>
+</ul>
+<button class="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-button hover:bg-blue-700 transition-colors">
+Player Dashboard
+</button>
+</div>
+
+<div class="bg-gray-900/60 rounded-xl p-6 border border-white/10 backdrop-blur-sm">
+<h4 class="text-lg font-semibold text-white mb-3">Recent Player Activity</h4>
+<div class="space-y-3">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+<span class="text-white text-sm font-bold">JS</span>
+</div>
+<div class="text-sm">
+<div class="text-white">Jordan Smith completed CB training</div>
+<div class="text-gray-400">15 minutes ago</div>
+</div>
+</div>
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+<span class="text-white text-sm font-bold">AR</span>
+</div>
+<div class="text-sm">
+<div class="text-white">Alex Rivera achieved milestone</div>
+<div class="text-gray-400">32 minutes ago</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="space-y-6">
+<div class="bg-gradient-to-br from-green-600/20 to-green-800/20 rounded-xl p-6 border border-green-500/30 backdrop-blur-sm">
+<h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+<i class="ri-trophy-fill text-green-400 mr-3"></i>
+For Coaches
+</h3>
+<ul class="space-y-3 text-gray-300">
+<li class="flex items-center space-x-2">
+<i class="ri-check-line text-green-400"></i>
+<span>Team management tools</span>
+</li>
+<li class="flex items-center space-x-2">
+<i class="ri-check-line text-green-400"></i>
+<span>Performance analytics</span>
+</li>
+<li class="flex items-center space-x-2">
+<i class="ri-check-line text-green-400"></i>
+<span>Training plan creation</span>
+</li>
+<li class="flex items-center space-x-2">
+<i class="ri-check-line text-green-400"></i>
+<span>Player development tracking</span>
+</li>
+</ul>
+<button class="w-full mt-4 px-4 py-2 bg-green-600 text-white rounded-button hover:bg-green-700 transition-colors">
+Coach Portal
+</button>
+</div>
+
+<div class="bg-gray-900/60 rounded-xl p-6 border border-white/10 backdrop-blur-sm">
+<h4 class="text-lg font-semibold text-white mb-3">Coach Resources</h4>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+<span class="text-gray-300 text-sm">Training Templates</span>
+<span class="text-blue-400 text-sm">24 available</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+<span class="text-gray-300 text-sm">Assessment Tools</span>
+<span class="text-green-400 text-sm">12 tools</span>
+</div>
+</div>
+</div>
+</div>
+
+<div class="space-y-6">
+<div class="bg-gradient-to-br from-purple-600/20 to-purple-800/20 rounded-xl p-6 border border-purple-500/30 backdrop-blur-sm">
+<h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+<i class="ri-parent-fill text-purple-400 mr-3"></i>
+For Parents
+</h3>
+<ul class="space-y-3 text-gray-300">
+<li class="flex items-center space-x-2">
+<i class="ri-check-line text-green-400"></i>
+<span>Real-time progress updates</span>
+</li>
+<li class="flex items-center space-x-2">
+<i class="ri-check-line text-green-400"></i>
+<span>Communication with coaches</span>
+</li>
+<li class="flex items-center space-x-2">
+<i class="ri-check-line text-green-400"></i>
+<span>Development milestones</span>
+</li>
+<li class="flex items-center space-x-2">
+<i class="ri-check-line text-green-400"></i>
+<span>Schedule & event updates</span>
+</li>
+</ul>
+<button class="w-full mt-4 px-4 py-2 bg-purple-600 text-white rounded-button hover:bg-purple-700 transition-colors">
+Parent Hub
+</button>
+</div>
+
+<div class="bg-gray-900/60 rounded-xl p-6 border border-white/10 backdrop-blur-sm">
+<h4 class="text-lg font-semibold text-white mb-3">Parent Notifications</h4>
+<div class="space-y-3">
+<div class="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+<div class="text-white text-sm">Training session completed</div>
+<div class="text-blue-400 text-xs">Your child: Emma Martinez</div>
+</div>
+<div class="p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+<div class="text-white text-sm">New milestone achieved</div>
+<div class="text-green-400 text-xs">Next goal: Advanced techniques</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="enquiryModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6 hidden">
+<div class="bg-gray-900/90 rounded-xl p-8 max-w-2xl w-full border border-white/20 backdrop-blur-xl">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-2xl font-bold text-white">Join Our Academy</h3>
+<button id="closeEnquiry" class="w-8 h-8 flex items-center justify-center bg-white/10 rounded-full hover:bg-white/20 transition-colors">
+<i class="ri-close-line text-white"></i>
+</button>
+</div>
+
+<form id="academyEnquiryForm" class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-white text-sm font-medium mb-2">Player Name *</label>
+<input type="text" name="playerName" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none">
+</div>
+<div>
+<label class="block text-white text-sm font-medium mb-2">Age Group *</label>
+<select name="ageGroup" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:border-blue-500 focus:outline-none pr-8">
+<option value="">Select age group</option>
+<option value="u12">Under 12</option>
+<option value="u14">Under 14</option>
+<option value="u16">Under 16</option>
+<option value="u18">Under 18</option>
+</select>
+</div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-white text-sm font-medium mb-2">Preferred Position</label>
+<select name="position" class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:border-blue-500 focus:outline-none pr-8">
+<option value="">Select position</option>
+<option value="goalkeeper">Goalkeeper</option>
+<option value="defender">Defender</option>
+<option value="midfielder">Midfielder</option>
+<option value="forward">Forward</option>
+<option value="winger">Winger</option>
+</select>
+</div>
+<div>
+<label class="block text-white text-sm font-medium mb-2">Experience Level</label>
+<select name="experience" class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:border-blue-500 focus:outline-none pr-8">
+<option value="">Select experience</option>
+<option value="beginner">Beginner</option>
+<option value="intermediate">Intermediate</option>
+<option value="advanced">Advanced</option>
+</select>
+</div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-white text-sm font-medium mb-2">Parent/Guardian Name *</label>
+<input type="text" name="parentName" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none">
+</div>
+<div>
+<label class="block text-white text-sm font-medium mb-2">Contact Number *</label>
+<input type="tel" name="phone" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none">
+</div>
+</div>
+
+<div>
+<label class="block text-white text-sm font-medium mb-2">Email Address *</label>
+<input type="email" name="email" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none">
+</div>
+
+<div>
+<label class="block text-white text-sm font-medium mb-2">Additional Information</label>
+<textarea name="message" rows="4" maxlength="500" class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none resize-none text-sm" placeholder="Tell us about the player's goals, current level, or any specific requirements..."></textarea>
+<div class="text-right text-gray-400 text-xs mt-1">
+<span id="charCount">0</span>/500 characters
+</div>
+</div>
+
+<div class="flex space-x-4">
+<button type="button" id="cancelEnquiry" class="flex-1 px-6 py-3 bg-gray-600 text-white rounded-button hover:bg-gray-700 transition-colors">
+Cancel
+</button>
+<button type="submit" class="flex-1 px-6 py-3 bg-primary text-white rounded-button hover:bg-primary/80 transition-colors">
+Submit Enquiry
+</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<script id="position-data">
+const positionData = {
+'gk': {
+title: 'Goalkeeper (GK)',
+challenges: 'Goalkeepers face unique psychological pressure as the last line of defense. Every mistake is magnified, and the weight of responsibility can create anxiety and hesitation. The isolation of the position requires exceptional mental resilience and the ability to reset quickly after conceding goals.',
+lessons: [
+'Develop pre-shot routines to maintain focus and composure',
+'Master the art of positive self-talk during high-pressure moments',
+'Build confidence through visualization of successful saves',
+'Learn to communicate effectively with the defensive line'
+],
+advice: '"A goalkeeper\'s mind is their greatest asset. Stay present, trust your training, and remember that every save starts with believing you can make it." - Manuel Neuer',
+deliverables: [
+'Complete 50 penalty saves in training without breaking pre-shot routine',
+'Lead 15 defensive organization drills with clear vocal commands',
+'Successfully execute post-mistake reset protocol 20 times in match scenarios',
+'Demonstrate 3 different visualization techniques before high-pressure situations'
+]
+},
+'cb-left': {
+title: 'Center Back (CB)',
+challenges: 'Center backs must make split-second decisions that can determine match outcomes. The pressure of defending against world-class attackers while maintaining tactical discipline requires exceptional mental fortitude and leadership qualities.',
+lessons: [
+'Develop anticipation skills through game reading exercises',
+'Build leadership presence through vocal communication',
+'Master tactical awareness and positioning discipline',
+'Cultivate calm decision-making under pressure'
+],
+advice: '"Defending is about the mind first, the body second. Read the game, trust your instincts, and never let one mistake define your performance." - Virgil van Dijk',
+deliverables: [
+'Organize defensive line successfully in 30 set-piece scenarios',
+'Complete tactical positioning test with 90% accuracy under time pressure',
+'Lead 10 team meetings discussing defensive strategy and communication',
+'Execute proper recovery positioning after being beaten in 25 1v1 situations'
+]
+},
+'cb-right': {
+title: 'Center Back (CB)',
+challenges: 'Center backs must make split-second decisions that can determine match outcomes. The pressure of defending against world-class attackers while maintaining tactical discipline requires exceptional mental fortitude and leadership qualities.',
+lessons: [
+'Develop anticipation skills through game reading exercises',
+'Build leadership presence through vocal communication',
+'Master tactical awareness and positioning discipline',
+'Cultivate calm decision-making under pressure'
+],
+advice: '"Defending is about the mind first, the body second. Read the game, trust your instincts, and never let one mistake define your performance." - Virgil van Dijk',
+deliverables: [
+'Organize defensive line successfully in 30 set-piece scenarios',
+'Complete tactical positioning test with 90% accuracy under time pressure',
+'Lead 10 team meetings discussing defensive strategy and communication',
+'Execute proper recovery positioning after being beaten in 25 1v1 situations'
+]
+},
+'cm-left': {
+title: 'Central Midfielder (CM)',
+challenges: 'Central midfielders are the engine of the team, requiring exceptional game intelligence and the ability to make quick decisions under constant pressure. They must balance creative vision with defensive responsibility while maintaining composure throughout the match.',
+lessons: [
+'Develop 360-degree awareness through scanning techniques',
+'Master the art of quick decision-making under pressure',
+'Build stamina for consistent performance over 90 minutes',
+'Cultivate leadership skills to orchestrate team play'
+],
+advice: '"The midfielder sees everything and controls everything. Your mind must be faster than your feet, and your vision clearer than your touch." - Andrés Iniesta',
+deliverables: [
+'Complete 100 scanning exercises with 8+ shoulder checks per drill',
+'Execute 40 successful passes under 3-second pressure in training',
+'Orchestrate 20 team attacking transitions from defensive recovery',
+'Maintain decision-making quality for 90+ minutes in 5 consecutive matches'
+]
+},
+'cm-right': {
+title: 'Central Midfielder (CM)',
+challenges: 'Central midfielders are the engine of the team, requiring exceptional game intelligence and the ability to make quick decisions under constant pressure. They must balance creative vision with defensive responsibility while maintaining composure throughout the match.',
+lessons: [
+'Develop 360-degree awareness through scanning techniques',
+'Master the art of quick decision-making under pressure',
+'Build stamina for consistent performance over 90 minutes',
+'Cultivate leadership skills to orchestrate team play'
+],
+advice: '"The midfielder sees everything and controls everything. Your mind must be faster than your feet, and your vision clearer than your touch." - Andrés Iniesta',
+deliverables: [
+'Complete 100 scanning exercises with 8+ shoulder checks per drill',
+'Execute 40 successful passes under 3-second pressure in training',
+'Orchestrate 20 team attacking transitions from defensive recovery',
+'Maintain decision-making quality for 90+ minutes in 5 consecutive matches'
+]
+},
+'lw': {
+title: 'Left Winger (LW)',
+challenges: 'Wingers face the challenge of creating magic in tight spaces while dealing with physical and mental pressure from defenders. They must maintain creativity and confidence even when isolated, requiring exceptional mental resilience and self-belief.',
+lessons: [
+'Develop confidence in 1v1 situations through mental rehearsal',
+'Master the ability to stay creative under defensive pressure',
+'Build resilience to handle physical challenges',
+'Cultivate patience to wait for the right moment to attack'
+],
+advice: '"A winger\'s greatest weapon is unpredictability. Trust your instincts, embrace the challenge, and never let fear of failure stop you from trying." - Neymar Jr.',
+deliverables: [
+'Win 60% of attempted 1v1 situations in controlled training scenarios',
+'Create 15 goal-scoring opportunities from wing positions in match play',
+'Complete resilience training after 20 failed dribble attempts without confidence drop',
+'Execute 25 successful crosses under defensive pressure in training'
+]
+},
+'rw': {
+title: 'Right Winger (RW)',
+challenges: 'Wingers face the challenge of creating magic in tight spaces while dealing with physical and mental pressure from defenders. They must maintain creativity and confidence even when isolated, requiring exceptional mental resilience and self-belief.',
+lessons: [
+'Develop confidence in 1v1 situations through mental rehearsal',
+'Master the ability to stay creative under defensive pressure',
+'Build resilience to handle physical challenges',
+'Cultivate patience to wait for the right moment to attack'
+],
+advice: '"A winger\'s greatest weapon is unpredictability. Trust your instincts, embrace the challenge, and never let fear of failure stop you from trying." - Neymar Jr.',
+deliverables: [
+'Win 60% of attempted 1v1 situations in controlled training scenarios',
+'Create 15 goal-scoring opportunities from wing positions in match play',
+'Complete resilience training after 20 failed dribble attempts without confidence drop',
+'Execute 25 successful crosses under defensive pressure in training'
+]
+},
+'st': {
+title: 'Striker (ST)',
+challenges: 'Strikers carry the weight of goal-scoring expectations and must maintain confidence even during goal droughts. The pressure to perform in crucial moments requires exceptional mental strength and the ability to stay focused on opportunities rather than missed chances.',
+lessons: [
+'Develop unwavering self-belief in goal-scoring ability',
+'Master the art of staying present and focused on the next chance',
+'Build resilience to handle criticism and pressure',
+'Cultivate killer instinct in crucial moments'
+],
+advice: '"A striker lives for goals, but greatness comes from believing in the next one more than regretting the last miss. Stay hungry, stay confident." - Thierry Henry',
+deliverables: [
+'Score 8 out of 10 goals in high-pressure penalty practice sessions',
+'Complete mental reset protocol after missing 15 clear chances in training',
+'Demonstrate consistent movement patterns for 90 minutes in 10 matches',
+'Execute finishing under pressure in 30 crowded box scenarios'
+]
+},
+'dm': {
+title: 'Defensive Midfielder (DM)',
+challenges: 'Defensive midfielders must read the game exceptionally well while providing both defensive stability and creative distribution. They face the challenge of making crucial interceptions and maintaining tactical discipline under constant pressure.',
+lessons: [
+'Develop exceptional game-reading abilities',
+'Master positioning and tactical awareness',
+'Build mental toughness for defensive duels',
+'Cultivate leadership in organizing team structure'
+],
+advice: '"The defensive midfielder is the shield and the sword. Protect your team with intelligence, attack with precision, and lead by example." - N\'Golo Kanté',
+deliverables: [
+'Successfully read and intercept 35 attacking patterns in training scenarios',
+'Maintain optimal positioning in 40 transition phases without coaching prompts',
+'Win 75% of defensive duels in high-intensity training sessions',
+'Complete 50 accurate long-range passes under defensive pressure'
+]
+},
+'cam': {
+title: 'Central Attacking Midfielder (CAM)',
+challenges: 'Central attacking midfielders operate in the most congested area of the pitch, requiring exceptional creativity and vision under intense pressure. They must find space between the lines while being constantly marked, demanding high football intelligence and mental resilience.',
+lessons: [
+'Develop exceptional vision and through-ball accuracy',
+'Master the art of finding space in tight areas',
+'Build confidence in creative decision-making',
+'Cultivate the ability to perform under defensive pressure'
+],
+advice: '"The number 10 is where football becomes art. See what others cannot see, create what others cannot imagine, and believe in your vision above all else." - Kevin De Bruyne',
+deliverables: [
+'Execute 30 successful through-balls that split defensive lines in training',
+'Find and exploit space between lines 25 times in crowded box scenarios',
+'Create 12 goal-scoring chances in high-pressure match simulations',
+'Complete 40 creative passes under 2+ defender pressure situations'
+]
+},
+'lb': {
+title: 'Left Back (LB)',
+challenges: 'Left backs must balance defensive duties with attacking contributions, requiring exceptional stamina and tactical awareness. They face the mental challenge of supporting attacks while maintaining defensive shape and dealing with isolation on the flank.',
+lessons: [
+'Develop exceptional crossing accuracy under pressure',
+'Master the timing of overlapping runs',
+'Build stamina for consistent box-to-box performance',
+'Cultivate defensive positioning and 1v1 confidence'
+],
+advice: '"A fullback must think like a defender but dream like a winger. Your mind must be in two places at once - protecting your goal and creating chances." - Roberto Carlos',
+deliverables: [
+'Complete 25 successful crosses from advanced positions under pressure',
+'Execute 20 perfectly timed overlapping runs without being caught out of position',
+'Maintain box-to-box intensity for full 90 minutes in 8 consecutive training sessions',
+'Win 70% of defensive 1v1 situations on the flank in match scenarios'
+]
+},
+'rb': {
+title: 'Right Back (RB)',
+challenges: 'Right backs must balance defensive duties with attacking contributions, requiring exceptional stamina and tactical awareness. They face the mental challenge of supporting attacks while maintaining defensive shape and dealing with isolation on the flank.',
+lessons: [
+'Develop exceptional crossing accuracy under pressure',
+'Master the timing of overlapping runs',
+'Build stamina for consistent box-to-box performance',
+'Cultivate defensive positioning and 1v1 confidence'
+],
+advice: '"A fullback must think like a defender but dream like a winger. Your mind must be in two places at once - protecting your goal and creating chances." - Dani Alves',
+deliverables: [
+'Complete 25 successful crosses from advanced positions under pressure',
+'Execute 20 perfectly timed overlapping runs without being caught out of position',
+'Maintain box-to-box intensity for full 90 minutes in 8 consecutive training sessions',
+'Win 70% of defensive 1v1 situations on the flank in match scenarios'
+]
+},
+'sub1': {
+title: 'First Substitute (1st SUB)',
+challenges: 'First substitutes face the unique mental challenge of staying match-ready while knowing they may be called upon at any moment. They must maintain peak physical and mental condition despite limited playing time, requiring exceptional patience and preparation mindset.',
+lessons: [
+'Develop mental preparation routines for instant impact',
+'Master the art of reading the game from the bench',
+'Build confidence to perform immediately upon entry',
+'Cultivate patience and positive team support energy'
+],
+advice: '"Your moment will come, and when it does, you must be ready to seize it. Champions are made in the waiting, not just in the playing." - Ole Gunnar Solskjær',
+deliverables: [
+'Complete 30 instant warm-up routines that prepare for immediate match entry',
+'Demonstrate game analysis skills by correctly predicting 15 tactical changes from bench',
+'Execute high-impact performances in 10 substitute appearance scenarios within 5 minutes',
+'Maintain peak fitness benchmarks during 20 consecutive bench sessions'
+]
+},
+'sub2': {
+title: 'Second Substitute (2nd SUB)',
+challenges: 'Second substitutes face the greatest mental challenge of potentially not playing while staying completely prepared. They must find motivation and purpose in training and team support, building resilience against disappointment while maintaining professional standards.',
+lessons: [
+'Develop intrinsic motivation independent of playing time',
+'Master the role of team energy and support from sideline',
+'Build mental resilience against disappointment',
+'Cultivate long-term development mindset'
+],
+advice: '"Not every hero scores the winning goal. Some heroes prepare others to score, support from shadows, and wait for their time with unwavering belief." - Jurgen Klopp',
+deliverables: [
+'Lead 25 high-energy team warm-up sessions with positive influence on squad morale',
+'Complete personal development plan with 15 skill improvement targets',
+'Demonstrate consistent professional attitude through 30 non-playing match days',
+'Mentor 5 younger players while maintaining own development standards'
+]
+}
+};
+</script>
+<script id="navigation-handler">
+document.addEventListener('DOMContentLoaded', function() {
+const navBtns = document.querySelectorAll('.nav-btn');
+const sections = document.querySelectorAll('.section-content');
+const enquiryBtn = document.getElementById('enquiryBtn');
+const enquiryModal = document.getElementById('enquiryModal');
+const closeEnquiry = document.getElementById('closeEnquiry');
+const cancelEnquiry = document.getElementById('cancelEnquiry');
+const enquiryForm = document.getElementById('academyEnquiryForm');
+const messageTextarea = enquiryForm.querySelector('[name="message"]');
+const charCount = document.getElementById('charCount');
+
+navBtns.forEach(btn => {
+btn.addEventListener('click', function() {
+const targetSection = this.dataset.section;
+
+navBtns.forEach(b => b.classList.remove('text-white', 'bg-white/10'));
+navBtns.forEach(b => b.classList.add('text-white/80'));
+this.classList.remove('text-white/80');
+this.classList.add('text-white', 'bg-white/10');
+
+sections.forEach(section => {
+if (section.id === targetSection + 'Section') {
+section.classList.remove('hidden');
+section.classList.add('active');
+} else {
+section.classList.add('hidden');
+section.classList.remove('active');
+}
+});
+
+if (targetSection === 'pitch') {
+document.getElementById('pitchSection').classList.remove('hidden');
+document.getElementById('pitchSection').classList.add('active');
+}
+});
+});
+
+enquiryBtn.addEventListener('click', function() {
+enquiryModal.classList.remove('hidden');
+});
+
+closeEnquiry.addEventListener('click', function() {
+enquiryModal.classList.add('hidden');
+});
+
+cancelEnquiry.addEventListener('click', function() {
+enquiryModal.classList.add('hidden');
+});
+
+enquiryModal.addEventListener('click', function(e) {
+if (e.target === this) {
+this.classList.add('hidden');
+}
+});
+
+messageTextarea.addEventListener('input', function() {
+const count = this.value.length;
+charCount.textContent = count;
+if (count > 500) {
+this.value = this.value.substring(0, 500);
+charCount.textContent = 500;
+}
+});
+
+enquiryForm.addEventListener('submit', function(e) {
+e.preventDefault();
+const formData = new FormData(this);
+const data = Object.fromEntries(formData.entries());
+
+const submitBtn = this.querySelector('[type="submit"]');
+const originalText = submitBtn.textContent;
+submitBtn.textContent = 'Submitting...';
+submitBtn.disabled = true;
+
+setTimeout(() => {
+enquiryModal.classList.add('hidden');
+this.reset();
+charCount.textContent = '0';
+submitBtn.textContent = originalText;
+submitBtn.disabled = false;
+
+const successMessage = document.createElement('div');
+successMessage.className = 'fixed top-6 right-6 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50';
+successMessage.innerHTML = `
+<div class="flex items-center space-x-2">
+<i class="ri-check-line"></i>
+<span>Enquiry submitted successfully! We'll contact you within 24 hours.</span>
+</div>
+`;
+document.body.appendChild(successMessage);
+
+setTimeout(() => {
+successMessage.remove();
+}, 5000);
+}, 2000);
+});
+});
+</script>
+
+<script id="interaction-handler">
+document.addEventListener('DOMContentLoaded', function() {
+const hotspots = document.querySelectorAll('.position-hotspot');
+const panel = document.getElementById('positionPanel');
+const closeBtn = document.getElementById('closePanel');
+const titleEl = document.getElementById('positionTitle');
+const challengesEl = document.getElementById('challenges');
+const lessonsEl = document.getElementById('lessons');
+const adviceEl = document.getElementById('advice');
+const deliverablesEl = document.getElementById('deliverables');
+function updateMobilePositions() {
+if (window.innerWidth <= 768) {
+hotspots.forEach(hotspot => {
+const mobilePosition = hotspot.getAttribute('data-mobile-position');
+if (mobilePosition) {
+const [top, left] = mobilePosition.split(' ');
+hotspot.style.setProperty('--mobile-top', top);
+hotspot.style.setProperty('--mobile-left', left);
+hotspot.style.top = top;
+hotspot.style.left = left;
+}
+});
+} else {
+hotspots.forEach(hotspot => {
+hotspot.style.removeProperty('--mobile-top');
+hotspot.style.removeProperty('--mobile-left');
+const originalStyle = hotspot.getAttribute('style').split(';').filter(s => !s.includes('--mobile')).join(';');
+hotspot.setAttribute('style', originalStyle);
+});
+}
+}
+updateMobilePositions();
+window.addEventListener('resize', updateMobilePositions);
+hotspots.forEach((hotspot, index) => {
+hotspot.setAttribute('tabindex', '0');
+hotspot.setAttribute('aria-label', `Select ${positionData[hotspot.dataset.position].title}`);
+hotspot.addEventListener('click', function() {
+this.classList.add('loading');
+const position = this.dataset.position;
+const data = positionData[position];
+if (data) {
+hotspots.forEach(h => h.classList.remove('active'));
+this.classList.add('active');
+titleEl.textContent = data.title;
+challengesEl.textContent = data.challenges;
+adviceEl.textContent = data.advice;
+lessonsEl.innerHTML = '';
+data.lessons.forEach(lesson => {
+const li = document.createElement('li');
+li.textContent = lesson;
+li.className = 'flex items-start space-x-2';
+li.innerHTML = `<span class="text-green-400 mt-1">•</span><span>${lesson}</span>`;
+lessonsEl.appendChild(li);
+});
+deliverablesEl.innerHTML = '';
+data.deliverables.forEach(deliverable => {
+const div = document.createElement('div');
+div.className = 'flex items-start space-x-3 p-3 bg-white/5 rounded-lg border border-purple-300/20';
+div.innerHTML = `
+<div class="w-5 h-5 flex items-center justify-center mt-0.5">
+<i class="ri-checkbox-blank-circle-line text-purple-300 text-sm"></i>
+</div>
+<span class="text-gray-200 text-sm leading-relaxed">${deliverable}</span>
+`;
+deliverablesEl.appendChild(div);
+});
+panel.classList.add('active');
+setTimeout(() => {
+this.classList.remove('loading');
+}, 400);
+}
+});
+});
+closeBtn.addEventListener('click', function() {
+panel.classList.remove('active');
+hotspots.forEach(h => h.classList.remove('active'));
+});
+document.addEventListener('keydown', function(e) {
+if (e.key === 'Escape') {
+panel.classList.remove('active');
+hotspots.forEach(h => h.classList.remove('active'));
+}
+if (e.key === 'ArrowRight' && panel.classList.contains('active')) {
+const currentActive = document.querySelector('.position-hotspot.active');
+if (currentActive) {
+const currentIndex = Array.from(hotspots).indexOf(currentActive);
+const nextIndex = (currentIndex + 1) % hotspots.length;
+hotspots[nextIndex].click();
+}
+}
+if (e.key === 'ArrowLeft' && panel.classList.contains('active')) {
+const currentActive = document.querySelector('.position-hotspot.active');
+if (currentActive) {
+const currentIndex = Array.from(hotspots).indexOf(currentActive);
+const prevIndex = (currentIndex - 1 + hotspots.length) % hotspots.length;
+hotspots[prevIndex].click();
+}
+}
+});
+hotspots.forEach(hotspot => {
+hotspot.addEventListener('keydown', function(e) {
+if (e.key === 'Enter' || e.key === ' ') {
+e.preventDefault();
+this.click();
+}
+});
+});
+});
+</script>
+</body>
+</html>
