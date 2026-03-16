@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { LogOut, ChevronLeft, ChevronRight, Mic2, MessageSquare, Timer, CheckCircle2, Palette, Lock, Volume2 } from "lucide-react";
+import { LogOut, ChevronLeft, ChevronRight, Mic2, MessageSquare, Timer, CheckCircle2, Palette, Lock, Volume2, VolumeX } from "lucide-react";
 import { PlayerJersey } from "@/components/PlayerJersey";
 import { LikenessUploader } from "@/components/LikenessUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
@@ -9,7 +9,7 @@ import { POSITIONS } from "@/data/positions";
 import { JOURNEY_STAGES } from "@/data/questions";
 import OnboardingIntro from "@/components/OnboardingIntro";
 import { DEFAULT_ASSISTANT } from "@/data/assistantProfiles";
-import { ensureMusicPlaying, stopMusic } from "@/lib/globalAudio";
+import { ensureMusicPlaying, stopMusic, isMusicPlaying } from "@/lib/globalAudio";
 import { getAcademyMascot } from "@/data/mascots";
 import { publicAssetUrl } from "@/lib/publicAssetUrl";
 
@@ -223,7 +223,7 @@ export default function Welcome() {
   const [_, navigate] = useLocation();
   const { selectedAcademy, playerData, clearContext } = usePlayerContext();
   const tipsRef = useRef<HTMLDivElement>(null);
-  const [isMuted, setIsMuted] = useState(false);
+  const [soundOn, setSoundOn] = useState(false);
 
   const [ready, setReady] = useState(false);
   const [revealPhase, setRevealPhase] = useState<0 | 1 | 2 | 3 | 4>(0);
@@ -252,12 +252,28 @@ export default function Welcome() {
   }, [revealPhase]);
 
   useEffect(() => {
+    // Try autoplay — succeeds on desktop or if user has already interacted with origin.
+    // If blocked, playWithFallback waits for the next user click automatically.
     ensureMusicPlaying();
+    // Sync button state with whatever the audio manager resolved to
+    const t = setTimeout(() => setSoundOn(isMusicPlaying()), 300);
+    return () => clearTimeout(t);
   }, []);
 
-  const handleMute = () => {
-    setIsMuted(true);
-    stopMusic();
+  const handleSoundToggle = () => {
+    if (soundOn) {
+      stopMusic();
+      setSoundOn(false);
+    } else {
+      ensureMusicPlaying();
+      setSoundOn(true);
+    }
+  };
+
+  const handleRevealTap = () => {
+    // User tapped during the FIFA reveal — use this gesture to start music
+    ensureMusicPlaying();
+    setSoundOn(true);
   };
 
   const goChapter = useCallback((dir: 1 | -1) => {
@@ -297,10 +313,11 @@ export default function Welcome() {
         {revealPhase < 4 && (
           <motion.div
             key="reveal"
-            className="fixed inset-0 z-[200] flex flex-col items-center justify-center overflow-hidden"
+            className="fixed inset-0 z-[200] flex flex-col items-center justify-center overflow-hidden cursor-pointer"
             style={{ background: "#000" }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
+            onClick={handleRevealTap}
           >
             {/* Ambient background gradient */}
             <motion.div
@@ -452,6 +469,19 @@ export default function Welcome() {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {/* Sound hint — tap reveal to enable */}
+            {!soundOn && (
+              <motion.div
+                className="absolute top-5 right-5 flex items-center gap-1.5 pointer-events-none"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 0.7, 0.4, 0.7] }}
+                transition={{ delay: 0.8, duration: 2, repeat: Infinity, repeatType: "reverse" }}
+              >
+                <VolumeX size={13} className="text-white/50" />
+                <span className="text-[10px] uppercase tracking-widest font-bold text-white/40">tap for sound</span>
+              </motion.div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -496,13 +526,14 @@ export default function Welcome() {
           </div>
 
           <div className="flex items-center gap-2">
-            {!isMuted && (
-              <button onClick={handleMute}
-                className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-sm min-h-[44px] px-1">
-                <Volume2 size={14} />
-                <span>Mute</span>
-              </button>
-            )}
+            <button onClick={handleSoundToggle}
+              className="flex items-center gap-1.5 transition-colors text-sm min-h-[44px] px-1"
+              style={{ color: soundOn ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.22)" }}
+              title={soundOn ? "Mute music" : "Enable music"}
+            >
+              {soundOn ? <Volume2 size={14} /> : <VolumeX size={14} />}
+              <span>{soundOn ? "Mute" : "Sound"}</span>
+            </button>
             {revealPhase >= 4 && (
               <OnboardingIntro
                 assistantId={DEFAULT_ASSISTANT}
