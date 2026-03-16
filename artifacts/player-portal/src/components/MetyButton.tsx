@@ -5,8 +5,11 @@ import { X, Send } from "lucide-react";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { useAssistant } from "@/context/AssistantContext";
 import { getAcademyMascot } from "@/data/mascots";
+import { duckMusic, restoreMusic } from "@/lib/globalAudio";
 
-const PLAYER_PATHS = ["/welcome", "/welcome-u9", "/journey", "/journey-u9", "/complete", "/invite"];
+// Assistant appears on journey pages and beyond — NOT on the welcome/home screen
+// (music is playing there and the button would clash with the sound toggle)
+const PLAYER_PATHS = ["/journey", "/journey-u9", "/complete", "/invite"];
 
 const PAGE_HINTS: Record<string, string> = {
   "/welcome":    "Browse the chapters below, then tap Begin My Story when you're ready. Got a question? Ask me anything.",
@@ -50,6 +53,9 @@ export default function MetyButton() {
     if (open) {
       setMessages([{ role: "assistant", text: openingMessage }]);
       setTimeout(() => inputRef.current?.focus(), 150);
+      duckMusic();
+    } else {
+      restoreMusic();
     }
   }, [open]);
 
