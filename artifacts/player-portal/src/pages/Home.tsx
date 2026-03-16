@@ -363,7 +363,7 @@ export default function Home() {
               {
                 label: "U9 Player Journey",
                 age: "Age 8 · Right Winger",
-                code: "PLY-DEMOU9",
+                code: "PLY-DEM0U9",
                 badge: "U9",
                 color: "#EF0107",
               },

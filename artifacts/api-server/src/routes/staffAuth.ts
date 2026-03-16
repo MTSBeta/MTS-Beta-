@@ -7,6 +7,10 @@ import { staffAuth } from "../middlewares/staffAuth.js";
 
 const router: IRouter = Router();
 
+function normalizeCode(s: string): string {
+  return s.trim().toUpperCase().replace(/O/g, "0").replace(/[Il]/g, "1");
+}
+
 function buildUser(staff: typeof academyStaffTable.$inferSelect, academy: typeof academiesTable.$inferSelect) {
   return {
     id: staff.id,
@@ -56,7 +60,7 @@ router.post("/staff/register", async (req, res) => {
 
   const academyRow = academyResult.rows[0];
 
-  if (!academyRow.access_code || academyRow.access_code !== accessCode.trim()) {
+  if (!academyRow.access_code || normalizeCode(String(academyRow.access_code)) !== normalizeCode(accessCode)) {
     res.status(401).json({ error: "Invalid access code for this academy" });
     return;
   }

@@ -7,6 +7,10 @@ import { eq, sql } from "drizzle-orm";
 
 const router: IRouter = Router();
 
+function normalizeCode(s: string): string {
+  return s.trim().toUpperCase().replace(/O/g, "0").replace(/[Il]/g, "1");
+}
+
 router.post("/players", async (req, res) => {
   const parsed = RegisterPlayerBody.safeParse(req.body);
   if (!parsed.success) {
@@ -29,7 +33,7 @@ router.post("/players", async (req, res) => {
   const academy = academyResult.rows[0];
 
   // Validate coach access code matches academy
-  if (!submittedCode || submittedCode.toUpperCase() !== academy.access_code?.toUpperCase()) {
+  if (!submittedCode || normalizeCode(submittedCode) !== normalizeCode(String(academy.access_code ?? ""))) {
     res.status(400).json({ error: "Invalid access code" });
     return;
   }
@@ -76,7 +80,7 @@ router.get("/players/by-code/:code", async (req, res) => {
   const [player] = await db
     .select()
     .from(playersTable)
-    .where(eq(playersTable.accessCode, code.toUpperCase()))
+    .where(eq(playersTable.accessCode, normalizeCode(code)))
     .limit(1);
 
   if (!player) {
