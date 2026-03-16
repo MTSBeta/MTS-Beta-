@@ -31,9 +31,10 @@ export default function Welcome() {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // Play theme music at 15% volume for 2 minutes
+    // Play theme music at 15% volume for 2 minutes (skip first 12 seconds)
     const audio = new Audio(`${import.meta.env.BASE_URL}audio/love-me-again.mp3`);
     audio.volume = 0.15; // 15% volume - subtle background
+    audio.currentTime = 12; // Skip first 12 seconds
     audioRef.current = audio;
     audio.play().catch(() => {});
     timeoutRef.current = setTimeout(() => { 

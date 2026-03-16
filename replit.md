@@ -145,6 +145,7 @@ Each position (GK, RB, CB, LB, CDM, CM, CAM, RW, ST, LW, CF) maps to: `displayNa
 - **Track**: Love Me Again (John Newman)
 - **Volume**: 15% (0.15)
 - **Duration**: 2 minutes (120 seconds) unless user clicks mute
+- **Start**: Skips first 12 seconds of track
 - **Mute button**: 🔊 Mute button in top bar (appears only while audio is playing)
 - **Location**: `/public/audio/love-me-again.mp3`
 
