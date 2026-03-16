@@ -169,11 +169,15 @@ export default function Journey() {
   const [showStageIntro, setShowStageIntro] = useState(true);
   const [qDir, setQDir] = useState(1); // 1=forward, -1=backward
 
+  const playerPosition = playerData?.position ?? "";
+
   const activeStages = PLAYER_STAGES.map(s => ({
     ...s,
-    questions: s.questions.filter(q =>
-      !q.requiresSecondPosition || !!playerData?.secondPosition
-    ),
+    questions: s.questions.filter(q => {
+      if (q.requiresSecondPosition && !playerData?.secondPosition) return false;
+      if (q.positionIds && !q.positionIds.includes(playerPosition)) return false;
+      return true;
+    }),
   }));
 
   const stage = activeStages[currentStep];
@@ -190,11 +194,15 @@ export default function Journey() {
     Array(qCount).fill(null).map(() => ({ text: "", audioUrl: null, audioBlob: null, mediaUrls: [] }))
   );
   const [qError, setQError] = useState(false);
+  const [followUpAnswer, setFollowUpAnswer] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [showReview, setShowReview] = useState(false);
   const [reviewAnswers, setReviewAnswers] = useState<Record<string, ReviewEntry>>({});
   const [skippedSet, setSkippedSet] = useState<Set<string>>(new Set());
   const reviewScrollRef = useRef<HTMLDivElement>(null);
+
+  // Reset follow-up answer whenever the question changes
+  useEffect(() => { setFollowUpAnswer(""); }, [currentQI, currentStep]);
 
   const saveMutation = useSaveJourneyResponses();
   const completeMutation = useCompleteJourney();
@@ -297,8 +305,18 @@ export default function Journey() {
 
   const goForward = async () => {
     const q = currentQuestion;
-    const answer = currentAnswer;
     const qType = q.type ?? "voice-text";
+
+    // Build effective answers array — merge follow-up text into current answer if present
+    const activeFollowUpBranch = q.followUps?.find(f => f.triggerOption === currentAnswer.text);
+    let effectiveAnswers = localAnswers;
+    if (activeFollowUpBranch && followUpAnswer.trim()) {
+      const merged = `${currentAnswer.text}\n---\n${activeFollowUpBranch.question}\n${followUpAnswer.trim()}`;
+      effectiveAnswers = [...localAnswers];
+      effectiveAnswers[currentQI] = { ...currentAnswer, text: merged };
+      setLocalAnswers(effectiveAnswers);
+    }
+    const answer = effectiveAnswers[currentQI] ?? { text: "", audioUrl: null, audioBlob: null, mediaUrls: [] };
 
     if (!isSkippedCurrent) {
       const isSelectType = qType === "select" || qType === "multiselect";
@@ -316,10 +334,10 @@ export default function Journey() {
       setQDir(1);
       setCurrentQI(qi => qi + 1);
     } else {
-      saveJourneyStage(stage.id, localAnswers);
+      saveJourneyStage(stage.id, effectiveAnswers);
       if (!isLastS) {
         setIsSaving(true);
-        const allAnswers = { ...journeyAnswers, [stage.id]: localAnswers };
+        const allAnswers = { ...journeyAnswers, [stage.id]: effectiveAnswers };
         let runningNum = 0;
         const responses: { stage: string; questionNumber: number; questionText: string; answerText: string; audioUrl: string | null; mediaUrls: string[] }[] = [];
         for (let si = 0; si <= currentStep; si++) {
@@ -541,6 +559,11 @@ export default function Journey() {
     ? currentAnswer.text.trim() !== ""
     : !!(currentAnswer.text.trim() || currentAnswer.audioUrl);
 
+  // Active follow-up branch for single-select questions
+  const activeFollowUp = isSelect
+    ? (currentQuestion.followUps?.find(f => f.triggerOption === currentAnswer.text) ?? null)
+    : null;
+
   // Global progress %
   const progressPct = ((doneQ - 1) / totalQ) * 100;
 
@@ -695,6 +718,31 @@ export default function Journey() {
                     ))}
                   </div>
                 )}
+
+                {/* Follow-up question (triggered by single-select option) */}
+                <AnimatePresence mode="wait">
+                  {activeFollowUp && (
+                    <motion.div
+                      key={activeFollowUp.question}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.22 }}
+                      className="mt-2 flex flex-col gap-2"
+                    >
+                      <p className="text-sm font-semibold text-white/60 leading-snug">
+                        {activeFollowUp.question}
+                      </p>
+                      <textarea
+                        rows={3}
+                        placeholder="Tell us more…"
+                        value={followUpAnswer}
+                        onChange={e => setFollowUpAnswer(e.target.value)}
+                        className="w-full border border-white/10 focus:border-white/25 bg-white/4 rounded-2xl px-4 py-3 text-white text-base placeholder:text-white/20 focus:outline-none transition-all resize-none leading-relaxed"
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 {/* Voice-text */}
                 {isVoiceText && (

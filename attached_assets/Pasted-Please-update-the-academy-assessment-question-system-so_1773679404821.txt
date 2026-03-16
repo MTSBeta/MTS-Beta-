@@ -1,0 +1,82 @@
+Please update the academy assessment question system so it intelligently uses the existing two-position player setup.
+
+Context:
+The platform already allows each player to have two positions assigned. I now want the question engine to reflect that properly. Many academy players are evaluated across two roles, so the assessment should not behave as if the player only has one fixed position.
+
+Goal:
+Build a blended, position-aware question system that generates intelligent assessment questions based on both assigned positions.
+
+What I want:
+
+1. Use the existing two-position structure already stored in the player profile.
+- primary position
+- secondary position
+
+2. When generating questions for a player:
+- pull most questions from the primary position
+- pull a smaller portion from the secondary position
+- use an intentional weighting such as:
+  - 70% primary position
+  - 30% secondary position
+
+3. If only one position is assigned, then use only that position’s question bank.
+
+4. Each question shown in the UI should be clearly labelled so the coach understands where it comes from. For example:
+- Primary Position: Centre Back
+- Secondary Position: Right Back
+or simply a position tag on each question
+
+5. The system should feel intelligent for hybrid-role players, not random.
+Examples:
+- CB / RB should combine questions about defending the line, covering channels, 1v1 wide defending, and build-up from wide areas
+- LB / LW should combine wide defending, overlapping decisions, receiving high and wide, and final-third support
+- 6 / 8 should combine screening, positioning in front of the back line, progression, support angles, and transitions
+- 8 / 10 should combine linking play, arriving in advanced areas, receiving between lines, and chance creation
+- winger / striker should combine wide 1v1 scenarios, movement in behind, box runs, and pressing from the front
+
+6. Do not just randomly merge two question arrays. I want the logic to be scalable and deliberate.
+
+Please structure it so that:
+- questions are stored cleanly by position
+- the generator can blend them predictably
+- it is easy to later add:
+  - custom weighting
+  - coach-selected emphasis
+  - age-group filtering
+  - combined-role question banks
+  - reporting by position
+
+7. Please also support a future-ready architecture where we can later add “hybrid role” question sets.
+Example:
+- a CB / RB player could eventually receive questions written specifically for that combination, instead of only separate CB and RB questions
+- if a hybrid-role bank exists, the system should be able to prioritise some of those questions too
+
+Suggested logic:
+- if hybrid-role-specific questions exist for the exact combination, include some of those first
+- then fill the rest from the primary and secondary banks using the weighting logic
+- if no hybrid-role bank exists, just use primary/secondary weighted logic
+
+8. Please make the code clean and modular.
+I do not want hardcoded one-off logic scattered through the app.
+Create something like:
+- question bank by position
+- optional hybrid question bank by position pair
+- question selection utility/service
+- UI rendering with position labels
+
+9. Please preserve the current platform experience and just improve the assessment logic.
+This should be an upgrade, not a redesign of the whole system.
+
+10. After implementing, please show me:
+- what files you changed
+- the new question data structure
+- how the blending logic works
+- an example output for these players:
+  - CB / RB
+  - 6 / 8
+  - winger / striker
+
+Product intent:
+The purpose is to make the platform reflect real academy football more accurately. Many players are developed in more than one position, and the question engine should assess their tactical understanding accordingly.
+
+Please implement this in a scalable way, with clean code and sensible defaults.

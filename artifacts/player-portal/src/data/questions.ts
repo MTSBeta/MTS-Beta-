@@ -5,6 +5,16 @@ export type JourneyQuestionType =
   | "staff-text"
   | "staff-multiselect";
 
+/** A conditional follow-up that appears after selecting a specific option */
+export interface FollowUpBranch {
+  /** The exact option text that triggers this follow-up */
+  triggerOption: string;
+  /** Follow-up question text (always answered as short voice-text) */
+  question: string;
+  hint?: string;
+  prompts?: string[];
+}
+
 export interface JourneyQuestion {
   text: string;
   hint?: string;
@@ -14,6 +24,10 @@ export interface JourneyQuestion {
   options?: string[];
   profileKey?: "traits" | "strengths" | "workEthic" | "mindset" | "goals" | "dreams" | "clubValues" | "storyThemes" | "developmentAreas";
   requiresSecondPosition?: boolean;
+  /** If set, this question only appears for players whose primary position matches one of these IDs */
+  positionIds?: string[];
+  /** Conditional follow-up questions keyed to specific option selections */
+  followUps?: FollowUpBranch[];
 }
 
 export interface JourneyStage {
@@ -91,7 +105,256 @@ export const JOURNEY_STAGES: JourneyStage[] = [
     ],
   },
 
-  // ── STAGE 2: The Invisible Days ──────────────────────────────────────────
+  // ── STAGE 2: Your Football Mind ──────────────────────────────────────────
+  {
+    id: "Your Football Mind",
+    title: "Your Football Mind",
+    emoji: "🧠",
+    subtitle: "This is where great players are separated from good ones. Not pace, not strength — the thinking.",
+    description: "Tactical scenarios, game intelligence, and the decisions that define you.",
+    questions: [
+
+      // ── GK ──────────────────────────────────────────
+      {
+        type: "select",
+        emoji: "🧤",
+        text: "The opposition striker is through on goal and your defender is chasing back. What do you do?",
+        hint: "There's no single right answer — your thinking process is what matters here.",
+        positionIds: ["GK"],
+        options: [
+          "Come out aggressively — close the angle and take away their shooting space",
+          "Spread wide and stand my ground — give them as little of the goal as possible",
+          "Hold my position until the last moment — wait for them to fully commit",
+        ],
+        followUps: [
+          {
+            triggerOption: "Come out aggressively — close the angle and take away their shooting space",
+            question: "You've committed to coming out and the striker has nipped the ball wide at the last second. What are you doing with your body and your communication?",
+            prompts: ["How do you recover your position?", "What do you shout to the defender?", "What's the danger you're managing now?"],
+          },
+          {
+            triggerOption: "Hold my position until the last moment — wait for them to fully commit",
+            question: "You've held your ground. The striker is right on top of you now and shaping to shoot near post. Describe your body position and mindset in that split second.",
+            prompts: ["Where do you put your weight?", "What are you reading in their body shape?", "What goes through your head?"],
+          },
+        ],
+      },
+
+      // ── CB ──────────────────────────────────────────
+      {
+        type: "select",
+        emoji: "🛡️",
+        text: "The striker drops deep to receive the ball. Do you follow them out or hold your defensive line?",
+        hint: "Both choices have consequences — what drives your decision?",
+        positionIds: ["CB"],
+        options: [
+          "Follow them tight — I can't let them turn with the ball facing goal",
+          "Hold my line — I trust my midfield to pick them up when they drop",
+          "Move towards them but don't fully commit — stay in a controlled mid-position",
+        ],
+        followUps: [
+          {
+            triggerOption: "Follow them tight — I can't let them turn with the ball facing goal",
+            question: "You've followed them deep. As you do, a second runner makes a run into the space you've just vacated. What do you shout and how do you react?",
+            prompts: ["How do you communicate?", "Do you track back or stay on the striker?", "What's the priority?"],
+          },
+          {
+            triggerOption: "Hold my line — I trust my midfield to pick them up when they drop",
+            question: "You hold and the midfielder doesn't track. The striker turns and now faces goal with pace. Talk through how you approach that 1v1.",
+            prompts: ["How do you set your body?", "When do you commit?", "What are you trying to force them to do?"],
+          },
+        ],
+      },
+
+      // ── LB / RB ──────────────────────────────────────────
+      {
+        type: "select",
+        emoji: "🏃",
+        text: "Your winger has the ball ahead of you and your team is building an attack. What's your decision?",
+        hint: "Your movement in the next few seconds changes the whole picture.",
+        positionIds: ["LB", "RB"],
+        options: [
+          "Overlap — get outside them to create a two-v-one out wide",
+          "Underlap — move inside to open a combination and give them the space to go outside",
+          "Hold — stay in position for defensive balance in case we lose it",
+        ],
+        followUps: [
+          {
+            triggerOption: "Overlap — get outside them to create a two-v-one out wide",
+            question: "You've made the run. The winger's attempted pull-back is blocked and the ball falls back to you near the byline with a second to decide. What are your options and what do you do?",
+            prompts: ["Who's making runs in the box?", "What's the goalkeeper's position?", "Do you cross early or take a touch?"],
+          },
+        ],
+      },
+
+      // ── CDM ──────────────────────────────────────────
+      {
+        type: "select",
+        emoji: "⚙️",
+        text: "The opposition wins the ball and launches a counter-attack straight through the middle. You're the last midfielder. What's your approach?",
+        hint: "This decision happens in less than a second. What goes through your head?",
+        positionIds: ["CDM"],
+        options: [
+          "Delay — get goal-side, show them wide, buy time for teammates to recover",
+          "Press hard immediately — don't let them build any momentum",
+          "Position myself to tackle at the right moment, but stay on my feet",
+        ],
+        followUps: [
+          {
+            triggerOption: "Delay — get goal-side, show them wide, buy time for teammates to recover",
+            question: "You've been delaying for several seconds but no cover has arrived. The striker is now in a shooting position 25 yards out. Do you stay on your feet, commit to a tackle, or foul intelligently? What decides it?",
+            prompts: ["What's the score?", "How much time is left?", "Where are your nearest teammates?"],
+          },
+          {
+            triggerOption: "Press hard immediately — don't let them build any momentum",
+            question: "You go to press. The striker lets the ball roll across their body and skips past you. You're beaten and behind the play. What's your immediate next action?",
+            prompts: ["Do you chase or drop off?", "What do you communicate?", "How do you stop the damage?"],
+          },
+        ],
+      },
+
+      // ── CM ──────────────────────────────────────────
+      {
+        type: "select",
+        emoji: "💫",
+        text: "Your team is building play and your holding midfielder has the ball but is being pressed. Where do you move and why?",
+        hint: "Your movement creates the pass — where you go decides what's possible.",
+        positionIds: ["CM"],
+        options: [
+          "Show between the lines — I want to receive and turn and drive at their backline",
+          "Make a run beyond the striker — if they play early we could break through",
+          "Drift wide to overload the flank and pull their midfield out of shape",
+        ],
+        followUps: [
+          {
+            triggerOption: "Show between the lines — I want to receive and turn and drive at their backline",
+            question: "You receive the ball between the lines with a midfielder closing fast behind you. What's your first touch and what happens next?",
+            prompts: ["Which foot do you receive on?", "What have you already spotted?", "Do you turn, lay it off, or drive?"],
+          },
+        ],
+      },
+
+      // ── CAM ──────────────────────────────────────────
+      {
+        type: "select",
+        emoji: "🎯",
+        text: "You're about to receive the ball in the space between the opposition midfield and defence — the pocket every number 10 lives for. What are you checking before the pass arrives?",
+        hint: "The best number 10s have already made the decision before they touch the ball.",
+        positionIds: ["CAM"],
+        options: [
+          "Where the runners are in behind — I want to know if I can play through the line immediately",
+          "Which defender is closest and which foot I want to receive on",
+          "What the striker is doing — I'm looking to play off their movement first",
+        ],
+        followUps: [
+          {
+            triggerOption: "Where the runners are in behind — I want to know if I can play through the line immediately",
+            question: "You've spotted a run in behind and the timing looks right. As you receive, the opponent tracking you lunges in from behind. How do you protect the ball and still get the pass away?",
+            prompts: ["Do you shield first or release early?", "What does your body shape need to do?", "What's the risk if you get it wrong?"],
+          },
+        ],
+      },
+
+      // ── LW / RW ──────────────────────────────────────────
+      {
+        type: "select",
+        emoji: "⚡",
+        text: "You've got the ball 1v1 against the full-back out wide. What tells you whether to go outside, cut inside, or hold for support?",
+        hint: "Great wingers read these cues instantly — what are yours?",
+        positionIds: ["LW", "RW"],
+        options: [
+          "Go outside — use my pace and get to the byline to cross",
+          "Cut inside onto my stronger foot — I'm looking to shoot or play through",
+          "Hold up and wait — read the situation before committing to anything",
+        ],
+        followUps: [
+          {
+            triggerOption: "Go outside — use my pace and get to the byline to cross",
+            question: "You've beaten them on the outside and you're at the byline. You can see two centre-backs goal-side of the striker and one runner arriving at the back post. Where do you aim and why?",
+            prompts: ["Near post? Far post? Cut-back?", "What tells you which run is best timed?", "What does the goalkeeper's position change?"],
+          },
+          {
+            triggerOption: "Cut inside onto my stronger foot — I'm looking to shoot or play through",
+            question: "You've cut inside. The covering centre-back slides across to block your shooting lane. What do you look for — shoot anyway, recycle, or something else?",
+            prompts: ["Is there a shooting angle?", "Has the overlap arrived?", "What's the ball-side danger if you lose it?"],
+          },
+        ],
+      },
+
+      // ── ST / CF ──────────────────────────────────────────
+      {
+        type: "select",
+        emoji: "🎯",
+        text: "Your team wins the ball and breaks quickly. You're the striker — what's your movement?",
+        hint: "Your first two steps decide whether the chance exists at all.",
+        positionIds: ["ST", "CF"],
+        options: [
+          "Run in behind the last defender — stretch them and create the depth",
+          "Come short to the ball — link play and look to turn quickly",
+          "Pull into the channel — drag a centre-back wide and open space centrally",
+        ],
+        followUps: [
+          {
+            triggerOption: "Run in behind the last defender — stretch them and create the depth",
+            question: "Your timing is perfect and you're in behind. The keeper rushes out. The ball is arriving at pace. Talk through your decision — where do you put it and how does the distance between you and the keeper change that?",
+            prompts: ["Do you go round them or over them?", "What does pace of the ball do to your options?", "What's your body shape as you receive?"],
+          },
+          {
+            triggerOption: "Pull into the channel — drag a centre-back wide and open space centrally",
+            question: "The centre-back has followed you wide and there's a gap centrally. How do you communicate that, and what do you need from a teammate to exploit it?",
+            prompts: ["What run do you want from midfield?", "When do you peel back inside?", "What's the timing of the pass you're asking for?"],
+          },
+        ],
+      },
+
+      // ── POSITION-INDEPENDENT ──────────────────────────────────────────
+
+      {
+        type: "voice-text",
+        emoji: "⏱️",
+        text: "Your team is 1–0 up with ten minutes to go. How does that change the way you play compared to when the score is level?",
+        prompts: ["What decisions change?", "How do you manage the game differently?", "What do you communicate to teammates?"],
+      },
+      {
+        type: "voice-text",
+        emoji: "🔄",
+        text: "You receive the ball facing your own goal with a player pressing tight behind you. What should you already know before your first touch arrives?",
+        prompts: ["What information have you scanned for?", "What are your options before you even touch it?", "How does your body shape affect what's possible?"],
+      },
+      {
+        type: "select",
+        emoji: "🤝",
+        text: "A teammate keeps making the same positional mistake two or three times in the same game. What do you do?",
+        hint: "How you handle this says a lot about your game intelligence and your character.",
+        options: [
+          "Talk to them quietly at the next stoppage — pick the right moment",
+          "Give them a quick instruction during play from close range",
+          "Leave it to the coach — it's not my place to correct them",
+          "Show them through my own movement — lead without saying a word",
+        ],
+        followUps: [
+          {
+            triggerOption: "Talk to them quietly at the next stoppage — pick the right moment",
+            question: "You pull them aside and they react defensively — 'I know, I know.' How do you respond to keep the conversation useful without damaging the relationship?",
+            prompts: ["Do you back off or push the point?", "What matters more right now — the mistake or the relationship?", "What's the goal of the conversation?"],
+          },
+          {
+            triggerOption: "Give them a quick instruction during play from close range",
+            question: "They don't respond to the instruction and make the same error a fourth time. What do you do now?",
+            prompts: ["Do you stay patient or change your approach?", "How do you adjust your own game to compensate?", "What do you say — or not say?"],
+          },
+        ],
+      },
+      {
+        type: "voice-text",
+        emoji: "💡",
+        text: "When you're not performing at your best personally, how do you still make yourself valuable to the team?",
+        prompts: ["What do you focus on when the technical side isn't flowing?", "What can you always control on a bad day?", "What do teammates need from you even when you're out of form?"],
+      },
+    ],
+  },
+
+  // ── STAGE 3: The Invisible Days ──────────────────────────────────────────
   {
     id: "The Invisible Days",
     title: "The Invisible Days",
@@ -141,7 +404,7 @@ export const JOURNEY_STAGES: JourneyStage[] = [
     ],
   },
 
-  // ── STAGE 3: When It Broke ───────────────────────────────────────────────
+  // ── STAGE 4: When It Broke ───────────────────────────────────────────────
   {
     id: "When It Broke",
     title: "When It Broke",
@@ -195,7 +458,7 @@ export const JOURNEY_STAGES: JourneyStage[] = [
     ],
   },
 
-  // ── STAGE 4: The Turn ────────────────────────────────────────────────────
+  // ── STAGE 5: The Turn ────────────────────────────────────────────────────
   {
     id: "The Turn",
     title: "The Turn",
@@ -249,7 +512,7 @@ export const JOURNEY_STAGES: JourneyStage[] = [
     ],
   },
 
-  // ── STAGE 5: Who You Are ─────────────────────────────────────────────────
+  // ── STAGE 6: Who You Are ─────────────────────────────────────────────────
   {
     id: "Who You Are",
     title: "Who You Are",
@@ -307,7 +570,7 @@ export const JOURNEY_STAGES: JourneyStage[] = [
     ],
   },
 
-  // ── STAGE 6: The Chapter Ahead ───────────────────────────────────────────
+  // ── STAGE 7: The Chapter Ahead ───────────────────────────────────────────
   {
     id: "The Chapter Ahead",
     title: "The Chapter Ahead",
@@ -369,7 +632,7 @@ export const JOURNEY_STAGES: JourneyStage[] = [
     ],
   },
 
-  // ── STAGE 7: Coach Input ─────────────────────────────────────────────────
+  // ── STAGE 8: Coach Input ─────────────────────────────────────────────────
   {
     id: "Coach Input",
     title: "Coach Input",
