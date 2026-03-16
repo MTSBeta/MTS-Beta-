@@ -7,6 +7,7 @@ import { StaffAuthProvider } from "@/context/StaffAuthContext";
 import { SoundProvider } from "@/context/SoundContext";
 import { ProtectedStaffRoute } from "@/components/ProtectedStaffRoute";
 import NotFound from "@/pages/not-found";
+import MetyButton from "@/components/MetyButton";
 
 import Home from "@/pages/Home";
 import Auth from "@/pages/Auth";
@@ -105,6 +106,7 @@ function App() {
             <TooltipProvider>
               <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
                 <Router />
+                <MetyButton />
               </WouterRouter>
               <Toaster />
             </TooltipProvider>

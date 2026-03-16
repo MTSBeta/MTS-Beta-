@@ -7,6 +7,8 @@ export interface SubtitleLine {
 export interface AssistantProfile {
   id: AssistantId;
   name: string;
+  displayName: "Mety";
+  pronunciation: "(me-thai)";
   tone: string;
   getIntroScript: (playerName: string) => string;
   getSubtitleLines: (playerName: string) => SubtitleLine[];
@@ -19,6 +21,8 @@ export const ASSISTANT_PROFILES: Record<AssistantId, AssistantProfile> = {
   cheeky: {
     id: "cheeky",
     name: "Cheeky",
+    displayName: "Mety",
+    pronunciation: "(me-thai)",
     tone: "warm, friendly, football-aware",
     getIntroScript: (name) =>
       `Hiya ${name} — we're about to get some information from you so we can write a book about you. ` +
@@ -51,6 +55,8 @@ export const ASSISTANT_PROFILES: Record<AssistantId, AssistantProfile> = {
   chilled: {
     id: "chilled",
     name: "Chilled",
+    displayName: "Mety",
+    pronunciation: "(me-thai)",
     tone: "calm, warm, supportive",
     getIntroScript: (name) =>
       `Hey ${name}. Welcome. Take a breath — there's no rush here. ` +
@@ -79,6 +85,8 @@ export const ASSISTANT_PROFILES: Record<AssistantId, AssistantProfile> = {
   driven: {
     id: "driven",
     name: "Driven",
+    displayName: "Mety",
+    pronunciation: "(me-thai)",
     tone: "focused, direct, motivational",
     getIntroScript: (name) =>
       `Right, ${name} — let's do this. We're writing a book about you, and we need your help to make it real. ` +

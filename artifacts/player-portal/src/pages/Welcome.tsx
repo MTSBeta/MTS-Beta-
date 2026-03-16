@@ -9,6 +9,7 @@ import { POSITIONS } from "@/data/positions";
 import { JOURNEY_STAGES } from "@/data/questions";
 import OnboardingIntro from "@/components/OnboardingIntro";
 import { DEFAULT_ASSISTANT } from "@/data/assistantProfiles";
+import { ensureMusicPlaying, stopMusic } from "@/lib/globalAudio";
 
 const TIPS = [
   { Icon: Mic2, title: "Talk, don't type", body: "Every question has a voice note. Use it — your actual voice tells more of the story." },
@@ -220,9 +221,7 @@ export default function Welcome() {
   const [_, navigate] = useLocation();
   const { selectedAcademy, playerData, clearContext } = usePlayerContext();
   const tipsRef = useRef<HTMLDivElement>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isMuted, setIsMuted] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [ready, setReady] = useState(false);
   const [revealPhase, setRevealPhase] = useState<0 | 1 | 2 | 3 | 4>(0);
@@ -251,26 +250,12 @@ export default function Welcome() {
   }, [revealPhase]);
 
   useEffect(() => {
-    const audio = new Audio(`${import.meta.env.BASE_URL}audio/love-me-again.mp3`);
-    audio.volume = 0.15;
-    audio.currentTime = 12;
-    audioRef.current = audio;
-    audio.play().catch(() => {});
-    timeoutRef.current = setTimeout(() => {
-      audio.pause();
-      audio.src = "";
-    }, 120000);
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      audio.pause();
-      audio.src = "";
-    };
+    ensureMusicPlaying();
   }, []);
 
   const handleMute = () => {
     setIsMuted(true);
-    if (audioRef.current) { audioRef.current.pause(); audioRef.current.src = ""; }
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    stopMusic();
   };
 
   const goChapter = useCallback((dir: 1 | -1) => {
@@ -295,7 +280,7 @@ export default function Welcome() {
   const kitUrl = KIT_IMAGES[selectedAcademy.key];
 
   const handleLogout = () => {
-    audioRef.current?.pause();
+    stopMusic();
     clearContext();
     navigate("/");
   };
@@ -521,7 +506,6 @@ export default function Welcome() {
                 assistantId={DEFAULT_ASSISTANT}
                 playerFirstName={firstName}
                 accentColor={selectedAcademy.primaryColor}
-                musicAudioRef={audioRef}
               />
             )}
           </div>

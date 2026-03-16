@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SkipForward, RotateCcw, Loader2, Volume2 } from "lucide-react";
 import { ASSISTANT_PROFILES, type AssistantId } from "@/data/assistantProfiles";
+import { duckMusic, restoreMusic } from "@/lib/globalAudio";
 
 const API_BASE = `${import.meta.env.BASE_URL}api`.replace(/\/api$/, "/api");
 const STORAGE_KEY_PREFIX = "metime_intro_played_";
@@ -12,7 +13,6 @@ interface OnboardingIntroProps {
   assistantId: AssistantId;
   playerFirstName: string;
   accentColor: string;
-  musicAudioRef: React.RefObject<HTMLAudioElement | null>;
   onDone?: () => void;
 }
 
@@ -35,7 +35,6 @@ export default function OnboardingIntro({
   assistantId,
   playerFirstName,
   accentColor,
-  musicAudioRef,
   onDone,
 }: OnboardingIntroProps) {
   const profile = ASSISTANT_PROFILES[assistantId];
@@ -50,44 +49,12 @@ export default function OnboardingIntro({
 
   const voiceAudioRef = useRef<HTMLAudioElement | null>(null);
   const subtitleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const originalVolumeRef = useRef<number>(0.15);
 
   const hasPlayed = !forcedReplay && !!localStorage.getItem(storageKey);
 
   const stopSubtitleTimers = () => {
     if (subtitleTimerRef.current) clearTimeout(subtitleTimerRef.current);
   };
-
-  const duckMusic = useCallback(() => {
-    const music = musicAudioRef.current;
-    if (!music) return;
-    originalVolumeRef.current = music.volume;
-    const duck = () => {
-      if (!musicAudioRef.current) return;
-      const target = 0.04;
-      const current = musicAudioRef.current.volume;
-      if (current > target) {
-        musicAudioRef.current.volume = Math.max(current - 0.005, target);
-        requestAnimationFrame(duck);
-      }
-    };
-    requestAnimationFrame(duck);
-  }, [musicAudioRef]);
-
-  const restoreMusic = useCallback(() => {
-    const music = musicAudioRef.current;
-    if (!music) return;
-    const target = originalVolumeRef.current;
-    const restore = () => {
-      if (!musicAudioRef.current) return;
-      const current = musicAudioRef.current.volume;
-      if (current < target) {
-        musicAudioRef.current.volume = Math.min(current + 0.003, target);
-        requestAnimationFrame(restore);
-      }
-    };
-    requestAnimationFrame(restore);
-  }, [musicAudioRef]);
 
   const finishIntro = useCallback(() => {
     stopSubtitleTimers();
@@ -97,11 +64,11 @@ export default function OnboardingIntro({
     setShowReplay(true);
     setForcedReplay(false);
     onDone?.();
-  }, [restoreMusic, storageKey, onDone]);
+  }, [storageKey, onDone]);
 
   const skipIntro = useCallback(() => {
     voiceAudioRef.current?.pause();
-    voiceAudioRef.current && (voiceAudioRef.current.src = "");
+    if (voiceAudioRef.current) voiceAudioRef.current.src = "";
     finishIntro();
   }, [finishIntro]);
 
@@ -158,7 +125,7 @@ export default function OnboardingIntro({
 
     setPhase("speaking");
     try { await audio.play(); } catch { finishIntro(); }
-  }, [assistantId, playerFirstName, duckMusic, finishIntro, subtitleLines, storageKey, onDone]);
+  }, [assistantId, playerFirstName, finishIntro, subtitleLines, storageKey, onDone]);
 
   const replayIntro = useCallback(() => {
     setShowReplay(false);
@@ -190,6 +157,7 @@ export default function OnboardingIntro({
     return () => {
       stopSubtitleTimers();
       voiceAudioRef.current?.pause();
+      restoreMusic();
     };
   }, []);
 
@@ -234,18 +202,23 @@ export default function OnboardingIntro({
                     ) : phase === "preroll" ? (
                       <Volume2 size={15} style={{ color: accentColor }} />
                     ) : (
-                      <span>{profile.avatarEmoji}</span>
+                      <span className="font-black text-sm" style={{ color: accentColor }}>M</span>
                     )}
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span
-                        className="text-[10px] font-black uppercase tracking-widest"
-                        style={{ color: accentColor }}
-                      >
-                        {profile.name} · Assistant
-                      </span>
+                      <div className="flex items-baseline gap-1.5">
+                        <span
+                          className="text-[10px] font-black uppercase tracking-widest"
+                          style={{ color: accentColor }}
+                        >
+                          Mety
+                        </span>
+                        <span className="text-[9px] text-white/30 tracking-wider">
+                          me-thai
+                        </span>
+                      </div>
                       {phase === "speaking" && (
                         <motion.div className="flex gap-[3px] items-end h-3">
                           {[0, 1, 2].map(i => (
@@ -345,7 +318,7 @@ export default function OnboardingIntro({
             className="flex items-center gap-1.5 text-white/30 hover:text-white/60 transition-colors text-[11px] font-bold uppercase tracking-wider min-h-[36px] px-1"
           >
             <RotateCcw size={11} />
-            {audioError ? "Retry intro" : "Replay intro"}
+            {audioError ? "Retry intro" : "Replay Mety"}
           </motion.button>
         )}
       </AnimatePresence>

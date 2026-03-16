@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { stopMusic } from "@/lib/globalAudio";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { ChevronLeft, SkipForward, Mic } from "lucide-react";
@@ -599,7 +600,7 @@ export default function Journey() {
           color={primaryColor}
           stageNum={currentStep + 1}
           totalStages={totalStages}
-          onBegin={() => setShowStageIntro(false)}
+          onBegin={() => { if (currentStep === 0) stopMusic(); setShowStageIntro(false); }}
         />
       </div>
     );
