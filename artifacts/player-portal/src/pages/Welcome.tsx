@@ -270,52 +270,84 @@ export default function Welcome() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
         >
-          <div className="flex items-center justify-between mb-3 px-1">
+          <div className="flex items-center justify-between mb-4 px-1">
             <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">
               Your 6 chapters
             </p>
             <span className="text-xs text-white/25 font-mono">do them in order</span>
           </div>
 
-          <div className="space-y-2">
-            {JOURNEY_STAGES.map((stage, i) => (
-              <motion.div
-                key={stage.id}
-                initial={{ opacity: 0, x: -16 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.75 + i * 0.07 }}
-                className="flex items-center gap-4 rounded-2xl px-4 py-3.5"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.07)"
-                }}
-              >
-                {/* Step number bubble */}
-                <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-black shrink-0"
+          <div className="space-y-2.5">
+            {JOURNEY_STAGES.map((stage, i) => {
+              const isActive = i === 0;
+              const isLocked = i > 0;
+              return (
+                <motion.div
+                  key={stage.id}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.75 + i * 0.07 }}
+                  whileHover={!isLocked ? { scale: 1.02, x: 4 } : {}}
+                  className={`flex items-center gap-3.5 rounded-2xl px-4 py-4 backdrop-blur-sm transition-all group ${
+                    isLocked ? "opacity-60" : "hover:shadow-lg"
+                  }`}
                   style={{
-                    background: i === 0 ? selectedAcademy.primaryColor : "rgba(255,255,255,0.08)",
-                    color: i === 0 ? btnText : "rgba(255,255,255,0.4)"
+                    background: isActive
+                      ? `linear-gradient(135deg, ${selectedAcademy.primaryColor}25, ${selectedAcademy.primaryColor}08)`
+                      : isLocked
+                      ? "rgba(255,255,255,0.03)"
+                      : "rgba(255,255,255,0.05)",
+                    border: isActive
+                      ? `1.5px solid ${selectedAcademy.primaryColor}40`
+                      : isLocked
+                      ? "1px solid rgba(255,255,255,0.05)"
+                      : "1px solid rgba(255,255,255,0.1)",
+                    boxShadow: isActive ? `0 8px 24px ${selectedAcademy.primaryColor}15` : "none"
                   }}
                 >
-                  {i + 1}
-                </div>
-
-                {/* Emoji + text */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">{stage.emoji}</span>
-                    <span className="text-white font-bold text-sm">{stage.title}</span>
+                  {/* Step number bubble */}
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-black shrink-0 transition-all"
+                    style={{
+                      background: isActive
+                        ? selectedAcademy.primaryColor
+                        : isLocked
+                        ? "rgba(255,255,255,0.05)"
+                        : "rgba(255,255,255,0.08)",
+                      color: isActive
+                        ? btnText
+                        : isLocked
+                        ? "rgba(255,255,255,0.25)"
+                        : "rgba(255,255,255,0.45)",
+                      boxShadow: isActive ? `0 4px 12px ${selectedAcademy.primaryColor}35` : "none"
+                    }}
+                  >
+                    {i + 1}
                   </div>
-                  <p className="text-white/35 text-xs mt-0.5 truncate">{stage.description}</p>
-                </div>
 
-                {/* Lock icon for future stages */}
-                {i > 0 && (
-                  <span className="text-white/15 text-xs shrink-0">🔒</span>
-                )}
-              </motion.div>
-            ))}
+                  {/* Emoji + text */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-xl">{stage.emoji}</span>
+                      <span className={`font-bold text-sm ${isLocked ? "text-white/50" : "text-white"}`}>
+                        {stage.title}
+                      </span>
+                    </div>
+                    <p className={`text-xs mt-1 truncate ${isLocked ? "text-white/25" : "text-white/45"}`}>
+                      {stage.description}
+                    </p>
+                  </div>
+
+                  {/* Lock icon for future stages */}
+                  {isLocked && (
+                    <span className="text-white/20 text-sm shrink-0">🔒</span>
+                  )}
+                  {isActive && (
+                    <span className="text-white/40 text-xs shrink-0 font-mono">start</span>
+                  )}
+                </motion.div>
+              );
+            })}
           </div>
         </motion.div>
 
