@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/Button";
 import { PlayerJersey } from "@/components/PlayerJersey";
+import { LikenessUploader } from "@/components/LikenessUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { POSITIONS } from "@/data/positions";
 import { JOURNEY_STAGES } from "@/data/questions";
@@ -127,6 +128,26 @@ export default function Welcome() {
           >
             "{selectedAcademy.welcomeMessage}"
           </blockquote>
+        </motion.div>
+
+        {/* ── LIKENESS PHOTOS ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.48 }}
+          className="glass-panel rounded-3xl p-6 md:p-8 mb-6 border border-white/6"
+          style={{ borderColor: `${selectedAcademy.primaryColor}25` }}
+        >
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-base">🎨</span>
+            <p className="text-white/40 text-xs uppercase tracking-widest font-bold">
+              For your illustration
+            </p>
+          </div>
+          <p className="text-white/60 text-sm leading-relaxed mb-5">
+            Your story will be turned into an illustrated book. Submit up to 3 photos so the illustrator can capture your likeness — your face, your kit, your presence.
+          </p>
+          <LikenessUploader primaryColor={selectedAcademy.primaryColor} />
         </motion.div>
 
         {/* ── TIPS ── */}
