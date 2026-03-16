@@ -2,15 +2,14 @@ export type AssistantId = "cheeky" | "chilled" | "driven";
 
 export interface SubtitleLine {
   text: string;
-  pauseAfterMs?: number;
 }
 
 export interface AssistantProfile {
   id: AssistantId;
   name: string;
   tone: string;
-  introScript: string;
-  subtitleLines: SubtitleLine[];
+  getIntroScript: (playerName: string) => string;
+  getSubtitleLines: (playerName: string) => SubtitleLine[];
   voiceId: string;
   accentColor: string;
   avatarEmoji: string;
@@ -20,20 +19,30 @@ export const ASSISTANT_PROFILES: Record<AssistantId, AssistantProfile> = {
   cheeky: {
     id: "cheeky",
     name: "Cheeky",
-    tone: "playful, direct, football-aware",
-    introScript: `Oi — you caught me. I was setting the mood. Anyway, welcome to the questions. This first page is easy — just upload your picture and we'll get you set. Think of this like stepping into the tunnel before kick-off. Once that's done, we move properly. Come on then — let's get started.`,
-    subtitleLines: [
-      { text: "Oi — you caught me.", pauseAfterMs: 600 },
-      { text: "I was setting the mood.", pauseAfterMs: 900 },
-      { text: "", pauseAfterMs: 400 },
-      { text: "Anyway, welcome to the questions.", pauseAfterMs: 700 },
-      { text: "This first page is easy —", pauseAfterMs: 300 },
-      { text: "just upload your picture and we'll get you set.", pauseAfterMs: 900 },
-      { text: "", pauseAfterMs: 400 },
-      { text: "Think of this like stepping into the tunnel before kick-off.", pauseAfterMs: 900 },
-      { text: "Once that's done, we move properly.", pauseAfterMs: 800 },
-      { text: "", pauseAfterMs: 300 },
-      { text: "Come on then — let's get started.", pauseAfterMs: 0 },
+    tone: "warm, friendly, football-aware",
+    getIntroScript: (name) =>
+      `Hiya ${name} — we're about to get some information from you so we can write a book about you. ` +
+      `This is your story that we're making, so we need your help to bring it to life properly. ` +
+      `Your coaches and your academy are going to help too, and even your parents and friends might have a part to play as well. ` +
+      `If you've got 20 to 30 minutes now, that would be great, but don't worry if not — you can always come back and finish it later. ` +
+      `I'd also check with your coaches to see when they need this done by. ` +
+      `If you ever get stuck on any of the questions, just click me and I'll help you through it.`,
+    getSubtitleLines: (name) => [
+      { text: `Hiya ${name} —` },
+      { text: "we're about to get some information from you so we can write a book about you." },
+      { text: "" },
+      { text: "This is your story that we're making," },
+      { text: "so we need your help to bring it to life properly." },
+      { text: "Your coaches and your academy are going to help too," },
+      { text: "and even your parents and friends might have a part to play as well." },
+      { text: "" },
+      { text: "If you've got 20 to 30 minutes now, that would be great," },
+      { text: "but don't worry if not — you can always come back and finish it later." },
+      { text: "" },
+      { text: "I'd also check with your coaches to see when they need this done by." },
+      { text: "" },
+      { text: "If you ever get stuck on any of the questions," },
+      { text: "just click me and I'll help you through it." },
     ],
     voiceId: "onyx",
     accentColor: "#EAB308",
@@ -43,18 +52,25 @@ export const ASSISTANT_PROFILES: Record<AssistantId, AssistantProfile> = {
     id: "chilled",
     name: "Chilled",
     tone: "calm, warm, supportive",
-    introScript: `Hey. Welcome. Take a breath — there's no rush here. This is your space to be honest, to go deep, and to tell your story properly. We'll start simple: upload your picture, get settled. Then we'll move through things at your pace. Ready when you are.`,
-    subtitleLines: [
-      { text: "Hey. Welcome.", pauseAfterMs: 700 },
-      { text: "Take a breath — there's no rush here.", pauseAfterMs: 900 },
-      { text: "", pauseAfterMs: 400 },
-      { text: "This is your space to be honest,", pauseAfterMs: 400 },
-      { text: "to go deep, and to tell your story properly.", pauseAfterMs: 900 },
-      { text: "", pauseAfterMs: 400 },
-      { text: "We'll start simple: upload your picture, get settled.", pauseAfterMs: 800 },
-      { text: "Then we'll move through things at your pace.", pauseAfterMs: 800 },
-      { text: "", pauseAfterMs: 300 },
-      { text: "Ready when you are.", pauseAfterMs: 0 },
+    getIntroScript: (name) =>
+      `Hey ${name}. Welcome. Take a breath — there's no rush here. ` +
+      `This is your space to be honest, to go deep, and to tell your story properly. ` +
+      `Your coaches, your academy, even your parents and friends might all have a part to play. ` +
+      `If you've got 20 to 30 minutes now, great — but you can always come back and finish it later. ` +
+      `If you ever get stuck, just click me and I'll help you through it.`,
+    getSubtitleLines: (name) => [
+      { text: `Hey ${name}. Welcome.` },
+      { text: "Take a breath — there's no rush here." },
+      { text: "" },
+      { text: "This is your space to be honest," },
+      { text: "to go deep, and to tell your story properly." },
+      { text: "Your coaches, your academy, even your parents and friends" },
+      { text: "might all have a part to play." },
+      { text: "" },
+      { text: "If you've got 20 to 30 minutes now, great —" },
+      { text: "but you can always come back and finish it later." },
+      { text: "" },
+      { text: "If you ever get stuck, just click me and I'll help you through it." },
     ],
     voiceId: "nova",
     accentColor: "#22D3EE",
@@ -63,18 +79,23 @@ export const ASSISTANT_PROFILES: Record<AssistantId, AssistantProfile> = {
   driven: {
     id: "driven",
     name: "Driven",
-    tone: "focused, intense, motivational",
-    introScript: `Right. Let's go. You're here because someone saw something in you. Now it's your turn to show it. This isn't a survey — it's your story. Upload your picture and let's get started. No excuses. No holding back. Let's get to work.`,
-    subtitleLines: [
-      { text: "Right. Let's go.", pauseAfterMs: 600 },
-      { text: "You're here because someone saw something in you.", pauseAfterMs: 900 },
-      { text: "Now it's your turn to show it.", pauseAfterMs: 900 },
-      { text: "", pauseAfterMs: 400 },
-      { text: "This isn't a survey — it's your story.", pauseAfterMs: 900 },
-      { text: "", pauseAfterMs: 300 },
-      { text: "Upload your picture and let's get started.", pauseAfterMs: 700 },
-      { text: "No excuses. No holding back.", pauseAfterMs: 600 },
-      { text: "Let's get to work.", pauseAfterMs: 0 },
+    tone: "focused, direct, motivational",
+    getIntroScript: (name) =>
+      `Right, ${name} — let's do this. We're writing a book about you, and we need your help to make it real. ` +
+      `Your coaches and your academy are involved. Your parents and friends too. ` +
+      `Set aside 20 to 30 minutes and get it done. If not now, come back later — but check with your coaches on the deadline. ` +
+      `If you get stuck, click me. Let's get to work.`,
+    getSubtitleLines: (name) => [
+      { text: `Right, ${name} — let's do this.` },
+      { text: "We're writing a book about you, and we need your help to make it real." },
+      { text: "" },
+      { text: "Your coaches and your academy are involved." },
+      { text: "Your parents and friends too." },
+      { text: "" },
+      { text: "Set aside 20 to 30 minutes and get it done." },
+      { text: "If not now, come back later — but check with your coaches on the deadline." },
+      { text: "" },
+      { text: "If you get stuck, click me. Let's get to work." },
     ],
     voiceId: "echo",
     accentColor: "#F97316",

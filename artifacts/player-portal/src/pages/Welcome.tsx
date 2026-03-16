@@ -519,6 +519,7 @@ export default function Welcome() {
             {revealPhase >= 4 && (
               <OnboardingIntro
                 assistantId={DEFAULT_ASSISTANT}
+                playerFirstName={firstName}
                 accentColor={selectedAcademy.primaryColor}
                 musicAudioRef={audioRef}
               />

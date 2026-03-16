@@ -10,6 +10,7 @@ type Phase = "idle" | "preloading" | "preroll" | "speaking" | "done";
 
 interface OnboardingIntroProps {
   assistantId: AssistantId;
+  playerFirstName: string;
   accentColor: string;
   musicAudioRef: React.RefObject<HTMLAudioElement | null>;
   onDone?: () => void;
@@ -32,11 +33,13 @@ function calcSubtitleTimestamps(
 
 export default function OnboardingIntro({
   assistantId,
+  playerFirstName,
   accentColor,
   musicAudioRef,
   onDone,
 }: OnboardingIntroProps) {
   const profile = ASSISTANT_PROFILES[assistantId];
+  const subtitleLines = profile.getSubtitleLines(playerFirstName);
   const storageKey = STORAGE_KEY_PREFIX + assistantId;
 
   const [phase, setPhase] = useState<Phase>("idle");
@@ -109,7 +112,8 @@ export default function OnboardingIntro({
 
     let audioUrl: string;
     try {
-      const res = await fetch(`${API_BASE}/tts/intro/${assistantId}`);
+      const nameParam = encodeURIComponent(playerFirstName || "there");
+      const res = await fetch(`${API_BASE}/tts/intro/${assistantId}?name=${nameParam}`);
       if (!res.ok) throw new Error("TTS fetch failed");
       const blob = await res.blob();
       audioUrl = URL.createObjectURL(blob);
@@ -134,7 +138,7 @@ export default function OnboardingIntro({
 
     audio.addEventListener("loadedmetadata", () => {
       const totalDuration = audio.duration;
-      const timestamps = calcSubtitleTimestamps(profile.subtitleLines, totalDuration);
+      const timestamps = calcSubtitleTimestamps(subtitleLines, totalDuration);
 
       audio.addEventListener("timeupdate", () => {
         const t = audio.currentTime;
@@ -154,7 +158,7 @@ export default function OnboardingIntro({
 
     setPhase("speaking");
     try { await audio.play(); } catch { finishIntro(); }
-  }, [assistantId, duckMusic, finishIntro, profile.subtitleLines, storageKey, onDone]);
+  }, [assistantId, playerFirstName, duckMusic, finishIntro, subtitleLines, storageKey, onDone]);
 
   const replayIntro = useCallback(() => {
     setShowReplay(false);
@@ -190,7 +194,7 @@ export default function OnboardingIntro({
   }, []);
 
   const isActive = phase === "preloading" || phase === "preroll" || phase === "speaking";
-  const currentSubtitle = profile.subtitleLines[subtitleIdx]?.text ?? "";
+  const currentSubtitle = subtitleLines[subtitleIdx]?.text ?? "";
 
   return (
     <div className="relative">
@@ -316,7 +320,7 @@ export default function OnboardingIntro({
                         className="h-full rounded-full"
                         style={{ background: `linear-gradient(90deg, ${accentColor}80, ${accentColor})` }}
                         animate={{
-                          width: `${Math.max(((subtitleIdx + 1) / Math.max(profile.subtitleLines.length, 1)) * 100, 4)}%`,
+                          width: `${Math.max(((subtitleIdx + 1) / Math.max(subtitleLines.length, 1)) * 100, 4)}%`,
                         }}
                         transition={{ duration: 0.4 }}
                       />
