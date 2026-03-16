@@ -7,6 +7,8 @@ import { LikenessUploader } from "@/components/LikenessUploader";
 import { usePlayerContext } from "@/context/PlayerContext";
 import { POSITIONS } from "@/data/positions";
 import { JOURNEY_STAGES } from "@/data/questions";
+import OnboardingIntro from "@/components/OnboardingIntro";
+import { DEFAULT_ASSISTANT } from "@/data/assistantProfiles";
 
 const TIPS = [
   { Icon: Mic2, title: "Talk, don't type", body: "Every question has a voice note. Use it — your actual voice tells more of the story." },
@@ -506,13 +508,22 @@ export default function Welcome() {
             {selectedAcademy.logoText}
           </div>
 
-          {!isMuted && (
-            <button onClick={handleMute}
-              className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-sm min-h-[44px] px-1">
-              <Volume2 size={14} />
-              <span>Mute</span>
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {!isMuted && (
+              <button onClick={handleMute}
+                className="flex items-center gap-1.5 text-white/40 hover:text-white/70 transition-colors text-sm min-h-[44px] px-1">
+                <Volume2 size={14} />
+                <span>Mute</span>
+              </button>
+            )}
+            {revealPhase >= 4 && (
+              <OnboardingIntro
+                assistantId={DEFAULT_ASSISTANT}
+                accentColor={selectedAcademy.primaryColor}
+                musicAudioRef={audioRef}
+              />
+            )}
+          </div>
         </div>
 
         {/* PlayerReveal card + identity */}

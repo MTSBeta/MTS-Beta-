@@ -1,0 +1,90 @@
+Please implement a premium voice-led welcome intro on the onboarding screen.
+
+I want this to feel like the start of a football game journey, not a normal form page.
+
+Core experience:
+- As soon as the welcome page loads, play 2–3 seconds of the chorus audio
+- Then the assistant voice should come in naturally, as if the player has just caught the assistant mid-vibe
+- The tone should feel human, playful, and football-aware
+- It must not sound robotic, stiff, or like generic text-to-speech
+
+Use this script for the Cheeky assistant:
+
+“Oi — you caught me.
+I was setting the mood.
+
+Anyway, welcome to the questions.
+This first page is easy — just upload your picture and we’ll get you set.
+
+Think of this like stepping into the tunnel before kick-off.
+Once that’s done, we move properly.
+
+Come on then — let’s get started.”
+
+Important product direction:
+I want a genuinely strong voice experience here. The voice must sound natural and expressive, not flat or robotic. Please use a high-quality voice API or TTS provider with realistic speech and emotional tone.
+
+Voice requirements:
+- natural British or neutral urban UK tone
+- warm, slightly cheeky delivery
+- human pacing
+- subtle energy and personality
+- not overacted
+- not cartoonish
+- not robotic
+
+Please evaluate and use a good voice API option for this, for example something in the quality range of:
+- ElevenLabs
+- OpenAI high-quality TTS/voice
+- another premium realistic voice provider
+
+Implementation requirements:
+1. Play the music first for 2–3 seconds
+2. Fade or duck the music slightly when the assistant starts speaking
+3. Start the voice line smoothly after that
+4. Add subtitles/captions that appear in sync or at least line-by-line
+5. Add a “Skip intro” option
+6. Add a “Replay intro” option
+7. Make sure the intro only auto-plays the first time on the welcome screen, not every single time the user returns unless they press replay
+8. Keep the experience smooth on desktop and mobile
+
+Architecture:
+- Please do not hardcode this in a messy way
+- Create a reusable onboarding intro component
+- Structure it so each assistant can later have:
+  - its own script
+  - its own voice
+  - its own audio file or generated speech config
+
+Suggested structure:
+- assistantProfiles config
+- each profile contains:
+  - name
+  - tone
+  - introScript
+  - voiceId or voice settings
+  - subtitle lines
+- onboarding intro component reads selected assistant and plays the correct version
+
+Need this to support the 3 assistant personalities:
+- Chilled
+- Cheeky
+- Driven
+
+For now, implement the Cheeky version first using the script above, but build it so the other two can be added cleanly.
+
+Audio/UX requirements:
+- music should feel like part of the intro, not awkwardly bolted on
+- voice should enter cleanly after the 2–3 second music moment
+- if there is latency from voice generation, do not generate live in a way that causes awkward delay on page load
+- prefer pre-generated voice assets or a cached approach for the intro if that gives a more premium result
+
+Important:
+I care more about quality than novelty here.
+If live TTS makes it feel slow or robotic, then pre-generate the voice lines using a premium voice API and load them as polished audio assets.
+
+Please also:
+- recommend the best voice API choice for this use case
+- explain whether you are generating the voice live or using pre-rendered audio
+- show me which files/components you changed
+- make sure the final effect feels premium, game-like, and human
