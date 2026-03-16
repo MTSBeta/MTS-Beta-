@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SkipForward, RotateCcw, Loader2, Volume2 } from "lucide-react";
 import { ASSISTANT_PROFILES, type AssistantId } from "@/data/assistantProfiles";
-import { duckMusic, restoreMusic } from "@/lib/globalAudio";
+import { duckMusic, restoreMusic, playAudioElement } from "@/lib/globalAudio";
 
 const API_BASE = `${import.meta.env.BASE_URL}api`.replace(/\/api$/, "/api");
 const STORAGE_KEY_PREFIX = "metime_intro_played_";
@@ -127,7 +127,7 @@ export default function OnboardingIntro({
     });
 
     setPhase("speaking");
-    try { await audio.play(); } catch { finishIntro(); }
+    playAudioElement(audio);
   }, [assistantId, playerFirstName, finishIntro, subtitleLines, storageKey, onDone]);
 
   const replayIntro = useCallback(() => {

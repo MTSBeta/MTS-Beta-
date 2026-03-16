@@ -8,6 +8,15 @@ function set(a: HTMLAudioElement | null) {
   w[KEY] = a;
 }
 
+function playWithFallback(audio: HTMLAudioElement): void {
+  audio.play().catch(() => {
+    const tryPlay = () => { audio.play().catch(() => {}); };
+    document.addEventListener("click",      tryPlay, { once: true, capture: true });
+    document.addEventListener("touchstart", tryPlay, { once: true, capture: true });
+    document.addEventListener("keydown",    tryPlay, { once: true, capture: true });
+  });
+}
+
 export function ensureMusicPlaying(): void {
   let audio = get();
   if (audio && !audio.paused) return;
@@ -18,7 +27,7 @@ export function ensureMusicPlaying(): void {
     audio.addEventListener("ended", () => { set(null); });
     set(audio);
   }
-  audio.play().catch(() => {});
+  playWithFallback(audio);
 }
 
 export function stopMusic(): void {
@@ -60,4 +69,8 @@ export function restoreMusic(targetVolume = 0.15): void {
 export function isMusicPlaying(): boolean {
   const a = get();
   return !!a && !a.paused;
+}
+
+export function playAudioElement(audio: HTMLAudioElement): void {
+  playWithFallback(audio);
 }
