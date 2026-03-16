@@ -2,6 +2,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { X } from "lucide-react";
+import { usePlayerContext } from "@/context/PlayerContext";
+import { getAcademyMascot } from "@/data/mascots";
 
 const PLAYER_PATHS = ["/welcome", "/welcome-u9", "/journey", "/journey-u9", "/complete", "/invite"];
 
@@ -10,17 +12,17 @@ interface PageGuide {
   body: string;
 }
 
-function getGuide(path: string): PageGuide {
+function getGuide(path: string, mascotName: string): PageGuide {
   if (path === "/welcome" || path === "/welcome-u9") {
     return {
-      title: "Welcome to your story",
-      body: "Browse through the chapters below to see what's coming. When you're ready, tap Begin My Story. You've got 20–30 minutes, but you can always save and come back.",
+      title: `${mascotName} here`,
+      body: "Browse through the chapters below to see what's coming. When you're ready, tap Begin My Story to start your journey. You've got 20–30 minutes, but you can always save and come back.",
     };
   }
   if (path === "/journey" || path === "/journey-u9") {
     return {
-      title: "You're inside the story",
-      body: "Answer each question honestly — there are no wrong answers. Use the mic if talking is easier than typing. You can skip a question and revisit it at the end.",
+      title: "Take your time",
+      body: "Answer each question honestly — there are no wrong answers. Use the mic if talking is easier than typing. You can skip questions and come back to them at the end.",
     };
   }
   if (path === "/complete") {
@@ -36,19 +38,23 @@ function getGuide(path: string): PageGuide {
     };
   }
   return {
-    title: "I'm Mety",
-    body: "Short for MeTime Stories. I'm here to guide you through building your player profile. Tap me on any page for help or context.",
+    title: `${mascotName} here`,
+    body: "I'm your guide through MeTime Stories. Tap me on any page if you need help or context about what you're doing.",
   };
 }
 
 export default function MetyButton() {
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
+  const { selectedAcademy } = usePlayerContext();
 
   const isPlayerPage = PLAYER_PATHS.some(p => location === p || location.startsWith(p + "/"));
   if (!isPlayerPage) return null;
 
-  const guide = getGuide(location);
+  const mascotName = getAcademyMascot(selectedAcademy?.key ?? "");
+  const initial = mascotName.charAt(0).toUpperCase();
+  const accentColor = selectedAcademy?.primaryColor ?? "#EAB308";
+  const guide = getGuide(location, mascotName);
 
   return (
     <>
@@ -76,30 +82,35 @@ export default function MetyButton() {
                 className="rounded-2xl overflow-hidden px-5 py-4 relative"
                 style={{
                   background: "rgba(12,12,12,0.96)",
-                  border: "1px solid rgba(234,179,8,0.22)",
+                  border: `1px solid ${accentColor}35`,
                   backdropFilter: "blur(20px)",
-                  boxShadow: "0 0 40px rgba(234,179,8,0.12), 0 20px 60px rgba(0,0,0,0.8)",
+                  boxShadow: `0 0 40px ${accentColor}15, 0 20px 60px rgba(0,0,0,0.8)`,
                 }}
               >
                 <div
                   className="absolute inset-x-0 top-0 h-0.5 rounded-t-2xl"
-                  style={{ background: "linear-gradient(90deg, transparent, #EAB308, transparent)" }}
+                  style={{ background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)` }}
                 />
 
                 <div className="flex items-center gap-2 mb-3">
                   <div
                     className="w-7 h-7 rounded-full flex items-center justify-center text-sm font-black"
-                    style={{ background: "rgba(234,179,8,0.15)", border: "1px solid rgba(234,179,8,0.3)", color: "#EAB308" }}
+                    style={{ background: `${accentColor}18`, border: `1px solid ${accentColor}35`, color: accentColor }}
                   >
-                    M
+                    {initial}
                   </div>
                   <div>
-                    <p className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: "#EAB308" }}>
-                      Mety
+                    <p
+                      className="text-[11px] font-black uppercase tracking-widest leading-none"
+                      style={{ color: accentColor }}
+                    >
+                      {mascotName}
                     </p>
-                    <p className="text-[9px] text-white/35 tracking-wider uppercase leading-none mt-0.5">
-                      me-thai
-                    </p>
+                    {selectedAcademy?.shortName && (
+                      <p className="text-[9px] text-white/35 tracking-wider leading-none mt-0.5">
+                        {selectedAcademy.shortName}
+                      </p>
+                    )}
                   </div>
                   <button
                     onClick={() => setOpen(false)}
@@ -115,7 +126,11 @@ export default function MetyButton() {
 
               <div
                 className="absolute right-[18px] -bottom-[6px] w-3 h-3 rotate-45"
-                style={{ background: "rgba(12,12,12,0.96)", borderRight: "1px solid rgba(234,179,8,0.22)", borderBottom: "1px solid rgba(234,179,8,0.22)" }}
+                style={{
+                  background: "rgba(12,12,12,0.96)",
+                  borderRight: `1px solid ${accentColor}35`,
+                  borderBottom: `1px solid ${accentColor}35`,
+                }}
               />
             </motion.div>
           </>
@@ -132,24 +147,27 @@ export default function MetyButton() {
           height: 48,
           borderRadius: "50%",
           background: "rgba(10,10,10,0.92)",
-          border: "1.5px solid rgba(234,179,8,0.35)",
+          border: `1.5px solid ${accentColor}45`,
           boxShadow: open
-            ? "0 0 0 3px rgba(234,179,8,0.18), 0 8px 32px rgba(0,0,0,0.6)"
+            ? `0 0 0 3px ${accentColor}20, 0 8px 32px rgba(0,0,0,0.6)`
             : "0 4px 24px rgba(0,0,0,0.5)",
           backdropFilter: "blur(12px)",
         }}
-        aria-label="Mety — tap for guidance"
+        aria-label={`${mascotName} — tap for guidance`}
       >
         {!open && (
           <motion.div
             className="absolute inset-0 rounded-full"
-            style={{ border: "1.5px solid rgba(234,179,8,0.25)" }}
+            style={{ border: `1.5px solid ${accentColor}30` }}
             animate={{ scale: [1, 1.35, 1], opacity: [0.6, 0, 0.6] }}
             transition={{ repeat: Infinity, duration: 2.6, ease: "easeInOut" }}
           />
         )}
-        <span className="text-base font-black" style={{ color: "#EAB308", fontFamily: "system-ui, sans-serif" }}>
-          M
+        <span
+          className="text-base font-black"
+          style={{ color: accentColor, fontFamily: "system-ui, sans-serif" }}
+        >
+          {initial}
         </span>
       </motion.button>
     </>

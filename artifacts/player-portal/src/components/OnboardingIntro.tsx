@@ -13,6 +13,7 @@ interface OnboardingIntroProps {
   assistantId: AssistantId;
   playerFirstName: string;
   accentColor: string;
+  mascotName?: string;
   onDone?: () => void;
 }
 
@@ -35,8 +36,10 @@ export default function OnboardingIntro({
   assistantId,
   playerFirstName,
   accentColor,
+  mascotName,
   onDone,
 }: OnboardingIntroProps) {
+  const resolvedMascot = mascotName ?? "Mety";
   const profile = ASSISTANT_PROFILES[assistantId];
   const subtitleLines = profile.getSubtitleLines(playerFirstName);
   const storageKey = STORAGE_KEY_PREFIX + assistantId;
@@ -202,7 +205,7 @@ export default function OnboardingIntro({
                     ) : phase === "preroll" ? (
                       <Volume2 size={15} style={{ color: accentColor }} />
                     ) : (
-                      <span className="font-black text-sm" style={{ color: accentColor }}>M</span>
+                      <span className="font-black text-sm" style={{ color: accentColor }}>{resolvedMascot.charAt(0).toUpperCase()}</span>
                     )}
                   </div>
 
@@ -213,10 +216,7 @@ export default function OnboardingIntro({
                           className="text-[10px] font-black uppercase tracking-widest"
                           style={{ color: accentColor }}
                         >
-                          Mety
-                        </span>
-                        <span className="text-[9px] text-white/30 tracking-wider">
-                          me-thai
+                          {resolvedMascot}
                         </span>
                       </div>
                       {phase === "speaking" && (

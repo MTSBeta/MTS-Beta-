@@ -10,6 +10,7 @@ import { JOURNEY_STAGES } from "@/data/questions";
 import OnboardingIntro from "@/components/OnboardingIntro";
 import { DEFAULT_ASSISTANT } from "@/data/assistantProfiles";
 import { ensureMusicPlaying, stopMusic } from "@/lib/globalAudio";
+import { getAcademyMascot } from "@/data/mascots";
 
 const TIPS = [
   { Icon: Mic2, title: "Talk, don't type", body: "Every question has a voice note. Use it — your actual voice tells more of the story." },
@@ -506,6 +507,7 @@ export default function Welcome() {
                 assistantId={DEFAULT_ASSISTANT}
                 playerFirstName={firstName}
                 accentColor={selectedAcademy.primaryColor}
+                mascotName={getAcademyMascot(selectedAcademy.key)}
               />
             )}
           </div>
