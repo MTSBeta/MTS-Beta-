@@ -29,25 +29,32 @@ export function Layout({ children, hideLogo = false }: { children: React.ReactNo
         <header className="relative z-20 w-full flex items-center justify-between px-4 h-12 border-b border-white/5">
           <div className="flex items-center gap-2">
             {selectedAcademy ? (
-              selectedAcademy.crestUrl ? (
-                <img
-                  src={selectedAcademy.crestUrl}
-                  alt={selectedAcademy.shortName}
-                  className="w-6 h-6 object-contain shrink-0"
-                  loading="lazy"
-                />
-              ) : (
-                <div
-                  className="w-6 h-6 rounded-md flex items-center justify-center text-[9px] font-black text-white shrink-0"
-                  style={{ background: selectedAcademy.primaryColor }}
-                >
-                  {selectedAcademy.logoText}
-                </div>
-              )
-            ) : null}
-            <span className="text-white/50 text-xs font-bold uppercase tracking-widest">
-              {selectedAcademy ? selectedAcademy.shortName : "Me Time Stories"}
-            </span>
+              <>
+                {selectedAcademy.crestUrl ? (
+                  <img
+                    src={selectedAcademy.crestUrl}
+                    alt={selectedAcademy.shortName}
+                    className="w-6 h-6 object-contain shrink-0"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div
+                    className="w-6 h-6 rounded-md flex items-center justify-center text-[9px] font-black text-white shrink-0"
+                    style={{ background: selectedAcademy.primaryColor }}
+                  >
+                    {selectedAcademy.logoText}
+                  </div>
+                )}
+                <span className="text-white/50 text-xs font-bold uppercase tracking-widest">{selectedAcademy.shortName}</span>
+              </>
+            ) : (
+              <img
+                src={`${import.meta.env.BASE_URL}images/metime-logo.png`}
+                alt="Me Time Stories"
+                className="h-7 w-auto object-contain"
+                style={{ mixBlendMode: "screen" }}
+              />
+            )}
           </div>
 
           {playerData && (

@@ -63,6 +63,12 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-10 space-y-3"
         >
+          <img
+            src={`${import.meta.env.BASE_URL}images/metime-logo.png`}
+            alt="Me Time Stories"
+            className="h-20 w-auto mx-auto object-contain mb-2"
+            style={{ mixBlendMode: "screen" }}
+          />
           <h1 className="text-4xl md:text-6xl font-display font-black text-white tracking-tight uppercase">
             Player <span className="text-transparent bg-clip-text bg-gradient-to-r from-white/90 to-white/40">Portal</span>
           </h1>

@@ -145,6 +145,22 @@ export default function Complete() {
         >
           Back to Home
         </motion.button>
+
+        {/* MeTime Stories brand stamp */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.1 }}
+          className="flex flex-col items-center gap-1 mt-8"
+        >
+          <img
+            src={`${import.meta.env.BASE_URL}images/metime-logo.png`}
+            alt="Me Time Stories"
+            className="h-10 w-auto object-contain"
+            style={{ mixBlendMode: "screen" }}
+          />
+          <p className="text-white/20 text-[10px] font-bold uppercase tracking-widest">Me Time Stories</p>
+        </motion.div>
       </div>
     </div>
   );
