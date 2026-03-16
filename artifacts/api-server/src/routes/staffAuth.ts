@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { academyStaffTable, academiesTable } from "@workspace/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { verifyPassword, signToken } from "../lib/auth.js";
 import { staffAuth } from "../middlewares/staffAuth.js";
 
@@ -62,16 +62,30 @@ router.post("/staff/login", async (req, res) => {
     return;
   }
 
-  const [academy] = await db
-    .select()
-    .from(academiesTable)
-    .where(eq(academiesTable.id, staff.academyId))
-    .limit(1);
+  // Get academy - use only columns that exist in the database
+  const academyResult = await db.execute(
+    sql`SELECT id, key, name, logo_text, primary_color, secondary_color, welcome_message 
+        FROM academies WHERE id = ${staff.academyId} LIMIT 1`
+  );
 
-  if (!academy) {
+  if (!academyResult.rows || academyResult.rows.length === 0) {
     res.status(500).json({ error: "Academy not found" });
     return;
   }
+
+  const academyRow = academyResult.rows[0];
+  const academy = {
+    id: academyRow.id,
+    key: academyRow.key,
+    name: academyRow.name,
+    logoText: academyRow.logo_text,
+    primaryColor: academyRow.primary_color,
+    secondaryColor: academyRow.secondary_color,
+    accentColor: null,
+    crestUrl: null,
+    welcomeMessage: academyRow.welcome_message,
+    chantUrl: null,
+  };
 
   const token = signToken({
     staffId: staff.id,
@@ -79,7 +93,7 @@ router.post("/staff/login", async (req, res) => {
     role: staff.systemRole,
   });
 
-  const user = buildUser(staff, academy);
+  const user = buildUser(staff, academy as any);
   res.json({ token, user, staff: user });
 });
 
@@ -97,16 +111,29 @@ router.get("/staff/me", staffAuth, async (req, res) => {
     return;
   }
 
-  const [academy] = await db
-    .select()
-    .from(academiesTable)
-    .where(eq(academiesTable.id, staff.academyId))
-    .limit(1);
+  const academyResult = await db.execute(
+    sql`SELECT id, key, name, logo_text, primary_color, secondary_color, welcome_message 
+        FROM academies WHERE id = ${staff.academyId} LIMIT 1`
+  );
 
-  if (!academy) {
-    res.status(500).json({ error: "Academy not found" });
+  if (!academyResult.rows || academyResult.rows.length === 0) {
+    res.status(404).json({ error: "Academy not found" });
     return;
   }
+
+  const academyRow = academyResult.rows[0];
+  const academy = {
+    id: academyRow.id,
+    key: academyRow.key,
+    name: academyRow.name,
+    logoText: academyRow.logo_text,
+    primaryColor: academyRow.primary_color,
+    secondaryColor: academyRow.secondary_color,
+    accentColor: null,
+    crestUrl: null,
+    welcomeMessage: academyRow.welcome_message,
+    chantUrl: null,
+  } as any;
 
   const user = buildUser(staff, academy);
   res.json({ staff: user, user });

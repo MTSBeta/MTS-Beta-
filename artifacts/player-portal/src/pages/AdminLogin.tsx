@@ -28,19 +28,17 @@ export default function AdminLogin() {
     setLoading(true);
     try {
       await login(email.trim(), password);
-      // Check if user is admin
-      const response = await fetch(`${import.meta.env.BASE_URL}api/staff/me`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("staffToken")}`,
-        },
-      });
-      const user = await response.json();
-      if (user.systemRole !== "academy_admin") {
-        setError("You must be an academy admin to access this portal.");
-        localStorage.removeItem("staffToken");
-        return;
-      }
-      navigate("/staff-dashboard");
+      // If login succeeds, check user role in the staffUser context
+      setTimeout(() => {
+        if (staffUser) {
+          if (staffUser.role === "academy_admin") {
+            navigate("/staff-dashboard");
+          } else {
+            setError("You must be an academy admin to access this portal.");
+            localStorage.removeItem("staffToken");
+          }
+        }
+      }, 100);
     } catch (err: any) {
       setError(err.message || "Invalid email or password.");
     } finally {
