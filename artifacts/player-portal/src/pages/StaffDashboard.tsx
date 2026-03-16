@@ -17,7 +17,7 @@ interface StaffUser {
 
 interface Player {
   id: number;
-  playerCode: string;
+  accessCode: string;
   playerName: string;
   age: number;
   position: string;
@@ -91,7 +91,7 @@ export default function StaffDashboard() {
   const academy = staff ? ACADEMIES.find(a => a.id === staff.academyId) : null;
   const filtered = players.filter(p =>
     p.playerName.toLowerCase().includes(search.toLowerCase()) ||
-    p.playerCode.toLowerCase().includes(search.toLowerCase())
+    (p.accessCode ?? "").toLowerCase().includes(search.toLowerCase())
   );
 
   if (isLoading) {
@@ -223,7 +223,7 @@ export default function StaffDashboard() {
                     <div className="flex-1 min-w-0">
                       <p className="text-white font-semibold text-sm leading-none truncate">{player.playerName}</p>
                       <p className="text-white/35 text-xs mt-1">
-                        Age {player.age} · {player.position} · <span className="font-mono">{player.playerCode}</span>
+                        Age {player.age} · {player.position} · <span className="font-mono">{player.accessCode}</span>
                       </p>
                     </div>
 

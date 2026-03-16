@@ -56,6 +56,7 @@ router.get("/staff/players", staffAuth, async (req, res) => {
   res.json(
     players.map((p) => ({
       id: p.id,
+      accessCode: p.accessCode,
       playerName: p.playerName,
       age: p.age,
       shirtNumber: p.shirtNumber,
