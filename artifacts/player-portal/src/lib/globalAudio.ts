@@ -28,22 +28,19 @@ function playWithFallback(audio: HTMLAudioElement): void {
   });
 }
 
-export function preloadMusic(): void {
+/** Fetch and buffer the audio file so it's ready to play instantly later.
+ *  Does NOT attempt playback and does NOT attach any interaction listeners.
+ *  Call this on app boot; call ensureMusicPlaying() only from the Welcome page. */
+export function bufferMusic(): void {
   if (get()) return;
   const audio = createAudioElement();
   set(audio);
   audio.load();
-  audio.play().catch(() => {
-    const tryPlay = () => {
-      audio.play().catch(() => {});
-      document.removeEventListener("click",      tryPlay, { capture: true });
-      document.removeEventListener("touchstart", tryPlay, { capture: true });
-      document.removeEventListener("keydown",    tryPlay, { capture: true });
-    };
-    document.addEventListener("click",      tryPlay, { once: true, capture: true });
-    document.addEventListener("touchstart", tryPlay, { once: true, capture: true });
-    document.addEventListener("keydown",    tryPlay, { once: true, capture: true });
-  });
+}
+
+/** @deprecated Use bufferMusic() for preloading and ensureMusicPlaying() to start. */
+export function preloadMusic(): void {
+  bufferMusic();
 }
 
 export function ensureMusicPlaying(): void {
