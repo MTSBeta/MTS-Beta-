@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
-import { staffLogin as apiLogin, type StaffUser } from "@/lib/staffApi";
+import { staffLogin as apiLogin, fetchAcademyBranding, type StaffUser } from "@/lib/staffApi";
 
 interface StaffAuthContextType {
   staffUser: StaffUser | null;
@@ -20,7 +20,26 @@ export function StaffAuthProvider({ children }: { children: ReactNode }) {
     const storedToken = localStorage.getItem("staff_token");
     if (storedUser && storedToken) {
       try {
-        setStaffUser(JSON.parse(storedUser));
+        const parsed: StaffUser = JSON.parse(storedUser);
+        setStaffUser(parsed);
+
+        fetchAcademyBranding()
+          .then((branding) => {
+            const refreshed: StaffUser = {
+              ...parsed,
+              academyName: branding.name,
+              academyLogoText: branding.logoText,
+              academyPrimaryColor: branding.primaryColor,
+              academySecondaryColor: branding.secondaryColor,
+              academyAccentColor: branding.accentColor,
+              academyCrestUrl: branding.crestUrl,
+              academyWelcomeMessage: branding.welcomeMessage,
+              academyChantUrl: branding.chantUrl,
+            };
+            setStaffUser(refreshed);
+            localStorage.setItem("staff_user", JSON.stringify(refreshed));
+          })
+          .catch(() => {});
       } catch {
         localStorage.removeItem("staff_user");
         localStorage.removeItem("staff_token");
