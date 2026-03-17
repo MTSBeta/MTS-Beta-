@@ -106,10 +106,21 @@ export function StaffLayout({ children }: { children: React.ReactNode }) {
 
         {staffUser?.academyCrestUrl && (
           <div className="flex items-center justify-center py-4 pointer-events-none select-none" aria-hidden="true">
-            <img
+            <motion.img
               src={staffUser.academyCrestUrl}
               alt=""
-              className="w-20 h-20 object-contain opacity-[0.06]"
+              className="w-20 h-20 object-contain"
+              animate={{
+                scale: [1, 1.07, 1],
+                opacity: [0.055, 0.1, 0.055],
+              }}
+              transition={{
+                duration: 7,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "loop",
+              }}
+              style={{ filter: "blur(0.5px) saturate(0.3) brightness(1.8)", mixBlendMode: "screen" }}
             />
           </div>
         )}
@@ -242,12 +253,33 @@ export function StaffLayout({ children }: { children: React.ReactNode }) {
 
       <main className="flex-1 lg:ml-64 min-h-screen relative z-10">
         {staffUser?.academyCrestUrl && (
-          <div className="pointer-events-none fixed bottom-8 right-8 z-0 select-none" aria-hidden="true">
-            <img
-              src={staffUser.academyCrestUrl}
-              alt=""
-              className="w-64 h-64 object-contain opacity-[0.04]"
-            />
+          <div
+            className="pointer-events-none fixed inset-0 z-0 select-none flex items-center justify-center"
+            aria-hidden="true"
+            style={{ left: "256px" }}
+          >
+            <motion.div
+              animate={{
+                scale: [1, 1.07, 1],
+                opacity: [0.045, 0.085, 0.045],
+              }}
+              transition={{
+                duration: 7,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "loop",
+              }}
+              style={{
+                filter: "blur(1.5px) saturate(0.4) brightness(1.8)",
+                mixBlendMode: "screen",
+              }}
+            >
+              <img
+                src={staffUser.academyCrestUrl}
+                alt=""
+                className="w-[420px] h-[420px] object-contain"
+              />
+            </motion.div>
           </div>
         )}
         <div className="pt-14 lg:pt-0 relative z-10">
