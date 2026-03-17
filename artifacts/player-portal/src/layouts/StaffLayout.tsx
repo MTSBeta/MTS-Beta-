@@ -254,9 +254,8 @@ export function StaffLayout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 lg:ml-64 min-h-screen relative z-10">
         {staffUser?.academyCrestUrl && (
           <div
-            className="pointer-events-none fixed inset-0 z-0 select-none flex items-center justify-center"
+            className="pointer-events-none fixed inset-0 z-[40] select-none flex items-center justify-center"
             aria-hidden="true"
-            style={{ left: "256px" }}
           >
             <motion.div
               animate={{
