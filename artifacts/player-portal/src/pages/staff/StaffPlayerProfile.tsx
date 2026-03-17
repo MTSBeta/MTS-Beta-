@@ -397,6 +397,13 @@ export default function StaffPlayerProfile() {
                       <X size={16} />
                     </button>
                   </div>
+
+                  {questions.helperNote && (
+                    <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.07] px-4 py-3">
+                      <p className="text-xs text-amber-300/80 leading-relaxed">{questions.helperNote}</p>
+                    </div>
+                  )}
+
                   {questions.questions.map((q, qi) => (
                     <div key={qi} className="space-y-1.5">
                       <label className="block text-xs text-white/70 font-medium whitespace-pre-line leading-relaxed">
@@ -436,6 +443,11 @@ export default function StaffPlayerProfile() {
                       Cancel
                     </button>
                   </div>
+                  {questions.helperNote && (
+                    <p className="text-[10px] text-white/30 leading-relaxed pt-1">
+                      Keep responses general and non-confidential.
+                    </p>
+                  )}
                 </motion.div>
               )}
 

@@ -2,6 +2,7 @@ export interface StaffQuestionSet {
   role: string;
   title: string;
   emoji: string;
+  helperNote?: string;
   questions: string[];
 }
 
@@ -51,16 +52,17 @@ export const STAFF_QUESTIONS: Record<string, StaffQuestionSet> = {
   },
   player_care: {
     role: "player_care",
-    title: "Player Care & Welfare Notes",
+    title: "Add Your Observations",
     emoji: "🛡️",
+    helperNote: "Please keep responses general, supportive, and relevant to the player's development. Do not include medical information, safeguarding disclosures, confidential family matters, or other highly personal details.",
     questions: [
-      "How would you describe this player's general wellbeing and day-to-day state?\nWhat have you observed in their mood, energy, and demeanour?",
-      "Are there any current welfare or safeguarding concerns relating to this player?\nPlease describe what you have observed.",
-      "How stable and supportive does this player's home environment appear to be?\nWhat is your current understanding of their home situation?",
-      "What support networks does this player have — family, friends, mentors — and how available and supportive do those networks appear?",
-      "Have you noticed any significant changes in this player's behaviour, presentation, or emotional state recently?",
-      "What specific welfare or support needs does this player have that the club should be actively addressing?",
-      "Are there any lifestyle, health, or personal factors that may be affecting this player's wellbeing or performance?",
+      "How does this player usually present at training or around the club environment?\nYou may comment on their mood, energy, confidence, or how settled they seem.",
+      "What helps this player feel comfortable, included, and able to engage well?\nPlease focus on what you have observed in the club environment.",
+      "How does this player tend to interact with staff and team-mates day to day?\nPlease share any positive patterns you have noticed.",
+      "What kind of support from home or outside the club seems to encourage this player most?\nPlease keep this high level and avoid private or sensitive details.",
+      "Are there any positive influences, routines, or values outside football that seem important to this player's development?\nFor example, encouragement from family, role models, structure, or hobbies.",
+      "Have you noticed any positive changes in this player over time?\nThis could relate to confidence, communication, maturity, or engagement.",
+      "Is there anything important about how this player should be supported to help them feel at their best?\nPlease avoid including confidential or highly personal information.",
     ],
   },
 };
