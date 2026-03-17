@@ -120,7 +120,7 @@ export function StaffLayout({ children }: { children: React.ReactNode }) {
                 repeat: Infinity,
                 repeatType: "loop",
               }}
-              style={{ filter: "blur(0.5px) saturate(0.3) brightness(1.8)", mixBlendMode: "screen" }}
+              style={{ filter: "blur(1px) brightness(1.3)" }}
             />
           </div>
         )}
@@ -260,8 +260,8 @@ export function StaffLayout({ children }: { children: React.ReactNode }) {
           >
             <motion.div
               animate={{
-                scale: [1, 1.07, 1],
-                opacity: [0.045, 0.085, 0.045],
+                scale: [1, 1.08, 1],
+                opacity: [0.12, 0.22, 0.12],
               }}
               transition={{
                 duration: 7,
@@ -270,14 +270,13 @@ export function StaffLayout({ children }: { children: React.ReactNode }) {
                 repeatType: "loop",
               }}
               style={{
-                filter: "blur(1.5px) saturate(0.4) brightness(1.8)",
-                mixBlendMode: "screen",
+                filter: "blur(2px) brightness(1.4)",
               }}
             >
               <img
                 src={staffUser.academyCrestUrl}
                 alt=""
-                className="w-[420px] h-[420px] object-contain"
+                className="w-[480px] h-[480px] object-contain"
               />
             </motion.div>
           </div>
