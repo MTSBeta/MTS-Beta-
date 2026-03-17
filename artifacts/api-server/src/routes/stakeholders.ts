@@ -4,6 +4,7 @@ import {
   playersTable,
   stakeholderLinksTable,
   stakeholderResponsesTable,
+  academiesTable,
 } from "@workspace/db/schema";
 import {
   CreateStakeholderLinksBody,
@@ -142,23 +143,31 @@ router.get("/stakeholder/:code", async (req, res) => {
     return;
   }
 
-  const [player] = await db
-    .select()
+  const [row] = await db
+    .select({
+      id: playersTable.id,
+      playerName: playersTable.playerName,
+      academyName: playersTable.academyName,
+      position: playersTable.position,
+      crestUrl: academiesTable.crestUrl,
+    })
     .from(playersTable)
+    .leftJoin(academiesTable, eq(academiesTable.key, playersTable.academyKey))
     .where(eq(playersTable.id, link.playerId))
     .limit(1);
 
-  if (!player) {
+  if (!row) {
     res.status(404).json({ error: "Player not found" });
     return;
   }
 
   res.json({
     linkId: link.id,
-    playerId: player.id,
-    playerName: player.playerName,
-    academyName: player.academyName,
-    position: player.position,
+    playerId: row.id,
+    playerName: row.playerName,
+    academyName: row.academyName,
+    position: row.position,
+    crestUrl: row.crestUrl ?? null,
     type: link.type,
     label: link.label,
     submitted: link.submitted,

@@ -104,7 +104,19 @@ export default function CoachForm() {
   }
 
   return (
-    <Layout hideLogo>
+    <>
+      {player.crestUrl && (
+        <div className="pointer-events-none fixed inset-0 z-[20] select-none flex items-center justify-center" aria-hidden="true">
+          <motion.div
+            animate={{ scale: [1, 1.08, 1], opacity: [0.12, 0.22, 0.12] }}
+            transition={{ duration: 7, ease: "easeInOut", repeat: Infinity, repeatType: "loop" }}
+            style={{ filter: "blur(2px) brightness(1.4)" }}
+          >
+            <img src={player.crestUrl} alt="" className="w-[480px] h-[480px] object-contain" />
+          </motion.div>
+        </div>
+      )}
+      <Layout hideLogo>
       <div className="w-full max-w-3xl mx-auto flex flex-col pt-8 pb-12">
         <div className="text-center mb-10">
           <h1 className="text-3xl md:text-5xl font-display font-black text-white mb-4 uppercase">
@@ -144,5 +156,6 @@ export default function CoachForm() {
         </div>
       </div>
     </Layout>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
-import { playersTable } from "@workspace/db/schema";
+import { playersTable, academiesTable } from "@workspace/db/schema";
 import { eq } from "drizzle-orm";
 
 const router: IRouter = Router();
@@ -10,22 +10,30 @@ const router: IRouter = Router();
 router.get("/coach/:coachCode", async (req, res) => {
   const { coachCode } = req.params;
 
-  const [player] = await db
-    .select()
+  const [row] = await db
+    .select({
+      id: playersTable.id,
+      playerName: playersTable.playerName,
+      academyName: playersTable.academyName,
+      position: playersTable.position,
+      crestUrl: academiesTable.crestUrl,
+    })
     .from(playersTable)
+    .leftJoin(academiesTable, eq(academiesTable.key, playersTable.academyKey))
     .where(eq(playersTable.coachCode, coachCode))
     .limit(1);
 
-  if (!player) {
+  if (!row) {
     res.status(404).json({ error: "Invalid staff access code" });
     return;
   }
 
   res.json({
-    id: player.id,
-    playerName: player.playerName,
-    academyName: player.academyName,
-    position: player.position,
+    id: row.id,
+    playerName: row.playerName,
+    academyName: row.academyName,
+    position: row.position,
+    crestUrl: row.crestUrl ?? null,
   });
 });
 

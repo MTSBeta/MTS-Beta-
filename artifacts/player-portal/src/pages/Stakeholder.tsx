@@ -119,6 +119,19 @@ export default function Stakeholder() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0a0a]" />
       </div>
 
+      {/* Breathing crest watermark */}
+      {info.crestUrl && (
+        <div className="pointer-events-none fixed inset-0 z-[20] select-none flex items-center justify-center" aria-hidden="true">
+          <motion.div
+            animate={{ scale: [1, 1.08, 1], opacity: [0.12, 0.22, 0.12] }}
+            transition={{ duration: 7, ease: "easeInOut", repeat: Infinity, repeatType: "loop" }}
+            style={{ filter: "blur(2px) brightness(1.4)" }}
+          >
+            <img src={info.crestUrl} alt="" className="w-[480px] h-[480px] object-contain" />
+          </motion.div>
+        </div>
+      )}
+
       {/* Sticky header */}
       <div className="sticky top-0 z-30 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/6">
         <div className="flex items-center justify-between px-4 h-12">
