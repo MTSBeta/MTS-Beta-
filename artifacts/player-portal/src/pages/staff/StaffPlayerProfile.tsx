@@ -367,7 +367,7 @@ export default function StaffPlayerProfile() {
                     <div className="space-y-3">
                       {sub.responses.map((r) => (
                         <div key={r.questionNumber} className="bg-white/[0.03] rounded-xl p-4 border border-white/5">
-                          <p className="text-xs font-semibold text-white/60 mb-1">
+                          <p className="text-xs font-semibold text-white/60 mb-1 whitespace-pre-line leading-relaxed">
                             Q{r.questionNumber}. {r.questionText}
                           </p>
                           <p className="text-white/90 text-sm italic pl-3 border-l-2 border-white/10">
@@ -399,7 +399,7 @@ export default function StaffPlayerProfile() {
                   </div>
                   {questions.questions.map((q, qi) => (
                     <div key={qi} className="space-y-1.5">
-                      <label className="text-xs text-white/70 font-medium">
+                      <label className="block text-xs text-white/70 font-medium whitespace-pre-line leading-relaxed">
                         {qi + 1}. {q}
                       </label>
                       <textarea
