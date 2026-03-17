@@ -11,12 +11,12 @@ interface BadgeSystemProps {
 
 export function RoleBadge({ role }: { role: string }) {
   const roleConfig: Record<string, { label: string; color: string }> = {
-    academy_admin: { label: "Academy Admin", color: "bg-amber-900/30 border-amber-600 text-amber-200" },
-    staff: { label: "Staff", color: "bg-blue-900/30 border-blue-600 text-blue-200" },
-    football_coaching: { label: "Football Coaching", color: "bg-green-900/30 border-green-600 text-green-200" },
-    psychology: { label: "Psychology", color: "bg-purple-900/30 border-purple-600 text-purple-200" },
-    education: { label: "Education", color: "bg-orange-900/30 border-orange-600 text-orange-200" },
-    player_care: { label: "Player Care", color: "bg-pink-900/30 border-pink-600 text-pink-200" },
+    academy_admin:     { label: "Education Lead / Super Admin", color: "bg-amber-900/30 border-amber-600 text-amber-200" },
+    staff:             { label: "Staff",                        color: "bg-blue-900/30 border-blue-600 text-blue-200" },
+    football_coaching: { label: "Football Development Lead",    color: "bg-green-900/30 border-green-600 text-green-200" },
+    psychology:        { label: "Psychology Lead",              color: "bg-purple-900/30 border-purple-600 text-purple-200" },
+    education:         { label: "Education Lead",               color: "bg-amber-900/30 border-amber-600 text-amber-200" },
+    player_care:       { label: "Player Care & Welfare Lead",   color: "bg-pink-900/30 border-pink-600 text-pink-200" },
   };
 
   const config = roleConfig[role] || { label: role, color: "bg-gray-900/30 border-gray-600 text-gray-200" };

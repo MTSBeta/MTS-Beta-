@@ -532,41 +532,49 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Staff demo cards */}
+          {/* Staff demo cards — 4 club support leads */}
           <div className="w-full">
             <div className="text-center mb-3">
               <div className="text-xs font-bold text-white/30 uppercase tracking-widest font-display mb-1">
                 Staff Portal Demo
               </div>
               <p className="text-white/40 text-xs max-w-xs mx-auto">
-                Log in as a staff member to see the academy dashboard first-hand.
+                Four club support leads — all contributing to the same player application.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
                 {
-                  badge: "ADM",
-                  label: "Academy Admin",
-                  role: "Academy Administrator",
-                  email: "admin@arsenal.co.uk",
-                  password: "admin123",
+                  badge: "EDU",
+                  label: "Education Lead",
+                  role: "Education Lead / Super Admin",
+                  email: "edu@arsenal.co.uk",
+                  password: "edu123",
                   color: "#C8102E",
                 },
                 {
-                  badge: "COACH",
-                  label: "Lead Coach",
-                  role: "Academy Lead Coach",
-                  email: "coach@arsenal.co.uk",
-                  password: "test123",
-                  color: "#EF0107",
-                },
-                {
-                  badge: "PSYCH",
-                  label: "Psychologist",
-                  role: "Head of Psychology",
+                  badge: "PSY",
+                  label: "Psychology Lead",
+                  role: "Psychology Lead",
                   email: "psych@arsenal.co.uk",
                   password: "psych123",
                   color: "#6D28D9",
+                },
+                {
+                  badge: "WEL",
+                  label: "Player Care Lead",
+                  role: "Player Care & Welfare Lead",
+                  email: "welfare@arsenal.co.uk",
+                  password: "welfare123",
+                  color: "#065F46",
+                },
+                {
+                  badge: "FBD",
+                  label: "Football Dev Lead",
+                  role: "Football Development Lead",
+                  email: "football@arsenal.co.uk",
+                  password: "football123",
+                  color: "#EF0107",
                 },
               ].map((demo) => (
                 <DemoStaffCard

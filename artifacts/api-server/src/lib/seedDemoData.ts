@@ -511,35 +511,69 @@ function staffSubmissionsFor(
   ];
 }
 
-const DEMO_STAFF = [
+/**
+ * The four club support roles for the demo.
+ * Education Lead doubles as Super Admin (system_role = 'academy_admin').
+ * Each of the other three leads has system_role = 'staff' and a specific question_role.
+ */
+const DEMO_LEADS = [
   {
-    email: "coach@arsenal.co.uk",
-    fullName: "Demo Coach",
-    password: "test123",
-    systemRole: "staff",
-    jobTitle: "Academy Lead Coach",
+    email: "edu@arsenal.co.uk",
+    fullName: "Sarah Mitchell",
+    password: "edu123",
+    systemRole: "academy_admin",
+    questionRole: "education",
+    jobTitle: "Education Lead",
   },
   {
     email: "psych@arsenal.co.uk",
     fullName: "Dr. Sarah Evans",
     password: "psych123",
     systemRole: "staff",
-    jobTitle: "Head of Psychology",
+    questionRole: "psychology",
+    jobTitle: "Psychology Lead",
+  },
+  {
+    email: "welfare@arsenal.co.uk",
+    fullName: "James Crawford",
+    password: "welfare123",
+    systemRole: "staff",
+    questionRole: "player_care",
+    jobTitle: "Player Care & Welfare Lead",
+  },
+  {
+    email: "football@arsenal.co.uk",
+    fullName: "Marcus Reid",
+    password: "football123",
+    systemRole: "staff",
+    questionRole: "football_coaching",
+    jobTitle: "Football Development Lead",
   },
 ];
 
 async function seedDemoStaffAccounts(academyId: number) {
-  for (const member of DEMO_STAFF) {
+  for (const member of DEMO_LEADS) {
     const existing = await db.execute(
-      sql`SELECT id FROM academy_staff WHERE email = ${member.email} LIMIT 1`
+      sql`SELECT id, question_role FROM academy_staff WHERE email = ${member.email} LIMIT 1`
     );
-    if ((existing.rows as any[]).length > 0) continue;
+    const rows = existing.rows as any[];
+    if (rows.length > 0) {
+      // If account exists but missing question_role, patch it
+      if (!rows[0].question_role) {
+        await db.execute(
+          sql`UPDATE academy_staff SET question_role = ${member.questionRole}, job_title = ${member.jobTitle}
+              WHERE email = ${member.email}`
+        );
+        console.log(`[demo-seed] Updated question_role for: ${member.email}`);
+      }
+      continue;
+    }
     const hash = await bcrypt.hash(member.password, 10);
     await db.execute(
-      sql`INSERT INTO academy_staff (academy_id, full_name, email, auth_user_id, system_role, job_title, is_active)
-          VALUES (${academyId}, ${member.fullName}, ${member.email}, ${hash}, ${member.systemRole}, ${member.jobTitle}, true)`
+      sql`INSERT INTO academy_staff (academy_id, full_name, email, auth_user_id, system_role, question_role, job_title, is_active)
+          VALUES (${academyId}, ${member.fullName}, ${member.email}, ${hash}, ${member.systemRole}, ${member.questionRole}, ${member.jobTitle}, true)`
     );
-    console.log(`[demo-seed] Created staff account: ${member.email}`);
+    console.log(`[demo-seed] Created ${member.jobTitle}: ${member.email}`);
   }
 }
 

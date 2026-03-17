@@ -8,7 +8,7 @@ export interface StaffQuestionSet {
 export const STAFF_QUESTIONS: Record<string, StaffQuestionSet> = {
   football_coaching: {
     role: "football_coaching",
-    title: "Football Coaching Observations",
+    title: "Football Development Observations",
     emoji: "📋",
     questions: [
       "Describe a specific moment in training or a match where this player demonstrated a key technical strength. What did you observe?",
@@ -36,7 +36,7 @@ export const STAFF_QUESTIONS: Record<string, StaffQuestionSet> = {
   },
   education: {
     role: "education",
-    title: "Education Staff Observations",
+    title: "Education Lead Observations",
     emoji: "📚",
     questions: [
       "How does this player approach academic challenges? Describe their attitude and effort in learning environments.",
@@ -65,17 +65,26 @@ export function getStaffQuestions(role: string): StaffQuestionSet | null {
 }
 
 export const STAFF_ROLES = [
-  { value: "football_coaching", label: "Football Coaching" },
-  { value: "psychology", label: "Psychology" },
-  { value: "education", label: "Education" },
-  { value: "player_care", label: "Player Care" },
-  { value: "academy_admin", label: "Academy Admin" },
+  { value: "football_coaching", label: "Football Development Lead" },
+  { value: "psychology",        label: "Psychology Lead" },
+  { value: "education",         label: "Education Lead" },
+  { value: "player_care",       label: "Player Care & Welfare Lead" },
+  { value: "academy_admin",     label: "Education Lead / Super Admin" },
 ];
 
 export const ROLE_LABELS: Record<string, string> = {
-  football_coaching: "Football Coaching",
-  psychology: "Psychology",
-  education: "Education",
-  player_care: "Player Care",
-  academy_admin: "Academy Admin",
+  football_coaching: "Football Development Lead",
+  psychology:        "Psychology Lead",
+  education:         "Education Lead",
+  player_care:       "Player Care & Welfare Lead",
+  academy_admin:     "Education Lead / Super Admin",
+};
+
+/** Short display label for use in tight UI spaces */
+export const ROLE_SHORT: Record<string, string> = {
+  football_coaching: "Football Development",
+  psychology:        "Psychology",
+  education:         "Education",
+  player_care:       "Player Care & Welfare",
+  academy_admin:     "Super Admin",
 };

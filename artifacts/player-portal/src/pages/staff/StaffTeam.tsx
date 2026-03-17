@@ -12,15 +12,15 @@ import {
 const MAX_STAFF = 8;
 
 const QUESTION_ROLES = [
-  { value: "football_coaching", label: "Football Coaching",  description: "Technical, tactical & physical performance observations" },
-  { value: "psychology",        label: "Psychology",          description: "Mental wellbeing, resilience & motivation" },
-  { value: "education",         label: "Education",           description: "Academic performance & life balance" },
-  { value: "player_care",       label: "Player Care",         description: "Welfare, relationships & safeguarding" },
+  { value: "football_coaching", label: "Football Development Lead",    description: "Technical, tactical & physical performance observations" },
+  { value: "psychology",        label: "Psychology Lead",              description: "Mental wellbeing, resilience & motivation" },
+  { value: "education",         label: "Education Lead",               description: "Academic performance & life balance" },
+  { value: "player_care",       label: "Player Care & Welfare Lead",   description: "Welfare, relationships & safeguarding" },
 ];
 
 const SYSTEM_ROLES = [
-  { value: "staff",         label: "Staff",         description: "View players and submit their assigned observations" },
-  { value: "academy_admin", label: "Academy Admin", description: "Full access — manages team, players and settings" },
+  { value: "staff",         label: "Staff",                        description: "View players and submit their assigned observations" },
+  { value: "academy_admin", label: "Education Lead / Super Admin",  description: "Full access — manages team, players, settings and education submissions" },
 ];
 
 function qRoleLabel(r: string | null) {

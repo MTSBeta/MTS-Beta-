@@ -1,0 +1,117 @@
+You may be missing the point slightly, so please update the system architecture and demo setup to reflect this properly.
+
+We need a club-based admin structure with exactly 4 admin roles per club.
+
+For every club, there should be:
+
+1. Education Lead — this person is also the Super Admin
+2. Psychology Lead
+3. Player Care and Welfare Lead
+4. Football Development Lead
+
+Core requirements:
+
+1. One Super Admin per club
+- The Education Lead should be the Super Admin
+- This user must be able to create, manage, and deactivate the other admin users for that club
+- This user must be able to oversee all player applications for that club
+- This user must also be able to submit their own support input as the Education Lead
+
+2. Three additional club admins
+- Psychology Lead
+- Player Care and Welfare Lead
+- Football Development Lead
+- Each of these users must have their own separate login
+- Each must be able to access the relevant player application records for their club
+- Each must be able to submit supporting notes, materials, and responses in their own area of responsibility
+
+3. One player = one application = one question set
+This is very important:
+We do NOT want two sets of questions.
+We do NOT want one question flow for the player and another separate one for staff/admins.
+
+Instead:
+- the player completes their story/application once
+- that creates a single shared application record
+- the four club support roles then contribute to that SAME application record
+- admins should not trigger a second questionnaire
+- admins should not see a duplicated version of the application
+- the same questions generated from the player journey should be the ones tied to the shared player record
+
+4. Admin workflow
+Once the player finishes their story/application:
+- the shared application becomes available to the relevant club admins
+- each admin can log in and add their contribution to the same player record
+- their input should be attached by role
+- their input can be completed independently
+- the system should show which sections are pending, completed, or updated by each support role
+
+5. Timing / submission logic
+Admins should be able to submit supporting materials at any time AFTER the player has completed their application.
+They should not need a second workflow.
+They should simply add their contributions into the existing shared application.
+
+6. Permission design
+Education Lead / Super Admin:
+- create admins
+- edit admin permissions for that club
+- view all player applications
+- view all support inputs
+- add education support input
+- manage application status
+
+Psychology Lead:
+- log in
+- view assigned/shared player applications for their club
+- add psychology support notes/materials only
+
+Player Care and Welfare Lead:
+- log in
+- view assigned/shared player applications for their club
+- add player care and welfare support notes/materials only
+
+Football Development Lead:
+- log in
+- view assigned/shared player applications for their club
+- add football development support notes/materials only
+
+7. Data structure
+Please structure this so that:
+- clubs have many users
+- users have role-based permissions
+- clubs have many player applications
+- each player application has one main question set / one main story/application flow
+- each application has support sections linked to the four admin roles
+- all role contributions live inside the same application record, not in separate duplicated forms
+
+8. Demo requirement
+For the Arsenal demo, create and show these demo accounts with correct permissions and visible functionality:
+
+- Education Lead / Super Admin
+- Psychology Admin
+- Player Care and Welfare Admin
+- Football Development Admin
+
+I want to be able to log into each of these demo accounts and clearly see:
+- what they can access
+- what they can submit
+- that they are all contributing to the same player application
+- that there is only one set of player questions, not two
+
+9. UI expectations
+Please make the interface clearly show:
+- the shared player application
+- support sections by role
+- which role has completed their input
+- which role is still pending
+- admin permissions based on role
+
+10. Final principle
+The key principle is:
+
+ONE PLAYER
+ONE APPLICATION
+ONE QUESTION SET
+FOUR CLUB SUPPORT ROLES CONTRIBUTING TO THE SAME RECORD
+
+Please implement the role structure, permission model, shared application workflow, and Arsenal demo accounts accordingly.

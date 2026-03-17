@@ -172,12 +172,12 @@ export default function StaffPlayerProfile() {
   const { player, journeyResponses, parentSubmission, staffSubmissions, completionStatus } = profile;
 
   const completionItems = [
-    { label: "Player Journey", done: completionStatus.journey },
-    { label: "Parent Submission", done: completionStatus.parent },
-    { label: "Football Coaching", done: completionStatus.footballCoaching },
-    { label: "Psychology", done: completionStatus.psychology },
-    { label: "Education", done: completionStatus.education },
-    { label: "Player Care", done: completionStatus.playerCare },
+    { label: "Player Journey",              done: completionStatus.journey },
+    { label: "Parent / Guardian",           done: completionStatus.parent },
+    { label: "Football Development Lead",   done: completionStatus.footballCoaching },
+    { label: "Psychology Lead",             done: completionStatus.psychology },
+    { label: "Education Lead",              done: completionStatus.education },
+    { label: "Player Care & Welfare Lead",  done: completionStatus.playerCare },
   ];
   const completedCount = completionItems.filter((c) => c.done).length;
 

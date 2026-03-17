@@ -41,7 +41,15 @@ export default function StaffDashboard() {
             Welcome back, {staffUser?.name?.split(" ")[0]}
           </h1>
           <div className="flex flex-wrap items-center gap-3 mt-3">
-            {staffUser?.role && <RoleBadge role={staffUser.role} />}
+            {staffUser && (
+              <RoleBadge
+                role={
+                  staffUser.role === "academy_admin"
+                    ? "academy_admin"
+                    : (staffUser.questionRole || staffUser.role)
+                }
+              />
+            )}
             <span className="text-white/30">•</span>
             <span className="text-white/60 text-sm">{staffUser?.academyName}</span>
           </div>
