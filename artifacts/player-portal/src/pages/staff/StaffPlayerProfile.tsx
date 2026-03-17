@@ -338,7 +338,7 @@ export default function StaffPlayerProfile() {
           return (
             <SectionAccordion
               key={role}
-              title={`${questions?.emoji || ""} ${ROLE_LABELS[role] || role}`}
+              title={ROLE_LABELS[role] || role}
               sectionKey={role}
               open={!!openSections[role]}
               onToggle={() => toggleSection(role)}
