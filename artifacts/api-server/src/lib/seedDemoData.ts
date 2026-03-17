@@ -511,6 +511,38 @@ function staffSubmissionsFor(
   ];
 }
 
+const DEMO_STAFF = [
+  {
+    email: "coach@arsenal.co.uk",
+    fullName: "Demo Coach",
+    password: "test123",
+    systemRole: "staff",
+    jobTitle: "Academy Lead Coach",
+  },
+  {
+    email: "psych@arsenal.co.uk",
+    fullName: "Dr. Sarah Evans",
+    password: "psych123",
+    systemRole: "staff",
+    jobTitle: "Head of Psychology",
+  },
+];
+
+async function seedDemoStaffAccounts(academyId: number) {
+  for (const member of DEMO_STAFF) {
+    const existing = await db.execute(
+      sql`SELECT id FROM academy_staff WHERE email = ${member.email} LIMIT 1`
+    );
+    if ((existing.rows as any[]).length > 0) continue;
+    const hash = await bcrypt.hash(member.password, 10);
+    await db.execute(
+      sql`INSERT INTO academy_staff (academy_id, full_name, email, auth_user_id, system_role, job_title, is_active)
+          VALUES (${academyId}, ${member.fullName}, ${member.email}, ${hash}, ${member.systemRole}, ${member.jobTitle}, true)`
+    );
+    console.log(`[demo-seed] Created staff account: ${member.email}`);
+  }
+}
+
 export async function seedDemoData() {
   try {
     const academyResult = await db.execute(
@@ -523,6 +555,8 @@ export async function seedDemoData() {
     }
 
     const academy = academyResult.rows[0] as { id: number; key: string; name: string };
+
+    await seedDemoStaffAccounts(academy.id);
 
     const adminResult = await db
       .select()

@@ -85,6 +85,91 @@ function DemoPlayerCard({
   );
 }
 
+function DemoStaffCard({
+  badge,
+  label,
+  role,
+  email,
+  password,
+  color,
+  onTry,
+}: {
+  badge: string;
+  label: string;
+  role: string;
+  email: string;
+  password: string;
+  color: string;
+  onTry: () => void;
+}) {
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [copiedPass, setCopiedPass] = useState(false);
+
+  const copyEmail = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(email).then(() => {
+      setCopiedEmail(true);
+      setTimeout(() => setCopiedEmail(false), 2000);
+    });
+  };
+  const copyPass = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(password).then(() => {
+      setCopiedPass(true);
+      setTimeout(() => setCopiedPass(false), 2000);
+    });
+  };
+
+  return (
+    <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+      <div className="flex items-center gap-2.5">
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-[9px] font-black text-white font-display shrink-0"
+          style={{ background: `${color}25`, border: `1px solid ${color}40` }}
+        >
+          {badge}
+        </div>
+        <div>
+          <div className="text-white text-sm font-bold font-display uppercase tracking-wide leading-tight">
+            {label}
+          </div>
+          <div className="text-white/40 text-xs">{role} · Arsenal</div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between bg-black/30 rounded-xl px-3 py-2 border border-white/8 gap-2">
+        <span className="text-white/70 font-mono text-xs tracking-tight truncate min-w-0">{email}</span>
+        <button
+          onClick={copyEmail}
+          className="p-1 rounded-lg hover:bg-white/10 transition-colors text-white/30 hover:text-white/70 shrink-0"
+          title="Copy email"
+        >
+          {copiedEmail ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
+        </button>
+      </div>
+
+      <div className="flex items-center justify-between bg-black/30 rounded-xl px-3 py-2 border border-white/8">
+        <span className="text-white font-mono font-bold text-sm tracking-widest">{password}</span>
+        <button
+          onClick={copyPass}
+          className="ml-2 p-1 rounded-lg hover:bg-white/10 transition-colors text-white/30 hover:text-white/70 shrink-0"
+          title="Copy password"
+        >
+          {copiedPass ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
+        </button>
+      </div>
+
+      <button
+        onClick={onTry}
+        className="w-full h-9 rounded-xl text-xs font-display font-black uppercase tracking-widest transition-all hover:opacity-90 active:scale-95"
+        style={{ background: color, color: "#fff" }}
+      >
+        Try This Demo →
+      </button>
+    </div>
+  );
+}
+
 export default function Home() {
   const [_, navigate] = useLocation();
   const { selectedAcademy, setSelectedAcademy } = usePlayerContext();
@@ -447,20 +532,49 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Staff credentials */}
-          <div className="w-full rounded-2xl border border-white/8 bg-white/[0.02] px-5 py-4">
-            <div className="text-xs font-bold text-white/30 uppercase tracking-widest font-display mb-3">
-              Staff Portal Demo
+          {/* Staff demo cards */}
+          <div className="w-full">
+            <div className="text-center mb-3">
+              <div className="text-xs font-bold text-white/30 uppercase tracking-widest font-display mb-1">
+                Staff Portal Demo
+              </div>
+              <p className="text-white/40 text-xs max-w-xs mx-auto">
+                Log in as a staff member to see the academy dashboard first-hand.
+              </p>
             </div>
-            <div className="space-y-2 text-xs font-mono">
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-white/40">Coach login</span>
-                <span className="text-white/60">coach@arsenal.co.uk / test123</span>
-              </div>
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-white/40">Admin login</span>
-                <span className="text-white/60">admin@arsenal.co.uk / admin123</span>
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {[
+                {
+                  badge: "ADM",
+                  label: "Academy Admin",
+                  role: "Academy Administrator",
+                  email: "admin@arsenal.co.uk",
+                  password: "admin123",
+                  color: "#C8102E",
+                },
+                {
+                  badge: "COACH",
+                  label: "Lead Coach",
+                  role: "Academy Lead Coach",
+                  email: "coach@arsenal.co.uk",
+                  password: "test123",
+                  color: "#EF0107",
+                },
+                {
+                  badge: "PSYCH",
+                  label: "Psychologist",
+                  role: "Head of Psychology",
+                  email: "psych@arsenal.co.uk",
+                  password: "psych123",
+                  color: "#6D28D9",
+                },
+              ].map((demo) => (
+                <DemoStaffCard
+                  key={demo.email}
+                  {...demo}
+                  onTry={() => navigate("/staff-login")}
+                />
+              ))}
             </div>
           </div>
 
