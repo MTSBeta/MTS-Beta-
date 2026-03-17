@@ -3,7 +3,7 @@ import { academiesTable } from "@workspace/db/schema";
 import { eq, sql } from "drizzle-orm";
 
 const ACADEMY_SEED_DATA = [
-  { key: "arsenal",            accessCode: "COACH-ARS-003", name: "Arsenal",                     logoText: "AFC",   primaryColor: "#EF0107", secondaryColor: "#FFFFFF", welcomeMessage: "Victoria Concordia Crescit. Welcome to the Arsenal Academy family.",                              maxStaffAccounts: 8 },
+  { key: "arsenal",            accessCode: "COACH-ARS-003", name: "Arsenal",                     logoText: "AFC",   primaryColor: "#EF0107", secondaryColor: "#FFFFFF", welcomeMessage: "Victoria Concordia Crescit. Welcome to the Arsenal Academy family.",                              maxStaffAccounts: 8, crestUrl: "/images/clubs/arsenal.svg" },
   { key: "aston-villa",        accessCode: "COACH-AST-009", name: "Aston Villa",                 logoText: "AVFC",  primaryColor: "#670E36", secondaryColor: "#95BFE5", welcomeMessage: "In Preparation is Victory. Your Villa story starts here.",                                         maxStaffAccounts: 8 },
   { key: "bournemouth",        accessCode: "COACH-BOU-010", name: "Bournemouth",                 logoText: "AFCB",  primaryColor: "#DA291C", secondaryColor: "#000000", welcomeMessage: "Welcome to the Cherries Academy. Your journey on the south coast starts now.",                    maxStaffAccounts: 8 },
   { key: "brentford",          accessCode: "COACH-BRE-011", name: "Brentford",                   logoText: "BFC",   primaryColor: "#E30613", secondaryColor: "#FFFFFF", welcomeMessage: "Welcome to Brentford Academy. Think differently, play boldly.",                                   maxStaffAccounts: 8 },

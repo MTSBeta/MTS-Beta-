@@ -11,8 +11,25 @@ import {
   X,
   Shield,
 } from "lucide-react";
+
 import { useStaffAuth } from "@/hooks/useStaffAuth";
 import { ROLE_LABELS } from "@/data/staffQuestions";
+
+function ClubBadge({ src, logoText, size }: { src: string | null | undefined; logoText?: string; size: number }) {
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={logoText || "Club badge"}
+        width={size}
+        height={size}
+        className="object-contain drop-shadow-sm"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+  return <Shield size={size * 0.55} />;
+}
 
 interface NavItem {
   label: string;
@@ -48,14 +65,14 @@ export function StaffLayout({ children }: { children: React.ReactNode }) {
         <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01]" />
       </div>
 
-      <aside className="hidden lg:flex flex-col w-64 fixed inset-y-0 left-0 z-30 bg-black/60 backdrop-blur-xl border-r border-white/8">
+      <aside className="hidden lg:flex flex-col w-64 fixed inset-y-0 left-0 z-30 bg-black/60 backdrop-blur-xl border-r border-white/8 overflow-hidden">
         <div className="p-5 border-b border-white/8">
           <div className="flex items-center gap-3">
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-sm font-display"
-              style={{ background: primaryColor }}
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black text-sm font-display flex-shrink-0"
+              style={{ background: staffUser?.academyCrestUrl ? "transparent" : primaryColor }}
             >
-              <Shield size={20} />
+              <ClubBadge src={staffUser?.academyCrestUrl} logoText={staffUser?.academyLogoText} size={36} />
             </div>
             <div className="min-w-0">
               <div className="text-white font-bold text-sm truncate">
@@ -87,6 +104,16 @@ export function StaffLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
+        {staffUser?.academyCrestUrl && (
+          <div className="flex items-center justify-center py-4 pointer-events-none select-none" aria-hidden="true">
+            <img
+              src={staffUser.academyCrestUrl}
+              alt=""
+              className="w-20 h-20 object-contain opacity-[0.06]"
+            />
+          </div>
+        )}
+
         <div className="p-4 border-t border-white/8">
           <div className="flex items-center gap-3 mb-3">
             <div
@@ -115,10 +142,10 @@ export function StaffLayout({ children }: { children: React.ReactNode }) {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 h-14 bg-black/80 backdrop-blur-xl border-b border-white/8 flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-xs"
-            style={{ background: primaryColor }}
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-xs flex-shrink-0"
+            style={{ background: staffUser?.academyCrestUrl ? "transparent" : primaryColor }}
           >
-            <Shield size={16} />
+            <ClubBadge src={staffUser?.academyCrestUrl} logoText={staffUser?.academyLogoText} size={30} />
           </div>
           <span className="text-white font-bold text-sm">{staffUser?.academyName}</span>
         </div>
@@ -151,10 +178,10 @@ export function StaffLayout({ children }: { children: React.ReactNode }) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center text-white"
-                      style={{ background: primaryColor }}
+                      className="w-9 h-9 rounded-xl flex items-center justify-center text-white flex-shrink-0"
+                      style={{ background: staffUser?.academyCrestUrl ? "transparent" : primaryColor }}
                     >
-                      <Shield size={18} />
+                      <ClubBadge src={staffUser?.academyCrestUrl} logoText={staffUser?.academyLogoText} size={34} />
                     </div>
                     <div>
                       <div className="text-white font-bold text-sm">{staffUser?.academyName}</div>
@@ -214,7 +241,16 @@ export function StaffLayout({ children }: { children: React.ReactNode }) {
       </AnimatePresence>
 
       <main className="flex-1 lg:ml-64 min-h-screen relative z-10">
-        <div className="pt-14 lg:pt-0">
+        {staffUser?.academyCrestUrl && (
+          <div className="pointer-events-none fixed bottom-8 right-8 z-0 select-none" aria-hidden="true">
+            <img
+              src={staffUser.academyCrestUrl}
+              alt=""
+              className="w-64 h-64 object-contain opacity-[0.04]"
+            />
+          </div>
+        )}
+        <div className="pt-14 lg:pt-0 relative z-10">
           <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto">{children}</div>
         </div>
       </main>

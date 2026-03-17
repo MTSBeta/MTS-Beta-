@@ -1,0 +1,70 @@
+Update the Player Care / Welfare section so it is safe, appropriate, and aligned with the fact that we are writing a book and building a player-support profile — not collecting safeguarding case information.
+
+This section may lightly explore support from home and the player’s wider environment, but it must NOT invite sensitive personal data.
+
+Important safeguarding and privacy rules:
+- Do not ask for safeguarding disclosures
+- Do not ask for medical information or diagnoses
+- Do not ask for trauma, abuse, neglect, or mental health history
+- Do not ask for family conflict, finances, custody, or legal issues
+- Do not ask staff to assess whether a home is “stable” or “unstable”
+- Do not ask for confidential or highly personal background details
+- Keep all questions general, observational, and suitable for a book-writing / player-development workflow
+- Questions should focus on what helps us understand the player in a supportive, respectful, high-level way
+
+The tone should be:
+- warm
+- child-centred
+- observational
+- strength-based
+- non-clinical
+- non-intrusive
+
+Please rename or present this section in a safe way. You can keep the internal role as Player Care and Welfare, but the visible form language should feel lighter and less like a safeguarding report.
+
+Use this section title:
+Add Your Observations
+
+Use this helper note at the top of the form:
+Please keep responses general, supportive, and relevant to the player’s development. Do not include medical information, safeguarding disclosures, confidential family matters, or other highly personal details.
+
+Use these questions exactly:
+
+1. How does this player usually present at training or around the club environment?
+You may comment on their mood, energy, confidence, or how settled they seem.
+
+2. What helps this player feel comfortable, included, and able to engage well?
+Please focus on what you have observed in the club environment.
+
+3. How does this player tend to interact with staff and team-mates day to day?
+Please share any positive patterns you have noticed.
+
+4. What kind of support from home or outside the club seems to encourage this player most?
+Please keep this high level and avoid private or sensitive details.
+
+5. Are there any positive influences, routines, or values outside football that seem important to this player’s development?
+For example, encouragement from family, role models, structure, or hobbies.
+
+6. Have you noticed any positive changes in this player over time?
+This could relate to confidence, communication, maturity, or engagement.
+
+7. Is there anything important about how this player should be supported to help them feel at their best?
+Please avoid including confidential or highly personal information.
+
+Implementation requirements:
+- Keep this as part of the shared player application record
+- Do not create a separate welfare questionnaire
+- Do not generate duplicate questions
+- Save responses under the Player Care / Welfare support role
+- Make the helper note clearly visible before any text entry fields
+- Add placeholder text in each answer box such as: “Share your observations...”
+- Include a small reminder near the save button such as:
+  “Keep responses general and non-confidential.”
+
+Validation / guardrails:
+- If possible, add a soft UI reminder when users are completing this section:
+  “Please do not include safeguarding disclosures, medical details, or private family information.”
+- If possible, flag or warn against language that appears to include highly sensitive information, while still allowing normal high-level observations
+
+Main principle:
+We want useful, human, supportive observations that help us understand the player and write responsibly, without asking clubs to provide sensitive safeguarding information.
