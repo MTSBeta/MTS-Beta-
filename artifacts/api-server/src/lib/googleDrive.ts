@@ -48,7 +48,7 @@ export function isDriveConfigured(): boolean {
 
 /**
  * Find a subfolder by name inside a parent folder.
- * Returns the folder ID if found, null otherwise.
+ * supportsAllDrives: true — works for both personal Drive and Shared Drives.
  */
 async function findFolder(parentId: string, name: string): Promise<string | null> {
   const drive = getDriveClient();
@@ -56,18 +56,19 @@ async function findFolder(parentId: string, name: string): Promise<string | null
   const res = await drive.files.list({
     q: `'${parentId}' in parents and name = '${safeName}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
     fields: "files(id, name)",
-    spaces: "drive",
+    includeItemsFromAllDrives: true,
+    supportsAllDrives: true,
   });
   return res.data.files?.[0]?.id ?? null;
 }
 
 /**
  * Create a subfolder inside a parent folder.
- * Returns the new folder ID.
  */
 async function createFolder(parentId: string, name: string): Promise<string> {
   const drive = getDriveClient();
   const res = await drive.files.create({
+    supportsAllDrives: true,
     requestBody: {
       name,
       mimeType: "application/vnd.google-apps.folder",
@@ -107,16 +108,17 @@ export interface DriveUploadOptions {
  * Upload a file to Google Drive under:
  *   ROOT_FOLDER / academy_name / player_code / filename
  *
- * Folders are created automatically if they don't already exist.
+ * Uses supportsAllDrives: true — works for personal shared folders and Shared Drives.
+ * The root folder MUST be shared with the service account email as Editor.
  */
 export async function uploadToDrive(opts: DriveUploadOptions): Promise<DriveUploadResult> {
   if (!isDriveConfigured()) {
-    throw new Error("Google Drive credentials not configured. Add GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEY, and optionally GOOGLE_DRIVE_FOLDER_ID to environment.");
+    throw new Error("Google Drive credentials not configured.");
   }
 
   const drive = getDriveClient();
 
-  // Sanitise folder names — remove slashes / illegal chars
+  // Sanitise folder names
   const sanitize = (s: string) => s.replace(/[\/\\:*?"<>|]/g, "_").trim() || "Unknown";
   const academyFolder = sanitize(opts.academyName);
   const playerFolder  = sanitize(opts.playerCode);
@@ -128,6 +130,7 @@ export async function uploadToDrive(opts: DriveUploadOptions): Promise<DriveUplo
   // Upload the file
   const stream = Readable.from(opts.fileBuffer);
   const res = await drive.files.create({
+    supportsAllDrives: true,
     requestBody: {
       name: opts.fileName,
       parents: [playerFolderId],
@@ -142,9 +145,10 @@ export async function uploadToDrive(opts: DriveUploadOptions): Promise<DriveUplo
   const fileId = res.data.id;
   if (!fileId) throw new Error("Drive upload returned no file ID");
 
-  // Make the file viewable by anyone with the link
+  // Make the file readable by anyone with the link
   await drive.permissions.create({
     fileId,
+    supportsAllDrives: true,
     requestBody: { role: "reader", type: "anyone" },
   });
 
@@ -154,8 +158,8 @@ export async function uploadToDrive(opts: DriveUploadOptions): Promise<DriveUplo
   return { fileId, fileLink, folderId: playerFolderId, folderLink };
 }
 
-/** Test Drive connectivity — just lists files in root folder */
-export async function testDriveConnection(): Promise<{ ok: boolean; error?: string; rootFolderName?: string }> {
+/** Test Drive connectivity */
+export async function testDriveConnection(): Promise<{ ok: boolean; error?: string; rootFolderName?: string; isSharedDrive?: boolean }> {
   if (!isDriveConfigured()) {
     return { ok: false, error: "Google Drive credentials not configured." };
   }
@@ -163,9 +167,14 @@ export async function testDriveConnection(): Promise<{ ok: boolean; error?: stri
     const drive = getDriveClient();
     const res = await drive.files.get({
       fileId: ROOT_FOLDER_ID,
-      fields: "id, name",
+      fields: "id, name, driveId",
+      supportsAllDrives: true,
     });
-    return { ok: true, rootFolderName: res.data.name ?? ROOT_FOLDER_ID };
+    return {
+      ok: true,
+      rootFolderName: res.data.name ?? ROOT_FOLDER_ID,
+      isSharedDrive: !!(res.data as any).driveId,
+    };
   } catch (err: any) {
     return { ok: false, error: err?.message ?? String(err) };
   }

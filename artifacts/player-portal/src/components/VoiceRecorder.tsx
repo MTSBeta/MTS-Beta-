@@ -1,11 +1,24 @@
 import { useState, useRef, useEffect } from "react";
-import { Mic, Square, Play, Pause, Trash2 } from "lucide-react";
+import { Mic, Square, Play, Pause, Trash2, Cloud, CloudOff } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+const API_BASE = `${import.meta.env.BASE_URL}api`.replace(/\/api$/, "/api");
+
+export interface AudioUploadContext {
+  playerId: string;
+  playerCode: string;
+  playerName: string;
+  academyName: string;
+  contributorRole?: string;
+  contributorName?: string;
+}
 
 interface VoiceRecorderProps {
   onAudioReady: (blob: Blob | null, url: string | null) => void;
   onTranscript?: (text: string) => void;
   existingUrl?: string | null;
+  uploadContext?: AudioUploadContext;
+  questionLabel?: string;
 }
 
 type RecordState = "idle" | "recording" | "paused" | "recorded" | "playing";
@@ -13,7 +26,7 @@ type RecordState = "idle" | "recording" | "paused" | "recorded" | "playing";
 const SpeechRecognitionAPI: typeof window.SpeechRecognition | undefined =
   (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
 
-export function VoiceRecorder({ onAudioReady, onTranscript, existingUrl }: VoiceRecorderProps) {
+export function VoiceRecorder({ onAudioReady, onTranscript, existingUrl, uploadContext, questionLabel }: VoiceRecorderProps) {
   const [state, setState] = useState<RecordState>(existingUrl ? "recorded" : "idle");
   const [duration, setDuration] = useState(0);
   const [playProgress, setPlayProgress] = useState(0);
@@ -21,6 +34,32 @@ export function VoiceRecorder({ onAudioReady, onTranscript, existingUrl }: Voice
   const [error, setError] = useState<string | null>(null);
   const [transcriptCaptured, setTranscriptCaptured] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [driveStatus, setDriveStatus] = useState<"idle" | "uploading" | "done" | "error">("idle");
+
+  const uploadToDrive = async (blob: Blob, mimeType: string) => {
+    if (!uploadContext) return;
+    setDriveStatus("uploading");
+    try {
+      const ext = mimeType.includes("webm") ? "webm" : "mp4";
+      const formData = new FormData();
+      formData.append("file", blob, `voice_note_${Date.now()}.${ext}`);
+      formData.append("image_type", "voice_note");
+      formData.append("upload_source", "journey");
+      formData.append("player_id",        uploadContext.playerId);
+      formData.append("player_code",      uploadContext.playerCode);
+      formData.append("player_name",      uploadContext.playerName);
+      formData.append("academy_name",     uploadContext.academyName);
+      formData.append("contributor_role", uploadContext.contributorRole ?? "player");
+      formData.append("contributor_name", uploadContext.contributorName ?? uploadContext.playerName);
+      if (questionLabel) formData.append("notes", questionLabel);
+
+      const res = await fetch(`${API_BASE}/images/upload`, { method: "POST", body: formData });
+      if (!res.ok) throw new Error("Upload failed");
+      setDriveStatus("done");
+    } catch {
+      setDriveStatus("error");
+    }
+  };
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -97,6 +136,8 @@ export function VoiceRecorder({ onAudioReady, onTranscript, existingUrl }: Voice
         setState("recorded");
         onAudioReady(blob, url);
         streamRef.current?.getTracks().forEach((t) => t.stop());
+        // Upload to Google Drive in the background (fire-and-forget for UX)
+        uploadToDrive(blob, mimeType);
 
         if (onTranscript) {
           setTimeout(() => {
@@ -171,6 +212,7 @@ export function VoiceRecorder({ onAudioReady, onTranscript, existingUrl }: Voice
     setDuration(0);
     setPlayProgress(0);
     setTranscriptCaptured(false);
+    setDriveStatus("idle");
     transcriptRef.current = "";
     onAudioReady(null, null);
   };
@@ -303,10 +345,23 @@ export function VoiceRecorder({ onAudioReady, onTranscript, existingUrl }: Voice
                 <Trash2 size={14} />
               </button>
             </div>
-            <p className="text-xs text-green-400/80 flex items-center gap-1">
-              <span>✓</span>
-              {transcriptCaptured ? "Voice note saved — transcript added to text box" : "Voice note saved"}
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-green-400/80 flex items-center gap-1">
+                <span>✓</span>
+                {transcriptCaptured ? "Voice note saved — transcript added to text box" : "Voice note saved"}
+              </p>
+              {uploadContext && driveStatus !== "idle" && (
+                <p className={`text-xs flex items-center gap-1 ${
+                  driveStatus === "uploading" ? "text-white/30" :
+                  driveStatus === "done"      ? "text-green-400/60" :
+                                               "text-red-400/60"
+                }`}>
+                  {driveStatus === "uploading" && <><Cloud size={10} className="animate-pulse" /> Saving…</>}
+                  {driveStatus === "done"      && <><Cloud size={10} /> Saved to Drive</>}
+                  {driveStatus === "error"     && <><CloudOff size={10} /> Drive save failed</>}
+                </p>
+              )}
+            </div>
           </motion.div>
         )}
 

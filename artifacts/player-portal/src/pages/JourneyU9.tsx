@@ -385,6 +385,13 @@ export default function JourneyU9() {
                         return updated;
                       })}
                       existingUrl={answers[currentReview.idx]?.audioUrl}
+                      uploadContext={playerData && selectedAcademy ? {
+                        playerId: playerData.id,
+                        playerCode: playerData.accessCode,
+                        playerName: playerData.playerName,
+                        academyName: selectedAcademy.name,
+                      } : undefined}
+                      questionLabel={currentReview.question.text}
                     />
                   </div>
                   <textarea rows={2} placeholder="Write here if you like…"
@@ -608,6 +615,13 @@ export default function JourneyU9() {
                         updateCurrent({ text: current ? `${current}\n${text}` : text });
                       }}
                       existingUrl={answers[currentIdx]?.audioUrl}
+                      uploadContext={playerData && selectedAcademy ? {
+                        playerId: playerData.id,
+                        playerCode: playerData.accessCode,
+                        playerName: playerData.playerName,
+                        academyName: selectedAcademy.name,
+                      } : undefined}
+                      questionLabel={question.text}
                     />
                   </motion.div>
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>

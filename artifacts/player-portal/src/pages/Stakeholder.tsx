@@ -195,6 +195,15 @@ export default function Stakeholder() {
                 <VoiceRecorder
                   onAudioReady={(blob, url) => updateAnswer(qi, { audioBlob: blob, audioUrl: url })}
                   existingUrl={answers[qi]?.audioUrl}
+                  uploadContext={{
+                    playerId: info.playerId,
+                    playerCode: info.playerId,
+                    playerName: info.playerName,
+                    academyName: info.academyName,
+                    contributorRole: info.type,
+                    contributorName: info.label,
+                  }}
+                  questionLabel={question}
                 />
                 <MediaUploader
                   onMediaChange={paths => updateAnswer(qi, { mediaUrls: paths })}

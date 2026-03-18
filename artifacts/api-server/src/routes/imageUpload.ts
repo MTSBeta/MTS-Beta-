@@ -9,12 +9,16 @@ const router: IRouter = Router();
 // Store uploads in memory — files go straight to Drive, not disk
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 20 * 1024 * 1024 }, // 20 MB max
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB max (audio can be larger)
   fileFilter(_req, file, cb) {
-    if (file.mimetype.startsWith("image/") || file.mimetype.startsWith("video/")) {
+    if (
+      file.mimetype.startsWith("image/") ||
+      file.mimetype.startsWith("video/") ||
+      file.mimetype.startsWith("audio/")
+    ) {
       cb(null, true);
     } else {
-      cb(new Error("Only image and video files are allowed"));
+      cb(new Error("Only image, video, and audio files are allowed"));
     }
   },
 });
@@ -23,7 +27,7 @@ const upload = multer({
  * POST /api/images/upload
  *
  * Multipart form-data fields:
- *   file            — the image/video file (required)
+ *   file            — the image, video, or audio file (required)
  *   player_id       — UUID of the player
  *   player_code     — e.g. PLY-DEMO-001
  *   player_name     — full name

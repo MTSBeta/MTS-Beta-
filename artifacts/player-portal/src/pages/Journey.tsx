@@ -556,6 +556,12 @@ export default function Journey() {
                       return { ...prev, [key]: { ...prev[key], text: cur ? `${cur}\n${text}` : text } };
                     })}
                     existingUrl={ra.audioUrl}
+                    uploadContext={playerData && selectedAcademy ? {
+                      playerId: playerData.id,
+                      playerCode: playerData.accessCode,
+                      playerName: playerData.playerName,
+                      academyName: selectedAcademy.name,
+                    } : undefined}
                   />
                 </motion.div>
               );
@@ -920,6 +926,13 @@ export default function Journey() {
                             updateCurrentAnswer({ text: current ? `${current}\n${text}` : text });
                           }}
                           existingUrl={currentAnswer.audioUrl}
+                          uploadContext={playerData && selectedAcademy ? {
+                            playerId: playerData.id,
+                            playerCode: playerData.accessCode,
+                            playerName: playerData.playerName,
+                            academyName: selectedAcademy.name,
+                          } : undefined}
+                          questionLabel={currentQuestion?.text}
                         />
                         <MediaUploader
                           onMediaChange={paths => updateCurrentAnswer({ mediaUrls: paths })}
