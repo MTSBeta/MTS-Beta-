@@ -1,154 +1,317 @@
+import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { publicAssetUrl } from "@/lib/publicAssetUrl";
 
+// ── Testimonials data ────────────────────────────────────────────────────
+const TESTIMONIALS = [
+  {
+    quote: "She grabbed the book and screamed 'That's ME!' — her curly hair, her frog pyjamas, her name on every page. She cried happy tears. We both did.",
+    name: "Amara N.",
+    role: "Mum of Zara, 5",
+    photo: "family-diversity-collage.png",
+  },
+  {
+    quote: "The academy story had our son's position, his personality, his biggest dream — all woven in. He carries it to training. His coach cried reading it.",
+    name: "James & Priya K.",
+    role: "Parents of a U12 academy player",
+    photo: "family-reading-1.png",
+  },
+  {
+    quote: "My daughter pointed at the illustration and said 'Look, Mummy — it's me having an adventure!' She's asked for it every single night since.",
+    name: "Claire T.",
+    role: "Mum of Freya, 6",
+    photo: "mom-daughter-sofa.png",
+  },
+  {
+    quote: "Bedtime used to be a battle. Now he runs to get the book. His favourite animal is actually in the story. He's read it 14 times.",
+    name: "Marcus D.",
+    role: "Dad of Noah, 7",
+    photo: "family-collage.png",
+  },
+];
+
+// ── Photo strip ──────────────────────────────────────────────────────────
+const READING_PHOTOS = [
+  { src: "images/book-likeness.png",           caption: "\"Look, Mum, it really IS me!\"" },
+  { src: "images/family-diversity-collage.png", caption: "Every family. Every child." },
+  { src: "images/mom-daughter-sofa.png",        caption: "Their likeness — right on the page." },
+  { src: "images/family-collage.png",           caption: "1,200+ families already reading." },
+  { src: "images/family-fireplace.png",         caption: "Cozy evenings that last a lifetime." },
+];
+
 export default function MarketingHome() {
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [activePhoto, setActivePhoto] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Auto-advance testimonials
+  useEffect(() => {
+    const t = setInterval(() => setActiveTestimonial((p) => (p + 1) % TESTIMONIALS.length), 6000);
+    return () => clearInterval(t);
+  }, []);
+
+  // Auto-advance photo strip
+  useEffect(() => {
+    const t = setInterval(() => setActivePhoto((p) => (p + 1) % READING_PHOTOS.length), 4500);
+    return () => clearInterval(t);
+  }, []);
+
+  const prevTestimonial = () => setActiveTestimonial((p) => (p - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
+  const nextTestimonial = () => setActiveTestimonial((p) => (p + 1) % TESTIMONIALS.length);
+
   return (
     <PublicLayout>
 
-      {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden" style={{ minHeight: "92vh", display: "flex", alignItems: "center" }}>
-        {/* Background image */}
+      {/* ══ 1. HERO ══════════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden" style={{ minHeight: "95vh", display: "flex", alignItems: "center" }}>
         <img
           src={publicAssetUrl("images/family-reading-2.png")}
-          alt="Family reading a Me Time Stories book together"
+          alt="Family reading a Me Time Stories book at bedtime"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition: "center top" }}
         />
-        {/* Gradient overlay — warm dark left, transparent right */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(105deg, rgba(15,15,30,0.92) 0%, rgba(15,15,30,0.82) 45%, rgba(15,15,30,0.30) 100%)",
-          }}
-        />
+        {/* Warm amber-dark overlay — cozy bedtime feel */}
+        <div className="absolute inset-0" style={{
+          background: "linear-gradient(110deg, rgba(12,8,4,0.93) 0%, rgba(20,10,4,0.85) 45%, rgba(30,14,4,0.40) 100%)"
+        }} />
+        {/* Soft amber glow at bottom */}
+        <div className="absolute inset-x-0 bottom-0 h-40" style={{
+          background: "linear-gradient(to top, rgba(251,146,60,0.12) 0%, transparent 100%)"
+        }} />
 
-        <div className="relative max-w-7xl mx-auto px-4 py-16 md:py-24 w-full grid md:grid-cols-2 items-center gap-10">
-          {/* Left column — text */}
+        <div className="relative max-w-7xl mx-auto px-4 py-16 md:py-24 w-full grid md:grid-cols-2 items-center gap-12">
           <div>
-            <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm text-white/90 text-sm font-medium px-4 py-2 rounded-full mb-8 border border-white/20">
-              📖 The Time-Travelling Tractor — Try it free today
+            {/* Eyebrow */}
+            <span className="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-400/30 text-amber-300 text-sm font-medium px-4 py-2 rounded-full mb-8">
+              🌙 The Time-Travelling Tractor — free to try tonight
             </span>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-[1.1]">
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.75rem] font-bold leading-[1.08] mb-6" style={{ color: "#fef3e2" }}>
               Every child deserves{" "}
-              <span
-                style={{
-                  background: "linear-gradient(135deg, #fbbf24, #f97316)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
+              <span style={{
+                background: "linear-gradient(135deg, #fbbf24, #f97316)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>
                 to be the hero
               </span>{" "}
-              of their own story.
+              of their own bedtime story.
             </h1>
 
-            <p className="text-lg md:text-xl text-white/75 mb-10 leading-relaxed max-w-lg">
-              Me Time Stories creates fully personalised books where your child's
-              name, personality, and biggest dreams are woven into every single page —
-              not just stamped on the cover.
+            <p className="text-lg md:text-xl mb-10 leading-relaxed max-w-lg" style={{ color: "rgba(254,243,226,0.70)" }}>
+              Me Time Stories creates fully personalised children's books where your child's name, face, personality, and biggest dreams live on every single page — not just stamped on the cover.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href="/stories/time-travelling-tractor"
-                className="flex items-center justify-center gap-2 px-8 py-4 text-white font-bold text-lg rounded-xl shadow-xl transition-all hover:scale-[1.02]"
-                style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a1a1a" }}
-              >
-                🚜 Try the Free Story
-              </Link>
-              <Link
                 href="/characters/create"
-                className="flex items-center justify-center gap-2 px-8 py-4 bg-white/15 backdrop-blur-sm border border-white/30 text-white font-semibold text-lg rounded-xl hover:bg-white/25 transition-all"
+                className="flex items-center justify-center gap-2 px-8 py-4 font-bold text-lg rounded-xl shadow-xl transition-all hover:scale-[1.02] hover:shadow-2xl"
+                style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
               >
                 ✨ Build Your Character
               </Link>
+              <Link
+                href="/stories/time-travelling-tractor"
+                className="flex items-center justify-center gap-2 px-8 py-4 border font-semibold text-lg rounded-xl transition-all hover:bg-white/10"
+                style={{ borderColor: "rgba(254,243,226,0.3)", color: "#fef3e2", backdropFilter: "blur(8px)", background: "rgba(255,255,255,0.08)" }}
+              >
+                🚜 Try the Free Story
+              </Link>
             </div>
 
-            <div className="flex flex-wrap gap-5 mt-8 text-sm text-white/55">
-              <span className="flex items-center gap-1.5"><span className="text-green-400">✓</span> Personalised in minutes</span>
-              <span className="flex items-center gap-1.5"><span className="text-green-400">✓</span> Ages 3–16</span>
-              <span className="flex items-center gap-1.5"><span className="text-green-400">✓</span> 42+ football academies</span>
+            <div className="flex flex-wrap gap-5 mt-8 text-sm" style={{ color: "rgba(254,243,226,0.45)" }}>
+              <span className="flex items-center gap-1.5"><span className="text-amber-400">✓</span> Personalised in minutes</span>
+              <span className="flex items-center gap-1.5"><span className="text-amber-400">✓</span> Ages 3–16</span>
+              <span className="flex items-center gap-1.5"><span className="text-amber-400">✓</span> 42+ football academies</span>
             </div>
           </div>
 
-          {/* Right column — decorative (visible on md+) */}
-          <div className="hidden md:flex flex-col items-end gap-4">
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-5 max-w-xs shadow-2xl">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-orange-400 rounded-xl flex items-center justify-center text-white text-lg font-bold">M</div>
+          {/* Floating preview card — desktop only */}
+          <div className="hidden md:block">
+            <div className="bg-black/40 backdrop-blur-xl border border-amber-400/20 rounded-3xl p-6 max-w-sm ml-auto shadow-2xl">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-amber-400 rounded-xl flex items-center justify-center text-amber-900 text-lg font-bold">M</div>
                 <div>
-                  <div className="text-white font-semibold text-sm">Mia's Story is Ready!</div>
-                  <div className="text-white/50 text-xs">The Time-Travelling Tractor</div>
+                  <div className="font-semibold text-sm" style={{ color: "#fef3e2" }}>Mia's story is ready! ✨</div>
+                  <div className="text-xs" style={{ color: "rgba(254,243,226,0.45)" }}>The Time-Travelling Tractor</div>
                 </div>
               </div>
-              <p className="text-white/70 text-sm italic leading-relaxed">
-                "The morning mist lay low when <strong className="text-white">Mia</strong> found it — brave as ever, she reached out and touched the golden wheel…"
+              <p className="text-sm italic leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif", color: "rgba(254,243,226,0.80)" }}>
+                "The morning mist lay low when <strong style={{ color: "#fbbf24" }}>Mia</strong> found it — brave as ever, she touched the golden wheel… A fox watched from the hedgerow with knowing eyes."
               </p>
-              <div className="flex gap-1 mt-3">
-                {["Brave","Creative","Kind"].map(t => (
-                  <span key={t} className="text-xs bg-orange-400/20 text-orange-300 px-2 py-0.5 rounded-full">{t}</span>
+              <div className="flex gap-2 flex-wrap">
+                {["Brave", "Creative", "Kind"].map((t) => (
+                  <span key={t} className="text-xs bg-amber-400/15 text-amber-300 border border-amber-400/25 px-2.5 py-0.5 rounded-full">{t}</span>
                 ))}
               </div>
+              <div className="mt-3 text-xs" style={{ color: "rgba(254,243,226,0.30)" }}>Traits, dream & favourite animal woven in</div>
             </div>
-            <div className="text-white/30 text-xs text-right pr-2">Updated instantly when you build your character</div>
           </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1" style={{ color: "rgba(254,243,226,0.30)" }}>
+          <span className="text-xs tracking-widest uppercase">Scroll</span>
+          <div className="w-0.5 h-8 rounded-full" style={{ background: "rgba(254,243,226,0.20)" }} />
         </div>
       </section>
 
-      {/* ── TRUST BAR ─────────────────────────────────────────────── */}
-      <section className="py-5 bg-gray-900 border-b border-gray-800">
+      {/* ══ 2. TRUST BAR ═════════════════════════════════════════════════ */}
+      <section className="py-4 border-b" style={{ background: "#0d0a08", borderColor: "rgba(251,191,36,0.12)" }}>
         <div className="max-w-5xl mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-x-10 gap-y-3 text-sm text-gray-400 text-center">
+          <div className="flex flex-wrap justify-center gap-x-10 gap-y-3 text-sm" style={{ color: "rgba(254,243,226,0.40)" }}>
             <span>🏆 Premier League & Championship academies</span>
-            <span>📚 Hyper-personalised — not just name-stamped</span>
-            <span>👨‍👩‍👧 Loved by 1,200+ families</span>
+            <span>📚 Truly personalised — not just name-stamped</span>
+            <span>👨‍👩‍👧 1,200+ families reading tonight</span>
             <span>🔒 Safeguarding compliant</span>
           </div>
         </div>
       </section>
 
-      {/* ── WHAT WE DO ────────────────────────────────────────────── */}
-      <section className="py-16 md:py-24 bg-white">
+      {/* ══ 3. "LOOK MUM — IT'S ME!" ═══════════════════════════════════ */}
+      <section className="py-16 md:py-24 overflow-hidden" style={{ background: "#fef9f0" }}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
-            <div className="relative">
-              <img
-                src={publicAssetUrl("images/family-reading-1.png")}
-                alt="Mother and child reading a Me Time Stories book"
-                className="w-full rounded-3xl object-cover shadow-2xl"
-                style={{ maxHeight: 480 }}
-              />
-              {/* Floating badge */}
-              <div className="absolute -bottom-4 -right-4 bg-white rounded-2xl shadow-xl p-4 border border-gray-100">
-                <div className="text-2xl font-bold text-orange-500 leading-none">100%</div>
-                <div className="text-xs text-gray-500 mt-0.5">Personalised to your child</div>
+            {/* Image with the magic moment */}
+            <div className="relative order-2 md:order-1">
+              <div className="rounded-3xl overflow-hidden shadow-2xl">
+                <img
+                  src={publicAssetUrl("images/book-likeness.png")}
+                  alt="Child pointing at their illustrated likeness in the book saying Look Mum it's really me"
+                  className="w-full object-cover"
+                />
+              </div>
+              {/* Floating quote bubble */}
+              <div
+                className="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 bg-white rounded-2xl shadow-xl px-5 py-4 max-w-[220px] border border-amber-100"
+              >
+                <p className="text-gray-800 font-bold text-sm leading-snug italic">"Look, Mum, it really IS me!"</p>
+                <p className="text-gray-400 text-xs mt-1">— Lily, age 6, pointing at the page</p>
               </div>
             </div>
 
+            {/* Text */}
+            <div className="order-1 md:order-2">
+              <span className="inline-block bg-amber-100 text-amber-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
+                ✨ The magic moment
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
+                Their face, their dream, their personality —{" "}
+                <span style={{ color: "#f97316" }}>right there on the page.</span>
+              </h2>
+              <p className="text-gray-600 text-lg leading-relaxed mb-6">
+                Other personalised books just swap in a name. We go so much deeper. Our illustrators draw characters that look like your child. Our authors weave in their personality traits, their favourite animal, and their biggest dream — so every page feels like it was written just for them.
+              </p>
+              <p className="text-gray-600 leading-relaxed mb-8">
+                The moment a child points at the page and says <em>"That's me!"</em> — that's the moment we work for. It happens. Every time.
+              </p>
+              <div className="space-y-3">
+                {[
+                  { icon: "🎭", text: "Their personality traits drive the story's choices" },
+                  { icon: "🐾", text: "Their favourite animal appears in the adventure" },
+                  { icon: "🌟", text: "Their biggest dream shapes the story's ending" },
+                ].map(({ icon, text }) => (
+                  <div key={text} className="flex items-center gap-3 text-gray-700 text-sm font-medium">
+                    <span className="text-xl">{icon}</span>
+                    <span>{text}</span>
+                  </div>
+                ))}
+              </div>
+              <Link
+                href="/characters/create"
+                className="inline-flex items-center gap-2 mt-8 px-7 py-4 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] text-base"
+                style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
+              >
+                Create their character →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ 4. VIDEO SECTION ═════════════════════════════════════════════ */}
+      <section className="py-16 md:py-20 relative overflow-hidden" style={{ background: "#0d0a08" }}>
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, rgba(251,191,36,0.06) 0%, transparent 70%)" }} />
+        </div>
+        <div className="max-w-4xl mx-auto px-4 text-center relative">
+          <span className="inline-block bg-amber-400/15 border border-amber-400/25 text-amber-300 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+            🎬 See the magic in action
+          </span>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: "#fef3e2" }}>
+            Watch a mum and daughter discover their story.
+          </h2>
+          <p className="mb-10 text-lg leading-relaxed max-w-xl mx-auto" style={{ color: "rgba(254,243,226,0.55)" }}>
+            Real reactions. Real magic. This is what bedtime looks like with Me Time Stories.
+          </p>
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl border" style={{ borderColor: "rgba(251,191,36,0.20)" }}>
+            <video
+              ref={videoRef}
+              src={publicAssetUrl("images/family-reading-video.mp4")}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full object-cover"
+              style={{ maxHeight: 500 }}
+            />
+            {/* Bottom caption */}
+            <div className="absolute inset-x-0 bottom-0 px-6 py-4" style={{ background: "linear-gradient(to top, rgba(12,8,4,0.85) 0%, transparent 100%)" }}>
+              <p className="text-sm font-medium" style={{ color: "rgba(254,243,226,0.70)" }}>
+                🌙 Bedtime magic, delivered to your door
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ 5. HOW PERSONALISATION WORKS ════════════════════════════════ */}
+      <section className="py-16 md:py-24" style={{ background: "#fef9f0" }}>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div>
-              <span className="inline-block bg-orange-50 text-orange-600 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+              <span className="inline-block bg-orange-100 text-orange-600 text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
                 Not just their name
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
                 We build every story around who your child truly is.
               </h2>
-              <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                Most "personalised" books just swap in a name. We go much deeper — your child's personality traits, favourite animals, biggest dreams, and real life context are woven into every scene, every challenge, and every triumph.
-              </p>
-              <div className="space-y-4">
+
+              <div className="space-y-5 mb-8">
                 {[
-                  { icon: "🎭", title: "Their personality in the plot", desc: "Brave, creative, curious — their traits drive the story's decisions." },
-                  { icon: "🌟", title: "Their dreams in the resolution", desc: "The story's ending reflects what they're really aiming for in life." },
-                  { icon: "🐾", title: "Their world on every page", desc: "Favourite animals, places, and things appear naturally throughout." },
-                ].map(({ icon, title, desc }) => (
-                  <div key={title} className="flex gap-4">
-                    <div className="w-11 h-11 bg-orange-50 rounded-xl flex items-center justify-center text-xl flex-shrink-0">{icon}</div>
+                  {
+                    step: "01",
+                    icon: "🧒",
+                    title: "Tell us who they are",
+                    desc: "Name, age, pronouns, personality traits, favourite animal, and their biggest dream. Takes 2 minutes.",
+                    color: "#f97316",
+                  },
+                  {
+                    step: "02",
+                    icon: "✍️",
+                    title: "Every chapter is personalised",
+                    desc: "Their traits drive the hero's decisions. Their animal appears in the story. Their dream shapes the ending.",
+                    color: "#f59e0b",
+                  },
+                  {
+                    step: "03",
+                    icon: "📖",
+                    title: "They see themselves on every page",
+                    desc: "Our illustrators bring their likeness to life. They'll point at the page and say \"That's me!\"",
+                    color: "#10b981",
+                  },
+                ].map(({ step, icon, title, desc, color }) => (
+                  <div key={step} className="flex gap-4">
+                    <div
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-sm flex-shrink-0 shadow-md"
+                      style={{ backgroundColor: color }}
+                    >
+                      {step}
+                    </div>
                     <div>
-                      <div className="font-semibold text-gray-900 text-sm">{title}</div>
+                      <div className="font-bold text-gray-900 mb-0.5">{icon} {title}</div>
                       <div className="text-gray-500 text-sm leading-relaxed">{desc}</div>
                     </div>
                   </div>
@@ -157,109 +320,255 @@ export default function MarketingHome() {
 
               <Link
                 href="/characters/create"
-                className="inline-flex items-center gap-2 mt-8 px-7 py-3.5 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all hover:scale-[1.02] text-base"
-                style={{ backgroundColor: "#f97316" }}
+                className="inline-flex items-center gap-2 px-7 py-4 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
+                style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
               >
-                Build your character →
+                Build their character →
               </Link>
+            </div>
+
+            <div className="relative">
+              <img
+                src={publicAssetUrl("images/mom-daughter-sofa.png")}
+                alt="Mother and daughter discovering the child's illustrated likeness in the book"
+                className="w-full rounded-3xl object-cover shadow-2xl"
+                style={{ maxHeight: 500 }}
+              />
+              <div className="absolute -bottom-4 -right-4 bg-amber-400 rounded-2xl shadow-xl p-4 text-center">
+                <div className="text-2xl font-black text-amber-900 leading-none">100%</div>
+                <div className="text-xs text-amber-800 mt-0.5 font-semibold">Personalised</div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── THE STORY ─────────────────────────────────────────────── */}
+      {/* ══ 6. THE STORY — TTT ═══════════════════════════════════════════ */}
       <section
         className="py-16 md:py-20 relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0c2340 100%)" }}
+        style={{ background: "linear-gradient(135deg, #0f0a1e 0%, #1a0f2e 50%, #0a0d1e 100%)" }}
       >
+        {/* Stars */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {["top-10 left-[8%]","top-20 right-[12%]","top-40 left-[35%]","bottom-16 right-[18%]"].map((pos, i) => (
-            <div key={i} className={`absolute ${pos} text-yellow-300 opacity-20 text-xl`} style={{ animation: `bounce ${2 + i * 0.4}s ease-in-out infinite alternate` }}>✦</div>
+          {[
+            "top-8 left-[8%]", "top-16 right-[12%]", "top-32 left-[40%]",
+            "bottom-12 right-[18%]", "bottom-28 left-[55%]", "top-48 right-[35%]",
+          ].map((pos, i) => (
+            <div
+              key={i}
+              className={`absolute ${pos} text-amber-300 opacity-20 text-xl`}
+              style={{ animation: `bounce ${2 + i * 0.35}s ease-in-out infinite alternate` }}
+            >
+              {i % 2 === 0 ? "✦" : "✧"}
+            </div>
           ))}
         </div>
 
         <div className="max-w-4xl mx-auto px-4 text-center relative">
-          <span className="inline-block bg-yellow-400/20 text-yellow-300 text-sm font-medium px-4 py-1.5 rounded-full mb-6 border border-yellow-400/30">
-            🚜 Our Flagship Story — Free to Try
+          <div className="text-6xl mb-5">🚜</div>
+          <span className="inline-block bg-amber-400/15 border border-amber-400/25 text-amber-300 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+            Our Flagship Story — Free Tonight
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: "#fef3e2" }}>
             The Time-Travelling Tractor
           </h2>
-          <p className="text-blue-200 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
-            Build your child's character in 2 minutes, then watch as their name, personality, and biggest dream appear throughout a magical 6-chapter adventure. No images yet — pure story magic.
+          <p className="text-lg mb-10 max-w-2xl mx-auto leading-relaxed" style={{ color: "rgba(254,243,226,0.60)" }}>
+            A 6-chapter adventure where your child's name, personality, and biggest dream are woven through every page. Build their character in 2 minutes — then watch the magic begin.
           </p>
 
-          {/* Story preview card */}
-          <div className="bg-white/8 border border-white/15 rounded-3xl p-6 md:p-8 mb-8 text-left max-w-xl mx-auto">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-white/40 text-xs font-bold uppercase tracking-widest">Chapter 1: The Discovery</span>
-            </div>
-            <p className="text-white text-base md:text-lg leading-relaxed" style={{ fontFamily: "Georgia, serif" }}>
+          {/* Story page preview */}
+          <div
+            className="rounded-3xl p-6 md:p-8 mb-8 text-left max-w-xl mx-auto border"
+            style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(251,191,36,0.15)" }}
+          >
+            <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(254,243,226,0.35)" }}>
+              📖 Chapter 1: The Discovery
+            </p>
+            <p className="text-base md:text-lg leading-relaxed" style={{ fontFamily: "Georgia, serif", color: "rgba(254,243,226,0.88)" }}>
               "The morning mist lay low over the fields when{" "}
-              <strong className="text-yellow-300">[your child's name]</strong>{" "}
-              found it — half-hidden beneath an old oak tree, covered in rust and wonder: the Time-Travelling Tractor. Something{" "}
-              <em className="text-orange-300">[brave / curious / kind]</em>{" "}
+              <strong style={{ color: "#fbbf24" }}>[your child's name]</strong>{" "}
+              found it — half-hidden beneath an old oak tree. Something{" "}
+              <em style={{ color: "#fb923c" }}>[brave / curious / kind]</em>{" "}
               stirred inside{" "}
-              <em className="text-blue-300">[their]</em>{" "}
-              chest as{" "}
-              <em className="text-blue-300">[they]</em>{" "}
-              reached out…"
+              <em style={{ color: "#a5f3fc" }}>[their]</em>{" "}
+              chest. In the hedgerow, a{" "}
+              <em style={{ color: "#86efac" }}>[fox / lion / dragon]</em>{" "}
+              watched with knowing eyes…"
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/stories/time-travelling-tractor"
-              className="flex items-center justify-center gap-2 px-8 py-4 font-bold text-lg rounded-xl shadow-xl transition-all hover:scale-[1.02]"
-              style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a1a1a" }}
-            >
-              🚜 Read the Story Now
-            </Link>
-            <Link
               href="/characters/create"
-              className="flex items-center justify-center gap-2 px-8 py-4 bg-white/10 border border-white/20 text-white font-semibold text-lg rounded-xl hover:bg-white/20 transition-all"
+              className="flex items-center justify-center gap-2 px-8 py-4 font-bold text-lg rounded-xl shadow-xl transition-all hover:scale-[1.02]"
+              style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
             >
               ✨ Build Character First
             </Link>
+            <Link
+              href="/stories/time-travelling-tractor"
+              className="flex items-center justify-center gap-2 px-8 py-4 border font-semibold text-lg rounded-xl transition-all"
+              style={{ borderColor: "rgba(254,243,226,0.25)", color: "#fef3e2", background: "rgba(255,255,255,0.06)" }}
+            >
+              🚜 Try Without Building
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ──────────────────────────────────────────── */}
-      <section className="py-16 md:py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How it works</h2>
-            <p className="text-gray-500 text-lg max-w-xl mx-auto">From a 2-minute character build to a story they'll ask for every bedtime.</p>
+      {/* ══ 7. PHOTO SLIDER ══════════════════════════════════════════════ */}
+      <section className="py-14 md:py-20 relative overflow-hidden" style={{ background: "#0d0a08" }}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: "#fef3e2" }}>
+              Reading moments that last forever.
+            </h2>
+            <p className="text-sm" style={{ color: "rgba(254,243,226,0.40)" }}>Every family. Every child. Every night.</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { step: "01", icon: "🧒", color: "#6366f1", title: "Tell us who they are", desc: "Name, age, personality traits, favourite animal, and biggest dream. Takes about 2 minutes." },
-              { step: "02", icon: "✍️", color: "#f97316", title: "The story is personalised", desc: "Every chapter adapts to their unique profile — their traits drive decisions, their dream shapes the ending." },
-              { step: "03", icon: "📖", color: "#10b981", title: "Read together and watch them glow", desc: "Hear them gasp when they see their own name, their own traits, their own world — on every page." },
-            ].map(({ step, icon, color, title, desc }) => (
-              <div key={step} className="relative">
-                <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow h-full">
-                  <div className="text-4xl font-black mb-3 leading-none" style={{ color: `${color}25` }}>{step}</div>
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mb-4" style={{ backgroundColor: `${color}15` }}>
-                    {icon}
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl border" style={{ borderColor: "rgba(251,191,36,0.15)" }}>
+            {/* Slides */}
+            <div className="relative" style={{ paddingBottom: "56.25%" }}>
+              {READING_PHOTOS.map((photo, i) => (
+                <div
+                  key={photo.src}
+                  className="absolute inset-0 transition-opacity duration-1000"
+                  style={{ opacity: activePhoto === i ? 1 : 0 }}
+                >
+                  <img
+                    src={publicAssetUrl(photo.src)}
+                    alt={photo.caption}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(12,8,4,0.75) 0%, transparent 50%)" }} />
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <p className="text-white font-bold text-lg md:text-2xl" style={{ fontFamily: "Georgia, serif" }}>
+                      {photo.caption}
+                    </p>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+
+              {/* Nav arrows */}
+              <button
+                onClick={() => setActivePhoto((p) => (p - 1 + READING_PHOTOS.length) % READING_PHOTOS.length)}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center hover:bg-black/70 transition-colors z-10"
+              >
+                ‹
+              </button>
+              <button
+                onClick={() => setActivePhoto((p) => (p + 1) % READING_PHOTOS.length)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center hover:bg-black/70 transition-colors z-10"
+              >
+                ›
+              </button>
+            </div>
+
+            {/* Dot indicators */}
+            <div className="flex justify-center gap-2 py-4" style={{ background: "#0d0a08" }}>
+              {READING_PHOTOS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActivePhoto(i)}
+                  className="rounded-full transition-all"
+                  style={{
+                    width: activePhoto === i ? 24 : 8,
+                    height: 8,
+                    backgroundColor: activePhoto === i ? "#f97316" : "rgba(254,243,226,0.20)",
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── FOOTBALL ACADEMY BANNER ───────────────────────────────── */}
+      {/* ══ 8. TESTIMONIALS SLIDER ═══════════════════════════════════════ */}
+      <section className="py-16 md:py-24 relative overflow-hidden" style={{ background: "#fef9f0" }}>
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">What families say</h2>
+            <p className="text-gray-500">Real reactions. Real bedtimes. Real magic.</p>
+          </div>
+
+          <div className="relative">
+            {/* Testimonial card */}
+            <div className="rounded-3xl overflow-hidden shadow-xl border border-amber-100" style={{ minHeight: 340 }}>
+              {TESTIMONIALS.map((t, i) => (
+                <div
+                  key={i}
+                  className="absolute inset-0 transition-opacity duration-700 flex flex-col md:flex-row"
+                  style={{ opacity: activeTestimonial === i ? 1 : 0, position: activeTestimonial === i ? "relative" : "absolute" }}
+                >
+                  {/* Image */}
+                  <div className="md:w-2/5 relative overflow-hidden" style={{ minHeight: 200 }}>
+                    <img
+                      src={publicAssetUrl(`images/${t.photo}`)}
+                      alt={t.name}
+                      className="w-full h-full object-cover"
+                      style={{ minHeight: 200 }}
+                    />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(to right, transparent 60%, #fef9f0 100%)" }} />
+                  </div>
+                  {/* Quote */}
+                  <div className="md:w-3/5 p-8 md:p-10 flex flex-col justify-center bg-white">
+                    <div className="flex gap-0.5 mb-4">
+                      {[1,2,3,4,5].map((s) => <span key={s} className="text-amber-400 text-lg">★</span>)}
+                    </div>
+                    <p className="text-gray-800 text-lg leading-relaxed mb-6 italic" style={{ fontFamily: "Georgia, serif" }}>
+                      "{t.quote}"
+                    </p>
+                    <div>
+                      <div className="font-bold text-gray-900">{t.name}</div>
+                      <div className="text-gray-400 text-sm">{t.role}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Controls */}
+            <div className="flex items-center justify-between mt-6">
+              <button
+                onClick={prevTestimonial}
+                className="flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 transition-colors text-sm font-semibold"
+              >
+                ← Previous
+              </button>
+
+              {/* Dots */}
+              <div className="flex gap-2">
+                {TESTIMONIALS.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveTestimonial(i)}
+                    className="rounded-full transition-all"
+                    style={{
+                      width: activeTestimonial === i ? 24 : 8,
+                      height: 8,
+                      backgroundColor: activeTestimonial === i ? "#f97316" : "#e5e7eb",
+                    }}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={nextTestimonial}
+                className="flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 transition-colors text-sm font-semibold"
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ 9. FOOTBALL ACADEMY BAND ═════════════════════════════════════ */}
       <section
         className="py-16 md:py-20 relative overflow-hidden"
         style={{ background: "linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #0ea5e9 100%)" }}
       >
-        <div className="absolute inset-0 opacity-8"
+        <div className="absolute inset-0 opacity-10"
           style={{ backgroundImage: "radial-gradient(circle at 20% 50%, white 1px, transparent 1px)", backgroundSize: "40px 40px" }}
         />
         <div className="max-w-7xl mx-auto px-4 relative">
@@ -271,27 +580,25 @@ export default function MarketingHome() {
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-5 leading-tight">
                 We partner with{" "}
                 <span className="text-yellow-300">elite football academies</span>{" "}
-                across England.
+                to tell every player's story.
               </h2>
               <p className="text-blue-100 text-lg leading-relaxed mb-4">
-                Once your academy is onboarded, you get a dedicated staff portal to add players and collect their profiles. We then craft a personalised story for each player — building mental resilience, identity, and belonging.
+                Once your academy is signed, we set up a staff portal. Coaches register players, players complete their journey questionnaire, and our team crafts a personalised story for each one.
               </p>
               <p className="text-blue-200 text-sm leading-relaxed mb-8">
-                Only 0.5% of academy players reach professional football. The difference is increasingly mental. Our stories address that — in a format young players actually love.
+                Only 0.5% of academy players reach professional football. The gap is mental. Our stories close it — in a format young players actually love.
               </p>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/for-academies"
-                  className="px-7 py-3.5 bg-white text-blue-900 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all text-base"
-                >
-                  Learn about the Academy Programme →
-                </Link>
-              </div>
+              <Link
+                href="/for-academies"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-blue-900 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all text-base"
+              >
+                Learn about the Academy Programme →
+              </Link>
             </div>
             <div className="grid grid-cols-2 gap-4">
               {[
                 { num: "42+", label: "Partner academies" },
-                { num: "0.5%", label: "Only reach pro football" },
+                { num: "0.5%", label: "Reach professional football" },
                 { num: "5–16", label: "Player age range" },
                 { num: "100%", label: "Stories personalised" },
               ].map(({ num, label }) => (
@@ -305,79 +612,69 @@ export default function MarketingHome() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS WITH IMAGE ───────────────────────────────── */}
-      <section className="py-16 md:py-24 bg-white">
+      {/* ══ 10. DIVERSITY MOMENTS ════════════════════════════════════════ */}
+      <section className="py-14 md:py-20" style={{ background: "#fef9f0" }}>
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">What families say</h2>
-            <p className="text-gray-500 text-lg">Real moments from real bedtimes.</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {[
-              {
-                quote: "My daughter screamed when she heard her name — then her favourite animal appeared. She's asked for it every night since. Pure magic.",
-                name: "Sarah M.",
-                role: "Mum of a 6-year-old",
-              },
-              {
-                quote: "The academy story gave our son something to hold onto during a really tough season — it knew him. He carries it everywhere.",
-                name: "James & Priya K.",
-                role: "Parents of a U12 academy player",
-              },
-              {
-                quote: "He saw his biggest dream written in the story and actually cried. A seven-year-old crying happy tears at bedtime. I'll never forget it.",
-                name: "Claire T.",
-                role: "Mum of two",
-              },
-            ].map(({ quote, name, role }) => (
-              <div key={name} className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                <div className="flex gap-0.5 mb-4">
-                  {[1,2,3,4,5].map(i => <span key={i} className="text-amber-400 text-sm">★</span>)}
-                </div>
-                <p className="text-gray-700 leading-relaxed mb-5 italic text-sm">"{quote}"</p>
-                <div>
-                  <div className="font-semibold text-gray-900 text-sm">{name}</div>
-                  <div className="text-gray-400 text-xs">{role}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Image bar */}
-          <div className="rounded-3xl overflow-hidden shadow-2xl relative" style={{ maxHeight: 320 }}>
-            <img
-              src={publicAssetUrl("images/family-collage.png")}
-              alt="Families reading Me Time Stories books"
-              className="w-full object-cover"
-              style={{ objectPosition: "center 30%" }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent flex items-end p-8">
-              <p className="text-white text-lg md:text-2xl font-bold max-w-lg leading-snug">
-                "Every family deserves a story where their child is the hero."
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <img
+                src={publicAssetUrl("images/family-diversity-collage.png")}
+                alt="Diverse families reading Me Time Stories books together"
+                className="w-full rounded-3xl shadow-2xl object-cover"
+                style={{ maxHeight: 420 }}
+              />
+            </div>
+            <div>
+              <span className="inline-block bg-purple-100 text-purple-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
+                Every family. Every child.
+              </span>
+              <h2 className="text-3xl font-bold text-gray-900 mb-5 leading-tight">
+                Stories that celebrate every child's world — whoever they are.
+              </h2>
+              <p className="text-gray-600 leading-relaxed mb-6 text-lg">
+                Whether it's bedtime in a tent under fairy lights, an afternoon in the garden, or storytime on the sofa — our books belong in every home and celebrate every family.
               </p>
+              <div className="space-y-3 mb-8">
+                {[
+                  "Diverse representation, authentically illustrated",
+                  "Stories in multiple languages available",
+                  "Cultural traditions celebrated, not tokenised",
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-3 text-gray-700 text-sm">
+                    <span className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 text-xs flex-shrink-0">✓</span>
+                    {item}
+                  </div>
+                ))}
+              </div>
+              <Link
+                href="/characters/create"
+                className="inline-flex items-center gap-2 px-7 py-4 font-bold rounded-xl text-white shadow-md hover:shadow-lg transition-all hover:scale-[1.02]"
+                style={{ background: "linear-gradient(135deg, #7c3aed, #a855f7)" }}
+              >
+                Start your child's story →
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── ILLUSTRATORS ──────────────────────────────────────────── */}
-      <section className="py-16 md:py-20 bg-amber-50">
+      {/* ══ 11. ILLUSTRATORS ═════════════════════════════════════════════ */}
+      <section className="py-14 md:py-20" style={{ background: "#fef3e2" }}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <span className="inline-block bg-amber-100 text-amber-700 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+              <span className="inline-block bg-amber-200 text-amber-800 text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
                 ✍️ For Authors & Illustrators
               </span>
-              <h2 className="text-3xl font-bold text-gray-900 mb-5">
-                Talented storytellers create our worlds. You bring the magic.
+              <h2 className="text-3xl font-bold text-gray-900 mb-5 leading-tight">
+                Talented storytellers create the worlds. We personalise them for every child.
               </h2>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                We partner with professional children's book authors and illustrators who craft the stories and artwork. Our platform personalises their work for every individual child — combining craft with technology.
+              <p className="text-gray-700 leading-relaxed mb-6 text-base">
+                We partner with professional children's book authors and illustrators. They craft the stories and artwork — we then personalise them deeply for every individual child.
               </p>
               <Link
                 href="/for-authors"
-                className="inline-flex items-center gap-2 px-7 py-3.5 font-semibold rounded-xl transition-all text-white text-base hover:scale-[1.02]"
+                className="inline-flex items-center gap-2 px-7 py-3.5 font-bold rounded-xl text-white shadow-md hover:shadow-lg transition-all hover:scale-[1.02]"
                 style={{ backgroundColor: "#d97706" }}
               >
                 Partner with us →
@@ -386,7 +683,7 @@ export default function MarketingHome() {
             <div>
               <img
                 src={publicAssetUrl("images/illustrator.png")}
-                alt="Illustrator creating a Me Time Stories character"
+                alt="Illustrator creating a character for a Me Time Stories book"
                 className="w-full rounded-3xl object-cover shadow-xl"
                 style={{ maxHeight: 380 }}
               />
@@ -395,36 +692,37 @@ export default function MarketingHome() {
         </div>
       </section>
 
-      {/* ── FINAL CTA ─────────────────────────────────────────────── */}
-      <section className="relative py-16 md:py-24 overflow-hidden">
+      {/* ══ 12. FINAL CTA ════════════════════════════════════════════════ */}
+      <section className="relative py-20 md:py-28 overflow-hidden">
         <img
           src={publicAssetUrl("images/family-fireplace.png")}
-          alt="Family reading by fireplace"
+          alt="Family reading by fireplace at bedtime"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition: "center 20%" }}
         />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.65) 100%)" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(12,8,4,0.90) 0%, rgba(12,8,4,0.72) 100%)" }} />
         <div className="relative max-w-2xl mx-auto px-4 text-center">
-          <div className="text-5xl mb-5">🚜</div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-5 leading-tight">
+          <div className="text-6xl mb-5">🌙</div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-5 leading-tight" style={{ color: "#fef3e2" }}>
             Start the adventure tonight.
           </h2>
-          <p className="text-white/70 text-lg mb-10 leading-relaxed">
-            Build your child's character in 2 minutes and read their personalised version of The Time-Travelling Tractor — completely free.
+          <p className="text-lg mb-10 leading-relaxed" style={{ color: "rgba(254,243,226,0.65)" }}>
+            Build your child's character in 2 minutes. Read their personalised version of The Time-Travelling Tractor — free — and discover the magic of hearing "Look Mum, that's me!"
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/characters/create"
               className="flex items-center justify-center gap-2 px-9 py-4 font-bold text-lg rounded-xl shadow-2xl transition-all hover:scale-[1.02]"
-              style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a1a1a" }}
+              style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
             >
-              ✨ Build Your Character
+              ✨ Build Their Character
             </Link>
             <Link
               href="/stories/time-travelling-tractor"
-              className="flex items-center justify-center gap-2 px-9 py-4 bg-white/15 backdrop-blur-sm border border-white/30 text-white font-semibold text-lg rounded-xl hover:bg-white/25 transition-all"
+              className="flex items-center justify-center gap-2 px-9 py-4 border font-semibold text-lg rounded-xl transition-all hover:bg-white/10"
+              style={{ borderColor: "rgba(254,243,226,0.30)", color: "#fef3e2", background: "rgba(255,255,255,0.08)" }}
             >
-              🚜 Try the Story First
+              🚜 Try the Free Story
             </Link>
           </div>
         </div>
