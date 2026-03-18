@@ -68,11 +68,13 @@ lib/
 - `/staff/settings` — Admin-only placeholder settings page (protected)
 
 ### Frontend Routes — Story Production Workspace (`/internal/stories/*`)
-All routes JWT-protected via `ProtectedStaffRoute`. Dark editorial UI with violet accent (#a78bfa). Layout: `InternalLayout.tsx`.
+All routes JWT-protected via `ProtectedInternalRoute`. Dark editorial UI with violet accent (#a78bfa). Layout: `InternalLayout.tsx`.
+- `/internal/login` — MeTime Stories author/editor login (`metime_staff` table, role-based)
+- `/internal/editor` — Editor Dashboard (editors/admins only): stats, blueprint approval queue, staff management, author assignments
 - `/internal/stories` — Cross-academy dashboard: all players, completeness bars, filters by academy/status/author
-- `/internal/stories/:playerId/profile` — 8 collapsible data sections + raw JSON drawer
-- `/internal/stories/:playerId/blueprint` — 13-field narrative blueprint with 2.5s auto-save
-- `/internal/stories/:playerId/builder` — 6 scene cards (Vision → Storm → Rock Bottom → Rise → Wisdom → Next Level), each with guidance panel + manuscript area + 2s auto-save
+- `/internal/stories/:playerId/profile` — 8 collapsible data sections + blueprint approval indicator + Approve/Revoke Blueprint buttons (editors only)
+- `/internal/stories/:playerId/blueprint` — 13-field narrative blueprint with 2.5s auto-save + approval status
+- `/internal/stories/:playerId/builder` — Writing Room: 3-column layout (chapter navigator, book page canvas with bleed/margins, reference panel). Supports A5/Square/A4 formats, 6 page layout modes, auto-save. Locked until blueprint approved by editor.
 - `/internal/stories/:playerId/illustrations` — Drive asset management by type (portrait, kit, scene, etc.) with approval workflow
 - `/internal/stories/:playerId/notes` — Production notes (tabbed) + detail tracker (usage status: unused / partly / clearly)
 
@@ -89,17 +91,29 @@ All routes JWT-protected via `ProtectedStaffRoute`. Dark editorial UI with viole
 - `GET /api/admin/players?passcode=X` — Admin list players
 - `GET /api/admin/players/:id?passcode=X` — Admin full player profile
 
-### Internal Story Production API Routes (JWT-protected, all staff)
+### Internal Story Production API Routes (JWT-protected via `internalAuth` middleware)
+- `POST /api/internal/login` — MeTime Stories staff login (`metime_staff` table)
+- `GET /api/internal/me` — Current internal staff user
 - `GET /api/internal/projects` — All story projects cross-academy (filters: search, academy, status, author)
-- `GET /api/internal/profile/:playerId` — Full player data: all responses + computed sections + media links
-- `GET/PUT /api/internal/blueprint/:playerId` — Get/save 13-field narrative blueprint
-- `GET /api/internal/scenes/:playerId` — All 6 scenes for a player
-- `PUT /api/internal/scenes/:playerId/:sceneNumber` — Save a scene (manuscript + notes)
-- `GET/PUT /api/internal/tracker/:playerId` — Detail tracker items + update usage status
-- `GET/POST /api/internal/notes/:playerId` — Production notes (add/list)
-- `GET /api/internal/illustrations/:playerId` — List illustration assets
-- `POST /api/internal/illustrations/:playerId` — Add illustration asset
-- `PUT /api/internal/illustrations/:playerId/:assetId` — Update/approve asset
+- `GET /api/internal/projects/:playerId` — Single project + player
+- `PUT /api/internal/projects/:playerId` — Update project (status, author assignment, etc.)
+- `GET /api/internal/projects/:playerId/profile` — Full player data: all responses + computed sections + media links
+- `GET/PUT /api/internal/projects/:playerId/blueprint` — Get/save narrative blueprint
+- `POST /api/internal/projects/:playerId/blueprint/approve` — Editor approves blueprint (unlocks Story Builder)
+- `POST /api/internal/projects/:playerId/blueprint/revoke` — Editor revokes blueprint approval
+- `PUT /api/internal/projects/:playerId/assign` — Assign author/editor/book format to project
+- `GET /api/internal/projects/:playerId/scenes` — All 6 scenes for a player
+- `PUT /api/internal/projects/:playerId/scenes/:sceneNumber` — Save a scene (manuscript, pageLayout, imageUrl, etc.)
+- `GET/PUT /api/internal/projects/:playerId/tracker` — Detail tracker items + update usage status
+- `GET/POST /api/internal/projects/:playerId/notes` — Production notes (add/list)
+- `GET /api/internal/projects/:playerId/illustrations` — List illustration assets
+- `POST /api/internal/projects/:playerId/illustrations` — Add illustration asset
+- `PUT /api/internal/projects/:playerId/illustrations/:assetId` — Update/approve asset
+- `GET /api/internal/editor/stats` — Editor dashboard stats (editors/admins only)
+- `GET /api/internal/staff` — List all MeTime Stories staff (editors/admins only)
+- `POST /api/internal/staff` — Add staff member (editors/admins only)
+- `PUT /api/internal/staff/:id` — Update staff member (editors/admins only)
+- `DELETE /api/internal/staff/:id` — Deactivate staff member (soft-delete)
 
 ### Staff API Routes (JWT-protected)
 - `POST /api/staff/login` — Staff login (email + password → JWT)
@@ -122,6 +136,13 @@ All routes JWT-protected via `ProtectedStaffRoute`. Dark editorial UI with viole
 - `coach_responses` — Coach form answers (5 per player)
 - `academy_staff` — Staff accounts (email, password_hash, academy_id, system_role, job_title, etc.)
 - `staff_submissions` — Staff observations per player (role-based: coaching, psychology, education, player_care)
+- `metime_staff` — MeTime Stories internal staff (email, password_hash, full_name, role: author/illustrator/editor/admin, is_active)
+- `story_projects` — One-per-player production record (status, book_format, assigned_author, assigned_editor, flags)
+- `story_blueprints` — 13-field narrative blueprint + blueprint_approved / blueprint_approved_by / blueprint_approved_at
+- `story_scenes` — 6 chapters per project (manuscript, page_layout, image_url, pages_data jsonb)
+- `illustration_assets` — Drive-linked illustration files (type, approval, scene_number)
+- `detail_tracker` — Per-project usage tracking for player details (unused/partly/clearly_used)
+- `production_notes` — Free-text notes per project (type: general, internal, revision)
 
 ## Academy Keys (used in database)
 `birmingham-city`, `chelsea`, `arsenal`, `liverpool`, `manchester-city`, `manchester-united`, `tottenham`, `newcastle`
@@ -155,6 +176,15 @@ Marcus Webb and Jamie Torres have: full journey (30 responses) + parent submissi
 ### Admin Dashboard
 - **Passcode**: `metime2024`
 - Access at `/admin?passcode=metime2024`
+
+### MeTime Stories Production Workspace
+- **Author login**: `author@metimestories.com` / `MetiAuthor2024!` (role: author)
+- **Editor login**: `michael@metimestories.com` / `MichaelEditor2024!` (role: editor — full access to Editor Dashboard, blueprint approvals, staff management)
+- Access at `/internal/login`
+
+### Marcus Rashford Demo Player (Manchester United)
+- **Access Code**: `PLY-MR12` · **Parent Code**: `PAR-MR12`
+- Age 12, U13, Winger, Shirt #10, 30 journey responses seeded
 
 ## Staff Auth
 - JWT-based authentication via `STAFF_JWT_SECRET` env var

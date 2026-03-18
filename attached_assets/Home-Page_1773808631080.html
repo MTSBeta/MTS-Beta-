@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YPG5QH8VNQ"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-YPG5QH8VNQ');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Me Time Stories - Personalized Children's Stories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#6366f1',secondary:'#f97316'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+}
+.hero-gradient {
+background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+.feature-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+.story-card:hover {
+transform: scale(1.03);
+}
+.pricing-card.popular {
+transform: scale(1.05);
+}
+.testimonial-card {
+transition: all 0.3s ease;
+}
+.author-card:hover {
+transform: translateY(-5px);
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+.custom-checkbox {
+position: relative;
+cursor: pointer;
+}
+.custom-checkbox input {
+position: absolute;
+opacity: 0;
+cursor: pointer;
+}
+.checkmark {
+position: absolute;
+top: 0;
+left: 0;
+height: 20px;
+width: 20px;
+border-radius: 4px;
+border: 2px solid #d1d5db;
+background-color: white;
+}
+.custom-checkbox input:checked ~ .checkmark {
+background-color: #6366f1;
+border-color: #6366f1;
+}
+.checkmark:after {
+content: "";
+position: absolute;
+display: none;
+}
+.custom-checkbox input:checked ~ .checkmark:after {
+display: block;
+}
+.custom-checkbox .checkmark:after {
+left: 6px;
+top: 2px;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+}
+.switch {
+position: relative;
+display: inline-block;
+width: 48px;
+height: 24px;
+}
+.switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #e5e7eb;
+transition: .4s;
+border-radius: 24px;
+}
+.slider:before {
+position: absolute;
+content: "";
+height: 18px;
+width: 18px;
+left: 3px;
+bottom: 3px;
+background-color: white;
+transition: .4s;
+border-radius: 50%;
+}
+input:checked + .slider {
+background-color: #6366f1;
+}
+input:checked + .slider:before {
+transform: translateX(24px);
+}
+.story-carousel {
+scroll-behavior: smooth;
+}
+.story-carousel::-webkit-scrollbar {
+display: none;
+}
+.counter-animation {
+opacity: 0;
+transform: translateY(20px);
+transition: all 0.8s ease-out;
+}
+.counter-animation.animate {
+opacity: 1;
+transform: translateY(0);
+}
+@keyframes countUp {
+from { opacity: 0; transform: scale(0.5); }
+to { opacity: 1; transform: scale(1); }
+}
+.stat-number {
+animation: countUp 0.8s ease-out forwards;
+}
+/* Enhanced Hero Animations */
+@keyframes typeWriter {
+from { width: 0; }
+to { width: 100%; }
+}
+@keyframes fadeInUp {
+from {
+opacity: 0;
+transform: translateY(30px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+@keyframes slideUp {
+from {
+opacity: 0;
+transform: translateY(40px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+@keyframes bounceIn {
+0% {
+opacity: 0;
+transform: scale(0.3);
+}
+50% {
+opacity: 1;
+transform: scale(1.05);
+}
+70% {
+transform: scale(0.9);
+}
+100% {
+opacity: 1;
+transform: scale(1);
+}
+}
+@keyframes shimmer {
+0% {
+background-position: -200% 0;
+}
+100% {
+background-position: 200% 0;
+}
+}
+.typing-text {
+animation: fadeInUp 0.8s ease-out forwards;
+animation-delay: 0.2s;
+opacity: 0;
+}
+.fade-in-text {
+animation: fadeInUp 1s ease-out forwards;
+animation-delay: 0.6s;
+opacity: 0;
+}
+.slide-up-text {
+animation: slideUp 1.2s ease-out forwards;
+animation-delay: 0.4s;
+opacity: 0;
+}
+.welcome-badge {
+animation: bounceIn 0.8s ease-out forwards;
+animation-delay: 0.1s;
+opacity: 0;
+}
+.magical-text {
+background: linear-gradient(45deg, #6366f1, #f97316, #6366f1);
+background-size: 200% 200%;
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+animation: shimmer 2s linear infinite;
+font-weight: bold;
+}
+.hero-text {
+background: linear-gradient(45deg, #f97316, #6366f1, #f97316);
+background-size: 200% 200%;
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+animation: shimmer 2s linear infinite;
+animation-delay: 0.5s;
+font-weight: bold;
+}
+</style>
+</head>
+<body class="bg-white">
+<!-- Header -->
+<header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+<div class="container mx-auto px-4 py-3 flex items-center justify-between">
+<div class="flex items-center">
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/f4bcb585-ab47-4ff8-924f-358f0740a159" data-readdy="true" class="flex items-center">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/3a01f2c9a7f65c31b620a4345f80c608.png" alt="Me Time Stories" class="h-8">
+</a>
+<nav class="hidden md:flex ml-10">
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/f4bcb585-ab47-4ff8-924f-358f0740a159" data-readdy="true" class="mx-3 text-gray-900 font-medium border-b-2 border-primary">Home</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/aa894146-4cf0-4633-8db4-7e9aa0139acc" data-readdy="true" class="mx-3 text-gray-600 hover:text-gray-900 font-medium">Library</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/feeb6245-39f9-4316-a5e5-85366ad382a3" data-readdy="true" class="mx-3 text-gray-600 hover:text-gray-900 font-medium">For Authors</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/23434b77-1ecd-4d13-8ce3-16e903483388" data-readdy="true" class="mx-3 text-gray-600 hover:text-gray-900 font-medium">Pricing</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/104beedb-11c6-4fae-9dad-811b863cfca6" data-readdy="true" class="mx-3 text-gray-600 hover:text-gray-900 font-medium">About</a>
+<div class="relative ml-3" id="solutionsDropdown">
+<button id="solutionsBtn" class="flex items-center text-gray-600 hover:text-gray-900 font-medium">
+Solutions
+<i class="ri-arrow-down-s-line ml-1"></i>
+</button>
+<div id="solutionsMenu" class="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden z-50">
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/77b6735a-20a9-4714-8158-45512e2df640" data-readdy="true" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50">
+<i class="ri-school-line ri-lg mr-2 text-blue-600"></i>
+Academies
+</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/6f030217-262f-4d5f-ba31-918cf5de4e3b" data-readdy="true" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50">
+<i class="ri-building-line ri-lg mr-2 text-green-600"></i>
+Corporate Social Responsibility
+</a>
+</div>
+</div>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/ec6c6307-85a0-4687-8585-7daf82074ebf" data-readdy="true" class="mx-3 bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap hover:bg-primary/90 transition-colors text-sm font-medium">
+Try our Beta Engine
+</a>
+</nav>
+</div>
+<div class="flex items-center">
+<div class="hidden md:flex items-center mr-4">
+<div class="relative" id="demoAccountsDropdown">
+<button id="demoAccountsBtn" class="flex items-center px-4 py-2 text-gray-600 hover:text-gray-900">
+<i class="ri-user-line ri-lg mr-2"></i>
+Demo Accounts
+<i class="ri-arrow-down-s-line ml-1"></i>
+</button>
+<div id="demoAccountsMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden">
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/c5965267-aede-4821-8c3e-6f3d48e50f1b" data-readdy="true" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50">
+<i class="ri-parent-line ri-lg mr-2 text-primary"></i>
+Parent Demo
+</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/emma-dashboard" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50">
+<i class="ri-user-smile-line ri-lg mr-2 text-purple-600"></i>
+Emma's Demo
+</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/0f56cee9-48f4-4d6c-96ba-2f1196e00e69" data-readdy="true" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50">
+<i class="ri-user-smile-line ri-lg mr-2 text-purple-600"></i>
+Jamie's Demo
+</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/f730f5c8-0731-4683-85cc-2b85d91a5531" data-readdy="true" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50">
+<i class="ri-quill-pen-line ri-lg mr-2 text-amber-600"></i>
+Author Demo
+</a>
+</div>
+</div>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/f4bcb585-ab47-4ff8-924f-358f0740a159" data-readdy="true" class="w-8 h-8 flex items-center justify-center mr-3 text-gray-600 hover:text-gray-900 cursor-pointer">
+<i class="ri-book-open-line ri-lg"></i>
+</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/9b79325f-7daf-4c39-8ce3-ceb154d22e63" data-readdy="true" class="w-8 h-8 flex items-center justify-center mr-3 text-gray-600 hover:text-gray-900 cursor-pointer relative">
+<i class="ri-notification-line ri-lg"></i>
+<span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+</a>
+</div>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/9b79325f-7daf-4c39-8ce3-ceb154d22e63" data-readdy="true">
+<button class="bg-primary text-white px-4 py-2 font-medium !rounded-button whitespace-nowrap cursor-pointer">Get Started</button>
+</a>
+<div id="mobileMenuBtn" class="md:hidden ml-4 w-8 h-8 flex items-center justify-center text-gray-600 cursor-pointer">
+<i class="ri-menu-line ri-lg"></i>
+</div>
+</div>
+</div>
+<div id="mobileMenu" class="fixed inset-0 bg-black/50 z-50 hidden">
+<div class="bg-white w-64 h-full ml-auto p-6">
+<div class="flex justify-end mb-6">
+<button id="closeMobileMenu" class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-gray-900">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<nav class="flex flex-col gap-4">
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/f4bcb585-ab47-4ff8-924f-358f0740a159" data-readdy="true" class="text-gray-900 font-medium">Home</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/aa894146-4cf0-4633-8db4-7e9aa0139acc" data-readdy="true" class="text-gray-600 hover:text-gray-900">Library</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/feeb6245-39f9-4316-a5e5-85366ad382a3" data-readdy="true" class="text-gray-600 hover:text-gray-900">For Authors</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/23434b77-1ecd-4d13-8ce3-16e903483388" data-readdy="true" class="text-gray-600 hover:text-gray-900">Pricing</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/104beedb-11c6-4fae-9dad-811b863cfca6" data-readdy="true" class="text-gray-600 hover:text-gray-900">About</a>
+<div class="border-t border-gray-200 pt-4 mt-4">
+<p class="text-sm font-medium text-gray-500 mb-2">Solutions</p>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/77b6735a-20a9-4714-8158-45512e2df640" data-readdy="true" class="text-gray-600 hover:text-gray-900 flex items-center mb-2">
+<i class="ri-school-line mr-2"></i>Academies
+</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/6f030217-262f-4d5f-ba31-918cf5de4e3b" data-readdy="true" class="text-gray-600 hover:text-gray-900 flex items-center">
+<i class="ri-building-line mr-2"></i>Corporate CSR
+</a>
+</div>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/ec6c6307-85a0-4687-8585-7daf82074ebf" data-readdy="true" class="bg-primary text-white px-4 py-2 !rounded-button whitespace-nowrap inline-block mt-4">Try our Beta Engine</a>
+</nav>
+</div>
+</div>
+</header>
+<!-- Hero Section -->
+<section class="pt-24 pb-16 md:py-32 relative overflow-hidden" style="background-image: url('https://readdy.ai/api/search-image?query=Magical%20childrens%20storybook%20scene%20with%20soft%20pastel%20colors%2C%20showing%20diverse%20children%20reading%20books%20under%20a%20tree%20with%20magical%20elements%20floating%20around%20them%2C%20with%20a%20vintage%20red%20tractor%20in%20the%20background.%20The%20left%20side%20has%20a%20clean%2C%20light%20gradient%20background%20that%20transitions%20smoothly%20to%20the%20illustration%20on%20the%20right.%20Professional%2C%20modern%2C%20dreamy%20atmosphere%20with%20soft%20lighting.&width=1600&height=800&seq=hero123&orientation=landscape'); background-size: cover; background-position: center;">
+<div class="absolute inset-0 bg-gradient-to-r from-white/95 via-white/85 to-transparent"></div>
+<div class="container mx-auto px-4 relative">
+<div class="flex flex-col md:flex-row items-center gap-8">
+<div class="max-w-4xl mx-auto text-center">
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/ec6c6307-85a0-4687-8585-7daf82074ebf" data-readdy="true" class="inline-flex items-center bg-primary/10 text-primary px-4 py-2 !rounded-full mb-6 animate-bounce cursor-pointer hover:bg-primary/15 transition-colors">
+<i class="ri-fire-line ri-lg mr-2"></i>
+<span class="font-medium">Now Live: Beta Engine Available!</span>
+</a>
+<h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
+<span class="inline-block typing-text">Your Child's Name in</span>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary animate-pulse inline-block transform hover:scale-105 transition-transform duration-300">Every Story</span>
+</h1>
+<p class="text-lg md:text-xl text-gray-600 mb-6 max-w-2xl mx-auto italic font-medium">Where imagination meets the heart</p>
+<p class="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto fade-in-text leading-relaxed">Stories crafted around your child's unique world – where their personality, dreams, and favorite things become the heart of every adventure, not just their name on a page</p>
+<div class="max-w-6xl mx-auto">
+<div class="space-y-16">
+<!-- Platform Introduction -->
+<div class="text-center mb-12">
+<span class="inline-block bg-primary/10 text-primary text-sm font-medium px-4 py-2 !rounded-full mb-6 welcome-badge">✨ Welcome to Me Time Stories!</span>
+<div class="text-xl md:text-2xl text-gray-700 leading-relaxed max-w-4xl mx-auto mb-8 slide-up-text">
+See how it works in just 2 minutes, then watch as bedtime becomes their favorite time of day.
+</div>
+</div>
+<!-- How It Works Preview -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+<div class="text-center group">
+<div class="relative w-32 h-32 mx-auto mb-6">
+<img src="https://readdy.ai/api/search-image?query=Cheerful%20cartoon%20illustration%20of%20a%20happy%20child%20creating%20a%20profile%20on%20a%20tablet%20with%20colorful%20avatar%20options%2C%20stars%20and%20magical%20elements%20floating%20around%2C%20bright%20and%20engaging%20childrens%20app%20interface%20design%20with%20friendly%20characters&width=200&height=200&seq=step1visual&orientation=squarish" alt="Create Profile Step" class="w-full h-full object-cover rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+<div class="absolute -top-2 -right-2 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg">1</div>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-2">Share Your Child's Magic</h3>
+<p class="text-gray-600">Tell us what makes them smile, what they dream about, and who they are – we weave these precious details into every tale</p>
+</div>
+<div class="text-center group">
+<div class="relative w-32 h-32 mx-auto mb-6">
+<img src="https://readdy.ai/api/search-image?query=Magical%20illustration%20showing%20AI%20personalization%20in%20action%20with%20floating%20books%2C%20sparkles%2C%20and%20a%20childs%20character%20being%20woven%20into%20colorful%20storybook%20pages%20with%20magical%20wand%20effects%20and%20glowing%20elements&width=200&height=200&seq=step2visual&orientation=squarish" alt="Story Personalization Step" class="w-full h-full object-cover rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+<div class="absolute -top-2 -right-2 w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg">2</div>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-2">We Craft Their Story</h3>
+<p class="text-gray-600">Each adventure is lovingly created around your child's world, making them not just a character, but the beating heart of every magical moment</p>
+</div>
+<div class="text-center group">
+<div class="relative w-32 h-32 mx-auto mb-6">
+<img src="https://readdy.ai/api/search-image?query=Heartwarming%20illustration%20of%20a%20smiling%20child%20reading%20a%20personalized%20story%20with%20bright%20happy%20expression%2C%20surrounded%20by%20floating%20hearts%20and%20magical%20sparkles%2C%20showing%20joy%20and%20excitement%20while%20discovering%20their%20name%20in%20the%20story&width=200&height=200&seq=step3visual&orientation=squarish" alt="Happy Reading Step" class="w-full h-full object-cover rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+<div class="absolute -top-2 -right-2 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg">3</div>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-2">Watch Them Light Up</h3>
+<p class="text-gray-600">Experience the pure joy as your child discovers they're the hero of their own story, creating precious moments that bring you closer together</p>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-16">
+<button id="watchVideoBtn" class="group relative bg-gradient-to-r from-primary to-primary/90 text-white px-8 py-6 font-semibold text-lg !rounded-button whitespace-nowrap flex items-center justify-center cursor-pointer hover:from-primary/90 hover:to-primary transition-all duration-300 shadow-lg hover:shadow-xl border-0 min-h-[72px] overflow-hidden">
+<i class="ri-play-circle-line ri-xl mr-3 relative z-10"></i>
+<span class="relative z-10">See the Magic</span>
+</button>
+<a href="" data-readdy="true" class="block">
+<button class="w-full group relative bg-white text-primary border-2 border-primary px-8 py-6 font-semibold text-lg !rounded-button whitespace-nowrap flex items-center justify-center cursor-pointer hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 shadow-lg hover:shadow-xl min-h-[72px] overflow-hidden">
+<i class="ri-heart-line ri-xl mr-3 relative z-10"></i>
+<span class="relative z-10">Begin Their Journey</span>
+</button>
+</a>
+</div>
+<!-- Sign Up Incentive -->
+<div class="bg-white/70 backdrop-blur-md p-4 sm:p-6 md:p-8 rounded-2xl md:rounded-3xl border border-primary/20 shadow-2xl max-w-2xl mx-auto mb-16">
+<div class="text-center mb-4 sm:mb-6">
+<div class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 flex items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full mx-auto mb-3 sm:mb-4">
+<i class="ri-gift-line ri-lg sm:ri-xl md:ri-2x text-primary"></i>
+</div>
+<h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 px-2">Your Story Awaits</h3>
+<p class="text-base sm:text-lg text-gray-600 mb-4 sm:mb-6 px-2">Join 1,200+ families creating magical memories together. Your child's first personalized adventure is our gift to you.</p>
+</div>
+<form id="heroEmailForm" action="https://formspree.io/f/mzbqzjaq" method="POST" class="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6">
+<input type="email" name="email" placeholder="Your email address" required class="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl border border-gray-200 shadow-sm focus:ring-2 focus:ring-primary focus:border-primary focus:outline-none text-sm sm:text-base bg-white min-h-[48px]">
+<button type="submit" class="w-full bg-primary text-white px-6 sm:px-8 py-3 sm:py-4 font-semibold !rounded-button cursor-pointer hover:bg-primary/90 transition-all duration-300 relative overflow-hidden group text-sm sm:text-base shadow-md min-h-[48px]">
+<span class="relative z-10 flex items-center justify-center">
+<i class="ri-heart-fill ri-lg mr-2 sm:mr-3"></i>
+Start Our Story Together
+</span>
+</button>
+</form>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm text-gray-600">
+<div class="flex items-center">
+<i class="ri-shield-check-line ri-lg mr-2 text-green-500"></i>
+Privacy Protected
+</div>
+<div class="flex items-center">
+<i class="ri-star-fill ri-lg mr-2 text-amber-400"></i>
+4.9/5 Rating
+</div>
+<div class="flex items-center">
+<i class="ri-time-line ri-lg mr-2 text-blue-500"></i>
+2-Min Setup
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Video Modal -->
+<div id="videoModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center">
+<div class="relative bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4">
+<button id="closeVideoBtn" class="absolute -top-4 -right-4 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-lg text-gray-600 hover:text-gray-900 cursor-pointer">
+<i class="ri-close-line ri-lg"></i>
+</button>
+<div class="aspect-video relative overflow-hidden rounded-lg">
+<iframe src="https://share.synthesia.io/embeds/videos/bd98723e-6f05-4f77-94be-307f1c5b4dab" loading="lazy" title="Synthesia video player - Introduction to Me Time Stories" allowfullscreen allow="encrypted-media; fullscreen;" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0; margin: 0; overflow:hidden;"></iframe>
+</div>
+</div>
+</div>
+</section>
+<!-- How Personalization Works -->
+<section class="py-16">
+<div class="container mx-auto px-4">
+<div class="text-center mb-12">
+<span class="inline-block bg-primary/10 text-primary text-sm px-4 py-1 !rounded-full mb-4">Dynamic Personalization Framework</span>
+<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How Our Story Magic Works</h2>
+<p class="text-lg text-gray-600 max-w-3xl mx-auto">Our Dynamic Personalization Framework (DPF) transforms your family into magical characters, creating unique adventures where familiar faces become part of enchanting stories. Here's how the magic happens:</p>
+<div class="flex items-center justify-center gap-2 mt-6">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse delay-100"></span>
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse delay-200"></span>
+</div>
+</div>
+<div class="flex justify-center items-center gap-4 mb-8">
+<div class="inline-flex bg-white rounded-full p-1 shadow-sm">
+<button class="text-process-tab px-6 py-2 rounded-full bg-primary text-white font-medium cursor-pointer">How It Works</button>
+</div>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/ec6c6307-85a0-4687-8585-7daf82074ebf" data-readdy="true">
+<button class="bg-primary text-white px-6 py-3 font-medium !rounded-button whitespace-nowrap cursor-pointer relative animate-pulse hover:animate-none group transition-all duration-300">
+Try our Beta Engine
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/ec6c6307-85a0-4687-8585-7daf82074ebf" data-readdy="true">
+<span class="absolute -inset-1 border border-primary rounded-button animate-ping opacity-20"></span>
+</a>
+</button>
+</a>
+</div>
+<div class="process-view relative">
+<div class="flex flex-col gap-4">
+<div class="story-carousel flex overflow-x-auto gap-8 pb-4 snap-x snap-mandatory">
+<div class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 relative overflow-hidden flex-shrink-0 w-full md:w-[calc(33.333%-1.5rem)] snap-start">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+<div class="absolute bottom-0 left-0 w-24 h-24 bg-secondary/5 rounded-full -ml-12 -mb-12"></div>
+<div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 rounded-full text-primary font-bold text-xl mx-auto mb-6 shadow-md relative z-10">
+<i class="ri-upload-cloud-line ri-lg"></i>
+</div>
+<h3 class="text-xl font-semibold text-gray-900 mb-3 text-center relative z-10">Step 1: Submit Your Data</h3>
+<div class="space-y-4 text-gray-600 relative z-10">
+<div class="flex items-start">
+<i class="ri-image-line ri-lg text-primary mt-1 mr-3"></i>
+<p>Upload family photos and create character profiles</p>
+</div>
+<div class="flex items-start">
+<i class="ri-mic-line ri-lg text-primary mt-1 mr-3"></i>
+<p>Add voice recordings for personalized narration</p>
+</div>
+<div class="flex items-start">
+<i class="ri-group-line ri-lg text-primary mt-1 mr-3"></i>
+<p>Build your family tree for story connections</p>
+</div>
+</div>
+</div>
+<div class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 relative overflow-hidden flex-shrink-0 w-full md:w-[calc(33.333%-1.5rem)] snap-start">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+<div class="absolute bottom-0 left-0 w-24 h-24 bg-secondary/5 rounded-full -ml-12 -mb-12"></div>
+<div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 rounded-full text-primary font-bold text-xl mx-auto mb-6 shadow-md relative z-10">
+<i class="ri-magic-line ri-lg"></i>
+</div>
+<h3 class="text-xl font-semibold text-gray-900 mb-3 text-center relative z-10">Step 2: Story Weaving</h3>
+<div class="space-y-4 text-gray-600 relative z-10">
+<div class="flex items-start">
+<i class="ri-sparkling-line ri-lg text-primary mt-1 mr-3"></i>
+<p>Your family becomes the cast of characters</p>
+</div>
+<div class="flex items-start">
+<i class="ri-character-recognition-line ri-lg text-primary mt-1 mr-3"></i>
+<p>Stories adapt to match your family dynamics</p>
+</div>
+<div class="flex items-start">
+<i class="ri-palette-line ri-lg text-primary mt-1 mr-3"></i>
+<p>Each story is uniquely crafted for your family</p>
+</div>
+</div>
+</div>
+<div class="bg-white p-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300 relative overflow-hidden flex-shrink-0 w-full md:w-[calc(33.333%-1.5rem)] snap-start">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+<div class="absolute bottom-0 left-0 w-24 h-24 bg-secondary/5 rounded-full -ml-12 -mb-12"></div>
+<div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 rounded-full text-primary font-bold text-xl mx-auto mb-6 shadow-md relative z-10">
+<i class="ri-book-open-line ri-lg"></i>
+</div>
+<h3 class="text-xl font-semibold text-gray-900 mb-3 text-center relative z-10">Step 3: Magical Reading</h3>
+<div class="space-y-4 text-gray-600 relative z-10">
+<div class="flex items-start">
+<i class="ri-book-mark-line ri-lg text-primary mt-1 mr-3"></i>
+<p>Experience stories starring your family</p>
+</div>
+<div class="flex items-start">
+<i class="ri-emotion-happy-line ri-lg text-primary mt-1 mr-3"></i>
+<p>Watch your children's excitement grow</p>
+</div>
+<div class="flex items-start">
+<i class="ri-heart-line ri-lg text-primary mt-1 mr-3"></i>
+<p>Create magical memories together</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-center mt-6 gap-2">
+<button class="process-dot w-3 h-3 rounded-full bg-primary"></button>
+<button class="process-dot w-3 h-3 rounded-full bg-gray-300"></button>
+<button class="process-dot w-3 h-3 rounded-full bg-gray-300"></button>
+</div>
+</div>
+<div class="visual-view hidden relative">
+<div class="story-carousel-visual flex flex-col md:flex-row gap-8 pb-4 bg-gradient-to-br from-blue-50 to-white p-8 rounded-xl">
+<div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 relative flex-1 border border-blue-100">
+<div class="flex items-center mb-8">
+<div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-primary font-bold text-2xl mr-4">1</div>
+<div class="flex-1">
+<div class="h-2 bg-blue-100 rounded-full">
+<div class="w-1/3 h-full bg-primary rounded-full"></div>
+</div>
+</div>
+</div>
+<img src="https://readdy.ai/api/search-image?query=Cheerful%20and%20colorful%20childrens%20app%20interface%20showing%20a%20fun%20profile%20creation%20screen%20with%20cute%20animal%20avatars%2C%20playful%20fonts%2C%20and%20bright%20colors.%20Light%20mode%20interface%20with%20friendly%20illustrations%20and%20welcoming%20design%20elements.&width=400&height=300&seq=onboard1&orientation=landscape" alt="Profile Creation" class="w-full h-48 object-cover rounded-lg mb-8 shadow-sm">
+<h3 class="text-2xl font-bold text-primary mb-4">Create Your Reading Adventure!</h3>
+<div class="space-y-4">
+<div class="flex items-center text-gray-700">
+<i class="ri-star-smile-line ri-lg mr-3 text-yellow-500"></i>
+<p>Pick your favorite stories and characters</p>
+</div>
+<div class="flex items-center text-gray-700">
+<i class="ri-magic-line ri-lg mr-3 text-purple-500"></i>
+<p>Discover magical reading journeys</p>
+</div>
+</div>
+</div>
+<div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 relative flex-1 border border-pink-100">
+<div class="flex items-center mb-8">
+<div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center text-primary font-bold text-2xl mr-4">2</div>
+<div class="flex-1">
+<div class="h-2 bg-pink-100 rounded-full">
+<div class="w-2/3 h-full bg-primary rounded-full"></div>
+</div>
+</div>
+</div>
+<img src="https://readdy.ai/api/search-image?query=Cheerful%20and%20colorful%20childrens%20library%20interface%20showing%20a%20fun%20book%20selection%20screen%20with%20animated%20book%20covers%2C%20playful%20category%20icons%2C%20and%20bright%20colors.%20Light%20mode%20interface%20with%20friendly%20illustrations%20and%20welcoming%20design%20elements.&width=400&height=300&seq=onboard2&orientation=landscape" alt="Story Selection" class="w-full h-48 object-cover rounded-lg mb-8 shadow-sm">
+<h3 class="text-2xl font-bold text-primary mb-4">Choose Your Stories!</h3>
+<div class="space-y-4">
+<div class="flex items-center text-gray-700">
+<i class="ri-book-open-line ri-lg mr-3 text-green-500"></i>
+<p>Find stories you'll love</p>
+</div>
+<div class="flex items-center text-gray-700">
+<i class="ri-heart-line ri-lg mr-3 text-red-500"></i>
+<p>Save your favorites</p>
+</div>
+</div>
+</div>
+<div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 relative flex-1 border border-green-100">
+<div class="flex items-center mb-8">
+<div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-primary font-bold text-2xl mr-4">3</div>
+<div class="flex-1">
+<div class="h-2 bg-green-100 rounded-full">
+<div class="w-full h-full bg-primary rounded-full"></div>
+</div>
+</div>
+</div>
+<img src="https://readdy.ai/api/search-image?query=Cheerful%20and%20colorful%20childrens%20reading%20interface%20showing%20an%20interactive%20storybook%20with%20animated%20characters%2C%20achievement%20badges%2C%20and%20fun%20progress%20tracking.%20Light%20mode%20interface%20with%20friendly%20illustrations%20and%20welcoming%20design%20elements.&width=400&height=300&seq=onboard3&orientation=landscape" alt="Reading Adventure" class="w-full h-48 object-cover rounded-lg mb-8 shadow-sm">
+<h3 class="text-2xl font-bold text-primary mb-4">Start Your Journey!</h3>
+<div class="space-y-4">
+<div class="flex items-center text-gray-700">
+<i class="ri-star-line ri-lg mr-3 text-yellow-500"></i>
+<p>Earn fun rewards as you read</p>
+</div>
+<div class="flex items-center text-gray-700">
+<i class="ri-medal-line ri-lg mr-3 text-orange-500"></i>
+<p>Collect special badges</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-center mt-6 gap-2">
+<button class="visual-dot w-3 h-3 rounded-full bg-primary"></button>
+<button class="visual-dot w-3 h-3 rounded-full bg-gray-300"></button>
+<button class="visual-dot w-3 h-3 rounded-full bg-gray-300"></button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Section -->
+<section class="py-20 bg-gradient-to-b from-white to-gray-50">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<span class="inline-block bg-primary/10 text-primary text-sm px-4 py-2 !rounded-full mb-4">Trusted by 50,000+ Parents</span>
+<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Why Families Choose Me Time Stories</h2>
+<p class="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">Transform bedtime into an adventure where your child becomes the hero, building confidence and love for reading that lasts a lifetime.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="feature-card group">
+<div class="bg-white p-8 rounded-2xl shadow-lg border border-primary/10 h-full transform hover:scale-105 hover:shadow-2xl transition-all duration-500 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/5 to-transparent rounded-full -mr-16 -mt-16"></div>
+<div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-blue-100 to-primary/20 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
+<i class="ri-magic-line ri-2x text-primary"></i>
+</div>
+<h3 class="text-2xl font-bold text-gray-900 mb-4">True Personalization</h3>
+<p class="text-gray-600 leading-relaxed mb-4">Your child becomes the main character with their name, appearance, and favorite things woven throughout every story.</p>
+<div class="text-sm text-primary font-medium">✨ AI-powered customization</div>
+</div>
+</div>
+<div class="feature-card group">
+<div class="bg-white p-8 rounded-2xl shadow-lg border border-green-200/50 h-full transform hover:scale-105 hover:shadow-2xl transition-all duration-500 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-100/50 to-transparent rounded-full -mr-16 -mt-16"></div>
+<div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-green-100 to-green-200/50 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
+<i class="ri-book-open-line ri-2x text-green-600"></i>
+</div>
+<h3 class="text-2xl font-bold text-gray-900 mb-4">Growing Library</h3>
+<p class="text-gray-600 leading-relaxed mb-4">Over 800 professionally crafted stories across genres, with 20+ new adventures added monthly.</p>
+<div class="text-sm text-green-600 font-medium">📚 New stories weekly</div>
+</div>
+</div>
+<div class="feature-card group">
+<div class="bg-white p-8 rounded-2xl shadow-lg border border-purple-200/50 h-full transform hover:scale-105 hover:shadow-2xl transition-all duration-500 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-100/50 to-transparent rounded-full -mr-16 -mt-16"></div>
+<div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-purple-100 to-purple-200/50 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
+<i class="ri-brain-line ri-2x text-purple-600"></i>
+</div>
+<h3 class="text-2xl font-bold text-gray-900 mb-4">Learning Focused</h3>
+<p class="text-gray-600 leading-relaxed mb-4">Every story builds reading skills, emotional intelligence, and values while keeping children engaged.</p>
+<div class="text-sm text-purple-600 font-medium">🎯 Age-appropriate content</div>
+</div>
+</div>
+<div class="feature-card group">
+<div class="bg-white p-8 rounded-2xl shadow-lg border border-amber-200/50 h-full transform hover:scale-105 hover:shadow-2xl transition-all duration-500 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-100/50 to-transparent rounded-full -mr-16 -mt-16"></div>
+<div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-amber-100 to-amber-200/50 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
+<i class="ri-devices-line ri-2x text-amber-600"></i>
+</div>
+<h3 class="text-2xl font-bold text-gray-900 mb-4">Everywhere Access</h3>
+<p class="text-gray-600 leading-relaxed mb-4">Read online, download for offline, or order beautiful physical books delivered to your door.</p>
+<div class="text-sm text-amber-600 font-medium">📱 All devices supported</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Story Library Preview -->
+<section class="hidden py-16">
+<div class="container mx-auto px-4">
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-3xl font-bold text-gray-900">Explore Our Story Library</h2>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/08040e79-f421-452a-b443-99574a8fa36d" data-readdy="true" class="text-primary font-medium flex items-center cursor-pointer">
+View All
+<i class="ri-arrow-right-line ri-lg ml-1"></i>
+</a>
+</div>
+<div class="flex mb-6 gap-3">
+<button class="bg-primary text-white px-4 py-2 !rounded-full text-sm whitespace-nowrap cursor-pointer">All Ages</button>
+<button class="bg-gray-100 text-gray-700 px-4 py-2 !rounded-full text-sm hover:bg-gray-200 whitespace-nowrap cursor-pointer">Ages 3-5</button>
+<button class="bg-gray-100 text-gray-700 px-4 py-2 !rounded-full text-sm hover:bg-gray-200 whitespace-nowrap cursor-pointer">Ages 6-8</button>
+<button class="bg-gray-100 text-gray-700 px-4 py-2 !rounded-full text-sm hover:bg-gray-200 whitespace-nowrap cursor-pointer">Ages 9-12</button>
+</div>
+<div class="flex mb-8 gap-3">
+<button class="bg-primary text-white px-4 py-2 !rounded-full text-sm whitespace-nowrap cursor-pointer">All Genres</button>
+<button class="bg-gray-100 text-gray-700 px-4 py-2 !rounded-full text-sm hover:bg-gray-200 whitespace-nowrap cursor-pointer">Adventure</button>
+<button class="bg-gray-100 text-gray-700 px-4 py-2 !rounded-full text-sm hover:bg-gray-200 whitespace-nowrap cursor-pointer">Fantasy</button>
+<button class="bg-gray-100 text-gray-700 px-4 py-2 !rounded-full text-sm hover:bg-gray-200 whitespace-nowrap cursor-pointer">Educational</button>
+<button class="bg-gray-100 text-gray-700 px-4 py-2 !rounded-full text-sm hover:bg-gray-200 whitespace-nowrap cursor-pointer">Bedtime</button>
+</div>
+<div class="story-carousel flex overflow-x-auto gap-6 pb-4">
+<div class="story-card flex-shrink-0 w-56 transition-all duration-300 cursor-pointer">
+<div class="relative h-72 rounded-lg overflow-hidden shadow-md mb-3">
+<img src="https://readdy.ai/api/search-image?query=Childrens%20book%20cover%20with%20a%20magical%20space%20adventure%20theme%2C%20featuring%20a%20young%20child%20astronaut%20floating%20among%20colorful%20planets%20and%20stars.%20Professional%2C%20vibrant%2C%20whimsical%20illustration%20style%20with%20a%20clean%20layout%20and%20title%20space%20at%20top.%20Suitable%20for%20ages%206-8.&width=400&height=600&seq=book1&orientation=portrait" alt="Space Adventure" class="w-full h-full object-cover object-top">
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+<h3 class="text-white font-bold">Space Adventure</h3>
+<p class="text-white/80 text-sm">Ages 6-8</p>
+</div>
+</div>
+</div>
+<div class="story-card flex-shrink-0 w-56 transition-all duration-300 cursor-pointer">
+<div class="relative h-72 rounded-lg overflow-hidden shadow-md mb-3">
+<img src="https://readdy.ai/api/search-image?query=Childrens%20book%20cover%20with%20an%20underwater%20mermaid%20adventure%20theme%2C%20featuring%20a%20child%20swimming%20with%20colorful%20fish%20and%20sea%20creatures%20in%20a%20magical%20ocean.%20Professional%2C%20vibrant%2C%20whimsical%20illustration%20style%20with%20a%20clean%20layout%20and%20title%20space%20at%20top.%20Suitable%20for%20ages%203-5.&width=400&height=600&seq=book2&orientation=portrait" alt="Mermaid Tales" class="w-full h-full object-cover object-top">
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+<h3 class="text-white font-bold">Mermaid Tales</h3>
+<p class="text-white/80 text-sm">Ages 3-5</p>
+</div>
+</div>
+</div>
+<div class="story-card flex-shrink-0 w-56 transition-all duration-300 cursor-pointer">
+<div class="relative h-72 rounded-lg overflow-hidden shadow-md mb-3">
+<img src="https://readdy.ai/api/search-image?query=Childrens%20book%20cover%20with%20a%20dinosaur%20adventure%20theme%2C%20featuring%20a%20child%20explorer%20in%20a%20prehistoric%20jungle%20with%20friendly%20dinosaurs.%20Professional%2C%20vibrant%2C%20whimsical%20illustration%20style%20with%20a%20clean%20layout%20and%20title%20space%20at%20top.%20Suitable%20for%20ages%206-8.&width=400&height=600&seq=book3&orientation=portrait" alt="Dinosaur Discovery" class="w-full h-full object-cover object-top">
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+<h3 class="text-white font-bold">Dinosaur Discovery</h3>
+<p class="text-white/80 text-sm">Ages 6-8</p>
+</div>
+</div>
+</div>
+<div class="story-card flex-shrink-0 w-56 transition-all duration-300 cursor-pointer">
+<div class="relative h-72 rounded-lg overflow-hidden shadow-md mb-3">
+<img src="https://readdy.ai/api/search-image?query=Childrens%20book%20cover%20with%20a%20fairy%20tale%20castle%20theme%2C%20featuring%20a%20child%20prince%20or%20princess%20approaching%20a%20magical%20castle%20with%20unicorns%20and%20rainbows.%20Professional%2C%20vibrant%2C%20whimsical%20illustration%20style%20with%20a%20clean%20layout%20and%20title%20space%20at%20top.%20Suitable%20for%20ages%203-5.&width=400&height=600&seq=book4&orientation=portrait" alt="Castle Magic" class="w-full h-full object-cover object-top">
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+<h3 class="text-white font-bold">Castle Magic</h3>
+<p class="text-white/80 text-sm">Ages 3-5</p>
+</div>
+</div>
+</div>
+<div class="story-card flex-shrink-0 w-56 transition-all duration-300 cursor-pointer">
+<div class="relative h-72 rounded-lg overflow-hidden shadow-md mb-3">
+<img src="https://readdy.ai/api/search-image?query=Childrens%20book%20cover%20with%20a%20jungle%20adventure%20theme%2C%20featuring%20a%20child%20explorer%20with%20friendly%20animals%20in%20a%20lush%20rainforest.%20Professional%2C%20vibrant%2C%20whimsical%20illustration%20style%20with%20a%20clean%20layout%20and%20title%20space%20at%20top.%20Suitable%20for%20ages%206-8.&width=400&height=600&seq=book5&orientation=portrait" alt="Jungle Journey" class="w-full h-full object-cover object-top">
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+<h3 class="text-white font-bold">Jungle Journey</h3>
+<p class="text-white/80 text-sm">Ages 6-8</p>
+</div>
+</div>
+</div>
+<div class="story-card flex-shrink-0 w-56 transition-all duration-300 cursor-pointer">
+<div class="relative h-72 rounded-lg overflow-hidden shadow-md mb-3">
+<img src="https://readdy.ai/api/search-image?query=Childrens%20book%20cover%20with%20a%20superhero%20theme%2C%20featuring%20a%20child%20in%20a%20superhero%20costume%20flying%20through%20a%20city%20skyline.%20Professional%2C%20vibrant%2C%20whimsical%20illustration%20style%20with%20a%20clean%20layout%20and%20title%20space%20at%20top.%20Suitable%20for%20ages%209-12.&width=400&height=600&seq=book6&orientation=portrait" alt="Super Kid" class="w-full h-full object-cover object-top">
+<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+<h3 class="text-white font-bold">Super Kid</h3>
+<p class="text-white/80 text-sm">Ages 9-12</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Subscription Plans -->
+<section class="py-20 bg-gradient-to-br from-gray-50 to-white">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<span class="inline-block bg-primary/10 text-primary text-sm px-4 py-2 !rounded-full mb-4">Simple, Transparent Pricing</span>
+<h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Plans That Grow With Your Family</h2>
+<p class="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">Start free, upgrade anytime. No long-term commitments, cancel whenever you want.</p>
+<div class="flex items-center justify-center gap-8 mt-6">
+<button class="text-primary font-medium border-b-2 border-primary cursor-pointer">Subscriptions</button>
+<button id="singlePurchaseBtn" class="text-gray-600 hover:text-gray-900 cursor-pointer">Single Purchase</button>
+<div id="annualModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center">
+<div class="relative bg-white rounded-lg p-8 max-w-md w-full mx-4">
+<button onclick="document.getElementById('annualModal').classList.add('hidden');document.getElementById('annualModal').classList.remove('flex')" class="absolute -top-4 -right-4 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-lg text-gray-600 hover:text-gray-900 cursor-pointer">
+<i class="ri-close-line ri-lg"></i>
+</button>
+<h3 class="text-2xl font-bold text-gray-900 mb-4">Coming Soon!</h3>
+<p class="text-gray-600">Annual rates and single purchase options will be available soon. Stay tuned for updates!</p>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+<div class="pricing-card bg-white p-8 rounded-2xl shadow-xl border-2 border-gray-100 transition-all duration-500 hover:border-primary/30 hover:shadow-2xl transform hover:scale-105">
+<div class="text-center mb-6">
+<div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+<i class="ri-seedling-line ri-2x text-gray-600"></i>
+</div>
+<h3 class="text-2xl font-bold text-gray-900 mb-2">Free Starter</h3>
+</div>
+<div class="text-center mb-6">
+<span class="text-5xl font-bold text-gray-900">£0</span>
+<span class="text-gray-600 text-lg">/month</span>
+<p class="text-sm text-gray-500 mt-2">Perfect for trying us out</p>
+</div>
+<ul class="mb-8 space-y-3">
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+Basic digital access
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+Limited story selection
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+Basic personalization
+</li>
+<li class="flex items-center text-gray-400">
+<i class="ri-close-line ri-lg text-gray-400 mr-2"></i>
+Physical books
+</li>
+<li class="flex items-center text-gray-400">
+<i class="ri-close-line ri-lg text-gray-400 mr-2"></i>
+Advanced features
+</li>
+</ul>
+<button class="w-full bg-white text-primary border border-primary py-3 font-medium !rounded-button whitespace-nowrap cursor-pointer">Start Free</button>
+</div>
+<div class="pricing-card bg-white p-8 rounded-lg shadow-sm border border-gray-100 transition-all duration-300">
+<h3 class="text-xl font-bold text-gray-900 mb-2">Digital Unlimited</h3>
+<div class="mb-6">
+<span class="text-4xl font-bold text-gray-900">£9.99</span>
+<span class="text-gray-600">/month</span>
+</div>
+<p class="text-gray-600 mb-6">Unlimited digital access on all devices</p>
+<ul class="mb-8 space-y-3">
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+Read on tablets & smartphones
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+Full personalization
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+Progress tracking
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+1 child profile
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+Option to order physical copies
+</li>
+</ul>
+<button class="w-full bg-white text-primary border border-primary py-3 font-medium !rounded-button whitespace-nowrap cursor-pointer">Choose Digital</button>
+</div>
+<div class="pricing-card bg-white p-8 rounded-lg shadow-sm border border-gray-100 transition-all duration-300">
+<h3 class="text-xl font-bold text-gray-900 mb-2">One Book Monthly</h3>
+<div class="mb-6">
+<span class="text-4xl font-bold text-gray-900">£14.99</span>
+<span class="text-gray-600">/month</span>
+</div>
+<p class="text-gray-600 mb-6">Digital + 1 physical book</p>
+<ul class="mb-8 space-y-3">
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+Unlimited digital stories
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+1 physical book monthly
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+Token system for selection
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+Full personalization
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+1 child profile
+</li>
+</ul>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/9b79325f-7daf-4c39-8ce3-ceb154d22e63" data-readdy="true">
+<button class="w-full bg-primary text-white py-3 font-medium !rounded-button whitespace-nowrap cursor-pointer">Get Started</button>
+</a>
+</div>
+<div class="pricing-card popular bg-white p-8 rounded-2xl shadow-2xl border-2 border-primary transition-all duration-500 transform scale-110 hover:scale-115 relative">
+<div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+<div class="bg-gradient-to-r from-primary to-secondary text-white text-sm font-bold py-2 px-6 !rounded-full shadow-lg">
+⭐ Most Popular Choice
+</div>
+</div>
+<div class="text-center mb-6 mt-4">
+<div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4">
+<i class="ri-family-line ri-2x text-white"></i>
+</div>
+<h3 class="text-2xl font-bold text-gray-900 mb-2">Family Favorite</h3>
+</div>
+<div class="text-center mb-6">
+<div class="flex items-center justify-center mb-2">
+<span class="text-2xl text-gray-400 line-through mr-2">£24.99</span>
+<span class="bg-red-100 text-red-600 text-xs px-2 py-1 !rounded-full">20% OFF</span>
+</div>
+<span class="text-5xl font-bold text-gray-900">£19.99</span>
+<span class="text-gray-600 text-lg">/month</span>
+<p class="text-sm text-primary font-medium mt-2">Best value for families</p>
+</div>
+<ul class="mb-8 space-y-3">
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+Unlimited digital stories
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+2 physical books monthly
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+Premium personalization
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+2 child profiles
+</li>
+<li class="flex items-center text-gray-600">
+<i class="ri-check-line ri-lg text-green-500 mr-2"></i>
+Advanced parent dashboard
+</li>
+</ul>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/9b79325f-7daf-4c39-8ce3-ceb154d22e63" data-readdy="true">
+<button class="w-full bg-primary text-white py-3 font-medium !rounded-button whitespace-nowrap cursor-pointer">Choose Family</button>
+</a>
+</div>
+</div>
+<div class="max-w-6xl mx-auto mt-8">
+<div class="bg-gray-50 p-6 rounded-lg flex justify-between items-center">
+<div>
+<h3 class="text-xl font-bold text-gray-900 mb-2">Add More Children</h3>
+<p class="text-gray-600">Add additional child profiles to any subscription plan</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<span class="text-2xl font-bold text-gray-900">+£9.99</span>
+<span class="text-gray-600">/month per child</span>
+</div>
+<button class="bg-primary text-white px-6 py-2 font-medium !rounded-button whitespace-nowrap cursor-pointer">Add Child</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="py-16 bg-gray-50">
+<div class="container mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Parents Say</h2>
+<p class="text-lg text-gray-600 max-w-3xl mx-auto">Join thousands of happy families already using Me Time Stories.</p>
+</div>
+<div class="relative">
+<div class="flex overflow-x-auto gap-6 pb-8 testimonial-wrapper">
+<div class="testimonial-card bg-white p-6 rounded-lg shadow-sm flex-shrink-0 w-full md:w-96">
+<div class="flex items-center mb-4">
+<div class="text-amber-400 flex">
+<i class="ri-star-fill ri-lg"></i>
+<i class="ri-star-fill ri-lg"></i>
+<i class="ri-star-fill ri-lg"></i>
+<i class="ri-star-fill ri-lg"></i>
+<i class="ri-star-fill ri-lg"></i>
+</div>
+</div>
+<p class="text-gray-700 mb-6">"My daughter absolutely loves being the main character in her bedtime stories. She gets so excited when I read her name and describe her adventures. The personalisation has made our bedtime routine something truly special!"</p>
+<div class="flex items-center">
+<img src="https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20a%20smiling%20British%20mother%20in%20her%2030s%20with%20shoulder-length%20brown%20hair%2C%20neutral%20background%2C%20warm%20expression%2C%20natural%20lighting%2C%20high%20quality%20portrait&width=60&height=60&seq=parent1uk&orientation=squarish" alt="Sophie Williams" class="w-12 h-12 rounded-full object-cover object-top mr-4">
+<div>
+<h4 class="font-medium text-gray-900">Sophie Williams</h4>
+<p class="text-sm text-gray-600">Mother of 2, Manchester</p>
+</div>
+</div>
+</div>
+<div class="testimonial-card bg-white p-6 rounded-lg shadow-sm flex-shrink-0 w-full md:w-96">
+<div class="flex items-center mb-4">
+<div class="text-amber-400 flex">
+<i class="ri-star-fill ri-lg"></i>
+<i class="ri-star-fill ri-lg"></i>
+<i class="ri-star-fill ri-lg"></i>
+<i class="ri-star-fill ri-lg"></i>
+<i class="ri-star-fill ri-lg"></i>
+</div>
+</div>
+<p class="text-gray-700 mb-6">"As a consultant who travels across Europe, Me Time Stories has been brilliant. I can record personalised stories for my son, and he listens to them whilst I'm away. It's kept us connected despite the distance."</p>
+<div class="flex items-center">
+<img src="https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20a%20smiling%20British%20father%20in%20his%2040s%20with%20short%20dark%20hair%20and%20glasses%2C%20neutral%20background%2C%20warm%20expression%2C%20natural%20lighting%2C%20high%20quality%20portrait&width=60&height=60&seq=parent2uk&orientation=squarish" alt="James Thompson" class="w-12 h-12 rounded-full object-cover object-top mr-4">
+<div>
+<h4 class="font-medium text-gray-900">James Thompson</h4>
+<p class="text-sm text-gray-600">Father of 1, London</p>
+</div>
+</div>
+</div>
+<div class="testimonial-card bg-white p-6 rounded-lg shadow-sm flex-shrink-0 w-full md:w-96">
+<div class="flex items-center mb-4">
+<div class="text-amber-400 flex">
+<i class="ri-star-fill ri-lg"></i>
+<i class="ri-star-fill ri-lg"></i>
+<i class="ri-star-fill ri-lg"></i>
+<i class="ri-star-fill ri-lg"></i>
+<i class="ri-star-half-fill ri-lg"></i>
+</div>
+</div>
+<p class="text-gray-700 mb-6">"My twins have quite different interests, so finding books they both enjoy has always been tricky. With Me Time Stories, I can create personalised adventures for each of them. It's been absolutely brilliant!"</p>
+<div class="flex items-center">
+<img src="https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20a%20smiling%20British%20parent%20with%20curly%20hair%20in%20their%2030s%2C%20neutral%20background%2C%20warm%20expression%2C%20natural%20lighting%2C%20high%20quality%20portrait&width=60&height=60&seq=parent3uk&orientation=squarish" alt="Emma Clarke" class="w-12 h-12 rounded-full object-cover object-top mr-4">
+<div>
+<h4 class="font-medium text-gray-900">Emma Clarke</h4>
+<p class="text-sm text-gray-600">Mother of twins, Edinburgh</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-center mt-6">
+<button class="w-3 h-3 rounded-full bg-primary mx-1 cursor-pointer"></button>
+<button class="w-3 h-3 rounded-full bg-gray-300 mx-1 cursor-pointer"></button>
+<button class="w-3 h-3 rounded-full bg-gray-300 mx-1 cursor-pointer"></button>
+</div>
+</div>
+</div>
+</section>
+<!-- Author Spotlight -->
+<section class="py-16">
+<div class="container mx-auto px-4">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
+<div>
+<h2 class="text-3xl font-bold text-gray-900 mb-2">Write for Me Time Stories</h2>
+<p class="text-lg text-gray-600">Join our community of authors and share your stories with children worldwide.</p>
+</div>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/feeb6245-39f9-4316-a5e5-85366ad382a3" data-readdy="true" class="mt-4 md:mt-0 bg-primary text-white px-6 py-3 font-medium !rounded-button whitespace-nowrap flex items-center cursor-pointer">
+<i class="ri-quill-pen-line ri-lg mr-2"></i>
+Start Publishing
+</a>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+<div class="bg-white p-8 rounded-lg shadow-sm">
+<h3 class="text-2xl font-bold text-gray-900 mb-6">Why Publish with Us?</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex items-start">
+<div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-primary/10 rounded-full mr-4">
+<i class="ri-money-pound-circle-line ri-lg text-primary"></i>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900 mb-2">Earn Per Read</h4>
+<p class="text-gray-600">Earn revenue each time your story is read, with bonus earnings for popular stories.</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-primary/10 rounded-full mr-4">
+<i class="ri-global-line ri-lg text-primary"></i>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900 mb-2">Global Reach</h4>
+<p class="text-gray-600">Connect with readers worldwide through our personalization technology.</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-primary/10 rounded-full mr-4">
+<i class="ri-tools-line ri-lg text-primary"></i>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900 mb-2">Easy Tools</h4>
+<p class="text-gray-600">Use our intuitive writing platform with built-in personalization features.</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-primary/10 rounded-full mr-4">
+<i class="ri-line-chart-line ri-lg text-primary"></i>
+</div>
+<div>
+<h4 class="font-semibold text-gray-900 mb-2">Analytics Dashboard</h4>
+<p class="text-gray-600">Track your stories' performance and reader engagement in real-time.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white p-8 rounded-lg shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-2xl font-bold text-gray-900">Author Success</h3>
+<div class="flex items-center text-primary">
+<span class="font-semibold mr-2">Last 30 Days</span>
+<i class="ri-arrow-up-line ri-lg"></i>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-6 mb-8">
+<div class="bg-gray-50 p-4 rounded-lg">
+<p class="text-gray-600 mb-1">Total Authors</p>
+<p class="text-3xl font-bold text-gray-900">2,500+</p>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg">
+<p class="text-gray-600 mb-1">Stories Published</p>
+<p class="text-3xl font-bold text-gray-900">12,000+</p>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg">
+<p class="text-gray-600 mb-1">Avg. Monthly Earnings</p>
+<p class="text-3xl font-bold text-gray-900">£850</p>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg">
+<p class="text-gray-600 mb-1">Global Readers</p>
+<p class="text-3xl font-bold text-gray-900">500K+</p>
+</div>
+</div>
+</div>
+</div>
+<h3 class="text-2xl font-bold text-gray-900 mb-6">Featured Authors</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="author-card bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 cursor-pointer">
+<img src="https://readdy.ai/api/search-image?query=Professional%20portrait%20of%20a%20female%20childrens%20book%20author%20in%20her%2040s%20with%20glasses%20and%20shoulder-length%20hair%2C%20sitting%20at%20a%20desk%20with%20books%2C%20warm%20lighting%2C%20creative%20workspace%2C%20high%20quality%20portrait&width=500&height=300&seq=author1&orientation=landscape" alt="Sarah Mitchell" class="w-full h-48 object-cover object-top">
+<div class="p-6">
+<h3 class="text-xl font-semibold text-gray-900 mb-2">Sarah Mitchell</h3>
+<p class="text-gray-600 mb-4">Award-winning author specializing in adventure stories that inspire curiosity and courage in young readers.</p>
+<div class="flex items-center justify-between">
+<div class="flex">
+<span class="text-sm text-gray-600 mr-4">
+<i class="ri-book-line ri-lg mr-1"></i>
+42 Stories
+</span>
+<span class="text-sm text-gray-600">
+<i class="ri-heart-line ri-lg mr-1"></i>
+12.5k Readers
+</span>
+</div>
+<a href="#" class="text-primary cursor-pointer">
+<i class="ri-arrow-right-line ri-lg"></i>
+</a>
+</div>
+</div>
+</div>
+<div class="author-card bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 cursor-pointer">
+<img src="https://readdy.ai/api/search-image?query=Professional%20portrait%20of%20a%20male%20childrens%20book%20author%20in%20his%2030s%20with%20a%20beard%2C%20sitting%20in%20a%20cozy%20library%20setting%20with%20notebooks%2C%20warm%20lighting%2C%20creative%20workspace%2C%20high%20quality%20portrait&width=500&height=300&seq=author2&orientation=landscape" alt="David Chen" class="w-full h-48 object-cover object-top">
+<div class="p-6">
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/e7ec279f-6cad-4734-bbc3-788ce667c21c" data-readdy="true" class="block">
+<h3 class="text-xl font-semibold text-gray-900 mb-2">David Chen</h3>
+<p class="text-gray-600 mb-4">Former elementary school teacher who creates educational stories that make learning fun and engaging for children.</p>
+<div class="flex items-center justify-between">
+<div class="flex">
+<span class="text-sm text-gray-600 mr-4">
+<i class="ri-book-line ri-lg mr-1"></i>
+36 Stories
+</span>
+<span class="text-sm text-gray-600">
+<i class="ri-heart-line ri-lg mr-1"></i>
+9.8k Readers
+</span>
+</div>
+<span class="text-primary">
+<i class="ri-arrow-right-line ri-lg"></i>
+</span>
+</div>
+</a>
+</div>
+</div>
+<div class="author-card bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 cursor-pointer">
+<img src="https://readdy.ai/api/search-image?query=Professional%20portrait%20of%20a%20diverse%20childrens%20book%20author%20in%20their%2050s%20with%20gray%20hair%2C%20sitting%20outdoors%20with%20a%20notebook%2C%20warm%20lighting%2C%20creative%20workspace%2C%20high%20quality%20portrait&width=500&height=300&seq=author3&orientation=landscape" alt="Maya Rodriguez" class="w-full h-48 object-cover object-top">
+<div class="p-6">
+<h3 class="text-xl font-semibold text-gray-900 mb-2">Maya Rodriguez</h3>
+<p class="text-gray-600 mb-4">Specializes in diverse and inclusive stories that help children understand and celebrate cultural differences.</p>
+<div class="flex items-center justify-between">
+<div class="flex">
+<span class="text-sm text-gray-600 mr-4">
+<i class="ri-book-line ri-lg mr-1"></i>
+29 Stories
+</span>
+<span class="text-sm text-gray-600">
+<i class="ri-heart-line ri-lg mr-1"></i>
+8.3k Readers
+</span>
+</div>
+<a href="#" class="text-primary cursor-pointer">
+<i class="ri-arrow-right-line ri-lg"></i>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Demo Accounts -->
+<section class="hidden py-16">
+<div class="container mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Try Our Demo Accounts</h2>
+<p class="text-lg text-gray-600 max-w-3xl mx-auto">Experience Me Time Stories from different perspectives. Click to view sample dashboards.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+<div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+<div class="w-16 h-16 flex items-center justify-center bg-blue-100 rounded-full mb-6">
+<i class="ri-parent-line ri-lg text-primary"></i>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-2">Parent Demo</h3>
+<p class="text-gray-600 mb-6">Manage children's profiles, track reading progress, and customize story preferences.</p>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/c5965267-aede-4821-8c3e-6f3d48e50f1b" data-readdy="true" class="block w-full cursor-pointer">
+<button class="w-full bg-primary text-white py-3 text-center font-medium !rounded-button whitespace-nowrap cursor-pointer">
+<i class="ri-login-box-line mr-2"></i>Login as Parent
+</button>
+</a>
+<p class="text-sm text-gray-500 mt-3">Demo credentials auto-filled</p>
+</div>
+<div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+<div class="w-16 h-16 flex items-center justify-center bg-purple-100 rounded-full mb-6">
+<i class="ri-group-line ri-lg text-purple-600"></i>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-2">Kids Demo</h3>
+<p class="text-gray-600 mb-6">Two sample profiles: Emma (age 8) and Lucas (age 6). See personalized story collections.</p>
+<div class="space-y-3">
+<button onclick="window.location.href='https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/emma-dashboard'" class="block w-full bg-primary text-white py-3 text-center font-medium !rounded-button whitespace-nowrap cursor-pointer">
+<i class="ri-user-smile-line mr-2"></i>Login as Emma
+</button>
+<button onclick="window.location.href='https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/lucas-dashboard'" class="block w-full bg-white text-primary border border-primary py-3 text-center font-medium !rounded-button whitespace-nowrap cursor-pointer">
+<i class="ri-user-smile-line mr-2"></i>Login as Lucas
+</button>
+<p class="text-sm text-gray-500 mt-3">Demo credentials auto-filled</p>
+</div>
+</div>
+<div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+<div class="w-16 h-16 flex items-center justify-center bg-amber-100 rounded-full mb-6">
+<i class="ri-quill-pen-line ri-lg text-amber-600"></i>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-2">Author Demo</h3>
+<p class="text-gray-600 mb-6">Explore the author platform, story creation tools, and analytics dashboard.</p>
+<button onclick="window.location.href='https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/author-dashboard'" class="block w-full bg-primary text-white py-3 text-center font-medium !rounded-button whitespace-nowrap cursor-pointer">
+<i class="ri-quill-pen-line mr-2"></i>Login as Author
+</button>
+<p class="text-sm text-gray-500 mt-3">Demo credentials auto-filled</p>
+</div>
+</div>
+</div>
+</section>
+<!-- App Download -->
+<section class="py-16 bg-gradient-to-br from-primary/5 to-white">
+<div class="container mx-auto px-4">
+<div class="flex flex-col md:flex-row items-center justify-between gap-8">
+<div class="max-w-xl">
+<span class="inline-block bg-primary/10 text-primary text-sm px-4 py-1 !rounded-full mb-4">Optimized for Tablets</span>
+<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">The Perfect Reading Experience on Your Tablet</h2>
+<p class="text-lg text-gray-600 mb-6">Our tablet-optimized app brings stories to life on larger screens. Enjoy stunning illustrations, smooth animations, and an immersive reading experience perfect for family story time.</p>
+<div class="flex flex-wrap gap-4">
+<a href="#" class="flex items-center bg-black text-white px-6 py-3 !rounded-button whitespace-nowrap cursor-pointer hover:bg-gray-900 transition-colors">
+<i class="ri-apple-fill ri-lg mr-2"></i>
+App Store
+</a>
+<a href="#" class="flex items-center bg-black text-white px-6 py-3 !rounded-button whitespace-nowrap cursor-pointer hover:bg-gray-900 transition-colors">
+<i class="ri-google-play-fill ri-lg mr-2"></i>
+Google Play
+</a>
+<a href="#" class="flex items-center bg-black text-white px-6 py-3 !rounded-button whitespace-nowrap cursor-pointer hover:bg-gray-900 transition-colors">
+<i class="ri-microsoft-fill ri-lg mr-2"></i>
+Microsoft Store
+</a>
+<a href="#" class="flex items-center bg-black text-white px-6 py-3 !rounded-button whitespace-nowrap cursor-pointer hover:bg-gray-900 transition-colors">
+<i class="ri-chrome-fill ri-lg mr-2"></i>
+Web Version
+</a>
+</div>
+<div class="space-y-6 mt-8">
+<div class="grid grid-cols-4 gap-4">
+<div class="bg-white p-4 rounded-lg shadow-sm">
+<div class="flex items-center mb-2">
+<i class="ri-tablet-line ri-lg text-primary mr-2"></i>
+<span class="text-gray-900 font-medium">Tablet-First Design</span>
+</div>
+<p class="text-sm text-gray-600">Optimized for larger screens</p>
+</div>
+<div class="bg-white p-4 rounded-lg shadow-sm">
+<div class="flex items-center mb-2">
+<i class="ri-hand-2-line ri-lg text-primary mr-2"></i>
+<span class="text-gray-900 font-medium">Touch Friendly</span>
+</div>
+<p class="text-sm text-gray-600">Interactive reading experience</p>
+</div>
+<div class="bg-white p-4 rounded-lg shadow-sm">
+<div class="flex items-center mb-2">
+<i class="ri-group-line ri-lg text-primary mr-2"></i>
+<span class="text-gray-900 font-medium">Family Sharing</span>
+</div>
+<p class="text-sm text-gray-600">Multiple reader profiles</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="flex items-center">
+<div class="text-amber-400 flex">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-half-fill"></i>
+</div>
+<span class="ml-2 text-gray-600">4.8/5 on Tablets</span>
+</div>
+<div class="text-gray-600">
+<span class="font-semibold">100K+</span> Tablet Users
+<div class="bg-white p-4 rounded-lg shadow-sm">
+<div class="flex items-center mb-2">
+<i class="ri-global-line ri-lg text-primary mr-2"></i>
+<span class="text-gray-900 font-medium">Web Access</span>
+</div>
+<p class="text-sm text-gray-600">Read anywhere online</p>
+</div>
+</div>
+<div class="text-gray-600">
+<span class="font-semibold">90%</span> Satisfaction Rate
+</div>
+</div>
+</div>
+</div>
+<div class="relative">
+<img src="https://readdy.ai/api/search-image?query=Modern%20tablet%20mockup%20showing%20Me%20Time%20Stories%20homepage%20with%20hero%20section%2C%20featuring%20a%20clean%20and%20modern%20interface%20with%20colorful%20story%20cards%20and%20navigation%20menu.%20The%20tablet%20screen%20displays%20a%20professional%20homepage%20layout%20with%20story%20recommendations%20and%20personalized%20reading%20sections.%20Light%20mode%20interface%20with%20soft%20shadows%20and%20reflections%20on%20a%20premium%20tablet%20device%20in%20landscape%20orientation&width=600&height=400&seq=tablet-mockup-home&orientation=landscape" alt="Me Time Stories Tablet App" class="w-[500px] rounded-3xl shadow-2xl">
+<div class="absolute -bottom-6 -right-6 w-24 h-24 bg-primary/10 rounded-full"></div>
+<div class="absolute -top-6 -left-6 w-32 h-32 bg-secondary/10 rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter -->
+<section class="py-16 bg-gradient-to-br from-primary/5 via-white to-secondary/5">
+<div class="container mx-auto px-4">
+<div class="max-w-4xl mx-auto">
+<div class="bg-white p-8 md:p-12 rounded-3xl shadow-xl border border-primary/10">
+<div class="text-center mb-8">
+<div class="w-16 h-16 flex items-center justify-center bg-primary/10 rounded-full mx-auto mb-4">
+<i class="ri-mail-send-line ri-2x text-primary"></i>
+</div>
+<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Don't Miss Out!</h2>
+<p class="text-lg text-gray-600 mb-2">Join 10,000+ parents already on our waitlist</p>
+<p class="text-gray-500">Get exclusive updates, early access, and special launch offers</p>
+</div>
+<form id="newsletterForm" action="https://formspree.io/f/mzbqzjaq" method="POST" class="flex flex-col md:flex-row gap-4 mb-6">
+<div class="flex-1 relative">
+<i class="ri-mail-line ri-lg absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+<input type="email" name="email" placeholder="Enter your email address" required class="w-full pl-12 pr-4 py-4 rounded-lg border border-gray-200 shadow-sm focus:ring-2 focus:ring-primary focus:border-primary focus:outline-none text-sm bg-gray-50 focus:bg-white transition-all duration-300">
+</div>
+<button type="submit" class="bg-gradient-to-r from-primary to-primary/90 text-white px-8 py-4 font-semibold !rounded-button whitespace-nowrap cursor-pointer hover:from-primary/90 hover:to-primary transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl relative overflow-hidden group">
+<span class="relative z-10 flex items-center">
+<i class="ri-send-plane-line ri-lg mr-2"></i>
+Get Early Access
+</span>
+<div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+</button>
+</form>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+<div class="flex items-center justify-center md:justify-start">
+<i class="ri-shield-check-line ri-lg text-green-500 mr-2"></i>
+<span class="text-sm text-gray-600">100% Privacy Protected</span>
+</div>
+<div class="flex items-center justify-center md:justify-center">
+<i class="ri-notification-off-line ri-lg text-blue-500 mr-2"></i>
+<span class="text-sm text-gray-600">No Spam Promise</span>
+</div>
+<div class="flex items-center justify-center md:justify-end">
+<i class="ri-vip-crown-line ri-lg text-amber-500 mr-2"></i>
+<span class="text-sm text-gray-600">Exclusive Early Access</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-gray-900 text-white pt-16 pb-8">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+<div>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/f4bcb585-ab47-4ff8-924f-358f0740a159" data-readdy="true" class="inline-block mb-6 cursor-pointer">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/3a01f2c9a7f65c31b620a4345f80c608.png" alt="Me Time Stories" class="h-8 brightness-0 invert">
+</a>
+<p class="text-gray-400 mb-6">Creating magical, personalized reading experiences for children around the world.</p>
+<div class="flex space-x-4">
+<a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition-colors cursor-pointer">
+<i class="ri-facebook-fill ri-lg"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition-colors cursor-pointer">
+<i class="ri-twitter-fill ri-lg"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition-colors cursor-pointer">
+<i class="ri-instagram-fill ri-lg"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-primary transition-colors cursor-pointer">
+<i class="ri-pinterest-fill ri-lg"></i>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-6">Quick Links</h3>
+<ul class="space-y-3">
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Home</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Library</a></li>
+<li><a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/feeb6245-39f9-4316-a5e5-85366ad382a3" data-readdy="true" class="text-gray-400 hover:text-white transition-colors cursor-pointer">For Authors</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Pricing</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors cursor-pointer">About Us</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Contact</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-6">Resources</h3>
+<ul class="space-y-3">
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Help Center</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Reading Tips</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Author Guidelines</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Blog</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Gift Cards</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-6">Newsletter</h3>
+<p class="text-gray-400 mb-4">Subscribe for updates on new stories and features.</p>
+<form action="https://formspree.io/f/mzbqzjaq" method="POST" class="flex mb-4">
+<input type="email" name="email" placeholder="Your email" class="flex-grow px-4 py-2 rounded-l-lg border-none text-gray-900 focus:outline-none text-sm">
+<button type="submit" class="bg-primary text-white px-4 py-2 rounded-r-lg font-medium !rounded-button whitespace-nowrap cursor-pointer">Sign Up</button>
+</form>
+<div class="flex flex-wrap gap-2">
+<div class="w-8 h-5 flex items-center justify-center bg-gray-800 rounded">
+<i class="ri-visa-fill ri-lg text-white"></i>
+</div>
+<div class="w-8 h-5 flex items-center justify-center bg-gray-800 rounded">
+<i class="ri-mastercard-fill ri-lg text-white"></i>
+</div>
+<div class="w-8 h-5 flex items-center justify-center bg-gray-800 rounded">
+<i class="ri-paypal-fill ri-lg text-white"></i>
+</div>
+<div class="w-8 h-5 flex items-center justify-center bg-gray-800 rounded">
+<i class="ri-apple-fill ri-lg text-white"></i>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-gray-800 pt-8">
+<div class="flex flex-col md:flex-row justify-between items-center">
+<p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 Me Time Stories. All rights reserved.</p>
+<div class="flex space-x-6">
+<a href="#" class="text-gray-400 hover:text-white text-sm cursor-pointer">Privacy Policy</a>
+<a href="#" class="text-gray-400 hover:text-white text-sm cursor-pointer">Terms of Service</a>
+<a href="#" class="text-gray-400 hover:text-white text-sm cursor-pointer">Cookie Policy</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<script id="processToggleScript">
+document.addEventListener('DOMContentLoaded', function() {
+const processTab = document.querySelector('.text-process-tab');
+const visualTab = document.querySelector('.text-visual-tab');
+const processView = document.querySelector('.process-view');
+const visualView = document.querySelector('.visual-view');
+processTab.addEventListener('click', () => {
+processTab.classList.add('bg-primary', 'text-white');
+processTab.classList.remove('text-gray-600');
+visualTab.classList.remove('bg-primary', 'text-white');
+visualTab.classList.add('text-gray-600');
+processView.classList.remove('hidden');
+visualView.classList.add('hidden');
+});
+visualTab.addEventListener('click', () => {
+visualTab.classList.add('bg-primary', 'text-white');
+visualTab.classList.remove('text-gray-600');
+processTab.classList.remove('bg-primary', 'text-white');
+processTab.classList.add('text-gray-600');
+visualView.classList.remove('hidden');
+processView.classList.add('hidden');
+});
+const visualCarousel = document.querySelector('.story-carousel-visual');
+const visualDots = document.querySelectorAll('.visual-dot');
+if (visualCarousel) {
+visualCarousel.addEventListener('scroll', () => {
+const scrollPosition = visualCarousel.scrollLeft;
+const slideWidth = visualCarousel.offsetWidth;
+const currentSlide = Math.round(scrollPosition / slideWidth);
+visualDots.forEach((dot, index) => {
+if (index === currentSlide) {
+dot.classList.remove('bg-gray-300');
+dot.classList.add('bg-primary');
+} else {
+dot.classList.remove('bg-primary');
+dot.classList.add('bg-gray-300');
+}
+});
+});
+visualDots.forEach((dot, index) => {
+dot.addEventListener('click', () => {
+visualCarousel.scrollTo({
+left: visualCarousel.offsetWidth * index,
+behavior: 'smooth'
+});
+});
+});
+}
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+const closeMobileMenu = document.getElementById('closeMobileMenu');
+if (mobileMenuBtn && mobileMenu && closeMobileMenu) {
+mobileMenuBtn.addEventListener('click', () => {
+mobileMenu.classList.remove('hidden');
+document.body.style.overflow = 'hidden';
+});
+closeMobileMenu.addEventListener('click', () => {
+mobileMenu.classList.add('hidden');
+document.body.style.overflow = '';
+});
+mobileMenu.addEventListener('click', (e) => {
+if (e.target === mobileMenu) {
+mobileMenu.classList.add('hidden');
+document.body.style.overflow = '';
+}
+});
+}
+const solutionsBtn = document.getElementById('solutionsBtn');
+const solutionsMenu = document.getElementById('solutionsMenu');
+if (solutionsBtn && solutionsMenu) {
+solutionsBtn.addEventListener('click', (e) => {
+e.stopPropagation();
+solutionsMenu.classList.toggle('hidden');
+});
+document.addEventListener('click', (e) => {
+if (!solutionsMenu.contains(e.target) && !solutionsBtn.contains(e.target)) {
+solutionsMenu.classList.add('hidden');
+}
+});
+solutionsMenu.addEventListener('click', (e) => {
+if (e.target.tagName === 'A') {
+solutionsMenu.classList.add('hidden');
+}
+});
+}
+const storyCarousel = document.querySelector('.story-carousel');
+const carouselDots = document.querySelectorAll('.flex.justify-center.mt-6.gap-2 button');
+let currentSlide = 0;
+const slideCount = carouselDots.length;
+function updateDots() {
+carouselDots.forEach((dot, index) => {
+if (index === currentSlide) {
+dot.classList.remove('bg-gray-300');
+dot.classList.add('bg-primary');
+} else {
+dot.classList.remove('bg-primary');
+dot.classList.add('bg-gray-300');
+}
+});
+}
+if (storyCarousel) {
+storyCarousel.addEventListener('scroll', () => {
+const scrollPosition = storyCarousel.scrollLeft;
+const slideWidth = storyCarousel.offsetWidth;
+currentSlide = Math.round(scrollPosition / slideWidth);
+updateDots();
+});
+carouselDots.forEach((dot, index) => {
+dot.addEventListener('click', () => {
+currentSlide = index;
+storyCarousel.scrollTo({
+left: storyCarousel.offsetWidth * index,
+behavior: 'smooth'
+});
+updateDots();
+});
+});
+}
+const videoModal = document.getElementById('videoModal');
+const watchVideoBtn = document.getElementById('watchVideoBtn');
+const heroVideoPreview = document.getElementById('heroVideoPreview');
+const watchDemoBtn = document.getElementById('watchDemoBtn');
+const closeVideoBtn = document.getElementById('closeVideoBtn');
+const demoAccountsBtn = document.getElementById('demoAccountsBtn');
+const feedbackBtn = document.getElementById('feedbackBtn');
+if (feedbackBtn) {
+feedbackBtn.addEventListener('click', () => {
+window.open('https://docs.google.com/forms/d/e/1FAIpQLSceCW4xlCLVkm5Jeg1ab2qjETiv74ZB8ka3qBF7JCpRLcJvvA/viewform', '_blank');
+});
+}
+const demoAccountsMenu = document.getElementById('demoAccountsMenu');
+const heroEmailForm = document.getElementById('heroEmailForm');
+const newsletterForm = document.getElementById('newsletterForm');
+function handleEmailSubmission(form, successMessage = "Thank you! We'll be in touch soon with next steps.") {
+if (form) {
+form.addEventListener('submit', function(e) {
+const email = this.querySelector('input[type="email"]').value;
+const submitBtn = this.querySelector('button[type="submit"]');
+const originalBtnText = submitBtn.innerHTML;
+if (email) {
+submitBtn.innerHTML = '<i class="ri-loader-4-line ri-lg animate-spin mr-2"></i>Joining...';
+submitBtn.disabled = true;
+setTimeout(() => {
+this.innerHTML = `<div class="text-center"><i class="ri-check-line ri-3x text-green-500 mb-4"></i><p class="text-xl font-semibold text-gray-900 mb-2">Welcome to the family!</p><p class="text-gray-600">${successMessage}</p></div>`;
+}, 1000);
+}
+});
+}
+}
+handleEmailSubmission(heroEmailForm, "You're on the list! We'll notify you as soon as we launch.");
+handleEmailSubmission(newsletterForm, "Welcome aboard! Check your inbox for a confirmation email.");
+[watchVideoBtn, heroVideoPreview, watchDemoBtn].forEach(btn => {
+if (btn) {
+btn.addEventListener('click', () => {
+videoModal.classList.remove('hidden');
+videoModal.classList.add('flex');
+document.body.style.overflow = 'hidden';
+});
+}
+});
+closeVideoBtn.addEventListener('click', () => {
+videoModal.classList.add('hidden');
+videoModal.classList.remove('flex');
+document.body.style.overflow = '';
+});
+videoModal.addEventListener('click', (e) => {
+if (e.target === videoModal) {
+videoModal.classList.add('hidden');
+videoModal.classList.remove('flex');
+document.body.style.overflow = '';
+}
+});
+demoAccountsBtn.addEventListener('click', (e) => {
+e.stopPropagation();
+demoAccountsMenu.classList.toggle('hidden');
+});
+document.addEventListener('click', (e) => {
+if (!demoAccountsMenu.contains(e.target) && !demoAccountsBtn.contains(e.target)) {
+demoAccountsMenu.classList.add('hidden');
+}
+});
+demoAccountsMenu.addEventListener('click', (e) => {
+if (e.target.tagName === 'A') {
+demoAccountsMenu.classList.add('hidden');
+}
+});
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+// Billing toggle functionality
+const billingToggle = document.getElementById('billingToggle');
+if (billingToggle) {
+billingToggle.addEventListener('change', function() {
+// Toggle between monthly and annual pricing
+// Implementation would go here
+});
+}
+// Single Purchase button click handler
+const singlePurchaseBtn = document.getElementById('singlePurchaseBtn');
+const annualModal = document.getElementById('annualModal');
+if (singlePurchaseBtn && annualModal) {
+singlePurchaseBtn.addEventListener('click', () => {
+annualModal.classList.remove('hidden');
+annualModal.classList.add('flex');
+});
+annualModal.addEventListener('click', (e) => {
+if (e.target === annualModal) {
+annualModal.classList.add('hidden');
+annualModal.classList.remove('flex');
+}
+}); -->
+</body>
+</html>

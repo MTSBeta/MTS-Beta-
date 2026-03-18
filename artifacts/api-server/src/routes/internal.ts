@@ -14,6 +14,7 @@ import {
   illustrationAssetsTable,
   detailTrackerTable,
   productionNotesTable,
+  meTimeStaffTable,
   DEFAULT_TRACKER_ITEMS,
 } from "@workspace/db/schema";
 import { eq, and, ilike, or, desc } from "drizzle-orm";
@@ -698,6 +699,346 @@ router.put("/internal/projects/:playerId/illustrations/:assetId", async (req, re
     .returning();
 
   res.json({ asset: updated });
+});
+
+// ─────────────────────────────────────────────────────────
+// POST /api/internal/projects/:playerId/blueprint/approve
+// Editor approves a blueprint — unlocks Story Builder
+// ─────────────────────────────────────────────────────────
+router.post("/internal/projects/:playerId/blueprint/approve", async (req, res) => {
+  const { playerId } = req.params;
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can approve blueprints" });
+    return;
+  }
+
+  const project = await ensureProject(playerId);
+
+  const [existing] = await db
+    .select()
+    .from(storyBlueprintsTable)
+    .where(eq(storyBlueprintsTable.projectId, project.id))
+    .limit(1);
+
+  if (!existing) {
+    res.status(404).json({ error: "No blueprint found — author must save blueprint first" });
+    return;
+  }
+
+  const [blueprint] = await db
+    .update(storyBlueprintsTable)
+    .set({
+      blueprintApproved: true,
+      blueprintApprovedBy: staffUser.fullName,
+      blueprintApprovedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(eq(storyBlueprintsTable.id, existing.id))
+    .returning();
+
+  await db
+    .update(storyProjectsTable)
+    .set({ status: "draft_in_progress", updatedAt: new Date() })
+    .where(eq(storyProjectsTable.id, project.id));
+
+  res.json({ blueprint });
+});
+
+// ─────────────────────────────────────────────────────────
+// POST /api/internal/projects/:playerId/blueprint/revoke
+// Editor revokes blueprint approval
+// ─────────────────────────────────────────────────────────
+router.post("/internal/projects/:playerId/blueprint/revoke", async (req, res) => {
+  const { playerId } = req.params;
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can revoke blueprint approval" });
+    return;
+  }
+
+  const project = await ensureProject(playerId);
+
+  const [existing] = await db
+    .select()
+    .from(storyBlueprintsTable)
+    .where(eq(storyBlueprintsTable.projectId, project.id))
+    .limit(1);
+
+  if (!existing) {
+    res.status(404).json({ error: "No blueprint found" });
+    return;
+  }
+
+  const [blueprint] = await db
+    .update(storyBlueprintsTable)
+    .set({
+      blueprintApproved: false,
+      blueprintApprovedBy: null,
+      blueprintApprovedAt: null,
+      updatedAt: new Date(),
+    })
+    .where(eq(storyBlueprintsTable.id, existing.id))
+    .returning();
+
+  await db
+    .update(storyProjectsTable)
+    .set({ status: "blueprint_in_progress", updatedAt: new Date() })
+    .where(eq(storyProjectsTable.id, project.id));
+
+  res.json({ blueprint });
+});
+
+// ─────────────────────────────────────────────────────────
+// PUT /api/internal/projects/:playerId/assign
+// Assign author/editor to a project
+// ─────────────────────────────────────────────────────────
+router.put("/internal/projects/:playerId/assign", async (req, res) => {
+  const { playerId } = req.params;
+  const staffUser = req.internalUser!;
+  const { assignedAuthor, assignedIllustrator, assignedAuthorId, assignedEditorId, bookFormat } = req.body;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can assign staff to projects" });
+    return;
+  }
+
+  const project = await ensureProject(playerId);
+
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (assignedAuthor !== undefined) updates.assignedAuthor = assignedAuthor;
+  if (assignedIllustrator !== undefined) updates.assignedIllustrator = assignedIllustrator;
+  if (assignedAuthorId !== undefined) updates.assignedAuthorId = assignedAuthorId;
+  if (assignedEditorId !== undefined) updates.assignedEditorId = assignedEditorId;
+  if (bookFormat !== undefined) updates.bookFormat = bookFormat;
+
+  const [updated] = await db
+    .update(storyProjectsTable)
+    .set(updates)
+    .where(eq(storyProjectsTable.id, project.id))
+    .returning();
+
+  res.json({ project: updated });
+});
+
+// ─────────────────────────────────────────────────────────
+// PUT /api/internal/projects/:playerId/book-format
+// Update book format/size
+// ─────────────────────────────────────────────────────────
+router.put("/internal/projects/:playerId/book-format", async (req, res) => {
+  const { playerId } = req.params;
+  const { bookFormat } = req.body;
+
+  const project = await ensureProject(playerId);
+
+  const [updated] = await db
+    .update(storyProjectsTable)
+    .set({ bookFormat, updatedAt: new Date() })
+    .where(eq(storyProjectsTable.id, project.id))
+    .returning();
+
+  res.json({ project: updated });
+});
+
+// ─────────────────────────────────────────────────────────
+// GET /api/internal/staff
+// List all MeTime Stories staff (editor/admin only)
+// ─────────────────────────────────────────────────────────
+router.get("/internal/staff", async (req, res) => {
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can manage staff" });
+    return;
+  }
+
+  const staff = await db
+    .select({
+      id: meTimeStaffTable.id,
+      email: meTimeStaffTable.email,
+      fullName: meTimeStaffTable.fullName,
+      role: meTimeStaffTable.role,
+      isActive: meTimeStaffTable.isActive,
+      createdAt: meTimeStaffTable.createdAt,
+    })
+    .from(meTimeStaffTable)
+    .orderBy(meTimeStaffTable.createdAt);
+
+  res.json({ staff });
+});
+
+// ─────────────────────────────────────────────────────────
+// POST /api/internal/staff
+// Add a new MeTime Stories staff member (editor/admin only)
+// ─────────────────────────────────────────────────────────
+router.post("/internal/staff", async (req, res) => {
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can add staff" });
+    return;
+  }
+
+  const { email, fullName, role, password } = req.body;
+  if (!email || !fullName || !role || !password) {
+    res.status(400).json({ error: "email, fullName, role, and password are required" });
+    return;
+  }
+
+  const bcrypt = await import("bcryptjs");
+  const passwordHash = await bcrypt.default.hash(password, 10);
+
+  try {
+    const [newStaff] = await db
+      .insert(meTimeStaffTable)
+      .values({ email: email.toLowerCase().trim(), passwordHash, fullName, role, isActive: true })
+      .returning({
+        id: meTimeStaffTable.id,
+        email: meTimeStaffTable.email,
+        fullName: meTimeStaffTable.fullName,
+        role: meTimeStaffTable.role,
+        isActive: meTimeStaffTable.isActive,
+      });
+
+    res.json({ staff: newStaff });
+  } catch (e: any) {
+    if (e.code === "23505") {
+      res.status(409).json({ error: "Email already exists" });
+    } else {
+      throw e;
+    }
+  }
+});
+
+// ─────────────────────────────────────────────────────────
+// PUT /api/internal/staff/:id
+// Update a staff member (editor/admin only)
+// ─────────────────────────────────────────────────────────
+router.put("/internal/staff/:id", async (req, res) => {
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can update staff" });
+    return;
+  }
+
+  const { id } = req.params;
+  const { fullName, role, isActive, password } = req.body;
+
+  const updates: Record<string, unknown> = {};
+  if (fullName !== undefined) updates.fullName = fullName;
+  if (role !== undefined) updates.role = role;
+  if (isActive !== undefined) updates.isActive = isActive;
+  if (password) {
+    const bcrypt = await import("bcryptjs");
+    updates.passwordHash = await bcrypt.default.hash(password, 10);
+  }
+
+  const [updated] = await db
+    .update(meTimeStaffTable)
+    .set(updates)
+    .where(eq(meTimeStaffTable.id, parseInt(id, 10)))
+    .returning({
+      id: meTimeStaffTable.id,
+      email: meTimeStaffTable.email,
+      fullName: meTimeStaffTable.fullName,
+      role: meTimeStaffTable.role,
+      isActive: meTimeStaffTable.isActive,
+    });
+
+  if (!updated) {
+    res.status(404).json({ error: "Staff member not found" });
+    return;
+  }
+
+  res.json({ staff: updated });
+});
+
+// ─────────────────────────────────────────────────────────
+// DELETE /api/internal/staff/:id
+// Deactivate (soft-delete) a staff member
+// ─────────────────────────────────────────────────────────
+router.delete("/internal/staff/:id", async (req, res) => {
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can deactivate staff" });
+    return;
+  }
+
+  const { id } = req.params;
+  const numId = parseInt(id, 10);
+
+  if (numId === staffUser.id) {
+    res.status(400).json({ error: "You cannot deactivate your own account" });
+    return;
+  }
+
+  const [updated] = await db
+    .update(meTimeStaffTable)
+    .set({ isActive: false })
+    .where(eq(meTimeStaffTable.id, numId))
+    .returning({
+      id: meTimeStaffTable.id,
+      email: meTimeStaffTable.email,
+      fullName: meTimeStaffTable.fullName,
+      role: meTimeStaffTable.role,
+      isActive: meTimeStaffTable.isActive,
+    });
+
+  if (!updated) {
+    res.status(404).json({ error: "Staff member not found" });
+    return;
+  }
+
+  res.json({ staff: updated });
+});
+
+// ─────────────────────────────────────────────────────────
+// GET /api/internal/editor/stats
+// Dashboard stats for editor view
+// ─────────────────────────────────────────────────────────
+router.get("/internal/editor/stats", async (req, res) => {
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Editor access required" });
+    return;
+  }
+
+  const [allProjects, allStaff, allBlueprints] = await Promise.all([
+    db.select().from(storyProjectsTable),
+    db.select({
+      id: meTimeStaffTable.id,
+      email: meTimeStaffTable.email,
+      fullName: meTimeStaffTable.fullName,
+      role: meTimeStaffTable.role,
+      isActive: meTimeStaffTable.isActive,
+    }).from(meTimeStaffTable),
+    db.select().from(storyBlueprintsTable),
+  ]);
+
+  const authors = allStaff.filter((s) => s.role === "author" && s.isActive);
+  const blueprintsPendingApproval = allBlueprints.filter((b) => !b.blueprintApproved);
+  const blueprintsApproved = allBlueprints.filter((b) => b.blueprintApproved);
+  const inDraft = allProjects.filter((p) => p.status === "draft_in_progress" || p.status === "internal_review");
+  const complete = allProjects.filter((p) => p.status === "final_ready" || p.status === "approved");
+
+  res.json({
+    stats: {
+      totalProjects: allProjects.length,
+      activeAuthors: authors.length,
+      totalAuthors: authors.length,
+      blueprintsPendingApproval: blueprintsPendingApproval.length,
+      blueprintsApproved: blueprintsApproved.length,
+      storiesInDraft: inDraft.length,
+      storiesComplete: complete.length,
+    },
+    staff: allStaff,
+    recentBlueprints: allBlueprints.slice(0, 20),
+  });
 });
 
 export default router;

@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, serial, integer, text, varchar, boolean, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -18,6 +18,9 @@ export const storyBlueprintsTable = pgTable("story_blueprints", {
   symbolicObject: text("symbolic_object"),
   parentResonanceNote: text("parent_resonance_note"),
   coachResonanceNote: text("coach_resonance_note"),
+  blueprintApproved: boolean("blueprint_approved").notNull().default(false),
+  blueprintApprovedBy: varchar("blueprint_approved_by", { length: 200 }),
+  blueprintApprovedAt: timestamp("blueprint_approved_at"),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 

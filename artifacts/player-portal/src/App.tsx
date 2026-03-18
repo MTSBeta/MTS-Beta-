@@ -41,6 +41,7 @@ import BlueprintEditor from "@/pages/internal/BlueprintEditor";
 import StoryBuilder from "@/pages/internal/StoryBuilder";
 import IllustrationWorkspace from "@/pages/internal/IllustrationWorkspace";
 import ProductionPanel from "@/pages/internal/ProductionPanel";
+import EditorDashboard from "@/pages/internal/EditorDashboard";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -106,6 +107,13 @@ function Router() {
 
       {/* MeTime Stories internal production workspace — separate auth */}
       <Route path="/internal/login" component={InternalLogin} />
+      <Route path="/internal/editor">
+        {() => (
+          <ProtectedInternalRoute>
+            <EditorDashboard />
+          </ProtectedInternalRoute>
+        )}
+      </Route>
       <Route path="/internal/stories">
         {() => (
           <ProtectedInternalRoute>

@@ -15,6 +15,9 @@ export const storyProjectsTable = pgTable("story_projects", {
   lastEditedBy: varchar("last_edited_by", { length: 100 }),
   editorNotes: text("editor_notes"),
   revisionNotes: text("revision_notes"),
+  bookFormat: varchar("book_format", { length: 30 }).default("a5"),
+  assignedEditorId: integer("assigned_editor_id"),
+  assignedAuthorId: integer("assigned_author_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

@@ -108,7 +108,29 @@ export interface StoryBlueprint {
   symbolicObject: string | null;
   parentResonanceNote: string | null;
   coachResonanceNote: string | null;
+  blueprintApproved: boolean;
+  blueprintApprovedBy: string | null;
+  blueprintApprovedAt: string | null;
   updatedAt: string;
+}
+
+export interface MeTimeStaffMember {
+  id: number;
+  email: string;
+  fullName: string;
+  role: string;
+  isActive: boolean;
+  createdAt?: string;
+}
+
+export interface EditorStats {
+  totalProjects: number;
+  activeAuthors: number;
+  totalAuthors: number;
+  blueprintsPendingApproval: number;
+  blueprintsApproved: number;
+  storiesInDraft: number;
+  storiesComplete: number;
 }
 
 export interface StoryScene {
@@ -299,6 +321,96 @@ export async function updateIllustrationAsset(
     body: JSON.stringify(updates),
   });
   if (!res.ok) throw new Error('Failed to update asset');
+  return res.json();
+}
+
+export async function approveBlueprint(playerId: string): Promise<{ blueprint: StoryBlueprint }> {
+  const res = await internalFetch(`/internal/projects/${playerId}/blueprint/approve`, { method: 'POST' });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error((err as any).error || 'Failed to approve blueprint');
+  }
+  return res.json();
+}
+
+export async function revokeBlueprint(playerId: string): Promise<{ blueprint: StoryBlueprint }> {
+  const res = await internalFetch(`/internal/projects/${playerId}/blueprint/revoke`, { method: 'POST' });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error((err as any).error || 'Failed to revoke blueprint');
+  }
+  return res.json();
+}
+
+export async function fetchEditorStats(): Promise<{
+  stats: EditorStats;
+  staff: MeTimeStaffMember[];
+  recentBlueprints: StoryBlueprint[];
+}> {
+  const res = await internalFetch('/internal/editor/stats');
+  if (!res.ok) throw new Error('Failed to fetch editor stats');
+  return res.json();
+}
+
+export async function fetchStaff(): Promise<{ staff: MeTimeStaffMember[] }> {
+  const res = await internalFetch('/internal/staff');
+  if (!res.ok) throw new Error('Failed to fetch staff');
+  return res.json();
+}
+
+export async function createStaffMember(data: {
+  email: string;
+  fullName: string;
+  role: string;
+  password: string;
+}): Promise<{ staff: MeTimeStaffMember }> {
+  const res = await internalFetch('/internal/staff', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error((err as any).error || 'Failed to create staff member');
+  }
+  return res.json();
+}
+
+export async function updateStaffMember(
+  id: number,
+  updates: { fullName?: string; role?: string; isActive?: boolean; password?: string }
+): Promise<{ staff: MeTimeStaffMember }> {
+  const res = await internalFetch(`/internal/staff/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error((err as any).error || 'Failed to update staff member');
+  }
+  return res.json();
+}
+
+export async function deactivateStaffMember(id: number): Promise<{ staff: MeTimeStaffMember }> {
+  const res = await internalFetch(`/internal/staff/${id}`, { method: 'DELETE' });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error((err as any).error || 'Failed to deactivate staff member');
+  }
+  return res.json();
+}
+
+export async function assignProject(playerId: string, updates: {
+  assignedAuthor?: string;
+  assignedIllustrator?: string;
+  assignedAuthorId?: number;
+  assignedEditorId?: number;
+  bookFormat?: string;
+}): Promise<{ project: StoryProject }> {
+  const res = await internalFetch(`/internal/projects/${playerId}/assign`, {
+    method: 'PUT',
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) throw new Error('Failed to assign project');
   return res.json();
 }
 

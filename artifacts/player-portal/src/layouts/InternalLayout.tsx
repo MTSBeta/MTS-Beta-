@@ -10,6 +10,8 @@ import {
   Feather,
   Palette,
   StickyNote,
+  Crown,
+  Users,
 } from "lucide-react";
 import { useInternalAuth } from "@/context/InternalAuthContext";
 
@@ -17,10 +19,12 @@ interface NavItem {
   label: string;
   href: string;
   icon: React.ReactNode;
+  roles?: string[];
 }
 
 const NAV_ITEMS: NavItem[] = [
   { label: "Stories Dashboard", href: "/internal/stories", icon: <LayoutDashboard size={16} /> },
+  { label: "Editor Dashboard", href: "/internal/editor", icon: <Crown size={16} />, roles: ["editor", "admin"] },
 ];
 
 interface PlayerNavItem {
@@ -70,8 +74,8 @@ export function InternalLayout({ children, playerId, playerName }: InternalLayou
       </div>
 
       <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-        {NAV_ITEMS.map((item) => {
-          const isActive = location === item.href;
+        {NAV_ITEMS.filter((item) => !item.roles || (internalUser?.role && item.roles.includes(internalUser.role))).map((item) => {
+          const isActive = location === item.href || location.startsWith(item.href + "/");
           return (
             <Link key={item.href} href={item.href}>
               <div

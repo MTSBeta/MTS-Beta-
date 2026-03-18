@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Me Time Stories – Beta Engine Demo</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#57b5e7',
+secondary: '#8dd3c7'
+},
+borderRadius: {
+'none': '0px',
+'sm': '4px',
+DEFAULT: '8px',
+'md': '12px',
+'lg': '16px',
+'xl': '20px',
+'2xl': '24px',
+'3xl': '32px',
+'full': '9999px',
+'button': '8px'
+}
+}
+}
+}
+</script>
+<style>
+body {
+background: url('https://readdy.ai/api/search-image?query=ultra-modern%20futuristic%20children%20library%20interior%20designed%20for%20kids%20aged%207-11%20with%20immersive%20VR%20hubs%2C%20interactive%20holographic%20displays%2C%20personalized%20digital%20screens%2C%20smart%20learning%20pods%2C%20AI-powered%20reading%20stations%2C%20colorful%20high-tech%20furniture%2C%20floating%20book%20displays%2C%20augmented%20reality%20zones%2C%20contemporary%20architecture%20with%20curved%20surfaces%2C%20warm%20LED%20lighting%2C%20cozy%20tech-enabled%20reading%20nooks%2C%20advanced%2021st%20century%20educational%20technology%2C%20hyper-personalized%20learning%20environment%20with%20magical%20digital%20atmosphere&width=1920&height=1080&seq=advancedkidslibrary&orientation=landscape') center center / cover no-repeat;
+background-attachment: fixed;
+min-height: 100vh;
+font-family: 'Fredoka', sans-serif;
+position: relative;
+}
+body::before {
+content: '';
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(168, 85, 247, 0.12) 25%, rgba(16, 185, 129, 0.1) 50%, rgba(139, 92, 246, 0.08) 75%, rgba(59, 130, 246, 0.1) 100%);
+pointer-events: none;
+z-index: 1;
+}
+.engine-frame {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+pointer-events: none;
+z-index: 1000;
+}
+.engine-frame::before {
+content: '';
+position: absolute;
+inset: 0;
+border: 3px solid rgba(255, 255, 255, 0.3);
+border-radius: 16px;
+margin: 8px;
+}
+.corner-bracket {
+position: absolute;
+width: 40px;
+height: 40px;
+border: 2px solid rgba(255, 255, 255, 0.6);
+}
+.corner-bracket.top-left {
+top: 20px;
+left: 20px;
+border-right: none;
+border-bottom: none;
+}
+.corner-bracket.top-right {
+top: 20px;
+right: 20px;
+border-left: none;
+border-bottom: none;
+}
+.corner-bracket.bottom-left {
+bottom: 20px;
+left: 20px;
+border-right: none;
+border-top: none;
+}
+.corner-bracket.bottom-right {
+bottom: 20px;
+right: 20px;
+border-left: none;
+border-top: none;
+}
+.rotating-gear {
+display: none;
+}
+.glassmorphism {
+background:
+linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%),
+radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+backdrop-filter: blur(12px) saturate(120%);
+border: 1px solid rgba(255, 255, 255, 0.25);
+box-shadow:
+0 8px 32px rgba(0, 0, 0, 0.1),
+inset 0 1px 0 rgba(255, 255, 255, 0.3);
+position: relative;
+overflow: hidden;
+}
+.glassmorphism::before {
+display: none;
+}
+.floating-particles {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+pointer-events: none;
+z-index: 1;
+}
+.particle {
+position: absolute;
+width: 6px;
+height: 6px;
+background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.3) 70%, transparent 100%);
+border-radius: 50%;
+animation: ultraFloat 8s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+box-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 0 20px rgba(255, 255, 255, 0.2);
+}
+@keyframes ultraFloat {
+0% {
+transform: translateY(0px) translateX(0px) rotate(0deg) scale(0.8);
+opacity: 0;
+filter: blur(1px);
+}
+25% {
+transform: translateY(-30px) translateX(15px) rotate(90deg) scale(1.1);
+opacity: 0.8;
+filter: blur(0px);
+}
+50% {
+transform: translateY(-60px) translateX(-10px) rotate(180deg) scale(1);
+opacity: 1;
+filter: blur(0px);
+}
+75% {
+transform: translateY(-90px) translateX(20px) rotate(270deg) scale(0.9);
+opacity: 0.6;
+filter: blur(0.5px);
+}
+100% {
+transform: translateY(-120px) translateX(0px) rotate(360deg) scale(0.7);
+opacity: 0;
+filter: blur(1px);
+}
+}
+.sparkle-hover {
+position: relative;
+transition: all 0.3s ease;
+}
+.sparkle-hover:hover {
+transform: translateY(-4px);
+box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+.sparkle-hover::before {
+content: '';
+position: absolute;
+inset: -5px;
+background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+border-radius: inherit;
+opacity: 0;
+transition: opacity 0.4s ease;
+}
+.sparkle-hover:hover::before {
+opacity: 1;
+animation: shimmer 1.5s ease-in-out;
+}
+.sparkle-hover:hover::after {
+display: none;
+}
+.quill-writing {
+display: none;
+}
+.typewriter-text {
+overflow: hidden;
+border-right: 3px solid rgba(139, 92, 246, 0.8);
+white-space: nowrap;
+margin: 0 auto;
+}
+@keyframes ultraBlinkCaret {
+0%, 100% {
+border-color: transparent;
+box-shadow: none;
+}
+50% {
+border-color: rgba(255, 255, 255, 0.9);
+box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+}
+}
+@keyframes textGlow {
+0% {
+text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+filter: brightness(1);
+}
+100% {
+text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.2);
+filter: brightness(1.1);
+}
+}
+@keyframes quillFadeOut {
+0% {
+opacity: 1;
+transform: rotate(-45deg) scale(1);
+filter: brightness(1.2);
+}
+100% {
+opacity: 0;
+transform: rotate(-45deg) scale(1.5) translateY(-20px);
+filter: brightness(2) blur(5px);
+}
+}
+.story-screen-bg {
+background: #0B1220;
+position: relative;
+overflow: hidden;
+}
+.story-screen-bg::before {
+content: '';
+position: absolute;
+top: -50%;
+left: -50%;
+width: 200%;
+height: 200%;
+background:
+radial-gradient(ellipse at 20% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+radial-gradient(ellipse at 80% 70%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
+radial-gradient(ellipse at 40% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+animation: aurora 20s ease-in-out infinite;
+pointer-events: none;
+}
+@keyframes aurora {
+0%, 100% { transform: rotate(0deg) scale(1); }
+33% { transform: rotate(2deg) scale(1.05); }
+66% { transform: rotate(-1deg) scale(0.98); }
+}
+.storybook {
+background:
+linear-gradient(145deg, #FEFEFE 0%, #F8F8F8 50%, #F5F5F5 100%),
+radial-gradient(circle at 30% 40%, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
+border-radius: 24px;
+box-shadow:
+0 20px 40px rgba(0, 0, 0, 0.12),
+0 8px 16px rgba(0, 0, 0, 0.08),
+0 0 0 1px rgba(0, 0, 0, 0.06),
+inset 0 1px 0 rgba(255, 255, 255, 0.9),
+inset 0 0 60px rgba(255, 255, 255, 0.5);
+position: relative;
+transition: all 500ms cubic-bezier(0.23, 1, 0.32, 1);
+overflow: hidden;
+font-family: 'Inter', sans-serif;
+transform-style: preserve-3d;
+}
+.storybook::before {
+content: '';
+position: absolute;
+inset: 0;
+background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 50%, rgba(139, 92, 246, 0.1) 100%);
+opacity: 0;
+transition: opacity 500ms ease;
+border-radius: inherit;
+}
+.storybook:hover {
+transform: translateY(-6px);
+box-shadow:
+0 20px 40px rgba(0, 0, 0, 0.1),
+0 8px 16px rgba(0, 0, 0, 0.08),
+0 0 0 1px rgba(139, 92, 246, 0.15);
+}
+.storybook:hover::before {
+opacity: 1;
+}
+@keyframes bookGlow {
+0% { filter: brightness(1) saturate(1); }
+100% { filter: brightness(1.05) saturate(1.1); }
+}
+.book-spine {
+position: absolute;
+left: 50%;
+top: 24px;
+bottom: 24px;
+width: 4px;
+background: linear-gradient(to bottom,
+#E5E7EB 0%,
+#D1D5DB 50%,
+#E5E7EB 100%);
+transform: translateX(-50%);
+box-shadow:
+-2px 0 8px rgba(0, 0, 0, 0.1),
+2px 0 8px rgba(0, 0, 0, 0.1),
+inset 0 0 2px rgba(0, 0, 0, 0.15);
+border-radius: 2px;
+}
+.page-texture {
+background:
+linear-gradient(45deg, transparent 48%, rgba(0, 0, 0, 0.015) 50%, transparent 52%),
+radial-gradient(circle at 20% 80%, rgba(0, 0, 0, 0.01) 0%, transparent 50%),
+radial-gradient(circle at 80% 20%, rgba(0, 0, 0, 0.01) 0%, transparent 50%);
+position: relative;
+}
+.page-texture::after {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background:
+radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.02) 1px, transparent 0);
+background-size: 24px 24px;
+pointer-events: none;
+opacity: 0.3;
+}
+.adventure-points-widget {
+position: fixed;
+top: 32px;
+right: 32px;
+background: rgba(255, 255, 255, 0.98);
+backdrop-filter: blur(20px);
+padding: 16px 24px;
+border-radius: 16px;
+border: 1px solid rgba(0, 0, 0, 0.08);
+cursor: move;
+user-select: none;
+z-index: 100;
+box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+font-family: 'Inter', sans-serif;
+font-weight: 600;
+font-size: 14px;
+color: #1F2937;
+}
+.adventure-points-widget:hover {
+transform: translateY(-2px);
+box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16);
+}
+.story-header {
+position: fixed;
+top: 32px;
+left: 32px;
+right: 320px;
+z-index: 100;
+background: rgba(255, 255, 255, 0.98);
+backdrop-filter: blur(20px);
+padding: 20px 24px;
+border-radius: 16px;
+border: 1px solid rgba(0, 0, 0, 0.08);
+box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+font-family: 'Inter', sans-serif;
+}
+.story-header:hover {
+transform: translateY(-2px);
+box-shadow: 0 12px 40px rgba(0, 0, 0, 0.16);
+}
+.story-page-indicator {
+color: #1F2937;
+font-size: 14px;
+font-weight: 600;
+letter-spacing: 0.5px;
+margin-bottom: 12px;
+}
+.story-progress-bar {
+width: 100%;
+height: 3px;
+background: #E5E7EB;
+border-radius: 3px;
+overflow: hidden;
+}
+.story-progress-fill {
+height: 100%;
+background: linear-gradient(90deg, #8B5CF6, #3B82F6);
+border-radius: 3px;
+transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.story-content-fade {
+opacity: 1;
+transform: translateY(0);
+transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+.story-content-fade.fade-out {
+opacity: 0;
+transform: translateY(10px);
+}
+.confetti {
+position: fixed;
+top: -10px;
+left: 0;
+width: 100%;
+height: 100%;
+pointer-events: none;
+z-index: 999;
+}
+.confetti-piece {
+position: absolute;
+width: 10px;
+height: 10px;
+background: #ff6b6b;
+animation: confetti-fall 3s ease-out forwards;
+}
+@keyframes confetti-fall {
+0% {
+transform: translateY(-100vh) translateX(0px) rotate(0deg) scale(1);
+opacity: 1;
+filter: brightness(1.2) blur(0px);
+}
+25% {
+transform: translateY(-50vh) translateX(30px) rotate(180deg) scale(1.1);
+opacity: 1;
+filter: brightness(1.5) blur(0px);
+}
+50% {
+transform: translateY(0vh) translateX(-20px) rotate(360deg) scale(0.9);
+opacity: 0.8;
+filter: brightness(1.3) blur(0.5px);
+}
+75% {
+transform: translateY(50vh) translateX(40px) rotate(540deg) scale(0.7);
+opacity: 0.4;
+filter: brightness(1.1) blur(1px);
+}
+100% {
+transform: translateY(120vh) translateX(-10px) rotate(720deg) scale(0.5);
+opacity: 0;
+filter: brightness(0.8) blur(2px);
+}
+}
+@keyframes fadeOut {
+0% { opacity: 1; }
+100% { opacity: 0; }
+}
+.modal-overlay {
+background: rgba(0, 0, 0, 0.7);
+backdrop-filter: blur(5px);
+}
+.hidden { display: none !important; }
+.show { display: block !important; }
+.assistant-bubble {
+animation: bubblePop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+@keyframes bubblePop {
+0% {
+transform: translateX(20px) scale(0.8);
+opacity: 0;
+}
+60% {
+transform: translateX(-5px) scale(1.05);
+opacity: 0.9;
+}
+100% {
+transform: translateX(0) scale(1);
+opacity: 1;
+}
+}
+.assistant-avatar {
+animation: avatarBounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s forwards;
+}
+@keyframes avatarBounceIn {
+0% {
+transform: scale(0) rotate(-180deg);
+opacity: 0;
+}
+60% {
+transform: scale(1.2) rotate(20deg);
+opacity: 0.8;
+}
+100% {
+transform: scale(1) rotate(0deg);
+opacity: 1;
+}
+}
+</style>
+</head>
+<body class="overflow-x-hidden">
+<div class="floating-particles" id="particles"></div>
+<div class="engine-frame">
+<div class="corner-bracket top-left"></div>
+<div class="corner-bracket top-right"></div>
+<div class="corner-bracket bottom-left"></div>
+<div class="corner-bracket bottom-right"></div>
+<div class="rotating-gear gear-1"></div>
+<div class="rotating-gear gear-2"></div>
+<div class="rotating-gear gear-3"></div>
+<div class="rotating-gear gear-4"></div>
+</div>
+<div class="min-h-screen flex items-center justify-center p-4 relative z-10">
+<div class="w-full max-w-4xl">
+<div id="points-counter" class="fixed top-6 right-6 glassmorphism px-4 py-2 rounded-full text-white font-semibold z-50 hidden">
+Points: <span id="points-value">0</span>
+</div>
+<div id="welcome-screen" class="text-center">
+<div class="glassmorphism rounded-3xl p-8 mb-8">
+<img src="https://readdy.ai/api/search-image?query=magical%20time%20traveling%20tractor%20in%20a%20whimsical%20fantasy%20landscape%20with%20sparkles%20and%20adventure%20elements%2C%20colorful%20illustration%20style%2C%20childrens%20book%20art&width=800&height=400&seq=hero1&orientation=landscape"
+alt="The Time Travelling Tractor"
+class="w-full h-64 object-cover object-top rounded-2xl mb-6">
+<div class="flex items-center justify-center mb-4">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/38de6d335fe9e078bfa5279f6f2ee63c.png"
+alt="Readdy AI Logo"
+class="h-16 w-auto mr-4">
+<h1 class="text-4xl md:text-6xl font-bold text-white">Story Engine</h1>
+</div>
+<p class="text-xl text-white/90 mb-2">Beta Engine Demo</p>
+<p class="text-2xl text-white/80 mb-8">The Time Travelling Tractor</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<button id="start-btn" class="!rounded-button whitespace-nowrap bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-600 text-white px-10 py-4 text-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2">
+<i class="ri-rocket-line text-xl"></i>
+Start Adventure
+</button>
+<button id="home-page-btn" class="!rounded-button whitespace-nowrap bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 text-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center gap-2 shadow-lg hover:shadow-xl">
+<i class="ri-home-line text-xl"></i>
+Home Page
+</button>
+</div>
+<div class="flex flex-col sm:flex-row gap-4 justify-center mt-4">
+<button id="sign-up-btn" class="!rounded-button whitespace-nowrap bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-3 text-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center gap-2 shadow-lg hover:shadow-xl relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+<i class="ri-user-add-line text-xl relative z-10"></i>
+<span class="relative z-10">Sign Up for Full Version</span>
+</button>
+</div>
+</div>
+</div>
+</修改前>
+<div id="name-screen" class="hidden text-center">
+<div class="glassmorphism rounded-3xl p-8">
+<h2 class="text-3xl font-bold text-white mb-6">What's your name, brave adventurer?</h2>
+<input type="text" id="name-input" placeholder="Enter your name here..."
+class="w-full max-w-md mx-auto px-6 py-4 text-lg rounded-button border-none bg-white/95 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-white/20 mb-6 shadow-lg transition-all duration-300 hover:shadow-xl">
+<div id="welcome-message" class="hidden text-2xl text-white mb-4"></div>
+<button id="name-next" class="!rounded-button whitespace-nowrap bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-600 text-white px-10 py-4 text-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2">
+Next
+<i class="ri-arrow-right-line text-xl"></i>
+</button>
+</div>
+</div>
+<div id="pronoun-screen" class="hidden text-center">
+<div class="glassmorphism rounded-3xl p-8">
+<h2 class="text-3xl font-bold text-white mb-8">Choose your pronouns</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 pronoun-card group" data-pronouns="he,him,his">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-blue-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-indigo-600/40 to-transparent"></div>
+<div class="absolute top-1 right-1 w-2 h-2 bg-cyan-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-1 left-2 w-1.5 h-1.5 bg-blue-300 rounded-full animate-pulse delay-300 group-hover:animate-spin"></div>
+<div class="absolute top-3 left-1 w-3 h-3 bg-sky-300 rounded-full animate-pulse delay-500 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-3 right-1 w-1 h-1 bg-indigo-300 rounded-full animate-pulse delay-700"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20male%20astronaut%20character%20with%20glowing%20blue%20tech%20suit%20and%20helmet%20visor%2C%20semi-realistic%203D%20render%20style%2C%20cybernetic%20enhancements%2C%20digital%20holographic%20effects%2C%20sci-fi%20adventure%20hero%20design%20with%20cosmic%20blue%20energy%20aura&width=200&height=200&seq=herohe&orientation=squarish" alt="He/Him adventurer" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-blue-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-sky-400/20 via-blue-400/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-xl font-semibold text-white group-hover:text-blue-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">He / Him</span>
+<div class="absolute inset-0 text-blue-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">He / Him</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 pronoun-card group" data-pronouns="she,her,her">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-pink-400 via-rose-500 to-purple-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-pink-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-purple-600/40 to-transparent"></div>
+<div class="absolute top-1 left-1 w-2 h-2 bg-pink-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-2 right-1 w-1.5 h-1.5 bg-rose-300 rounded-full animate-pulse delay-200 group-hover:animate-spin"></div>
+<div class="absolute top-4 right-2 w-3 h-3 bg-purple-300 rounded-full animate-pulse delay-400 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-1 left-3 w-1 h-1 bg-pink-400 rounded-full animate-pulse delay-600"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20female%20artist%20character%20with%20glowing%20pink%20and%20purple%20tech%20suit%2C%20semi-realistic%203D%20render%20style%2C%20creative%20holographic%20tools%20and%20paint%20effects%2C%20digital%20art%20aesthetic%20with%20rose%20gold%20cybernetic%20enhancements&width=200&height=200&seq=heroshe&orientation=squarish" alt="She/Her adventurer" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-pink-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-pink-400/20 via-rose-400/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-xl font-semibold text-white group-hover:text-pink-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">She / Her</span>
+<div class="absolute inset-0 text-pink-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">She / Her</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 pronoun-card group" data-pronouns="they,them,their">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-emerald-400 via-green-500 to-teal-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-emerald-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-teal-600/40 to-transparent"></div>
+<div class="absolute top-2 right-1 w-2 h-2 bg-emerald-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-1 left-1 w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse delay-300 group-hover:animate-spin"></div>
+<div class="absolute top-1 left-3 w-3 h-3 bg-teal-300 rounded-full animate-pulse delay-500 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-4 right-3 w-1 h-1 bg-emerald-400 rounded-full animate-pulse delay-700"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20scientist%20character%20with%20glowing%20green%20and%20teal%20tech%20suit%2C%20semi-realistic%203D%20render%20style%2C%20laboratory%20holographic%20displays%2C%20scientific%20cybernetic%20enhancements%20with%20emerald%20energy%20effects&width=200&height=200&seq=herothey&orientation=squarish" alt="They/Them adventurer" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-400/20 via-green-400/20 to-teal-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-xl font-semibold text-white group-hover:text-emerald-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">They / Them</span>
+<div class="absolute inset-0 text-emerald-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">They / Them</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="appearance-screen" class="hidden text-center">
+<div class="glassmorphism rounded-3xl p-8">
+<h2 class="text-3xl font-bold text-white mb-8">What kind of adventurer are you?</h2>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 appearance-card group" data-appearance="Adventure Ready">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-amber-400 via-orange-500 to-red-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-orange-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-red-600/40 to-transparent"></div>
+<div class="absolute top-1 right-2 w-2 h-2 bg-yellow-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-2 left-1 w-1.5 h-1.5 bg-orange-300 rounded-full animate-pulse delay-200 group-hover:animate-spin"></div>
+<div class="absolute top-3 left-3 w-3 h-3 bg-red-300 rounded-full animate-pulse delay-400 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-1 right-1 w-1 h-1 bg-amber-300 rounded-full animate-pulse delay-600"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20adventure%20gear%20with%20glowing%20orange%20and%20amber%20energy%20effects%2C%20high-tech%20expedition%20suit%20and%20equipment%2C%20semi-realistic%203D%20render%20style%2C%20dynamic%20action%20pose%20with%20cybernetic%20enhancements%20and%20holographic%20displays&width=200&height=200&seq=adventureready&orientation=squarish" alt="Adventure Ready style" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-orange-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-400/20 via-orange-400/20 to-red-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-orange-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Adventure Ready</span>
+<div class="absolute inset-0 text-orange-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Adventure Ready</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 appearance-card group" data-appearance="Nature Explorer">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-lime-400 via-green-500 to-emerald-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-green-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-emerald-600/40 to-transparent"></div>
+<div class="absolute top-2 left-1 w-2 h-2 bg-lime-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-1 right-2 w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse delay-300 group-hover:animate-spin"></div>
+<div class="absolute top-1 right-1 w-3 h-3 bg-emerald-300 rounded-full animate-pulse delay-500 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-3 left-2 w-1 h-1 bg-lime-400 rounded-full animate-pulse delay-700"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20nature%20explorer%20with%20glowing%20green%20bio-tech%20suit%20and%20holographic%20tree%20displays%2C%20semi-realistic%203D%20render%20style%2C%20cybernetic%20plant%20scanner%20and%20forest%20energy%20effects%2C%20eco-tech%20aesthetic%20with%20emerald%20light&width=200&height=200&seq=natureexplorer&orientation=squarish" alt="Nature Explorer style" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-green-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-lime-400/20 via-green-400/20 to-emerald-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-green-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Nature Explorer</span>
+<div class="absolute inset-0 text-green-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Nature Explorer</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 appearance-card group" data-appearance="Magic Seeker">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-violet-400 via-purple-500 to-indigo-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-purple-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-indigo-600/40 to-transparent"></div>
+<div class="absolute top-1 left-2 w-2 h-2 bg-violet-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-2 right-1 w-1.5 h-1.5 bg-purple-300 rounded-full animate-pulse delay-250 group-hover:animate-spin"></div>
+<div class="absolute top-4 right-2 w-3 h-3 bg-indigo-300 rounded-full animate-pulse delay-450 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-1 left-1 w-1 h-1 bg-violet-400 rounded-full animate-pulse delay-650"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20magical%20wizard%20with%20glowing%20purple%20and%20violet%20cyber-magic%20effects%2C%20semi-realistic%203D%20render%20style%2C%20holographic%20spell%20casting%20and%20mystical%20tech%20staff%2C%20enchanted%20cybernetic%20robes%20with%20indigo%20energy%20aura&width=200&height=200&seq=magicseeker&orientation=squarish" alt="Magic Seeker style" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-purple-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-violet-400/20 via-purple-400/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-purple-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Magic Seeker</span>
+<div class="absolute inset-0 text-purple-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Magic Seeker</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 appearance-card group" data-appearance="Brave Heart">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-rose-400 via-pink-500 to-red-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-rose-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-red-600/40 to-transparent"></div>
+<div class="absolute top-2 right-1 w-2 h-2 bg-rose-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-1 left-2 w-1.5 h-1.5 bg-pink-300 rounded-full animate-pulse delay-350 group-hover:animate-spin"></div>
+<div class="absolute top-1 left-1 w-3 h-3 bg-red-300 rounded-full animate-pulse delay-550 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-4 right-3 w-1 h-1 bg-rose-400 rounded-full animate-pulse delay-750"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20superhero%20with%20glowing%20rose%20and%20pink%20energy%20shield%20and%20cape%2C%20semi-realistic%203D%20render%20style%2C%20brave%20cyber-warrior%20with%20heroic%20pose%2C%20advanced%20tech%20armor%20with%20red%20energy%20effects%20and%20holographic%20heart%20symbol&width=200&height=200&seq=braveheart&orientation=squarish" alt="Brave Heart style" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-rose-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-rose-400/20 via-pink-400/20 to-red-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-rose-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Brave Heart</span>
+<div class="absolute inset-0 text-rose-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Brave Heart</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 appearance-card group" data-appearance="Star Wanderer">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-yellow-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-orange-600/40 to-transparent"></div>
+<div class="absolute top-1 left-1 w-2 h-2 bg-yellow-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-2 right-2 w-1.5 h-1.5 bg-amber-300 rounded-full animate-pulse delay-400 group-hover:animate-spin"></div>
+<div class="absolute top-3 right-1 w-3 h-3 bg-orange-300 rounded-full animate-pulse delay-600 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-1 left-3 w-1 h-1 bg-yellow-400 rounded-full animate-pulse delay-800"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20space%20wanderer%20with%20glowing%20yellow%20and%20amber%20star-tech%20suit%2C%20semi-realistic%203D%20render%20style%2C%20cosmic%20navigator%20with%20holographic%20constellation%20maps%2C%20celestial%20energy%20effects%20and%20stellar%20cybernetic%20enhancements&width=200&height=200&seq=starwanderer&orientation=squarish" alt="Star Wanderer style" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-yellow-400/20 via-amber-400/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-yellow-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Star Wanderer</span>
+<div class="absolute inset-0 text-yellow-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Star Wanderer</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 appearance-card group" data-appearance="Dream Chaser">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-cyan-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-indigo-600/40 to-transparent"></div>
+<div class="absolute top-2 left-2 w-2 h-2 bg-cyan-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-1 right-1 w-1.5 h-1.5 bg-blue-300 rounded-full animate-pulse delay-450 group-hover:animate-spin"></div>
+<div class="absolute top-1 right-3 w-3 h-3 bg-indigo-300 rounded-full animate-pulse delay-650 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-3 left-1 w-1 h-1 bg-cyan-400 rounded-full animate-pulse delay-850"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20dream%20chaser%20with%20glowing%20cyan%20and%20blue%20cloud-tech%20suit%2C%20semi-realistic%203D%20render%20style%2C%20ethereal%20floating%20design%20with%20holographic%20dream%20catchers%2C%20mystical%20sky%20energy%20effects%20and%20cloud%20cybernetics&width=200&height=200&seq=dreamchaser&orientation=squarish" alt="Dream Chaser style" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/20 via-blue-400/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-cyan-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Dream Chaser</span>
+<div class="absolute inset-0 text-cyan-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Dream Chaser</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="toy-screen" class="hidden text-center">
+<div class="glassmorphism rounded-3xl p-8">
+<h2 class="text-3xl font-bold text-white mb-8">Choose your adventure companion</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 toy-card group" data-toy="Dino">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-lime-400 via-green-500 to-emerald-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-green-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-emerald-600/40 to-transparent"></div>
+<div class="absolute top-1 right-1 w-2 h-2 bg-lime-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-2 left-2 w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse delay-200 group-hover:animate-spin"></div>
+<div class="absolute top-3 left-1 w-3 h-3 bg-emerald-300 rounded-full animate-pulse delay-400 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-1 right-3 w-1 h-1 bg-lime-400 rounded-full animate-pulse delay-600"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20cybernetic%20dinosaur%20toy%20companion%20with%20glowing%20green%20energy%20circuits%20and%20holographic%20bone%20displays%2C%20semi-realistic%203D%20render%20style%2C%20friendly%20robotic%20dino%20with%20emerald%20tech%20enhancements%20and%20playful%20design&width=200&height=200&seq=dinotoy&orientation=squarish" alt="Cyber Dino companion" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-green-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-lime-400/20 via-green-400/20 to-emerald-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-green-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Dino</span>
+<div class="absolute inset-0 text-green-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Dino</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 toy-card group" data-toy="Dragon">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-red-400 via-orange-500 to-yellow-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-red-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-yellow-600/40 to-transparent"></div>
+<div class="absolute top-1 left-1 w-2 h-2 bg-red-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-1 right-2 w-1.5 h-1.5 bg-orange-300 rounded-full animate-pulse delay-250 group-hover:animate-spin"></div>
+<div class="absolute top-4 right-1 w-3 h-3 bg-yellow-300 rounded-full animate-pulse delay-450 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-3 left-2 w-1 h-1 bg-red-400 rounded-full animate-pulse delay-650"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20cybernetic%20dragon%20toy%20companion%20with%20glowing%20red%20and%20orange%20fire%20energy%20effects%2C%20semi-realistic%203D%20render%20style%2C%20friendly%20tech%20dragon%20with%20holographic%20flame%20displays%20and%20golden%20circuits&width=200&height=200&seq=dragontoy&orientation=squarish" alt="Cyber Dragon companion" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-orange-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-red-400/20 via-orange-400/20 to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-orange-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Dragon</span>
+<div class="absolute inset-0 text-orange-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Dragon</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 toy-card group" data-toy="Unicorn">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-pink-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-indigo-600/40 to-transparent"></div>
+<div class="absolute top-2 right-1 w-2 h-2 bg-pink-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-1 left-1 w-1.5 h-1.5 bg-purple-300 rounded-full animate-pulse delay-300 group-hover:animate-spin"></div>
+<div class="absolute top-1 left-2 w-3 h-3 bg-indigo-300 rounded-full animate-pulse delay-500 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-4 right-3 w-1 h-1 bg-pink-400 rounded-full animate-pulse delay-700"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20cybernetic%20unicorn%20toy%20companion%20with%20glowing%20pink%20and%20purple%20rainbow%20energy%20horn%2C%20semi-realistic%203D%20render%20style%2C%20magical%20tech%20unicorn%20with%20holographic%20rainbow%20displays%20and%20crystalline%20mane%20effects&width=200&height=200&seq=unicorntoy&orientation=squarish" alt="Cyber Unicorn companion" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-pink-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-pink-400/20 via-purple-400/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-pink-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Unicorn</span>
+<div class="absolute inset-0 text-pink-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Unicorn</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 toy-card group" data-toy="Robot">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-cyan-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-indigo-600/40 to-transparent"></div>
+<div class="absolute top-1 right-2 w-2 h-2 bg-cyan-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-2 left-1 w-1.5 h-1.5 bg-blue-300 rounded-full animate-pulse delay-350 group-hover:animate-spin"></div>
+<div class="absolute top-3 left-3 w-3 h-3 bg-indigo-300 rounded-full animate-pulse delay-550 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-1 right-1 w-1 h-1 bg-cyan-400 rounded-full animate-pulse delay-750"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20friendly%20robot%20toy%20companion%20with%20glowing%20cyan%20and%20blue%20energy%20circuits%2C%20semi-realistic%203D%20render%20style%2C%20advanced%20AI%20robot%20with%20holographic%20displays%20and%20electric%20energy%20effects%2C%20child-friendly%20design&width=200&height=200&seq=robottoy&orientation=squarish" alt="Cyber Robot companion" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/20 via-blue-400/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-cyan-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Robot</span>
+<div class="absolute inset-0 text-cyan-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Robot</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="cat-screen" class="hidden text-center">
+<div class="glassmorphism rounded-3xl p-8">
+<h2 class="text-3xl font-bold text-white mb-8">Meet your magical cat friend</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 cat-card group" data-cat="Sparkle">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-violet-400 via-purple-500 to-pink-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-purple-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-pink-600/40 to-transparent"></div>
+<div class="absolute top-1 left-2 w-2 h-2 bg-yellow-300 rounded-full animate-ping opacity-70 group-hover:animate-bounce group-hover:scale-150"></div>
+<div class="absolute top-3 right-1 w-3 h-3 bg-pink-300 rounded-full animate-pulse group-hover:animate-spin delay-200 opacity-60"></div>
+<div class="absolute bottom-2 left-1 w-1.5 h-1.5 bg-white rounded-full animate-pulse delay-400 group-hover:animate-bounce"></div>
+<div class="absolute top-4 right-4 w-1 h-1 bg-cyan-300 rounded-full animate-pulse delay-600"></div>
+<div class="absolute bottom-4 right-2 w-2 h-2 bg-yellow-400 rounded-full animate-pulse delay-800 group-hover:animate-ping"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20magical%20cat%20with%20sparkling%20crystalline%20fur%20and%20glowing%20neon%20accents%2C%20semi-realistic%203D%20render%20style%2C%20holographic%20shimmer%20effects%2C%20digital%20art%20with%20purple%20and%20pink%20energy%20aura%2C%20cyberpunk%20fantasy%20aesthetic%2C%20luminescent%20whiskers%20and%20eyes&width=200&height=200&seq=sparklecat&orientation=squarish" alt="Sparkle the magical cat" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-pink-400/20 via-purple-400/20 to-violet-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-pink-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Sparkle</span>
+<div class="absolute inset-0 text-pink-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Sparkle</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 cat-card group" data-cat="Midnight">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-indigo-500 via-purple-600 to-gray-900 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-indigo-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
+<div class="absolute top-1 right-1 w-2 h-2 bg-blue-300 rounded-full animate-pulse group-hover:animate-ping opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-1 left-1 w-1.5 h-1.5 bg-purple-300 rounded-full animate-pulse delay-300 group-hover:animate-bounce"></div>
+<div class="absolute top-2 left-3 w-3 h-3 bg-indigo-300 rounded-full animate-pulse delay-500 group-hover:animate-spin opacity-60"></div>
+<div class="absolute bottom-3 right-3 w-1 h-1 bg-cyan-400 rounded-full animate-pulse delay-700"></div>
+<div class="absolute top-5 right-5 w-2 h-2 bg-moon-blue rounded-full animate-pulse delay-900 group-hover:animate-ping"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20midnight%20black%20cat%20with%20glowing%20blue%20cybernetic%20eyes%20and%20silver%20tech%20collar%2C%20semi-realistic%203D%20render%2C%20dark%20elegant%20fur%20with%20digital%20constellation%20patterns%2C%20neon%20blue%20accents%2C%20sci-fi%20mystical%20atmosphere%2C%20holographic%20moonlight%20effects&width=200&height=200&seq=midnightcat&orientation=squarish" alt="Midnight the cyber cat" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-400/20 via-purple-400/20 to-gray-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-indigo-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Midnight</span>
+<div class="absolute inset-0 text-indigo-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Midnight</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 cat-card group" data-cat="Whiskers">
+<div class="w-24 h-24 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-amber-400 via-orange-500 to-red-600 rounded-full shadow-xl border-4 border-white/70 relative overflow-hidden group-hover:scale-110 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-t from-red-600/30 to-transparent"></div>
+<div class="absolute top-2 right-3 w-1 h-1 bg-yellow-200 rounded-full animate-bounce group-hover:animate-ping"></div>
+<div class="absolute bottom-2 left-3 w-1.5 h-1.5 bg-orange-200 rounded-full animate-pulse delay-200 group-hover:animate-spin"></div>
+<div class="absolute top-4 left-2 w-0.5 h-0.5 bg-white rounded-full animate-pulse delay-400"></div>
+<div class="text-5xl relative z-10 group-hover:animate-bounce">🐾</div>
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-orange-300/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-orange-200 transition-colors duration-300 group-hover:animate-pulse">Whiskers</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 cat-card group" data-cat="Comet">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-cyan-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-indigo-600/40 to-transparent"></div>
+<div class="absolute top-1 left-1 w-2 h-2 bg-cyan-300 rounded-full animate-ping group-hover:animate-bounce delay-100 opacity-70 group-hover:scale-125"></div>
+<div class="absolute top-2 right-1 w-3 h-3 bg-blue-300 rounded-full animate-pulse group-hover:animate-spin delay-300 opacity-60"></div>
+<div class="absolute bottom-1 right-2 w-1.5 h-1.5 bg-white rounded-full animate-pulse delay-500 group-hover:animate-bounce"></div>
+<div class="absolute bottom-2 left-1 w-2 h-2 bg-cyan-400 rounded-full animate-pulse delay-700 group-hover:animate-ping"></div>
+<div class="absolute top-4 left-4 w-1 h-1 bg-blue-500 rounded-full animate-pulse delay-900"></div>
+<div class="absolute bottom-4 right-4 w-2.5 h-2.5 bg-cyan-200 rounded-full animate-pulse delay-1100 group-hover:animate-spin"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20space%20cat%20with%20cosmic%20blue%20and%20cyan%20coloring%2C%20glowing%20constellation%20markings%20on%20fur%2C%20semi-realistic%203D%20render%2C%20cybernetic%20space%20collar%20with%20comet%20trail%20effects%2C%20stellar%20atmosphere%20with%20particle%20effects%2C%20sci-fi%20mystical%20pet%20design&width=200&height=200&seq=cometcat&orientation=squarish" alt="Comet the space cat" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 animate-pulse"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/20 via-blue-400/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-cyan-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Comet</span>
+<div class="absolute inset-0 text-cyan-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Comet</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="dinosaur-screen" class="hidden text-center">
+<div class="glassmorphism rounded-3xl p-8">
+<h2 class="text-3xl font-bold text-white mb-8">Which dinosaur will you help?</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 dinosaur-card group" data-dinosaur="T-Rex">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-red-500 via-orange-600 to-yellow-700 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-red-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-yellow-700/40 to-transparent"></div>
+<div class="absolute top-1 left-1 w-2 h-2 bg-red-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-2 right-2 w-1.5 h-1.5 bg-orange-300 rounded-full animate-pulse delay-200 group-hover:animate-spin"></div>
+<div class="absolute top-3 right-1 w-3 h-3 bg-yellow-300 rounded-full animate-pulse delay-400 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-1 left-3 w-1 h-1 bg-red-400 rounded-full animate-pulse delay-600"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20friendly%20T-Rex%20dinosaur%20with%20glowing%20red%20and%20orange%20energy%20patterns%2C%20semi-realistic%203D%20render%20style%2C%20gentle%20expression%20with%20cybernetic%20tech%20enhancements%20and%20holographic%20displays%2C%20child-friendly%20prehistoric%20creature&width=200&height=200&seq=trexdino&orientation=squarish" alt="Friendly T-Rex dinosaur" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-red-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-red-400/20 via-orange-400/20 to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-orange-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">T-Rex</span>
+<div class="absolute inset-0 text-orange-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">T-Rex</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 dinosaur-card group" data-dinosaur="Triceratops">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-lime-400 via-green-500 to-emerald-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-green-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-emerald-600/40 to-transparent"></div>
+<div class="absolute top-2 right-1 w-2 h-2 bg-lime-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-1 left-2 w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse delay-250 group-hover:animate-spin"></div>
+<div class="absolute top-1 left-1 w-3 h-3 bg-emerald-300 rounded-full animate-pulse delay-450 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-3 right-3 w-1 h-1 bg-lime-400 rounded-full animate-pulse delay-650"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20friendly%20Triceratops%20dinosaur%20with%20glowing%20green%20and%20emerald%20energy%20horns%2C%20semi-realistic%203D%20render%20style%2C%20gentle%20herbivore%20with%20cybernetic%20tech%20enhancements%20and%20holographic%20leaf%20displays%2C%20child-friendly%20design&width=200&height=200&seq=triceratopsdino&orientation=squarish" alt="Friendly Triceratops dinosaur" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-green-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-lime-400/20 via-green-400/20 to-emerald-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-green-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Triceratops</span>
+<div class="absolute inset-0 text-green-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Triceratops</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 dinosaur-card group" data-dinosaur="Stegosaurus">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-amber-400 via-yellow-500 to-orange-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-amber-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-orange-600/40 to-transparent"></div>
+<div class="absolute top-1 right-2 w-2 h-2 bg-amber-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-2 left-1 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-pulse delay-300 group-hover:animate-spin"></div>
+<div class="absolute top-4 left-3 w-3 h-3 bg-orange-300 rounded-full animate-pulse delay-500 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-1 right-1 w-1 h-1 bg-amber-400 rounded-full animate-pulse delay-700"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20friendly%20Stegosaurus%20dinosaur%20with%20glowing%20amber%20and%20yellow%20energy%20spikes%2C%20semi-realistic%203D%20render%20style%2C%20gentle%20herbivore%20with%20cybernetic%20tech%20enhancements%20and%20holographic%20plate%20displays%2C%20child-friendly%20design&width=200&height=200&seq=stegosaurusdino&orientation=squarish" alt="Friendly Stegosaurus dinosaur" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-400/20 via-yellow-400/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-amber-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Stegosaurus</span>
+<div class="absolute inset-0 text-amber-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Stegosaurus</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 dinosaur-card group" data-dinosaur="Pterodactyl">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-sky-400 via-blue-500 to-purple-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-sky-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-purple-600/40 to-transparent"></div>
+<div class="absolute top-2 left-1 w-2 h-2 bg-sky-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-1 right-1 w-1.5 h-1.5 bg-blue-300 rounded-full animate-pulse delay-350 group-hover:animate-spin"></div>
+<div class="absolute top-1 right-2 w-3 h-3 bg-purple-300 rounded-full animate-pulse delay-550 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-4 left-3 w-1 h-1 bg-sky-400 rounded-full animate-pulse delay-750"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20friendly%20Pterodactyl%20flying%20dinosaur%20with%20glowing%20blue%20and%20purple%20energy%20wings%2C%20semi-realistic%203D%20render%20style%2C%20graceful%20pterosaur%20with%20cybernetic%20tech%20enhancements%20and%20holographic%20wind%20displays%2C%20child-friendly%20design&width=200&height=200&seq=pterodactyldino&orientation=squarish" alt="Friendly Pterodactyl dinosaur" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-blue-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-sky-400/20 via-blue-400/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-blue-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Pterodactyl</span>
+<div class="absolute inset-0 text-blue-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Pterodactyl</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="snack-screen" class="hidden text-center">
+<div class="glassmorphism rounded-3xl p-8">
+<h2 class="text-3xl font-bold text-white mb-8">What's your favorite adventure snack?</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 snack-card group" data-snack="Fruit">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-lime-400 via-green-500 to-red-500 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-lime-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-red-500/40 to-transparent"></div>
+<div class="absolute top-1 right-1 w-2 h-2 bg-lime-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-2 left-2 w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse delay-200 group-hover:animate-spin"></div>
+<div class="absolute top-3 left-1 w-3 h-3 bg-red-300 rounded-full animate-pulse delay-400 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-1 right-3 w-1 h-1 bg-lime-400 rounded-full animate-pulse delay-600"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20holographic%20fruit%20snacks%20with%20glowing%20green%20and%20red%20energy%20effects%2C%20semi-realistic%203D%20render%20style%2C%20healthy%20cyber-fruit%20with%20digital%20nutrition%20displays%20and%20fresh%20organic%20tech%20aesthetic&width=200&height=200&seq=fruitsnack&orientation=squarish" alt="Futuristic fruit snack" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-green-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-lime-400/20 via-green-400/20 to-red-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-green-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Fruit</span>
+<div class="absolute inset-0 text-green-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Fruit</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 snack-card group" data-snack="Cookies">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-amber-400 via-yellow-500 to-orange-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-amber-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-orange-600/40 to-transparent"></div>
+<div class="absolute top-2 left-1 w-2 h-2 bg-amber-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-1 right-2 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-pulse delay-250 group-hover:animate-spin"></div>
+<div class="absolute top-1 right-1 w-3 h-3 bg-orange-300 rounded-full animate-pulse delay-450 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-3 left-3 w-1 h-1 bg-amber-400 rounded-full animate-pulse delay-650"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20holographic%20cookies%20with%20glowing%20amber%20and%20yellow%20energy%20patterns%2C%20semi-realistic%203D%20render%20style%2C%20delicious%20cyber-cookies%20with%20digital%20chocolate%20chips%20and%20sweet%20tech%20aesthetic&width=200&height=200&seq=cookiesnack&orientation=squarish" alt="Futuristic cookie snack" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-400/20 via-yellow-400/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-amber-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Cookies</span>
+<div class="absolute inset-0 text-amber-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Cookies</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 snack-card group" data-snack="Sandwiches">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-yellow-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-orange-600/40 to-transparent"></div>
+<div class="absolute top-1 left-2 w-2 h-2 bg-yellow-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-2 right-1 w-1.5 h-1.5 bg-amber-300 rounded-full animate-pulse delay-300 group-hover:animate-spin"></div>
+<div class="absolute top-4 right-2 w-3 h-3 bg-orange-300 rounded-full animate-pulse delay-500 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-1 left-1 w-1 h-1 bg-yellow-400 rounded-full animate-pulse delay-700"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20holographic%20sandwiches%20with%20glowing%20yellow%20and%20amber%20energy%20layers%2C%20semi-realistic%203D%20render%20style%2C%20delicious%20cyber-sandwich%20with%20digital%20ingredients%20and%20fresh%20tech%20aesthetic&width=200&height=200&seq=sandwichsnack&orientation=squarish" alt="Futuristic sandwich snack" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-amber-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-yellow-400/20 via-amber-400/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-yellow-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Sandwiches</span>
+<div class="absolute inset-0 text-yellow-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Sandwiches</div>
+</div>
+</div>
+<div class="sparkle-hover glassmorphism rounded-2xl p-6 cursor-pointer transition-all duration-300 snack-card group" data-snack="Cupcakes">
+<div class="w-28 h-28 flex items-center justify-center mb-4 mx-auto bg-gradient-to-br from-pink-400 via-rose-500 to-purple-600 rounded-2xl shadow-2xl border-3 border-white/80 relative overflow-hidden group-hover:scale-110 transition-all duration-500 group-hover:rotate-3 group-hover:shadow-pink-500/50">
+<div class="absolute inset-0 bg-gradient-to-t from-purple-600/40 to-transparent"></div>
+<div class="absolute top-2 right-1 w-2 h-2 bg-pink-300 rounded-full animate-ping group-hover:animate-bounce opacity-70 group-hover:scale-125"></div>
+<div class="absolute bottom-1 left-1 w-1.5 h-1.5 bg-rose-300 rounded-full animate-pulse delay-350 group-hover:animate-spin"></div>
+<div class="absolute top-1 left-3 w-3 h-3 bg-purple-300 rounded-full animate-pulse delay-550 group-hover:animate-bounce opacity-60"></div>
+<div class="absolute bottom-4 right-2 w-1 h-1 bg-pink-400 rounded-full animate-pulse delay-750"></div>
+<img src="https://readdy.ai/api/search-image?query=futuristic%20holographic%20cupcakes%20with%20glowing%20pink%20and%20purple%20energy%20frosting%2C%20semi-realistic%203D%20render%20style%2C%20delicious%20cyber-cupcake%20with%20digital%20sprinkles%20and%20sweet%20tech%20aesthetic&width=200&height=200&seq=cupcakesnack&orientation=squarish" alt="Futuristic cupcake snack" class="w-20 h-20 rounded-xl object-cover relative z-10 group-hover:brightness-125 transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-pink-300/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-pink-400/20 via-rose-400/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+</div>
+<div class="text-lg font-semibold text-white group-hover:text-pink-200 transition-all duration-500 group-hover:animate-pulse group-hover:tracking-wider group-hover:scale-105 relative">
+<span class="relative z-10">Cupcakes</span>
+<div class="absolute inset-0 text-pink-300 opacity-0 group-hover:opacity-50 blur-sm transition-opacity duration-500 group-hover:animate-pulse">Cupcakes</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="story-screen" class="hidden story-screen-bg min-h-screen relative">
+<div class="story-header" style="position: fixed; top: 16px; left: 16px; right: 280px; z-index: 100; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); padding: 16px 20px; border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);">
+<div class="story-page-indicator">
+Page <span id="current-page">1</span> of 6
+</div>
+<div class="story-progress-bar">
+<div class="story-progress-fill" id="story-progress" style="width: 16.67%"></div>
+</div>
+</div>
+<div class="adventure-points-widget" id="adventure-points" style="position: fixed; top: 16px; right: 16px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); padding: 12px 20px; border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);">
+Adventure Points: <span id="final-points">0</span>
+</div>
+<div class="flex items-center justify-center min-h-screen p-4 pt-24 pb-32" style="padding-top: 100px;">
+<div class="storybook max-w-6xl w-full p-16 page-texture">
+<div class="book-spine"></div>
+<div class="grid grid-cols-2 gap-12 min-h-[500px] items-start story-content-fade" id="story-content">
+<div class="flex flex-col justify-center items-center relative h-full pt-12" id="story-illustration">
+<div class="w-48 h-48 flex items-center justify-center bg-gradient-to-r from-primary to-secondary rounded-3xl shadow-xl transition-all 300ms cubic-bezier(0.4, 0, 0.2, 1) hover:shadow-2xl hover:scale-105">
+<i class="ri-truck-fill text-8xl text-white"></i>
+</div>
+</div>
+<div class="flex flex-col justify-start h-full pt-12 pr-8">
+<div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+<div class="text-lg leading-relaxed font-medium" id="story-text" style="line-height: 1.7; font-family: 'Inter', sans-serif; color: #FFFFFF; text-align: left;">
+Loading your adventure...
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed bottom-8 left-8 z-50">
+<button id="prev-page" class="!rounded-button whitespace-nowrap bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 font-semibold transition-all 300ms cubic-bezier(0.4, 0, 0.2, 1) disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 font-['Inter']">
+<i class="ri-arrow-left-line text-lg"></i>
+Previous
+</button>
+</div>
+<div class="fixed bottom-8 right-8 z-50">
+<button id="next-page" class="!rounded-button whitespace-nowrap bg-primary hover:bg-blue-600 text-white px-6 py-3 font-semibold transition-all 300ms cubic-bezier(0.4, 0, 0.2, 1) flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 font-['Inter']">
+Next
+<i class="ri-arrow-right-line text-lg"></i>
+</button>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/9b79325f-7daf-4c39-8ce3-ceb154d22e63" data-readdy="true" id="finish-story" class="!rounded-button whitespace-nowrap bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 font-semibold transition-all 300ms cubic-bezier(0.4, 0, 0.2, 1) hidden items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 font-['Inter'] inline-flex">
+Finish Adventure
+<i class="ri-flag-line text-lg"></i>
+</a>
+</div>
+<div class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex gap-4">
+<button id="story-home-btn" class="!rounded-button whitespace-nowrap bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 font-semibold transition-all 300ms cubic-bezier(0.4, 0, 0.2, 1) flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 font-['Inter']">
+<i class="ri-home-line text-lg"></i>
+Home
+</button>
+<button id="read-aloud" class="!rounded-button whitespace-nowrap bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 font-semibold transition-all 300ms cubic-bezier(0.4, 0, 0.2, 1) flex items-center gap-3 shadow-lg hover:shadow-xl hover:-translate-y-1 font-['Inter']">
+<i class="ri-volume-up-line text-xl"></i>
+Read Aloud
+</button>
+<button id="pause-reading" class="!rounded-button whitespace-nowrap bg-red-600 hover:bg-red-700 text-white px-8 py-3 font-semibold transition-all 300ms cubic-bezier(0.4, 0, 0.2, 1) hidden items-center gap-3 shadow-lg hover:shadow-xl hover:-translate-y-1 font-['Inter']">
+<i class="ri-pause-line text-xl"></i>
+Pause
+</button>
+</div>
+</div>
+<div id="adventure-summary" class="hidden glassmorphism rounded-3xl p-8 mt-8 text-center">
+<h2 class="text-3xl font-bold text-white mb-8">Adventure Summary</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6" id="summary-grid">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="assistant-helper" class="fixed bottom-6 right-6 z-[200] hidden">
+<div class="relative">
+<div class="assistant-bubble bg-gradient-to-br from-white via-blue-50 to-purple-50 rounded-2xl p-4 shadow-2xl border-2 border-purple-200 max-w-xs mb-3 transform translate-x-4 opacity-0 transition-all duration-500">
+<div class="text-purple-800 font-medium text-sm leading-relaxed" id="assistant-message">
+Hi there! 🌟 I'm Quilly, your magical writing friend!
+</div>
+<div class="absolute bottom-0 right-6 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-white transform translate-y-2"></div>
+</div>
+<div class="assistant-avatar w-20 h-20 bg-gradient-to-br from-purple-300 via-pink-300 to-blue-300 rounded-full shadow-xl flex items-center justify-center transform scale-0 transition-all duration-700 cursor-pointer hover:scale-110 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-purple-400/20 to-transparent"></div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="text-3xl mb-1 animate-bounce" style="animation-duration: 2s;">🪶</div>
+<div class="w-6 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-pulse"></div>
+</div>
+<div class="absolute top-1 right-1 w-2 h-2 bg-yellow-300 rounded-full animate-ping"></div>
+<div class="absolute bottom-1 left-1 w-1 h-1 bg-pink-400 rounded-full animate-pulse" style="animation-delay: 0.5s;"></div>
+</div>
+</div>
+</div>
+<div id="feedback-modal" class="hidden fixed inset-0 z-[9999] modal-overlay flex items-center justify-center p-4">
+<div class="glassmorphism rounded-3xl p-8 max-w-2xl w-full max-h-[80vh] overflow-hidden">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-white">Give Feedback</h2>
+<button id="close-modal" class="text-white hover:text-gray-300 text-2xl">×</button>
+</div>
+<iframe src="PASTE_FORM_URL_HERE"
+width="100%"
+height="500"
+frameborder="0"
+marginheight="0"
+marginwidth="0">
+Loading...
+</iframe>
+</div>
+</div>
+<script>
+let gameData = {
+name: '',
+pronouns: { subject: '', object: '', possessive: '' },
+appearance: '',
+toy: '',
+cat: '',
+dinosaur: '',
+snack: '',
+points: 0
+};
+let currentPage = 1;
+const totalPages = 6;
+let isReading = false;
+const storyPages = [
+{
+illustration: "🌅",
+text: "One bright morning, {name} woke up feeling ready for adventure. {subject} looked out the window and discovered {possessive} magical cat {cat} sitting beside an ancient, glowing tractor in the garden. The tractor shimmered with golden light, and {name} knew this would be the most extraordinary day ever."
+},
+{
+illustration: "😺",
+text: "{cat} meowed mysteriously and gracefully pointed {possessive} paw toward the enchanted tractor. Through gentle purrs and sparkling eyes, {cat} seemed to whisper, '{name}, this magical machine can transport us to any moment in time!' Excited, {name} carefully gathered {possessive} beloved {toy} and packed some delicious {snack} for their incredible journey."
+},
+{
+illustration: "🚜",
+text: "As {name} climbed aboard the mystical tractor with {cat} and {possessive} treasured {toy}, the ancient engine began radiating brilliant rainbow colors. The tractor hummed with magical energy, spinning faster and faster until suddenly they were whirling through a spectacular portal of swirling stardust and time itself!"
+},
+{
+illustration: "🌀",
+text: "The time-traveling tractor landed gracefully in a lush prehistoric valley filled with towering ferns and the most amazing sounds {name} had ever heard. {subject} gazed around in pure wonder—they had actually journeyed back to the age of dinosaurs! But then {name} noticed something troubling: a magnificent {dinosaur} was sitting alone, looking very sad."
+},
+{
+illustration: "🦕",
+text: "The gentle {dinosaur} had become separated from its family and didn't know how to find them again. {name} felt {possessive} compassionate heart overflow with kindness. 'Don't worry, I'll help you!' {name} declared warmly, offering to share some tasty {snack} with their new prehistoric friend. The {dinosaur}'s eyes lit up with hope and gratitude."
+},
+{
+illustration: "🏡",
+text: "Together with the magical tractor's help, {name} and {cat} searched throughout the beautiful valley until they joyfully reunited the {dinosaur} with its loving family. The dinosaur family was so grateful they performed a celebratory dance and gifted {name} a magnificent glowing crystal as thanks. With {cat} purring contentedly and {possessive} {toy} held safely, {name} climbed back aboard the time-traveling tractor, heart full of joy and ready to return home with the most amazing adventure story to share."
+}
+];
+function createParticles() {
+const container = document.getElementById('particles');
+for (let i = 0; i < 20; i++) {
+const particle = document.createElement('div');
+particle.className = 'particle';
+particle.style.left = Math.random() * 100 + '%';
+particle.style.animationDelay = Math.random() * 6 + 's';
+particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+container.appendChild(particle);
+}
+}
+function showScreen(screenId) {
+document.querySelectorAll('[id$="-screen"]').forEach(screen => {
+screen.classList.add('hidden');
+});
+document.getElementById(screenId).classList.remove('hidden');
+}
+function updatePoints(amount) {
+gameData.points += amount;
+document.getElementById('points-value').textContent = gameData.points;
+}
+function showPointsCounter() {
+document.getElementById('points-counter').classList.remove('hidden');
+}
+function hidePointsCounter() {
+document.getElementById('points-counter').classList.add('hidden');
+}
+function showConfetti() {
+const confettiContainer = document.createElement('div');
+confettiContainer.className = 'confetti';
+document.body.appendChild(confettiContainer);
+const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#c44569', '#f8b500'];
+const shapes = ['circle', 'square', 'triangle', 'star'];
+for (let i = 0; i < 80; i++) {
+const confettiPiece = document.createElement('div');
+confettiPiece.className = 'confetti-piece';
+const shape = shapes[Math.floor(Math.random() * shapes.length)];
+const color = colors[Math.floor(Math.random() * colors.length)];
+const size = 8 + Math.random() * 8;
+confettiPiece.style.left = Math.random() * 100 + '%';
+confettiPiece.style.width = size + 'px';
+confettiPiece.style.height = size + 'px';
+confettiPiece.style.animationDelay = Math.random() * 2 + 's';
+confettiPiece.style.animationDuration = (2 + Math.random() * 2) + 's';
+if (shape === 'circle') {
+confettiPiece.style.background = `radial-gradient(circle, ${color} 0%, ${color}AA 100%)`;
+confettiPiece.style.borderRadius = '50%';
+} else if (shape === 'square') {
+confettiPiece.style.background = `linear-gradient(45deg, ${color} 0%, ${color}CC 100%)`;
+confettiPiece.style.borderRadius = '2px';
+} else if (shape === 'triangle') {
+confettiPiece.style.background = 'transparent';
+confettiPiece.style.borderLeft = `${size/2}px solid transparent`;
+confettiPiece.style.borderRight = `${size/2}px solid transparent`;
+confettiPiece.style.borderBottom = `${size}px solid ${color}`;
+confettiPiece.style.width = '0';
+confettiPiece.style.height = '0';
+} else if (shape === 'star') {
+confettiPiece.innerHTML = '★';
+confettiPiece.style.color = color;
+confettiPiece.style.fontSize = size + 'px';
+confettiPiece.style.background = 'transparent';
+}
+confettiPiece.style.boxShadow = `0 0 ${size}px ${color}44`;
+confettiContainer.appendChild(confettiPiece);
+}
+setTimeout(() => {
+confettiContainer.style.animation = 'fadeOut 1s ease-out forwards';
+setTimeout(() => {
+if (document.body.contains(confettiContainer)) {
+document.body.removeChild(confettiContainer);
+}
+}, 1000);
+}, 4000);
+}
+function replacePlaceholders(text) {
+return text
+.replace(/{name}/g, gameData.name)
+.replace(/{subject}/g, gameData.pronouns.subject)
+.replace(/{object}/g, gameData.pronouns.object)
+.replace(/{possessive}/g, gameData.pronouns.possessive)
+.replace(/{toy}/g, gameData.toy)
+.replace(/{cat}/g, gameData.cat)
+.replace(/{dinosaur}/g, gameData.dinosaur)
+.replace(/{snack}/g, gameData.snack);
+}
+function updateStoryPage() {
+const page = storyPages[currentPage - 1];
+const illustrationEl = document.getElementById('story-illustration');
+const contentEl = document.getElementById('story-content');
+const illustrations = [
+{
+url: "https://readdy.ai/api/search-image?query=magical%20bright%20morning%20sunrise%20with%20golden%20light%20streaming%20through%20windows%2C%20a%20child%20looking%20out%20at%20an%20enchanted%20garden%20with%20a%20glowing%20ancient%20tractor%2C%20fantasy%20childrens%20book%20illustration%20style%20with%20warm%20colors%20and%20sparkles&width=400&height=400&seq=story1&orientation=squarish",
+alt: "Bright morning adventure begins"
+},
+{
+url: "https://readdy.ai/api/search-image?query=magical%20talking%20cat%20with%20sparkling%20eyes%20pointing%20toward%20an%20enchanted%20time-traveling%20tractor%2C%20whimsical%20fantasy%20illustration%20with%20mystical%20glow%20and%20rainbow%20colors%2C%20childrens%20book%20art%20style&width=400&height=400&seq=story2&orientation=squarish",
+alt: "Magical cat reveals the secret"
+},
+{
+url: "https://readdy.ai/api/search-image?query=time-traveling%20tractor%20radiating%20rainbow%20colors%20and%20magical%20energy%2C%20swirling%20portal%20of%20stardust%20and%20time%2C%20child%20and%20cat%20aboard%20magical%20vehicle%2C%20fantasy%20adventure%20illustration%20with%20brilliant%20colors&width=400&height=400&seq=story3&orientation=squarish",
+alt: "Journey through time begins"
+},
+{
+url: "https://readdy.ai/api/search-image?query=prehistoric%20valley%20with%20towering%20ferns%20and%20lush%20vegetation%2C%20magical%20time%20portal%20landing%20scene%2C%20beautiful%20ancient%20landscape%20with%20mystical%20atmosphere%2C%20childrens%20fantasy%20book%20illustration&width=400&height=400&seq=story4&orientation=squarish",
+alt: "Arrival in prehistoric times"
+},
+{
+url: "https://readdy.ai/api/search-image?query=gentle%20dinosaur%20looking%20sad%20and%20alone%20in%20a%20beautiful%20prehistoric%20valley%2C%20friendly%20child%20approaching%20with%20kindness%2C%20heartwarming%20scene%20with%20lush%20ancient%20plants%2C%20childrens%20book%20illustration%20style&width=400&height=400&seq=story5&orientation=squarish",
+alt: "Meeting the lonely dinosaur"
+},
+{
+url: "https://readdy.ai/api/search-image?query=happy%20dinosaur%20family%20reunion%20with%20joyful%20celebration%20dance%2C%20magical%20glowing%20crystal%20gift%2C%20child%20and%20cat%20watching%20with%20joy%2C%20beautiful%20prehistoric%20valley%20background%2C%20childrens%20fantasy%20illustration&width=400&height=400&seq=story6&orientation=squarish",
+alt: "Happy reunion and magical gift"
+}
+];
+const currentIllustration = illustrations[currentPage - 1];
+contentEl.classList.add('fade-out');
+setTimeout(() => {
+illustrationEl.innerHTML = `
+<div class="illustration-container relative">
+<div class="w-80 h-80 rounded-3xl shadow-xl relative overflow-hidden transition-all 300ms cubic-bezier(0.4, 0, 0.2, 1) hover:scale-105 hover:shadow-2xl">
+<img src="${currentIllustration.url}"
+alt="${currentIllustration.alt}"
+class="w-full h-full object-cover object-top rounded-3xl"
+style="filter: brightness(1.1) saturate(1.2) contrast(1.1);">
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/10 pointer-events-none rounded-3xl"></div>
+<div class="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity 300ms rounded-3xl"></div>
+</div>
+<div class="absolute -inset-8 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 rounded-full opacity-30 blur-2xl transition-opacity 300ms hover:opacity-50"></div>
+</div>
+`;
+const textEl = document.getElementById('story-text');
+textEl.innerHTML = '';
+const quill = document.createElement('div');
+quill.className = 'quill-writing';
+textEl.parentElement.appendChild(quill);
+const fullText = replacePlaceholders(page.text);
+animateTextWithQuill(textEl, fullText, quill);
+updatePageNavigation();
+updateProgressBar();
+contentEl.classList.remove('fade-out');
+}, 200);
+}
+function animateTextWithQuill(element, text, quill) {
+element.innerHTML = '';
+element.style.opacity = '0';
+element.style.color = '#FFFFFF';
+element.style.fontSize = window.innerWidth < 768 ? '18px' : '20px';
+element.style.lineHeight = '1.8';
+element.style.letterSpacing = '0.2px';
+element.style.fontFamily = "'Inter', sans-serif";
+element.style.fontWeight = '400';
+element.style.maxWidth = '100%';
+element.style.whiteSpace = 'normal';
+element.style.wordWrap = 'break-word';
+element.style.textShadow = 'none';
+element.textContent = text;
+setTimeout(() => {
+element.style.transition = 'opacity 0.5s ease-in-out';
+element.style.opacity = '1';
+}, 100);
+}
+function updatePageNavigation() {
+document.getElementById('current-page').textContent = currentPage;
+document.getElementById('prev-page').disabled = currentPage === 1;
+document.getElementById('next-page').disabled = currentPage === totalPages;
+if (currentPage === 1) {
+document.getElementById('prev-page').style.display = 'none';
+} else {
+document.getElementById('prev-page').style.display = 'flex';
+}
+if (currentPage === totalPages) {
+document.getElementById('next-page').classList.add('hidden');
+document.getElementById('finish-story').classList.remove('hidden');
+} else {
+document.getElementById('next-page').classList.remove('hidden');
+document.getElementById('finish-story').classList.add('hidden');
+}
+document.getElementById('adventure-summary').classList.add('hidden');
+}
+function updateProgressBar() {
+const progress = (currentPage / totalPages) * 100;
+document.getElementById('story-progress').style.width = progress + '%';
+}
+function showSummary() {
+const summaryGrid = document.getElementById('summary-grid');
+const summaryData = [
+{ label: 'Name', value: gameData.name, emoji: '👤' },
+{ label: 'Pronouns', value: `${gameData.pronouns.subject}/${gameData.pronouns.object}`, emoji: '💭' },
+{ label: 'Appearance', value: gameData.appearance, emoji: '✨' },
+{ label: 'Toy', value: gameData.toy, emoji: '🎮' },
+{ label: 'Cat', value: gameData.cat, emoji: '🐱' },
+{ label: 'Dinosaur', value: gameData.dinosaur, emoji: '🦕' },
+{ label: 'Snack', value: gameData.snack, emoji: '🍎' }
+];
+summaryGrid.innerHTML = summaryData.map(item => `
+<div class="glassmorphism rounded-2xl p-4 text-center">
+<div class="text-3xl mb-2">${item.emoji}</div>
+<div class="text-sm text-white/80 mb-1">${item.label}</div>
+<div class="text-white font-semibold">${item.value}</div>
+</div>
+`).join('');
+document.getElementById('adventure-summary').classList.remove('hidden');
+}
+function readAloud() {
+if ('speechSynthesis' in window) {
+const text = document.getElementById('story-text').textContent;
+const utterance = new SpeechSynthesisUtterance(text);
+utterance.rate = 0.85;
+utterance.pitch = 1.4;
+utterance.volume = 1.0;
+const voices = speechSynthesis.getVoices();
+const youngFemaleVoices = voices.filter(voice =>
+voice.lang.startsWith('en') &&
+(voice.name.toLowerCase().includes('samantha') ||
+voice.name.toLowerCase().includes('tessa') ||
+voice.name.toLowerCase().includes('zoe') ||
+voice.name.toLowerCase().includes('fiona') ||
+voice.name.toLowerCase().includes('alice') ||
+voice.name.toLowerCase().includes('emma') ||
+voice.name.toLowerCase().includes('chloe') ||
+voice.name.toLowerCase().includes('allison') ||
+voice.name.toLowerCase().includes('ava') ||
+voice.name.toLowerCase().includes('susan') ||
+voice.name.toLowerCase().includes('victoria') ||
+voice.name.toLowerCase().includes('karen') ||
+voice.name.toLowerCase().includes('female') ||
+voice.name.toLowerCase().includes('woman') ||
+(voice.localService === true && 
+ (voice.gender === 'female' || 
+  voice.name.toLowerCase().includes('female'))))
+);
+const guideFemaleVoices = voices.filter(voice =>
+voice.lang.startsWith('en') &&
+voice.localService === true &&
+(voice.name.toLowerCase().includes('samantha') ||
+voice.name.toLowerCase().includes('tessa') ||
+voice.name.toLowerCase().includes('zoe') ||
+voice.name.toLowerCase().includes('allison') ||
+voice.name.toLowerCase().includes('ava') ||
+voice.name.toLowerCase().includes('female'))
+);
+const narratorVoice = guideFemaleVoices.find(voice =>
+voice.name.toLowerCase().includes('samantha') ||
+voice.name.toLowerCase().includes('allison') ||
+voice.name.toLowerCase().includes('ava')
+) || guideFemaleVoices.find(voice =>
+voice.name.toLowerCase().includes('tessa') ||
+voice.name.toLowerCase().includes('zoe')
+) || guideFemaleVoices[0] || 
+youngFemaleVoices.find(voice => voice.localService === true) ||
+youngFemaleVoices[0] || 
+voices.find(voice => voice.lang.startsWith('en') && voice.name.toLowerCase().includes('female')) || 
+voices[0];
+if (narratorVoice) {
+utterance.voice = narratorVoice;
+}
+utterance.onstart = () => {
+isReading = true;
+document.getElementById('read-aloud').classList.add('hidden');
+document.getElementById('pause-reading').classList.remove('hidden');
+console.log(`Reading story with guide voice: ${narratorVoice ? narratorVoice.name : 'default'}`);
+};
+utterance.onend = () => {
+isReading = false;
+document.getElementById('read-aloud').classList.remove('hidden');
+document.getElementById('pause-reading').classList.add('hidden');
+};
+speechSynthesis.speak(utterance);
+}
+}
+function speakAssistantMessage(message) {
+if ('speechSynthesis' in window) {
+const cleanMessage = message.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '').trim();
+const utterance = new SpeechSynthesisUtterance(cleanMessage);
+utterance.rate = 0.9;
+utterance.pitch = 1.5;
+utterance.volume = 0.95;
+const voices = speechSynthesis.getVoices();
+const guideFemaleVoices = voices.filter(voice =>
+voice.lang.startsWith('en') &&
+voice.localService === true &&
+(voice.name.toLowerCase().includes('samantha') ||
+voice.name.toLowerCase().includes('allison') ||
+voice.name.toLowerCase().includes('ava') ||
+voice.name.toLowerCase().includes('tessa') ||
+voice.name.toLowerCase().includes('zoe') ||
+voice.name.toLowerCase().includes('fiona') ||
+voice.name.toLowerCase().includes('alice') ||
+voice.name.toLowerCase().includes('emma') ||
+voice.name.toLowerCase().includes('chloe') ||
+voice.name.toLowerCase().includes('susan') ||
+voice.name.toLowerCase().includes('victoria') ||
+voice.name.toLowerCase().includes('female'))
+);
+const youngFemaleVoices = voices.filter(voice =>
+voice.lang.startsWith('en') &&
+(voice.name.toLowerCase().includes('samantha') ||
+voice.name.toLowerCase().includes('allison') ||
+voice.name.toLowerCase().includes('ava') ||
+voice.name.toLowerCase().includes('tessa') ||
+voice.name.toLowerCase().includes('zoe') ||
+voice.name.toLowerCase().includes('fiona') ||
+voice.name.toLowerCase().includes('alice') ||
+voice.name.toLowerCase().includes('emma') ||
+voice.name.toLowerCase().includes('chloe') ||
+voice.name.toLowerCase().includes('female') ||
+voice.name.toLowerCase().includes('woman') ||
+(voice.localService === true && 
+ (voice.gender === 'female' || 
+  voice.name.toLowerCase().includes('female'))))
+);
+const bestGuideVoice = guideFemaleVoices.find(voice =>
+voice.name.toLowerCase().includes('samantha') ||
+voice.name.toLowerCase().includes('allison') ||
+voice.name.toLowerCase().includes('ava')
+) || guideFemaleVoices.find(voice =>
+voice.name.toLowerCase().includes('tessa') ||
+voice.name.toLowerCase().includes('zoe') ||
+voice.name.toLowerCase().includes('alice')
+) || guideFemaleVoices[0] ||
+youngFemaleVoices.find(voice => voice.localService === true) ||
+youngFemaleVoices[0] || 
+voices.find(voice => voice.lang.startsWith('en') && voice.name.toLowerCase().includes('female')) || 
+voices[0];
+if (bestGuideVoice) {
+utterance.voice = bestGuideVoice;
+}
+utterance.onstart = () => {
+console.log(`Using guide voice: ${bestGuideVoice ? bestGuideVoice.name : 'default'}`);
+};
+speechSynthesis.speak(utterance);
+}
+}
+function pauseReading() {
+if (speechSynthesis.speaking) {
+speechSynthesis.cancel();
+isReading = false;
+document.getElementById('read-aloud').classList.remove('hidden');
+document.getElementById('pause-reading').classList.add('hidden');
+}
+}
+function showAssistant(message) {
+const assistant = document.getElementById('assistant-helper');
+const messageEl = document.getElementById('assistant-message');
+const avatar = assistant.querySelector('.assistant-avatar');
+const bubble = assistant.querySelector('.assistant-bubble');
+messageEl.textContent = message;
+assistant.classList.remove('hidden');
+setTimeout(() => {
+avatar.style.transform = 'scale(1) rotate(5deg)';
+avatar.style.opacity = '1';
+}, 100);
+setTimeout(() => {
+bubble.style.transform = 'translateX(0)';
+bubble.style.opacity = '1';
+speakAssistantMessage(message);
+}, 400);
+}
+function hideAssistant() {
+const assistant = document.getElementById('assistant-helper');
+const avatar = assistant.querySelector('.assistant-avatar');
+const bubble = assistant.querySelector('.assistant-bubble');
+bubble.style.transform = 'translateX(20px)';
+bubble.style.opacity = '0';
+setTimeout(() => {
+avatar.style.transform = 'scale(0)';
+avatar.style.opacity = '0';
+}, 300);
+setTimeout(() => {
+assistant.classList.add('hidden');
+}, 800);
+}
+function updateAssistantMessage(message) {
+const messageEl = document.getElementById('assistant-message');
+const bubble = document.querySelector('.assistant-bubble');
+bubble.style.transform = 'translateX(10px) scale(0.95)';
+bubble.style.opacity = '0.7';
+setTimeout(() => {
+messageEl.textContent = message;
+bubble.style.transform = 'translateX(0) scale(1)';
+bubble.style.opacity = '1';
+speakAssistantMessage(message);
+}, 200);
+}
+function makeDraggable(element) {
+let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+element.onmousedown = dragMouseDown;
+function dragMouseDown(e) {
+e = e || window.event;
+e.preventDefault();
+pos3 = e.clientX;
+pos4 = e.clientY;
+document.onmouseup = closeDragElement;
+document.onmousemove = elementDrag;
+}
+function elementDrag(e) {
+e = e || window.event;
+e.preventDefault();
+pos1 = pos3 - e.clientX;
+pos2 = pos4 - e.clientY;
+pos3 = e.clientX;
+pos4 = e.clientY;
+element.style.top = (element.offsetTop - pos2) + "px";
+element.style.left = (element.offsetLeft - pos1) + "px";
+}
+function closeDragElement() {
+document.onmouseup = null;
+document.onmousemove = null;
+}
+}
+document.addEventListener('DOMContentLoaded', function() {
+createParticles();
+if ('speechSynthesis' in window) {
+speechSynthesis.getVoices();
+window.speechSynthesis.onvoiceschanged = () => {
+const voices = speechSynthesis.getVoices();
+console.log('Available voices loaded:', voices.length);
+};
+}
+document.getElementById('start-btn').addEventListener('click', function() {
+showScreen('name-screen');
+showPointsCounter();
+});
+document.getElementById('close-modal').addEventListener('click', function() {
+document.getElementById('feedback-modal').classList.add('hidden');
+document.body.style.overflow = '';
+});
+document.getElementById('feedback-modal').addEventListener('click', function(e) {
+if (e.target === this) {
+document.getElementById('feedback-modal').classList.add('hidden');
+document.body.style.overflow = '';
+}
+});
+document.getElementById('name-next').addEventListener('click', function() {
+const name = document.getElementById('name-input').value.trim();
+if (name) {
+gameData.name = name;
+updatePoints(10);
+const welcomeMsg = document.getElementById('welcome-message');
+welcomeMsg.textContent = `Welcome, ${name}!`;
+welcomeMsg.classList.remove('hidden');
+showAssistant(`Hi ${name}! 🎉 What a magical name! I'm Quilly, your writing buddy! Let's pick your pronouns next! ✨`);
+setTimeout(() => {
+showScreen('pronoun-screen');
+updateAssistantMessage("Great! Now choose the pronouns that feel right for you! 😊");
+}, 1500);
+}
+});
+document.querySelectorAll('.pronoun-card').forEach(card => {
+card.addEventListener('click', function() {
+const pronouns = this.dataset.pronouns.split(',');
+gameData.pronouns = {
+subject: pronouns[0],
+object: pronouns[1],
+possessive: pronouns[2]
+};
+updatePoints(10);
+updateAssistantMessage("Perfect choice! 🌈 Now let's discover what kind of adventurer you are!");
+setTimeout(() => {
+showScreen('appearance-screen');
+}, 1000);
+});
+});
+document.querySelectorAll('.appearance-card').forEach(card => {
+card.addEventListener('click', function() {
+gameData.appearance = this.dataset.appearance;
+updatePoints(10);
+updateAssistantMessage("Wow! You're going to be an amazing adventurer! 🚀 What companion will you bring?");
+setTimeout(() => {
+showScreen('toy-screen');
+}, 1000);
+});
+});
+document.querySelectorAll('.toy-card').forEach(card => {
+card.addEventListener('click', function() {
+gameData.toy = this.dataset.toy;
+updatePoints(10);
+updateAssistantMessage("Excellent choice! 🎮 Now meet your magical cat friend!");
+setTimeout(() => {
+showScreen('cat-screen');
+}, 1000);
+});
+});
+document.querySelectorAll('.cat-card').forEach(card => {
+card.addEventListener('click', function() {
+gameData.cat = this.dataset.cat;
+updatePoints(10);
+updateAssistantMessage("What a wonderful cat friend! 🐱 Which dinosaur will you help on your journey?");
+setTimeout(() => {
+showScreen('dinosaur-screen');
+}, 1000);
+});
+});
+document.querySelectorAll('.dinosaur-card').forEach(card => {
+card.addEventListener('click', function() {
+gameData.dinosaur = this.dataset.dinosaur;
+updatePoints(10);
+updateAssistantMessage("Perfect! 🦕 One last thing - pick your favorite adventure snack!");
+setTimeout(() => {
+showScreen('snack-screen');
+}, 1000);
+});
+});
+document.querySelectorAll('.snack-card').forEach(card => {
+card.addEventListener('click', function() {
+gameData.snack = this.dataset.snack;
+updatePoints(10);
+updateAssistantMessage(`Amazing, ${gameData.name}! 🎉 Your adventure is ready to begin! Enjoy your magical journey! ✨`);
+setTimeout(() => {
+hideAssistant();
+hidePointsCounter();
+showScreen('story-screen');
+document.getElementById('final-points').textContent = gameData.points;
+makeDraggable(document.getElementById('adventure-points'));
+updateStoryPage();
+showConfetti();
+}, 2000);
+});
+});
+document.getElementById('prev-page').addEventListener('click', function() {
+if (currentPage > 1) {
+currentPage--;
+updateStoryPage();
+if (isReading) pauseReading();
+}
+});
+document.getElementById('next-page').addEventListener('click', function() {
+if (currentPage < totalPages) {
+currentPage++;
+updateStoryPage();
+if (isReading) pauseReading();
+}
+});
+document.getElementById('finish-story').addEventListener('click', function(e) {
+e.preventDefault();
+showSummary();
+showConfetti();
+setTimeout(() => {
+window.location.href = 'https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/9b79325f-7daf-4c39-8ce3-ceb154d22e63';
+}, 2000);
+});
+document.getElementById('read-aloud').addEventListener('click', readAloud);
+document.getElementById('pause-reading').addEventListener('click', pauseReading);
+document.getElementById('home-page-btn').addEventListener('click', function() {
+window.open('https://metimestories.com', '_blank');
+});
+document.getElementById('sign-up-btn').addEventListener('click', function() {
+window.open('https://metimestories.com/signup', '_blank');
+});
+document.getElementById('story-home-btn').addEventListener('click', function() {
+if (confirm('Are you sure you want to return to the home page? Your progress will be lost.')) {
+location.reload();
+}
+});
+});
+</script>
+</body>
+</html>

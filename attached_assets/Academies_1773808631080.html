@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YPG5QH8VNQ"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-YPG5QH8VNQ');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MeTime Stories - Mental Training for Elite Athletes</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#1e3a8a',
+secondary: '#3b82f6'
+},
+borderRadius: {
+'none': '0px',
+'sm': '4px',
+DEFAULT: '12px',
+'md': '16px',
+'lg': '20px',
+'xl': '24px',
+'2xl': '32px',
+'3xl': '40px',
+'full': '9999px',
+'button': '12px'
+},
+screens: {
+'xs': '375px',
+'sm': '640px',
+'md': '768px',
+'lg': '1024px',
+'xl': '1280px',
+'2xl': '1536px'
+}
+}
+}
+}
+</script>
+<style>
+:where([class^="ri-"])::before {
+content: "\f3c2";
+}
+body {
+font-family: 'Inter', sans-serif;
+}
+@keyframes fadeInUp {
+from {
+opacity: 0;
+transform: translateY(30px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+.animate-on-scroll {
+opacity: 0;
+transform: translateY(30px);
+transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.animate-on-scroll.animated {
+opacity: 1;
+transform: translateY(0);
+}
+.gradient-bg-1 {
+background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+.gradient-bg-2 {
+background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+}
+.modern-card {
+background: rgba(255, 255, 255, 0.95);
+backdrop-filter: blur(10px);
+border: 1px solid rgba(255, 255, 255, 0.2);
+box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.modern-card:hover {
+transform: translateY(-8px);
+box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+.heading-bold {
+font-weight: 800;
+letter-spacing: -0.02em;
+line-height: 1.1;
+}
+@media (max-width: 768px) {
+.tap-target {
+min-height: 48px;
+min-width: 48px;
+touch-action: manipulation;
+-webkit-tap-highlight-color: rgba(59, 130, 246, 0.3);
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+user-select: none;
+}
+.mobile-card {
+transform: translateZ(0);
+backface-visibility: hidden;
+perspective: 1000px;
+transition: all 0.2s ease-out;
+}
+.mobile-card:active {
+transform: scale(0.98);
+}
+.mobile-heading {
+font-size: clamp(1.75rem, 5vw, 2.5rem);
+line-height: 1.2;
+letter-spacing: -0.025em;
+}
+.mobile-subheading {
+font-size: clamp(1.125rem, 3.5vw, 1.25rem);
+line-height: 1.4;
+}
+.swipe-indicator {
+position: absolute;
+bottom: -20px;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+gap: 8px;
+}
+.swipe-dot {
+width: 8px;
+height: 8px;
+border-radius: 50%;
+background: rgba(0, 0, 0, 0.3);
+transition: all 0.3s ease;
+}
+.swipe-dot.active {
+background: #3b82f6;
+transform: scale(1.2);
+}
+.mobile-text {
+line-height: 1.6;
+letter-spacing: 0.01em;
+}
+.slide-in-left {
+animation: slideInLeft 0.3s ease-out;
+}
+.slide-in-right {
+animation: slideInRight 0.3s ease-out;
+}
+@keyframes slideInLeft {
+from {
+opacity: 0;
+transform: translateX(-100%);
+}
+to {
+opacity: 1;
+transform: translateX(0);
+}
+}
+@keyframes slideInRight {
+from {
+opacity: 0;
+transform: translateX(100%);
+}
+to {
+opacity: 1;
+transform: translateX(0);
+}
+}
+.collapsible-content {
+max-height: 0;
+overflow: hidden;
+transition: max-height 0.3s ease-out;
+}
+.collapsible-content.expanded {
+max-height: 1000px;
+}
+.touch-feedback:active {
+background-color: rgba(59, 130, 246, 0.1);
+transform: scale(0.98);
+}
+.mobile-section {
+padding: 1.5rem 1rem;
+}
+.mobile-gap {
+gap: 0.75rem;
+}
+.mobile-input {
+font-size: 16px;
+padding: 0.875rem;
+border-radius: 0.75rem;
+-webkit-appearance: none;
+appearance: none;
+}
+.mobile-card-stack {
+display: flex;
+flex-direction: column;
+gap: 0.75rem;
+}
+}
+.swipeable {
+touch-action: pan-y pinch-zoom;
+overflow-x: hidden;
+}
+.swipe-container {
+display: flex;
+transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.swipe-item {
+flex: 0 0 100%;
+}
+.skeleton {
+background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+background-size: 200% 100%;
+animation: skeleton-loading 1.5s infinite;
+}
+@keyframes skeleton-loading {
+0% {
+background-position: 200% 0;
+}
+100% {
+background-position: -200% 0;
+}
+}
+.mobile-button {
+position: relative;
+overflow: hidden;
+}
+.mobile-button::after {
+content: '';
+position: absolute;
+top: 50%;
+left: 50%;
+width: 0;
+height: 0;
+border-radius: 50%;
+background: rgba(255, 255, 255, 0.3);
+transition: width 0.3s, height 0.3s, top 0.3s, left 0.3s;
+transform: translate(-50%, -50%);
+}
+.mobile-button:active::after {
+width: 300px;
+height: 300px;
+top: 50%;
+left: 50%;
+}
+.solution-pillars .pillar-item {
+opacity: 0;
+transform: translateX(32px);
+transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.solution-pillars .pillar-item.animated {
+opacity: 1;
+transform: translateX(0);
+}
+.pillar-icon-container:hover .pillar-glow {
+opacity: 1;
+}
+.pillar-icon-container:hover .pillar-pulse {
+transform: scale(1.5);
+opacity: 0.7;
+}
+.pillar-icon-container:hover .pillar-icon {
+transform: scale(1.1);
+}
+@keyframes stadiumLight1 {
+0%, 100% {
+transform: translate(-20px, -20px) scale(1);
+opacity: 0.3;
+}
+50% {
+transform: translate(20px, 20px) scale(1.2);
+opacity: 0.6;
+}
+}
+.typewriter-text {
+border-right: 2px solid transparent;
+display: inline-block;
+animation: fadeInText 0.8s ease-out 0.6s forwards;
+}
+.typewriter-cursor {
+color: #3b82f6;
+font-weight: 300;
+animation: blink 1.5s infinite;
+}
+@keyframes fadeInText {
+from {
+opacity: 0;
+transform: translateY(10px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+@keyframes blink {
+0%, 50% { opacity: 1; }
+51%, 100% { opacity: 0; }
+}
+@keyframes typewriter {
+from { width: 0; }
+to { width: 100%; }
+}
+.text-gradient-flow {
+background: linear-gradient(90deg, #6b7280, #1f2937, #3b82f6, #1f2937, #6b7280);
+background-size: 300% 100%;
+background-clip: text;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+animation: gradientFlow 4s ease-in-out infinite;
+}
+@keyframes gradientFlow {
+0%, 100% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+}
+@keyframes stadiumLight2 {
+0%, 100% {
+transform: translate(-10px, -10px) scale(1.1);
+opacity: 0.2;
+}
+50% {
+transform: translate(30px, 15px) scale(0.9);
+opacity: 0.5;
+}
+}
+@keyframes stadiumLight3 {
+0%, 100% {
+transform: translate(0px, 0px) scale(0.8);
+opacity: 0.25;
+}
+50% {
+transform: translate(-25px, -15px) scale(1.3);
+opacity: 0.4;
+}
+}
+.stadium-light-1 {
+animation: stadiumLight1 8s ease-in-out infinite;
+}
+.stadium-light-2 {
+animation: stadiumLight2 12s ease-in-out infinite;
+animation-delay: -2s;
+}
+.stadium-light-3 {
+animation: stadiumLight3 10s ease-in-out infinite;
+animation-delay: -4s;
+}
+</style>
+</head>
+<body class="bg-white text-gray-900">
+<nav class="bg-white/95 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+<div class="max-w-6xl mx-auto px-4 sm:px-6">
+<div class="flex justify-between items-center h-16">
+<div class="flex items-center space-x-3">
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/f4bcb585-ab47-4ff8-924f-358f0740a159" data-readdy="true" class="tap-target">
+<div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg">
+<i class="ri-brain-line text-white text-xl"></i>
+</div>
+</a>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/f4bcb585-ab47-4ff8-924f-358f0740a159" data-readdy="true" class="font-['Pacifico'] text-lg text-gray-900 hover:text-primary transition-colors heading-bold tap-target">MeTime Stories</a>
+</div>
+<button id="mobile-menu-btn" class="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors tap-target">
+<i class="ri-menu-line text-gray-600 text-xl"></i>
+</button>
+<div class="hidden md:flex items-center space-x-6">
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/f4bcb585-ab47-4ff8-924f-358f0740a159" data-readdy="true" class="text-sm text-gray-600 hover:text-gray-900 transition-colors cursor-pointer">Home</a>
+<a href="#solution" class="text-sm text-gray-600 hover:text-gray-900 transition-colors cursor-pointer">Solution</a>
+<a href="#benefits" class="text-sm text-gray-600 hover:text-gray-900 transition-colors cursor-pointer">Benefits</a>
+<button class="bg-primary text-white px-4 py-2 text-sm !rounded-button hover:bg-blue-700 transition-colors whitespace-nowrap font-medium cursor-pointer" onclick="document.querySelector('#enquiry-form').scrollIntoView({behavior: 'smooth', block: 'start'})">
+Send Enquiry
+</button>
+</div>
+</div>
+<div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white/95 backdrop-blur-md">
+<div class="px-4 py-4 space-y-2">
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/f4bcb585-ab47-4ff8-924f-358f0740a159" data-readdy="true" class="block text-base text-gray-600 hover:text-gray-900 transition-colors py-3 tap-target touch-feedback rounded-lg px-3 mobile-text font-medium cursor-pointer">Home</a>
+<a href="#solution" class="block text-base text-gray-600 hover:text-gray-900 transition-colors py-3 mobile-nav-link tap-target touch-feedback rounded-lg px-3 mobile-text font-medium cursor-pointer">Solution</a>
+<a href="#benefits" class="block text-base text-gray-600 hover:text-gray-900 transition-colors py-3 mobile-nav-link tap-target touch-feedback rounded-lg px-3 mobile-text font-medium cursor-pointer">Benefits</a>
+<button class="w-full bg-primary text-white px-4 py-4 text-base !rounded-button hover:bg-blue-700 transition-colors font-medium mt-4 tap-target mobile-button cursor-pointer" onclick="document.querySelector('#enquiry-form').scrollIntoView({behavior: 'smooth', block: 'start'}); document.getElementById('mobile-menu').classList.add('hidden');">
+Send Enquiry
+</button>
+</div>
+</div>
+</nav>
+<section class="py-12 sm:py-16 relative overflow-hidden min-h-screen flex items-center">
+<div class="absolute inset-0 z-0 gradient-bg-1">
+<div class="absolute inset-0 opacity-15">
+<img src="https://readdy.ai/api/search-image?query=stunning%20aerial%20view%20of%20La%20Masia%20Barcelona%20football%20academy%20training%20facilities%20at%20golden%20hour%2C%20multiple%20pristine%20grass%20football%20pitches%20arranged%20in%20geometric%20patterns%2C%20modern%20Spanish%20architecture%20buildings%2C%20professional%20sports%20photography%2C%20warm%20lighting%2C%20symmetrical%20layout%20of%20training%20fields%2C%20world-class%20academy%20complex%20with%20beautiful%20landscaping%2C%20pathways%20connecting%20multiple%20training%20grounds%2C%20elite%20football%20development%20center%20design&width=1920&height=1080&seq=hero-lamasia-bg&orientation=landscape"
+alt="Elite Football Academy Training Facilities Background"
+class="w-full h-full object-cover object-center">
+</div>
+<div class="absolute top-20 left-10 w-64 h-64 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-full blur-3xl animate-pulse"></div>
+<div class="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-green-400/10 to-blue-400/10 rounded-full blur-2xl animate-pulse" style="animation-delay: 2s;"></div>
+</div>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 text-center relative z-10 animate-on-scroll">
+<div class="flex flex-col items-center mb-8">
+<div class="inline-flex items-center bg-gradient-to-r from-primary/10 to-secondary/10 backdrop-blur-sm border border-primary/20 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-on-scroll tap-target" style="animation-delay: 0.2s;">
+<i class="ri-trophy-line mr-2 w-4 h-4 flex items-center justify-center text-sm"></i>
+<span class="block sm:hidden">Elite Mental Training</span>
+<span class="hidden sm:inline">Elite Mental Performance Training</span>
+</div>
+<h1 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl heading-bold text-gray-900 leading-tight text-center mb-4 animate-on-scroll px-4 sm:px-2" style="animation-delay: 0.4s;">
+Mental Training for<br>
+<span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Elite Athletes</span>
+</h1>
+</div>
+<style>
+.professional-hero-title {
+font-weight: 800;
+letter-spacing: -0.025em;
+text-rendering: optimizeLegibility;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+animation: fadeInUp 0.8s ease-out forwards;
+opacity: 0;
+transform: translateY(30px);
+}
+@keyframes fadeInUp {
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+.professional-hero-title:hover {
+transform: translateY(-2px);
+transition: transform 0.3s ease;
+}
+</style>
+<p class="text-lg sm:text-xl text-gray-600 mb-6 max-w-3xl mx-auto px-4 sm:px-0 leading-relaxed animate-on-scroll" style="animation-delay: 0.6s;">Your story, your journey: hyper-personalised experiences that strengthen resilience, sharpen focus, and ignite a champion's mindset in Academy Players</p>
+<div class="flex flex-col gap-3 sm:flex-row sm:gap-4 justify-center mb-12 px-4 sm:px-0 animate-on-scroll" style="animation-delay: 0.8s;">
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/9d1d3da4-a2fe-4550-895f-13a5c43ba635" data-readdy="true" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 text-base !rounded-button font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 whitespace-nowrap inline-flex items-center justify-center tap-target mobile-button animate-pulse cursor-pointer" style="animation-delay: 0s; animation-duration: 3s;">
+<i class="ri-football-line mr-2 w-5 h-5 flex items-center justify-center"></i>
+<span class="block sm:hidden">Matrix (Soccer)</span>
+<span class="hidden sm:inline">Story Matrix (Soccer)</span>
+</a>
+<button class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 text-base !rounded-button font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 whitespace-nowrap inline-flex items-center justify-center tap-target mobile-button animate-pulse cursor-pointer" style="animation-delay: 1s; animation-duration: 3s;" onclick="document.querySelector('#flipbook-modal').classList.remove('hidden'); document.querySelector('#flipbook-modal').style.opacity = '0'; setTimeout(() => { document.querySelector('#flipbook-modal').style.opacity = '1'; }, 10);">
+<i class="ri-book-open-line mr-2 w-5 h-5 flex items-center justify-center"></i>
+<span class="block sm:hidden">Sample Story</span>
+<span class="hidden sm:inline">Read Sample Story</span>
+</button>
+<button class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-4 text-base !rounded-button font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 whitespace-nowrap tap-target mobile-button animate-pulse cursor-pointer" style="animation-delay: 2s; animation-duration: 3s;" onclick="document.querySelector('#enquiry-form').scrollIntoView({behavior: 'smooth', block: 'center'})">
+Get Started Today
+<i class="ri-arrow-right-line ml-2 w-5 h-5 flex items-center justify-center"></i>
+</button>
+</div>
+<div class="relative max-w-5xl mx-auto animate-on-scroll" style="animation-delay: 1s;">
+<div class="bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-2xl p-4 sm:p-6 shadow-2xl border border-white/5 backdrop-blur-sm">
+<div class="relative bg-gradient-to-br from-gray-700 via-gray-600 to-gray-800 rounded-xl p-3 sm:p-4 shadow-inner border border-gray-500/30">
+<div class="absolute inset-2 bg-gradient-to-t from-transparent via-white/5 to-white/10 rounded-lg pointer-events-none"></div>
+<div class="relative bg-black rounded-lg overflow-hidden shadow-2xl border-2 border-gray-500/50 backdrop-blur-sm">
+<div class="absolute inset-0 bg-gradient-to-t from-blue-600/25 via-transparent to-cyan-400/15 opacity-40 pointer-events-none"></div>
+<div class="absolute inset-0 bg-gradient-to-br from-transparent via-purple-500/10 to-blue-500/15 opacity-30 pointer-events-none"></div>
+<div class="absolute top-0 left-0 right-0 h-1/3 bg-gradient-to-b from-white/10 to-transparent opacity-20 pointer-events-none"></div>
+<div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 pointer-events-none rounded-lg"></div>
+<div style="position: relative; width: 100%; height: 0; padding-top: 100.0000%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;" class="relative z-10 rounded-lg">
+<iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0; margin: 0;"
+src="https://www.canva.com/design/DAG0v1pRV58/F9zetjrwUlpdl-8aeAKmIg/watch?embed&autoplay=0&quality=720p"
+allowfullscreen="allowfullscreen"
+allow="fullscreen; accelerometer; gyroscope; picture-in-picture"
+sandbox="allow-scripts allow-same-origin allow-presentation"
+referrerpolicy="strict-origin-when-cross-origin"
+title="MeTime Stories Football Demo Video">
+</iframe>
+</div>
+<div class="text-center mt-3">
+<a href="https://www.canva.com/design/DAG0v1pRV58/F9zetjrwUlpdl-8aeAKmIg/watch?utm_content=DAG0v1pRV58&utm_campaign=designshare&utm_medium=embeds&utm_source=link" target="_blank" rel="noopener" class="text-xs text-gray-400 hover:text-gray-600 transition-colors cursor-pointer">MTS Football Story Matrix by Awwa Stories</a>
+</div>
+</div>
+</div>
+<div class="flex flex-col xs:flex-row xs:items-center xs:justify-between mt-4 px-2 sm:px-3 space-y-2 xs:space-y-0 relative z-10">
+<div class="flex items-center space-x-2 sm:space-x-3">
+<div class="relative">
+<div class="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/50"></div>
+<div class="absolute inset-0 w-3 h-3 bg-red-400 rounded-full animate-ping opacity-75"></div>
+</div>
+<span class="text-gray-300 text-sm font-semibold tracking-wide">LIVE PREVIEW</span>
+<div class="hidden sm:block w-1 h-1 bg-gray-500 rounded-full"></div>
+<span class="hidden sm:inline text-gray-400 text-xs font-medium">HD QUALITY</span>
+</div>
+<div class="flex items-center space-x-2 text-gray-400">
+<div class="w-6 h-6 bg-gray-700/50 rounded-lg flex items-center justify-center backdrop-blur-sm border border-gray-600/30">
+<i class="ri-movie-line text-gray-300 text-sm"></i>
+</div>
+<span class="text-sm font-medium truncate">Academy Mental Training Demo</span>
+<div class="hidden lg:flex items-center space-x-1 text-xs text-gray-500">
+<i class="ri-time-line w-3 h-3"></i>
+<span>0.58</span>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute -inset-4 bg-gradient-to-r from-blue-600/20 via-purple-600/10 to-blue-600/20 rounded-3xl blur-xl -z-10 opacity-60"></div>
+<div class="absolute -inset-8 bg-gradient-to-r from-transparent via-blue-500/5 to-transparent rounded-3xl blur-2xl -z-20"></div>
+</div>
+</div>
+</section>
+<section class="py-12 sm:py-16 relative overflow-hidden min-h-screen">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-800 to-gray-900" style="opacity: 0.9;"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/25"></div>
+<div class="absolute inset-0 opacity-20">
+<div class="absolute -top-20 -left-20 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
+<div class="absolute -top-10 -right-10 w-64 h-64 bg-gradient-to-br from-cyan-300/15 to-transparent rounded-full blur-2xl animate-pulse" style="animation-delay: 2s;"></div>
+<div class="absolute -bottom-20 left-1/3 w-48 h-48 bg-gradient-to-br from-blue-200/10 to-transparent rounded-full blur-xl animate-pulse" style="animation-delay: 4s;"></div>
+</div>
+<div class="absolute inset-0 opacity-5">
+<img src="https://readdy.ai/api/search-image?query=aerial%20view%20of%20La%20Masia%20Barcelona%20football%20academy%20training%20facilities%20at%20dawn%2C%20multiple%20pristine%20grass%20football%20pitches%20arranged%20in%20geometric%20patterns%2C%20modern%20Spanish%20architecture%20buildings%2C%20professional%20sports%20photography%2C%20golden%20hour%20lighting%2C%20symmetrical%20layout%2C%20world-class%20training%20complex%2C%20beautiful%20landscaping%20with%20trees%2C%20pathways%20connecting%20training%20fields%2C%20elite%20football%20academy%20design&width=1920&height=1080&seq=lamasia-bg-pattern&orientation=landscape"
+alt="La Masia Training Ground Background"
+class="w-full h-full object-cover object-center">
+</div>
+</div>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+<div class="text-center mb-12 animate-on-scroll">
+<div class="inline-flex items-center bg-red-500/20 text-red-300 px-3 py-2 rounded-full text-sm font-medium mb-4 backdrop-blur-sm border border-red-500/30">
+<i class="ri-error-warning-line mr-2 w-4 h-4 flex items-center justify-center"></i>
+The Reality Check
+</div>
+<h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 drop-shadow-lg">The Mental Performance Wall</h2>
+<p class="text-lg sm:text-xl text-blue-200 drop-shadow-sm max-w-3xl mx-auto">Three critical barriers blocking athletic potential</p>
+</div>
+<div class="grid md:grid-cols-3 gap-4 mb-10">
+<div class="group cursor-pointer animate-on-scroll relative overflow-hidden" style="animation-delay: 0.1s;">
+<div class="relative bg-gradient-to-br from-white/8 via-white/5 to-white/3 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:border-red-400/30 transition-all duration-700 hover:shadow-2xl hover:shadow-red-500/10 hover:-translate-y-2">
+<div class="absolute inset-0 opacity-20">
+<div class="absolute top-4 right-6 w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+<div class="absolute bottom-6 left-4 w-1 h-1 bg-red-300 rounded-full animate-bounce" style="animation-delay: 0.5s;"></div>
+<div class="absolute top-1/2 left-1/2 w-3 h-3 bg-red-200/40 rounded-full animate-pulse" style="animation-delay: 1s;"></div>
+</div>
+<div class="relative mb-5">
+<div class="w-14 h-14 mx-auto bg-gradient-to-br from-red-500/20 via-red-400/15 to-red-600/20 rounded-xl backdrop-blur-sm border border-red-400/20 flex items-center justify-center transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg shadow-red-500/20">
+<i class="ri-user-heart-line text-red-300 text-xl group-hover:text-red-100 transition-colors duration-300"></i>
+</div>
+<div class="absolute inset-0 rounded-xl border-2 border-red-400/30 opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-500"></div>
+</div>
+<div class="relative z-10">
+<h3 class="text-lg font-bold text-white mb-3 group-hover:text-red-200 transition-colors duration-300 tracking-tight">Social Pressure</h3>
+<p class="text-blue-100/90 text-sm leading-relaxed group-hover:text-white transition-colors duration-300 font-light">Performance anxiety and external expectations create mental blocks that limit natural ability. Whether it be family, friends or peers, being strong-minded and disciplined makes the difference.</p>
+<div class="mt-4 text-xs text-red-300/70 font-medium uppercase tracking-wider">Mental Barrier #1</div>
+</div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-red-600/5 via-transparent to-red-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-red-500/0 via-red-400/20 to-red-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl -z-10"></div>
+</div>
+</div>
+<div class="group cursor-pointer animate-on-scroll relative overflow-hidden" style="animation-delay: 0.3s;">
+<div class="relative bg-gradient-to-br from-white/8 via-white/5 to-white/3 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:border-amber-400/30 transition-all duration-700 hover:shadow-2xl hover:shadow-amber-500/10 hover:-translate-y-2">
+<div class="absolute inset-0 opacity-20">
+<div class="absolute top-8 left-4 w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
+<div class="absolute bottom-4 right-6 w-1 h-1 bg-amber-300 rounded-full animate-bounce" style="animation-delay: 0.7s;"></div>
+<div class="absolute top-1/3 right-1/3 w-3 h-3 bg-amber-200/40 rounded-full animate-pulse" style="animation-delay: 1.2s;"></div>
+</div>
+<div class="relative mb-5">
+<div class="w-14 h-14 mx-auto bg-gradient-to-br from-amber-500/20 via-amber-400/15 to-orange-600/20 rounded-xl backdrop-blur-sm border border-amber-400/20 flex items-center justify-center transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg shadow-amber-500/20">
+<i class="ri-brain-line text-amber-300 text-xl group-hover:text-amber-100 transition-colors duration-300"></i>
+</div>
+<div class="absolute inset-0 rounded-xl border-2 border-amber-400/30 opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-500"></div>
+</div>
+<div class="relative z-10">
+<h3 class="text-lg font-bold text-white mb-3 group-hover:text-amber-200 transition-colors duration-300 tracking-tight">Mental Gaps</h3>
+<p class="text-blue-100/90 text-sm leading-relaxed group-hover:text-white transition-colors duration-300 font-light">Without structured mental training, even talented athletes falter in decisive moments. We provide the framework to build resilience, focus, and composure when it matters most.</p>
+<div class="mt-4 text-xs text-amber-300/70 font-medium uppercase tracking-wider">Mental Barrier #2</div>
+</div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-600/5 via-transparent to-orange-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-amber-500/0 via-amber-400/20 to-orange-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl -z-10"></div>
+</div>
+</div>
+<div class="group cursor-pointer animate-on-scroll relative overflow-hidden" style="animation-delay: 0.5s;">
+<div class="relative bg-gradient-to-br from-white/8 via-white/5 to-white/3 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:border-cyan-400/30 transition-all duration-700 hover:shadow-2xl hover:shadow-cyan-500/10 hover:-translate-y-2">
+<div class="absolute inset-0 opacity-20">
+<div class="absolute top-6 right-4 w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+<div class="absolute bottom-8 left-6 w-1 h-1 bg-cyan-300 rounded-full animate-bounce" style="animation-delay: 0.3s;"></div>
+<div class="absolute top-2/3 left-1/4 w-3 h-3 bg-cyan-200/40 rounded-full animate-pulse" style="animation-delay: 0.8s;"></div>
+</div>
+<div class="relative mb-5">
+<div class="w-14 h-14 mx-auto bg-gradient-to-br from-cyan-500/20 via-blue-400/15 to-cyan-600/20 rounded-xl backdrop-blur-sm border border-cyan-400/20 flex items-center justify-center transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-lg shadow-cyan-500/20">
+<i class="ri-line-chart-line text-cyan-300 text-xl group-hover:text-cyan-100 transition-colors duration-300"></i>
+</div>
+<div class="absolute inset-0 rounded-xl border-2 border-cyan-400/30 opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-500"></div>
+</div>
+<div class="relative z-10">
+<h3 class="text-lg font-bold text-white mb-3 group-hover:text-cyan-200 transition-colors duration-300 tracking-tight">Inconsistency</h3>
+<p class="text-blue-100/90 text-sm leading-relaxed group-hover:text-white transition-colors duration-300 font-light">Without systematic development, mental strength remains unpredictable. Building systems and infrastructure to maintain acquired tools is key to sustained athletic development.</p>
+<div class="mt-4 text-xs text-cyan-300/70 font-medium uppercase tracking-wider">Mental Barrier #3</div>
+</div>
+<div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-600/5 via-transparent to-blue-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-cyan-500/0 via-cyan-400/20 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl -z-10"></div>
+</div>
+</div>
+</div>
+<div class="text-center mb-3 animate-on-scroll">
+<div class="relative inline-block">
+<div class="absolute inset-0 bg-gradient-to-r from-red-900/50 via-red-800/30 to-red-900/50 rounded-lg blur-md"></div>
+<div class="relative bg-black/40 backdrop-blur-xl border border-white/10 rounded-lg px-3 py-3">
+<div class="inline-flex items-center bg-red-500/20 text-red-300 px-2 py-1 rounded-full text-xs font-medium mb-2 backdrop-blur-sm border border-red-500/30">
+<i class="ri-error-warning-line mr-1 w-2 h-2 flex items-center justify-center"></i>
+Industry Reality Check
+</div>
+<div class="text-lg sm:text-xl font-bold text-white mb-1 tracking-tight">
+<span id="animated-counter">0.5</span><span class="text-base">%</span>
+</div>
+<h3 class="text-xs font-bold text-red-300 mb-1">Academy Success Rate</h3>
+<p class="text-xs text-blue-200 leading-relaxed max-w-xs mx-auto">Only 0.5% of Academy players ever sign a Professional contract. Every increase means more dreams realised and better ROI margins.</p>
+</div>
+</div>
+</div>
+<div class="max-w-4xl mx-auto animate-on-scroll">
+<div class="text-center mb-10">
+<h3 class="text-2xl font-bold text-white mb-3">Mental Training Transforms Everything</h3>
+<p class="text-lg text-blue-200">Four pillars of systematic mental development</p>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="group text-center p-4">
+<div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-green-400/20 to-green-600/20 rounded-xl backdrop-blur-lg border border-green-400/30 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:shadow-2xl group-hover:shadow-green-400/30">
+<i class="ri-shield-check-line text-green-300 text-2xl group-hover:text-green-200 transition-colors duration-300"></i>
+</div>
+<h4 class="text-base font-bold text-white mb-2 group-hover:text-green-200 transition-colors duration-300">Mental Resilience</h4>
+<p class="text-sm text-blue-200 group-hover:text-white transition-colors duration-300">Bounce back stronger</p>
+</div>
+<div class="group text-center p-4">
+<div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-blue-400/20 to-blue-600/20 rounded-xl backdrop-blur-lg border border-blue-400/30 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:shadow-2xl group-hover:shadow-blue-400/30">
+<i class="ri-flashlight-line text-blue-300 text-2xl group-hover:text-blue-200 transition-colors duration-300"></i>
+</div>
+<h4 class="text-base font-bold text-white mb-2 group-hover:text-blue-200 transition-colors duration-300">Pressure Performance</h4>
+<p class="text-sm text-blue-200 group-hover:text-white transition-colors duration-300">Thrive under pressure</p>
+</div>
+<div class="group text-center p-4">
+<div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-purple-400/20 to-purple-600/20 rounded-xl backdrop-blur-lg border border-purple-400/30 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:shadow-2xl group-hover:shadow-purple-400/30">
+<i class="ri-line-chart-line text-purple-300 text-2xl group-hover:text-purple-200 transition-colors duration-300"></i>
+</div>
+<h4 class="text-base font-bold text-white mb-2 group-hover:text-purple-200 transition-colors duration-300">Systematic Growth</h4>
+<p class="text-sm text-blue-200 group-hover:text-white transition-colors duration-300">Structured development</p>
+</div>
+<div class="group text-center p-4">
+<div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-orange-400/20 to-orange-600/20 rounded-xl backdrop-blur-lg border border-orange-400/30 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:shadow-2xl group-hover:shadow-orange-400/30">
+<i class="ri-compass-3-line text-orange-300 text-2xl group-hover:text-orange-200 transition-colors duration-300"></i>
+</div>
+<h4 class="text-base font-bold text-white mb-2 group-hover:text-orange-200 transition-colors duration-300">Position-Specific</h4>
+<p class="text-sm text-blue-200 group-hover:text-white transition-colors duration-300">Tailored for every role</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="solution" class="py-8 bg-white relative overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/8bc88ee353666b9a2e4473cb0a5eb0b8.jfif"
+alt="Elite Football Academy Training Facilities Background"
+class="w-full h-full object-cover object-center">
+<div class="absolute inset-0 bg-gradient-to-b from-white/95 via-white/90 to-white/95"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-white/85 via-transparent to-white/85">
+<div class="absolute inset-0 opacity-20">
+<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-400/10 via-transparent to-blue-600/10 animate-pulse"></div>
+<div class="absolute -top-20 -left-20 w-64 h-64 bg-gradient-to-br from-white/30 to-blue-300/20 rounded-full blur-3xl stadium-light-1"></div>
+<div class="absolute -top-10 -right-10 w-48 h-48 bg-gradient-to-br from-blue-200/20 to-white/30 rounded-full blur-2xl stadium-light-2"></div>
+<div class="absolute -bottom-20 left-1/3 w-32 h-32 bg-gradient-to-br from-blue-100/25 to-white/20 rounded-full blur-xl stadium-light-3"></div>
+</div>
+</div>
+</div>
+<div class="max-w-5xl mx-auto px-4 relative z-10">
+<div class="text-center mb-6 animate-on-scroll">
+<div class="inline-flex items-center bg-gradient-to-r from-primary/15 to-secondary/15 backdrop-blur-sm border border-primary/25 text-primary px-3 py-2 rounded-full text-sm font-medium mb-3">
+<i class="ri-book-line mr-2 w-4 h-4 flex items-center justify-center"></i>
+Personalized Story Books for Every Player
+</div>
+<h2 class="text-3xl font-bold text-gray-900 mb-3 drop-shadow-sm">
+Each Player Gets Their Own Mental Training Book
+</h2>
+<p class="text-lg text-gray-600 max-w-4xl mx-auto drop-shadow-sm mb-4">
+Every academy player receives a custom-written story book tailored to their position, challenges, and development stage. From goalkeeper to striker, each book is uniquely crafted to build the mental skills they need most.
+</p>
+<div class="flex flex-wrap justify-center gap-4 max-w-5xl mx-auto">
+<div class="flex items-center bg-white/80 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/50 shadow-lg">
+<div class="w-7 h-7 bg-blue-500 rounded-lg flex items-center justify-center mr-2">
+<i class="ri-user-line text-white text-sm"></i>
+</div>
+<div class="text-left">
+<div class="text-sm font-bold text-gray-900">Individual Stories</div>
+<div class="text-xs text-gray-600">Custom book per player</div>
+</div>
+</div>
+<div class="flex items-center bg-white/80 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/50 shadow-lg">
+<div class="w-7 h-7 bg-green-500 rounded-lg flex items-center justify-center mr-2">
+<i class="ri-shield-line text-white text-sm"></i>
+</div>
+<div class="text-left">
+<div class="text-sm font-bold text-gray-900">Position-Specific</div>
+<div class="text-xs text-gray-600">GK, CB, ST focused content</div>
+</div>
+</div>
+<div class="flex items-center bg-white/80 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/50 shadow-lg">
+<div class="w-7 h-7 bg-purple-500 rounded-lg flex items-center justify-center mr-2">
+<i class="ri-building-2-line text-white text-sm"></i>
+</div>
+<div class="text-left">
+<div class="text-sm font-bold text-gray-900">Academy Branded</div>
+<div class="text-xs text-gray-600">Your club's identity</div>
+</div>
+</div>
+<div class="flex items-center bg-white/80 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/50 shadow-lg">
+<div class="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center mr-2">
+<i class="ri-refresh-line text-white text-sm"></i>
+</div>
+<div class="text-left">
+<div class="text-sm font-bold text-gray-900">Evolving Content</div>
+<div class="text-xs text-gray-600">Updates with growth</div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid lg:grid-cols-2 gap-6 items-center">
+<div class="relative z-20">
+<div class="bg-white/95 backdrop-blur-sm rounded-2xl p-3 shadow-xl border border-white/30">
+<div class="mb-3 flex flex-col sm:flex-row gap-2 items-center justify-between">
+<div class="flex items-center space-x-2">
+<div class="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
+<i class="ri-image-line text-white text-sm"></i>
+</div>
+<div>
+<h4 class="font-medium text-gray-900 text-sm">Book Pages Gallery</h4>
+<p class="text-xs text-gray-500">Upload multiple images to customize your slideshow</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button id="upload-images-btn" class="bg-primary text-white px-3 py-2 text-xs !rounded-button font-medium hover:bg-blue-700 transition-colors whitespace-nowrap tap-target cursor-pointer">
+<i class="ri-upload-2-line mr-1 w-3 h-3 flex items-center justify-center"></i>
+Add Images
+</button>
+<button id="reset-slideshow-btn" class="bg-gray-100 text-gray-600 px-3 py-2 text-xs !rounded-button font-medium hover:bg-gray-200 transition-colors whitespace-nowrap tap-target cursor-pointer">
+<i class="ri-refresh-line mr-1 w-3 h-3 flex items-center justify-center"></i>
+Reset
+</button>
+</div>
+</div>
+<input type="file" id="slideshow-images-input" accept="image/*" multiple class="hidden">
+<div class="relative overflow-hidden rounded-xl h-64 md:h-72" id="book-slideshow">
+<div class="flex transition-transform duration-500 ease-out h-full" id="book-slides-track">
+<div class="w-full flex-shrink-0 h-full slideshow-slide" data-slide="0">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/91fb567bfa7e3ce644b6b4d4b96435a9.png"
+alt="MeTime Stories Book Cover"
+class="w-full h-full rounded-xl object-cover shadow-lg">
+</div>
+<div class="w-full flex-shrink-0 h-full slideshow-slide" data-slide="1">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/7064627c2fa04913cd55ac5902886e23.jfif"
+alt="Character Introduction Page"
+class="w-full h-full rounded-xl object-cover shadow-lg">
+</div>
+<div class="w-full flex-shrink-0 h-full slideshow-slide" data-slide="2">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/8bc88ee353666b9a2e4473cb0a5eb0b8.jfif"
+alt="Training Ground Story Page"
+class="w-full h-full rounded-xl object-cover shadow-lg">
+</div>
+<div class="w-full flex-shrink-0 h-full slideshow-slide" data-slide="3">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/8bc88ee353666b9a2e4473cb0a5eb0b8.jpeg"
+alt="Book Content and Story Page"
+class="w-full h-full rounded-xl object-cover shadow-lg">
+</div>
+<div class="w-full flex-shrink-0 h-full slideshow-slide" data-slide="4">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/916f461468a73745291a01d716c71072.jfif"
+alt="Challenge and Growth Story Page"
+class="w-full h-full rounded-xl object-cover shadow-lg">
+</div>
+<div class="w-full flex-shrink-0 h-full slideshow-slide" data-slide="5">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/4f26ae0eac22f148ec417494f35acffd.jfif"
+alt="Success and Achievement Story Page"
+class="w-full h-full rounded-xl object-cover shadow-lg">
+</div>
+</div>
+<button class="absolute left-2 top-1/2 transform -translate-y-1/2 w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 flex items-center justify-center group opacity-0 hover:opacity-100 transition-opacity" id="book-prev-btn">
+<i class="ri-arrow-left-line text-gray-600 group-hover:text-primary text-sm group-hover:-translate-x-0.5 transition-all duration-300"></i>
+</button>
+<button class="absolute right-2 top-1/2 transform -translate-y-1/2 w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 flex items-center justify-center group opacity-0 hover:opacity-100 transition-opacity" id="book-next-btn">
+<i class="ri-arrow-right-line text-gray-600 group-hover:text-primary text-sm group-hover:translate-x-0.5 transition-all duration-300"></i>
+</button>
+<div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1" id="slideshow-dots">
+<button class="w-2 h-2 rounded-full bg-white/80 shadow-sm book-dot active transition-all duration-300 cursor-pointer" data-slide="0"></button>
+<button class="w-2 h-2 rounded-full bg-white/50 shadow-sm book-dot transition-all duration-300 cursor-pointer" data-slide="1"></button>
+<button class="w-2 h-2 rounded-full bg-white/50 shadow-sm book-dot transition-all duration-300 cursor-pointer" data-slide="2"></button>
+<button class="w-2 h-2 rounded-full bg-white/50 shadow-sm book-dot transition-all duration-300 cursor-pointer" data-slide="3"></button>
+<button class="w-2 h-2 rounded-full bg-white/50 shadow-sm book-dot transition-all duration-300 cursor-pointer" data-slide="4"></button>
+<button class="w-2 h-2 rounded-full bg-white/50 shadow-sm book-dot transition-all duration-300 cursor-pointer" data-slide="5"></button>
+</div>
+</div>
+<div class="mt-2 text-center min-h-6">
+<p class="text-sm text-gray-600 font-medium transition-all duration-300" id="book-caption">
+<span class="slide-caption active">Personalized Story Interface</span>
+<span class="slide-caption hidden">Character Development</span>
+<span class="slide-caption hidden">Training Ground Challenges</span>
+<span class="slide-caption hidden">Book Content & Story Pages</span>
+<span class="slide-caption hidden">Mental Resilience Building</span>
+<span class="slide-caption hidden">Achievement & Growth</span>
+</p>
+</div>
+<div id="upload-status" class="hidden mt-2 text-center">
+<div class="inline-flex items-center bg-green-50 text-green-700 px-2 py-1 rounded-lg text-xs">
+<i class="ri-check-circle-line mr-1 w-3 h-3 flex items-center justify-center"></i>
+<span id="upload-count">5 images loaded</span>
+</div>
+</div>
+<div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+<i class="ri-check-line text-white text-xs"></i>
+</div>
+</div>
+<div class="absolute -top-2 -left-2 w-5 h-5 bg-blue-500/80 rounded-full animate-pulse"></div>
+<div class="absolute -bottom-2 -right-6 w-3 h-3 bg-purple-400/60 rounded-full animate-bounce" style="animation-delay: 1s;"></div>
+</div>
+<div class="space-y-6 solution-pillars">
+<div class="flex items-start space-x-3 pillar-item opacity-0 transform translate-x-8" data-delay="0.2">
+<div class="pillar-icon-container w-12 h-12 flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:scale-110 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 pillar-glow transition-opacity duration-300"></div>
+<i class="ri-book-open-line text-white text-lg relative z-10 transition-transform duration-300 pillar-icon"></i>
+<div class="absolute inset-0 bg-blue-400/50 rounded-xl blur-lg scale-0 pillar-pulse transition-transform duration-300"></div>
+</div>
+<div class="pillar-content">
+<h3 class="text-lg font-bold text-gray-900 mb-2 pillar-title">Individual Story Books</h3>
+<p class="text-sm text-gray-600 leading-relaxed pillar-description">Each player receives their own personalized mental training book. Marcus the Center Back gets different stories than Emma the Goalkeeper - all targeting their specific psychological challenges and growth areas.</p>
+</div>
+</div>
+<div class="flex items-start space-x-3 pillar-item opacity-0 transform translate-x-8" data-delay="0.4">
+<div class="pillar-icon-container w-12 h-12 flex items-center justify-center bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:scale-110 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 pillar-glow transition-opacity duration-300"></div>
+<i class="ri-building-line text-white text-lg relative z-10 transition-transform duration-300 pillar-icon"></i>
+<div class="absolute inset-0 bg-green-400/50 rounded-xl blur-lg scale-0 pillar-pulse transition-transform duration-300"></div>
+</div>
+<div class="pillar-content">
+<h3 class="text-lg font-bold text-gray-900 mb-2 pillar-title">Academy-Branded Books</h3>
+<p class="text-sm text-gray-600 leading-relaxed pillar-description">Stories feature your academy's values, training ground settings, and coaching philosophy. Players see themselves in familiar environments, making the mental training feel authentic and connected to their real journey.</p>
+</div>
+</div>
+<div class="flex items-start space-x-3 pillar-item opacity-0 transform translate-x-8" data-delay="0.6">
+<div class="pillar-icon-container w-12 h-12 flex items-center justify-center bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg transition-all duration-500 hover:shadow-2xl hover:scale-110 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 pillar-glow transition-opacity duration-300"></div>
+<i class="ri-group-line text-white text-lg relative z-10 transition-transform duration-300 pillar-icon"></i>
+<div class="absolute inset-0 bg-purple-400/50 rounded-xl blur-lg scale-0 pillar-pulse transition-transform duration-300"></div>
+</div>
+<div class="pillar-content">
+<h3 class="text-lg font-bold text-gray-900 mb-2 pillar-title">Scalable Academy Solution</h3>
+<p class="text-sm text-gray-600 leading-relaxed pillar-description">From 20 to 200+ players, our system creates personalized books for your entire academy. Each age group, position, and development level gets content that matches their specific needs and challenges.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-8 bg-gray-50 relative overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img src="https://readdy.ai/api/search-image?query=stunning%20aerial%20view%20of%20world-class%20football%20academy%20training%20facilities%20including%20La%20Masia%20Barcelona%2C%20Carrington%20Manchester%20United%2C%20Bayern%20Munich%20campus%2C%20Manchester%20City%20Football%20Academy%2C%20multiple%20pristine%20grass%20pitches%2C%20modern%20architecture%2C%20professional%20sports%20photography%2C%20golden%20hour%20lighting%2C%20geometric%20training%20field%20patterns%2C%20elite%20academy%20complex&width=1920&height=1080&seq=process-academy-bg&orientation=landscape"
+alt="Elite Football Academy Training Facilities Background"
+class="w-full h-full object-cover object-center">
+<div class="absolute inset-0 bg-gradient-to-b from-gray-50/95 via-gray-50/90 to-gray-50/95"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-gray-50/85 via-transparent to-gray-50/85"></div>
+</div>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+<div class="text-center mb-8">
+<div class="inline-flex items-center bg-primary/10 text-primary px-3 py-2 rounded-full text-sm font-medium mb-3">
+<i class="ri-lightbulb-line mr-2 w-3 h-3 flex items-center justify-center"></i>
+Our Proven Process
+</div>
+<h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 leading-tight drop-shadow-sm px-4 sm:px-0">Academy Ecosystem Approach</h2>
+<p class="text-lg text-gray-600 max-w-3xl mx-auto drop-shadow-sm px-4 sm:px-0">Three-stage transformation that scales across your entire program with measurable results</p>
+</div>
+<div class="relative" id="process-carousel">
+<div class="absolute inset-0 -z-10">
+<div class="absolute top-20 left-10 w-24 h-24 bg-blue-100 rounded-full blur-3xl opacity-30 animate-pulse"></div>
+<div class="absolute bottom-20 right-10 w-20 h-20 bg-green-100 rounded-full blur-2xl opacity-40 animate-pulse" style="animation-delay: 1s;"></div>
+<div class="absolute top-40 right-20 w-16 h-16 bg-purple-100 rounded-full blur-xl opacity-25 animate-pulse" style="animation-delay: 2s;"></div>
+</div>
+<div class="relative overflow-hidden rounded-2xl">
+<div class="flex transition-transform duration-700 ease-in-out" id="carousel-track">
+<div class="w-full flex-shrink-0 px-2">
+<div class="max-w-4xl mx-auto">
+<div class="bg-gradient-to-br from-white via-blue-50/30 to-blue-100/20 rounded-2xl p-6 lg:p-8 shadow-2xl border-2 border-blue-100/50 relative overflow-hidden">
+<div class="absolute inset-0 opacity-10">
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-10 -left-10 w-24 h-24 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full blur-2xl"></div>
+</div>
+<div class="absolute top-6 right-6 w-5 h-5 bg-blue-400/20 rounded-full animate-pulse"></div>
+<div class="absolute bottom-8 left-6 w-3 h-3 bg-blue-300/30 rounded-full animate-bounce" style="animation-delay: 0.5s;"></div>
+<div class="relative z-10 text-center">
+<div class="w-20 h-20 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
+<i class="ri-team-line text-white text-3xl"></i>
+</div>
+<div class="absolute -top-4 -right-4 w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-xl border-4 border-white">
+<span class="text-sm font-bold text-white">1</span>
+</div>
+<h3 class="text-2xl font-bold text-gray-900 mb-4">Input Phase</h3>
+<p class="text-gray-600 mb-8 text-lg leading-relaxed">Comprehensive data collection from players, coaches, and families creates the foundation for personalized mental training</p>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="bg-white/70 backdrop-blur-sm rounded-xl p-4 hover:bg-white/90 transition-all duration-300 hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-3">
+<i class="ri-user-line text-white text-lg"></i>
+</div>
+<h4 class="font-bold text-gray-900 mb-2">Position Analysis</h4>
+<p class="text-sm text-gray-600">Role-specific mental demands and challenges</p>
+</div>
+<div class="bg-white/70 backdrop-blur-sm rounded-xl p-4 hover:bg-white/90 transition-all duration-300 hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mb-3">
+<i class="ri-bar-chart-line text-white text-lg"></i>
+</div>
+<h4 class="font-bold text-gray-900 mb-2">Performance Data</h4>
+<p class="text-sm text-gray-600">Real-time feedback and progress patterns</p>
+</div>
+<div class="bg-white/70 backdrop-blur-sm rounded-xl p-4 hover:bg-white/90 transition-all duration-300 hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mb-3">
+<i class="ri-heart-line text-white text-lg"></i>
+</div>
+<h4 class="font-bold text-gray-900 mb-2">Family & Coach Insights</h4>
+<p class="text-sm text-gray-600">Support system and environmental analysis</p>
+</div>
+<div class="bg-white/70 backdrop-blur-sm rounded-xl p-4 hover:bg-white/90 transition-all duration-300 hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mb-3">
+<i class="ri-brain-line text-white text-lg"></i>
+</div>
+<h4 class="font-bold text-gray-900 mb-2">Mental State Mapping</h4>
+<p class="text-sm text-gray-600">Current psychological profile assessment</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full flex-shrink-0 px-2">
+<div class="max-w-2xl mx-auto">
+<div class="bg-gradient-to-br from-white via-green-50/30 to-green-100/20 rounded-2xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-500 border-2 border-green-100/50 hover:border-green-300 relative overflow-hidden group">
+<div class="absolute inset-0 opacity-10">
+<div class="absolute -top-10 -left-10 w-32 h-32 bg-gradient-to-br from-green-400 to-secondary rounded-full blur-3xl"></div>
+<div class="absolute -bottom-10 -right-10 w-24 h-24 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full blur-2xl"></div>
+</div>
+<div class="absolute top-6 left-6 w-5 h-5 bg-green-400/20 rounded-full animate-pulse"></div>
+<div class="absolute bottom-8 right-6 w-3 h-3 bg-green-300/30 rounded-full animate-bounce" style="animation-delay: 1s;"></div>
+<div class="relative z-10 text-center">
+<div class="w-20 h-20 bg-gradient-to-br from-secondary via-green-600 to-green-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+<i class="ri-magic-line text-white text-3xl"></i>
+</div>
+<div class="absolute -top-4 -right-4 w-10 h-10 bg-secondary rounded-full flex items-center justify-center shadow-xl border-4 border-white">
+<span class="text-sm font-bold text-white">2</span>
+</div>
+<h3 class="text-2xl font-bold text-gray-900 mb-4">Content Generation</h3>
+<p class="text-gray-600 mb-8 text-lg leading-relaxed">We designed the Story Matrix and Dynamic Personalisation Framework. Advanced AI then adapts these into compelling, personalised story journeys that mirror each player's unique challenges</p>
+<div class="grid md:grid-cols-2 gap-3">
+<div class="bg-white/70 backdrop-blur-sm rounded-xl p-4 hover:bg-white/90 transition-all duration-300 group/item hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mb-3 group-hover/item:rotate-12 transition-transform duration-300">
+<i class="ri-shield-line text-white text-lg"></i>
+</div>
+<h4 class="font-bold text-gray-900 mb-2">Role Customization</h4>
+<p class="text-sm text-gray-600">Stories tailored for CB, GK, Striker psychology</p>
+</div>
+<div class="bg-white/70 backdrop-blur-sm rounded-xl p-4 hover:bg-white/90 transition-all duration-300 group/item hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-3 group-hover/item:rotate-12 transition-transform duration-300">
+<i class="ri-mind-map text-white text-lg"></i>
+</div>
+<h4 class="font-bold text-gray-900 mb-2">Mental Mapping</h4>
+<p class="text-sm text-gray-600">Resilience skills embedded in narrative structure</p>
+</div>
+<div class="bg-white/70 backdrop-blur-sm rounded-xl p-4 hover:bg-white/90 transition-all duration-300 group/item hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mb-3 group-hover/item:rotate-12 transition-transform duration-300">
+<i class="ri-refresh-line text-white text-lg"></i>
+</div>
+<h4 class="font-bold text-gray-900 mb-2">Dynamic Updates</h4>
+<p class="text-sm text-gray-600">Stories evolve with player development</p>
+</div>
+<div class="bg-white/70 backdrop-blur-sm rounded-xl p-4 hover:bg-white/90 transition-all duration-300 group/item hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg flex items-center justify-center mb-3 group-hover/item:rotate-12 transition-transform duration-300">
+<i class="ri-cpu-line text-white text-lg"></i>
+</div>
+<h4 class="font-bold text-gray-900 mb-2">AI Precision</h4>
+<p class="text-sm text-gray-600">Machine learning optimizes narrative impact</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full flex-shrink-0 px-2">
+<div class="max-w-4xl mx-auto">
+<div class="bg-gradient-to-br from-white via-purple-50/30 to-purple-100/20 rounded-2xl p-6 lg:p-8 shadow-2xl border-2 border-purple-100/50 relative overflow-hidden">
+<div class="absolute inset-0 opacity-10">
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-10 -left-10 w-24 h-24 bg-gradient-to-br from-violet-400 to-purple-500 rounded-full blur-2xl"></div>
+</div>
+<div class="absolute top-6 right-6 w-5 h-5 bg-purple-400/20 rounded-full animate-pulse"></div>
+<div class="absolute bottom-8 left-6 w-3 h-3 bg-purple-300/30 rounded-full animate-bounce" style="animation-delay: 1.5s;"></div>
+<div class="relative z-10 text-center">
+<div class="w-20 h-20 bg-gradient-to-br from-purple-500 via-purple-600 to-purple-700 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
+<i class="ri-trophy-line text-white text-3xl"></i>
+</div>
+<div class="absolute -top-4 -right-4 w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center shadow-xl border-4 border-white">
+<span class="text-sm font-bold text-white">3</span>
+</div>
+<h3 class="text-2xl font-bold text-gray-900 mb-4">Development</h3>
+<p class="text-gray-600 mb-8 text-lg leading-relaxed">Stories become the catalyst for systematic mental strength development across the entire academy</p>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="bg-white/70 backdrop-blur-sm rounded-xl p-4 hover:bg-white/90 transition-all duration-300 hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center mb-3">
+<i class="ri-brain-line text-white text-lg"></i>
+</div>
+<h4 class="font-bold text-gray-900 mb-2">Mindset Transformation</h4>
+<p class="text-sm text-gray-600">Deep psychological shifts and growth</p>
+</div>
+<div class="bg-white/70 backdrop-blur-sm rounded-xl p-4 hover:bg-white/90 transition-all duration-300 hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center mb-3">
+<i class="ri-line-chart-line text-white text-lg"></i>
+</div>
+<h4 class="font-bold text-gray-900 mb-2">Performance Gains</h4>
+<p class="text-sm text-gray-600">Quantifiable improvements in mental resilience</p>
+</div>
+<div class="bg-white/70 backdrop-blur-sm rounded-xl p-4 hover:bg-white/90 transition-all duration-300 hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center mb-3">
+<i class="ri-rocket-line text-white text-lg"></i>
+</div>
+<h4 class="font-bold text-gray-900 mb-2">Scalable Impact</h4>
+<p class="text-sm text-gray-600">Academy-wide transformation at scale</p>
+</div>
+<div class="bg-white/70 backdrop-blur-sm rounded-xl p-4 hover:bg-white/90 transition-all duration-300 hover:scale-105">
+<div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center mb-3">
+<i class="ri-award-line text-white text-lg"></i>
+</div>
+<h4 class="font-bold text-gray-900 mb-2">Sustainable Growth</h4>
+<p class="text-sm text-gray-600">Long-term mental strength development</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-center items-center space-x-3 mt-6">
+<button id="prev-btn" class="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 flex items-center justify-center group cursor-pointer">
+<i class="ri-arrow-left-line text-gray-600 group-hover:text-primary text-lg group-hover:-translate-x-0.5 transition-all duration-300"></i>
+</button>
+<div class="flex items-center space-x-2">
+<button class="w-2 h-2 rounded-full bg-primary process-nav-dot active transition-all duration-300 cursor-pointer" data-slide="0"></button>
+<button class="w-2 h-2 rounded-full bg-gray-300 process-nav-dot transition-all duration-300 cursor-pointer" data-slide="1"></button>
+<button class="w-2 h-2 rounded-full bg-gray-300 process-nav-dot transition-all duration-300 cursor-pointer" data-slide="2"></button>
+</div>
+<button id="next-btn" class="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl hover:bg-white transition-all duration-300 flex items-center justify-center group cursor-pointer">
+<i class="ri-arrow-right-line text-gray-600 group-hover:text-primary text-lg group-hover:translate-x-0.5 transition-all duration-300"></i>
+</button>
+</div>
+<div class="mt-4 mx-auto max-w-md">
+<div class="bg-gray-200 rounded-full h-1 overflow-hidden">
+<div class="bg-primary h-1 rounded-full transition-all duration-700" id="progress-track" style="width: 33.33%"></div>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<div class="bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900 rounded-2xl p-6 relative overflow-hidden">
+<div class="absolute inset-0 opacity-10">
+<img src="https://readdy.ai/api/search-image?query=modern%20football%20training%20data%20visualization%20dashboard%20with%20holographic%20elements%2C%20futuristic%20academy%20analytics%2C%20depth%20of%20field%20effect&width=1200&height=400&seq=process-bg&orientation=landscape"
+alt="Process Background"
+class="w-full h-full object-cover">
+</div>
+<div class="relative z-10">
+<div class="text-center mb-6">
+<h3 class="text-xl font-bold text-white mb-2">Ecosystem Impact</h3>
+<p class="text-blue-200">Measurable transformation across every stakeholder</p>
+</div>
+<div class="grid md:grid-cols-4 gap-4">
+<div class="text-center">
+<div class="text-2xl font-bold text-blue-400 mb-1">360°</div>
+<p class="text-sm text-gray-300">Holistic development</p>
+</div>
+<div class="text-center">
+<div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">
+<i class="ri-plant-line text-white text-lg"></i>
+</div>
+<p class="text-sm text-gray-300 font-medium">Consistent Growth</p>
+<p class="text-xs text-gray-400 mt-1">Structured development</p>
+</div>
+<div class="text-center">
+<div class="text-2xl font-bold text-purple-400 mb-1">95%</div>
+<p class="text-sm text-gray-300">Engagement rate</p>
+</div>
+<div class="text-center">
+<div class="text-2xl font-bold text-orange-400 mb-1">∞</div>
+<p class="text-sm text-gray-300">Scalable impact</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="benefits" class="py-8 bg-white relative overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img src="https://readdy.ai/api/search-image?query=stunning%20aerial%20view%20of%20world-class%20football%20academy%20training%20facilities%20including%20La%20Masia%20Barcelona%2C%20Carrington%20Manchester%20United%2C%20Bayern%20Munich%20campus%2C%20Manchester%20City%20Football%20Academy%2C%20Juventus%20training%20center%2C%20Chelsea%20Cobham%20academy%2C%20multiple%20pristine%20grass%20pitches%2C%20modern%20architecture%2C%20professional%20sports%20photography%2C%20golden%20hour%20lighting%2C%20geometric%20training%20field%20patterns%2C%20elite%20academy%20complex&width=1920&height=1080&seq=position-training-bg&orientation=landscape"
+alt="Elite Football Academy Training Facilities Background"
+class="w-full h-full object-cover object-center">
+<div class="absolute inset-0 bg-gradient-to-b from-white/95 via-white/90 to-white/95"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-white/85 via-transparent to-white/85"></div>
+</div>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
+<div class="bg-gradient-to-br from-gray-50 via-blue-50 to-gray-50 rounded-2xl p-6 lg:p-8 relative overflow-hidden">
+<div class="absolute inset-0 opacity-5">
+<div class="absolute top-10 left-10 w-24 h-24 bg-primary rounded-full blur-3xl"></div>
+<div class="absolute bottom-10 right-10 w-20 h-20 bg-secondary rounded-full blur-2xl"></div>
+</div>
+<div class="relative z-10">
+<div class="text-center mb-6">
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/9d1d3da4-a2fe-4550-895f-13a5c43ba635" data-readdy="true" class="inline-flex items-center bg-primary/10 text-primary px-3 py-2 rounded-full text-sm font-medium mb-2 cursor-pointer hover:bg-primary/20 transition-colors tap-target" id="framework-trigger">
+<i class="ri-lightbulb-line mr-2"></i>Our Signature Framework
+<i class="ri-external-link-line ml-2 text-xs"></i>
+</a>
+<div id="football-matrix-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-2 sm:p-4">
+<div class="bg-white rounded-2xl w-full max-w-6xl max-h-full overflow-hidden relative shadow-2xl">
+<div class="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-blue-50">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg">
+<i class="ri-football-line text-white text-lg"></i>
+</div>
+<div>
+<h3 class="text-lg font-bold text-gray-900">Me Time Stories Football Matrix</h3>
+<p class="text-sm text-gray-600">Interactive position-based mental training framework</p>
+</div>
+</div>
+<button id="close-matrix-btn" class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center hover:bg-gray-200 transition-colors shadow-sm cursor-pointer">
+<i class="ri-close-line text-gray-600 text-lg"></i>
+</button>
+</div>
+<div class="overflow-auto bg-gray-50" style="height: calc(100vh - 180px); max-height: 900px;">
+<iframe id="matrix-iframe" class="w-full h-full border-none bg-transparent" style="min-height: 900px;"></iframe>
+</div>
+</div>
+</div>
+<h3 class="text-3xl font-bold text-gray-900 mb-2">The Mental Mastery Method™</h3>
+<p class="text-lg text-gray-600 max-w-3xl mx-auto">Six proven scenes that transform pressure into power, setbacks into comebacks</p>
+</div>
+<div class="relative swipeable" id="journey-container">
+<div class="hidden lg:block absolute top-20 left-0 right-0 h-1 bg-gradient-to-r from-yellow-300 via-red-300 via-blue-300 via-green-300 to-purple-300 rounded-full opacity-30"></div>
+<div class="lg:grid lg:grid-cols-6 lg:gap-3 relative z-10 overflow-x-auto lg:overflow-visible" id="journey-steps">
+<div class="flex lg:contents gap-3 lg:gap-0 pb-4 lg:pb-0" style="width: max-content;">
+<div class="text-center group cursor-pointer journey-step tap-target mobile-card flex-shrink-0 w-32 lg:w-auto" data-step="1" data-scene="dream">
+<div class="relative">
+<div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110 journey-icon touch-feedback">
+<i class="ri-star-fill text-white text-xl"></i>
+</div>
+<div class="absolute -top-2 -right-2 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 step-number">
+<span class="text-xs font-bold text-primary">1</span>
+</div>
+</div>
+<h4 class="font-bold text-gray-900 mb-2 text-base">The Vision</h4>
+<p class="text-sm text-gray-600 group-hover:text-gray-800 transition-colors mobile-text">Pure ambition ignites the journey</p>
+</div>
+<div class="text-center group cursor-pointer journey-step tap-target mobile-card flex-shrink-0 w-32 lg:w-auto" data-step="2" data-scene="reality">
+<div class="relative">
+<div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110 journey-icon touch-feedback">
+<i class="ri-thunder-storms-fill text-white text-xl"></i>
+</div>
+<div class="absolute -top-2 -right-2 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 step-number">
+<span class="text-xs font-bold text-primary">2</span>
+</div>
+</div>
+<h4 class="font-bold text-gray-900 mb-2 text-base">The Storm</h4>
+<p class="text-sm text-gray-600 group-hover:text-gray-800 transition-colors mobile-text">First taste of brutal competition</p>
+</div>
+<div class="text-center group cursor-pointer journey-step tap-target mobile-card flex-shrink-0 w-32 lg:w-auto" data-step="3" data-scene="loss">
+<div class="relative">
+<div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110 journey-icon touch-feedback">
+<i class="ri-heart-crack-fill text-white text-xl"></i>
+</div>
+<div class="absolute -top-2 -right-2 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 step-number">
+<span class="text-xs font-bold text-primary">3</span>
+</div>
+</div>
+<h4 class="font-bold text-gray-900 mb-2 text-base">Rock Bottom</h4>
+<p class="text-sm text-gray-600 group-hover:text-gray-800 transition-colors mobile-text">The defining moment of truth</p>
+</div>
+<div class="text-center group cursor-pointer journey-step tap-target mobile-card flex-shrink-0 w-32 lg:w-auto" data-step="4" data-scene="comeback">
+<div class="relative">
+<div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110 journey-icon touch-feedback">
+<i class="ri-rocket-fill text-white text-xl"></i>
+</div>
+<div class="absolute -top-2 -right-2 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 step-number">
+<span class="text-xs font-bold text-primary">4</span>
+</div>
+</div>
+<h4 class="font-bold text-gray-900 mb-2 text-base">The Rise</h4>
+<p class="text-sm text-gray-600 group-hover:text-gray-800 transition-colors mobile-text">Resilience becomes rocket fuel</p>
+</div>
+<div class="text-center group cursor-pointer journey-step tap-target mobile-card flex-shrink-0 w-32 lg:w-auto" data-step="5" data-scene="mentorship">
+<div class="relative">
+<div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110 journey-icon touch-feedback">
+<i class="ri-award-fill text-white text-xl"></i>
+</div>
+<div class="absolute -top-2 -right-2 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 step-number">
+<span class="text-xs font-bold text-primary">5</span>
+</div>
+</div>
+<h4 class="font-bold text-gray-900 mb-2 text-base">Elite Wisdom</h4>
+<p class="text-sm text-gray-600 group-hover:text-gray-800 transition-colors mobile-text">Champions share their secrets</p>
+</div>
+<div class="text-center group cursor-pointer journey-step tap-target mobile-card flex-shrink-0 w-32 lg:w-auto" data-step="6" data-scene="cliffhanger">
+<div class="relative">
+<div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110 journey-icon touch-feedback">
+<i class="ri-infinity-fill text-white text-xl"></i>
+</div>
+<div class="absolute -top-2 -right-2 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-lg opacity-0 step-number">
+<span class="text-xs font-bold text-primary">6</span>
+</div>
+</div>
+<h4 class="font-bold text-gray-900 mb-2 text-base">Next Level</h4>
+<p class="text-sm text-gray-600 group-hover:text-gray-800 transition-colors mobile-text">The journey never ends</p>
+</div>
+</div>
+</div>
+<div class="mt-6" id="scene-preview">
+<div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-white/50 shadow-lg min-h-24 transition-all duration-500" id="preview-content">
+<div class="text-center text-gray-500">
+<i class="ri-hand-heart-line text-2xl mb-2"></i>
+<p class="text-sm">Hover over any scene to see it come alive</p>
+</div>
+</div>
+</div>
+<div class="flex justify-center mt-4">
+<div class="flex items-center space-x-1">
+<div class="w-2 h-2 rounded-full bg-primary transition-all duration-300" id="progress-1"></div>
+<div class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300" id="progress-2"></div>
+<div class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300" id="progress-3"></div>
+<div class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300" id="progress-4"></div>
+<div class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300" id="progress-5"></div>
+<div class="w-2 h-2 rounded-full bg-gray-300 transition-all duration-300" id="progress-6"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-8 bg-gray-50">
+<div class="max-w-4xl mx-auto px-4">
+<div class="grid lg:grid-cols-2 gap-6 items-center">
+<div class="order-2 lg:order-1">
+<div class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-medium mb-3">
+Sample Story
+</div>
+<h2 class="text-2xl font-bold text-gray-900 mb-3">
+Kofi's Journey
+</h2>
+<p class="text-gray-600 mb-4">Kofi is a young centre-back learning that one mistake can change everything. His story follows the highs of ambition, the lows of costly errors, and the resilience needed to rise again. Guided by mentorship, he discovers that true leadership is built on confidence, recovery, and holding the line when it matters most.</p>
+<div class="flex flex-col sm:flex-row gap-2 mb-4">
+<button id="read-sample-btn" class="bg-secondary text-white px-5 py-3 text-sm !rounded-button font-medium hover:bg-green-700 transition-colors whitespace-nowrap tap-target mobile-button cursor-pointer">
+Read Sample
+</button>
+</div>
+<div id="flipbook-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+<div class="bg-white rounded-2xl w-full max-w-4xl max-h-full overflow-hidden">
+<div class="flex items-center justify-between p-4 border-b border-gray-200">
+<h3 class="text-lg font-bold text-gray-900">Kofi's Journey - Sample Story</h3>
+<button id="close-flipbook-btn" class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors cursor-pointer">
+<i class="ri-close-line text-gray-600"></i>
+</button>
+</div>
+<div class="p-4 h-96 overflow-auto">
+<script src="https://elfsightcdn.com/platform.js" async></script>
+<div class="elfsight-app-afe99087-bc2e-4e3d-a1a0-9c9bc2ac40c9" data-elfsight-app-lazy></div>
+</div>
+</div>
+</div>
+<div id="upload-area" class="hidden bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-dashed border-blue-300 rounded-2xl p-4 transition-all duration-300">
+<div class="text-center">
+<div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
+<i class="ri-file-pdf-line text-white text-lg"></i>
+</div>
+<h3 class="text-base font-bold text-gray-900 mb-2">Upload Your PDF Book</h3>
+<p class="text-sm text-gray-600 mb-3">Drag and drop your PDF file or click to browse</p>
+<input type="file" id="pdf-input" accept=".pdf" class="hidden">
+<label for="pdf-input" class="bg-primary text-white px-3 py-2 text-sm !rounded-button font-medium hover:bg-blue-700 transition-colors whitespace-nowrap cursor-pointer inline-block">
+Choose PDF File
+</label>
+<p class="text-xs text-gray-500 mt-2">Supports PDF files up to 50MB</p>
+</div>
+</div>
+<div id="upload-success" class="hidden bg-green-50 border border-green-200 rounded-xl p-3">
+<div class="flex items-center space-x-2">
+<div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+<i class="ri-check-line text-white text-sm"></i>
+</div>
+<div>
+<h4 class="font-medium text-green-900">PDF Upload Successful!</h4>
+<p class="text-sm text-green-700">Your PDF book has been uploaded and is ready to view.</p>
+</div>
+</div>
+<div class="mt-2 flex gap-2">
+<button id="view-pdf-btn" class="bg-green-600 text-white px-3 py-2 text-sm !rounded-button font-medium hover:bg-green-700 transition-colors whitespace-nowrap cursor-pointer">
+<i class="ri-book-open-line mr-1 w-3 h-3 flex items-center justify-center"></i>View PDF Book
+</button>
+<button id="upload-another-btn" class="bg-gray-100 text-gray-700 px-3 py-2 text-sm !rounded-button font-medium hover:bg-gray-200 transition-colors whitespace-nowrap cursor-pointer">
+Upload Another
+</button>
+</div>
+</div>
+<div id="pdf-book-display" class="hidden mt-4 bg-white rounded-2xl border-2 border-gray-200 overflow-hidden">
+<div class="bg-gray-50 border-b border-gray-200 p-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<div class="w-6 h-6 bg-red-500 rounded-lg flex items-center justify-center">
+<i class="ri-file-pdf-line text-white text-sm"></i>
+</div>
+<div>
+<h4 class="font-medium text-gray-900" id="pdf-title">Your PDF Book</h4>
+<p class="text-sm text-gray-500" id="pdf-info">Loading...</p>
+</div>
+</div>
+<div class="flex items-center space-x-1">
+<button id="pdf-fullscreen-btn" class="w-6 h-6 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors cursor-pointer">
+<i class="ri-fullscreen-line text-gray-600 text-sm"></i>
+</button>
+<button id="close-pdf-btn" class="w-6 h-6 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors cursor-pointer">
+<i class="ri-close-line text-gray-600 text-sm"></i>
+</button>
+</div>
+</div>
+</div>
+<div class="p-3">
+<div class="bg-gray-100 rounded-xl" style="height: 500px;">
+<iframe id="pdf-viewer" class="w-full h-full rounded-xl" frameborder="0"></iframe>
+</div>
+<div class="flex items-center justify-between mt-3">
+<div class="flex items-center space-x-2">
+<button id="pdf-prev-btn" class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+<i class="ri-arrow-left-line text-gray-600"></i>
+</button>
+<span class="text-sm text-gray-600" id="pdf-page-info">Page 1 of 1</span>
+<button id="pdf-next-btn" class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
+<i class="ri-arrow-right-line text-gray-600"></i>
+</button>
+</div>
+<div class="flex items-center space-x-1">
+<button id="pdf-zoom-out-btn" class="w-6 h-6 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors cursor-pointer">
+<i class="ri-subtract-line text-gray-600 text-sm"></i>
+</button>
+<span class="text-sm text-gray-600 px-1" id="pdf-zoom-level">100%</span>
+<button id="pdf-zoom-in-btn" class="w-6 h-6 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors cursor-pointer">
+<i class="ri-add-line text-gray-600 text-sm"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="order-1 lg:order-2">
+<a href="#" class="block cursor-pointer hover:scale-105 transition-transform duration-300" id="book-cover-link" data-readdy="true">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/c88ffed5c6fd809025ebdaba93122a64.png"
+alt="Kofi's Journey Book Cover"
+class="w-full max-w-sm mx-auto rounded-lg object-cover shadow-lg hover:shadow-xl transition-shadow duration-300">
+</a>
+</div>
+</div>
+</div>
+</section>
+<section class="py-8 bg-gray-50 relative overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img src="https://readdy.ai/api/search-image?query=stunning%20aerial%20view%20of%20world-class%20football%20academy%20training%20facilities%20including%20La%20Masia%20Barcelona%2C%20Carrington%20Manchester%20United%2C%20Bayern%20Munich%20campus%2C%20Manchester%20City%20Football%20Academy%2C%20Juventus%20training%20center%2C%20Chelsea%20Cobham%20academy%2C%20multiple%20pristine%20grass%20pitches%2C%20modern%20architecture%2C%20professional%20sports%20photography%2C%20golden%20hour%20lighting%2C%20geometric%20training%20field%20patterns%2C%20elite%20academy%20complex%2C%20symmetrical%20layout&width=1920&height=1080&seq=cta-academy-bg&orientation=landscape"
+alt="Elite Football Academy Training Facilities Background"
+class="w-full h-full object-cover object-center">
+<div class="absolute inset-0 bg-gradient-to-b from-gray-50/95 via-gray-50/90 to-gray-50/95"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-gray-50/85 via-transparent to-gray-50/85"></div>
+</div>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
+<div class="text-center mb-6">
+<h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 drop-shadow-sm">Ready to Start?</h2>
+<p class="text-lg text-gray-600 mb-1 drop-shadow-sm">
+Transform mental training at your academy
+</p>
+<p class="text-base text-gray-500 drop-shadow-sm">Fill out this form and we'll get back to you within 24 hours</p>
+</div>
+<div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/50 p-4 sm:p-6">
+<form id="enquiry-form" action="https://formspree.io/f/mzbqzjaq" method="POST" class="space-y-3">
+<div class="grid md:grid-cols-2 gap-3">
+<div>
+<label for="full-name" class="block text-sm font-medium text-gray-900 mb-2">
+Full Name <span class="text-red-500">*</span>
+</label>
+<input
+type="text"
+id="full-name"
+name="full_name"
+required
+class="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-colors mobile-input tap-target"
+placeholder="Enter your full name"
+>
+</div>
+<div>
+<label for="email" class="block text-sm font-medium text-gray-900 mb-2">
+Email Address <span class="text-red-500">*</span>
+</label>
+<input
+type="email"
+id="email"
+name="email"
+required
+class="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-colors mobile-input tap-target"
+placeholder="your.email@example.com"
+>
+</div>
+</div>
+<div class="grid md:grid-cols-2 gap-3">
+<div>
+<label for="organisation" class="block text-sm font-medium text-gray-900 mb-2">
+Organisation / Club / Academy Name <span class="text-red-500">*</span>
+</label>
+<input
+type="text"
+id="organisation"
+name="organisation"
+required
+class="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-colors mobile-input tap-target"
+placeholder="Your academy or club name"
+>
+</div>
+<div>
+<label for="role" class="block text-sm font-medium text-gray-900 mb-2">
+Your Role <span class="text-red-500">*</span>
+</label>
+<input
+type="text"
+id="role"
+name="role"
+required
+class="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-colors mobile-input tap-target"
+placeholder="e.g. Academy Director, Coach, Manager, Parent, etc."
+>
+</div>
+</div>
+<div>
+<label for="enquiry-type" class="block text-sm font-medium text-gray-900 mb-2">
+Enquiry Type <span class="text-red-500">*</span>
+</label>
+<input
+type="text"
+id="enquiry-type"
+name="enquiry_type"
+required
+class="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-colors mobile-input tap-target"
+placeholder="e.g. Partnership, Demo Request, Pilot Programme, General Enquiry"
+>
+</div>
+<div>
+<label for="message" class="block text-sm font-medium text-gray-900 mb-2">
+Additional Information
+</label>
+<textarea
+id="message"
+name="message"
+rows="3"
+maxlength="500"
+class="w-full px-3 py-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-colors resize-none mobile-input tap-target"
+placeholder="Tell us more about your academy, specific challenges, or what you'd like to achieve..."
+></textarea>
+<div class="flex justify-between items-center mt-2">
+<div class="text-xs text-gray-500">Optional - help us understand your needs better</div>
+<div class="text-xs text-gray-400" id="char-count">0/500</div>
+</div>
+</div>
+<div class="pt-3">
+<button
+type="submit"
+class="w-full bg-primary text-white px-4 py-4 !rounded-button font-medium hover:bg-blue-700 transition-colors whitespace-nowrap text-sm flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed tap-target mobile-button cursor-pointer"
+id="submit-btn"
+>
+<span id="submit-text">Send Enquiry</span>
+<i class="ri-send-plane-line ml-2 w-4 h-4 flex items-center justify-center hidden" id="submit-icon"></i>
+<i class="ri-loader-4-line ml-2 w-4 h-4 flex items-center justify-center animate-spin hidden" id="loading-icon"></i>
+</button>
+</div>
+<div class="pt-3 border-t border-gray-100">
+<p class="text-xs text-gray-500 text-center">
+By submitting this form, you agree to be contacted by MeTime Stories regarding your enquiry.
+We respect your privacy and will never share your information with third parties.
+</p>
+</div>
+</form>
+<div id="success-message" class="hidden text-center py-6">
+<div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+<i class="ri-check-line text-green-600 text-xl"></i>
+</div>
+<h3 class="text-lg font-bold text-gray-900 mb-2">Thank You!</h3>
+<p class="text-gray-600 mb-3">Your enquiry has been submitted successfully. We'll get back to you within 24 hours.</p>
+<button type="button" id="submit-another" class="text-primary font-medium text-sm hover:text-blue-700 transition-colors cursor-pointer">
+Submit Another Enquiry
+</button>
+</div>
+</div>
+</div>
+</section>
+<div id="floating-cta" class="fixed bottom-6 right-6 z-40 opacity-0 transform translate-y-4 transition-all duration-500">
+<div class="relative group">
+<button class="bg-gradient-to-r from-primary to-secondary text-white w-14 h-14 rounded-full shadow-2xl hover:shadow-3xl flex items-center justify-center transition-all duration-300 hover:scale-110 mobile-button animate-pulse tap-target cursor-pointer" style="animation-duration: 3s;" onclick="document.querySelector('#enquiry-form').scrollIntoView({behavior: 'smooth', block: 'start'})">
+<i class="ri-send-plane-fill text-xl"></i>
+</button>
+<div class="absolute bottom-full right-0 mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+<div class="bg-gray-900 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap">
+Send Enquiry
+<div class="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+</div>
+</div>
+<div class="absolute -inset-2 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full blur-xl opacity-60 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+</div>
+</div>
+<footer class="bg-white border-t border-gray-200 py-6">
+<div class="max-w-4xl mx-auto px-4">
+<div class="grid md:grid-cols-3 gap-4 mb-4">
+<div>
+<div class="font-['Pacifico'] text-base text-gray-900 mb-2">MeTime Stories</div>
+<p class="text-sm text-gray-600">Mental training for elite athletes</p>
+</div>
+<div>
+<h4 class="font-medium text-gray-900 mb-2">Product</h4>
+<div class="space-y-1 text-sm text-gray-600">
+<div>How It Works</div>
+<div>Stories</div>
+<div>Pricing</div>
+</div>
+</div>
+<div>
+<h4 class="font-medium text-gray-900 mb-2">Support</h4>
+<div class="space-y-1 text-sm text-gray-600">
+<div>Help Center</div>
+<div>Contact</div>
+<div>Resources</div>
+</div>
+</div>
+</div>
+<div class="border-t border-gray-200 pt-4 text-center">
+<p class="text-sm text-gray-600">&copy; 2025 MeTime Stories. All rights reserved.</p>
+</div>
+</div>
+</footer>
+<script id="scroll-animations">
+document.addEventListener('DOMContentLoaded', function() {
+const animateElements = document.querySelectorAll('.animate-on-scroll');
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('animated');
+}
+});
+}, {
+threshold: 0.1,
+rootMargin: '0px 0px -50px 0px'
+});
+animateElements.forEach(element => {
+observer.observe(element);
+});
+const solutionPillars = document.querySelectorAll('.solution-pillars .pillar-item');
+const pillarObserver = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+const delay = entry.target.getAttribute('data-delay') || '0';
+setTimeout(() => {
+entry.target.classList.add('animated');
+}, parseFloat(delay) * 1000);
+}
+});
+}, {
+threshold: 0.3,
+rootMargin: '0px 0px -100px 0px'
+});
+solutionPillars.forEach(pillar => {
+pillarObserver.observe(pillar);
+});
+const heroSubtitle = document.getElementById('hero-subtitle');
+const typewriterText = heroSubtitle.querySelector('.typewriter-text');
+const cursor = heroSubtitle.querySelector('.typewriter-cursor');
+const fullText = "Your story, your journey: hyper-personalised experiences that strengthen resilience, sharpen focus, and ignite a champion's mindset in Academy Players";
+let currentIndex = 0;
+let isTyping = false;
+function startTypewriter() {
+if (isTyping) return;
+isTyping = true;
+typewriterText.classList.add('text-gradient-flow');
+const typeInterval = setInterval(() => {
+if (currentIndex < fullText.length) {
+typewriterText.textContent = fullText.slice(0, currentIndex + 1);
+currentIndex++;
+} else {
+clearInterval(typeInterval);
+setTimeout(() => {
+typewriterText.classList.remove('text-gradient-flow');
+cursor.style.opacity = '0';
+isTyping = false;
+}, 1000);
+}
+}, 50);
+}
+const heroObserver = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting && !isTyping) {
+setTimeout(startTypewriter, 1200);
+}
+});
+}, {
+threshold: 0.3
+});
+heroObserver.observe(heroSubtitle);
+});
+</script>
+<script id="navigation-interactions">
+document.addEventListener('DOMContentLoaded', function() {
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+const mobileMenuIcon = mobileMenuBtn.querySelector('i');
+mobileMenuBtn.addEventListener('click', function() {
+if (mobileMenu.classList.contains('hidden')) {
+mobileMenu.classList.remove('hidden');
+mobileMenuIcon.className = 'ri-close-line text-gray-600 text-xl';
+} else {
+mobileMenu.classList.add('hidden');
+mobileMenuIcon.className = 'ri-menu-line text-gray-600 text-xl';
+}
+});
+const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+mobileNavLinks.forEach(link => {
+link.addEventListener('click', function() {
+mobileMenu.classList.add('hidden');
+mobileMenuIcon.className = 'ri-menu-line text-gray-600 text-xl';
+});
+});
+const navLinks = document.querySelectorAll('nav a[href^="#"]');
+navLinks.forEach(link => {
+link.addEventListener('click', function(e) {
+e.preventDefault();
+const targetId = this.getAttribute('href');
+const targetSection = document.querySelector(targetId);
+if (targetSection) {
+targetSection.scrollIntoView({
+behavior: 'smooth',
+block: 'start'
+});
+}
+});
+});
+document.addEventListener('click', function(e) {
+if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+mobileMenu.classList.add('hidden');
+mobileMenuIcon.className = 'ri menu-line text-gray-600 text-xl';
+}
+});
+});
+</script>
+<script id="book-slideshow">
+document.addEventListener('DOMContentLoaded', function() {
+const slidesTrack = document.getElementById('book-slides-track');
+const slides = document.querySelectorAll('.slideshow-slide');
+const dots = document.querySelectorAll('.book-dot');
+const prevBtn = document.getElementById('book-prev-btn');
+const nextBtn = document.getElementById('book-next-btn');
+const captions = document.querySelectorAll('.slide-caption');
+const uploadImagesBtn = document.getElementById('upload-images-btn');
+const resetSlideshowBtn = document.getElementById('reset-slideshow-btn');
+const slideshowImagesInput = document.getElementById('slideshow-images-input');
+const uploadStatus = document.getElementById('upload-status');
+const uploadCount = document.getElementById('upload-count');
+let currentSlide = 0;
+let autoSlideInterval;
+const originalImages = [
+'https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/91fb567bfa7e3ce644b6b4d4b96435a9.png',
+'https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/7064627c2fa04913cd55ac5902886e23.jfif',
+'https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/8bc88ee353666b9a2e4473cb0a5eb0b8.jfif',
+'https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/8bc88ee353666b9a2e4473cb0a5eb0b8.jpeg',
+'https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/916f461468a73745291a01d716c71072.jfif',
+'https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/4f26ae0eac22f148ec417494f35acffd.jfif'
+];
+function updateSlide(index) {
+currentSlide = index;
+slidesTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+dots.forEach((dot, i) => {
+dot.classList.toggle('active', i === currentSlide);
+dot.style.backgroundColor = i === currentSlide ? '#3b82f6' : 'rgba(255,255,255,0.5)';
+});
+captions.forEach((caption, i) => {
+caption.classList.toggle('active', i === currentSlide);
+caption.classList.toggle('hidden', i !== currentSlide);
+});
+}
+function nextSlide() {
+const nextIndex = (currentSlide + 1) % slides.length;
+updateSlide(nextIndex);
+}
+function prevSlide() {
+const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+updateSlide(prevIndex);
+}
+function startAutoSlide() {
+autoSlideInterval = setInterval(nextSlide, 4000);
+}
+function stopAutoSlide() {
+clearInterval(autoSlideInterval);
+}
+nextBtn.addEventListener('click', function() {
+stopAutoSlide();
+nextSlide();
+startAutoSlide();
+});
+prevBtn.addEventListener('click', function() {
+stopAutoSlide();
+prevSlide();
+startAutoSlide();
+});
+dots.forEach((dot, index) => {
+dot.addEventListener('click', function() {
+stopAutoSlide();
+updateSlide(index);
+startAutoSlide();
+});
+});
+const slideshow = document.getElementById('book-slideshow');
+slideshow.addEventListener('mouseenter', stopAutoSlide);
+slideshow.addEventListener('mouseleave', startAutoSlide);
+uploadImagesBtn.addEventListener('click', function() {
+slideshowImagesInput.click();
+});
+slideshowImagesInput.addEventListener('change', function(e) {
+const files = Array.from(e.target.files);
+if (files.length > 0) {
+stopAutoSlide();
+slidesTrack.innerHTML = '';
+const dotsContainer = document.getElementById('slideshow-dots');
+dotsContainer.innerHTML = '';
+files.forEach((file, index) => {
+if (file.type.startsWith('image/')) {
+const reader = new FileReader();
+reader.onload = function(e) {
+const slideDiv = document.createElement('div');
+slideDiv.className = 'w-full flex-shrink-0 h-full slideshow-slide';
+slideDiv.dataset.slide = index;
+const img = document.createElement('img');
+img.src = e.target.result;
+img.alt = `Uploaded image ${index + 1}`;
+img.className = 'w-full h-full rounded-xl object-cover shadow-lg';
+slideDiv.appendChild(img);
+slidesTrack.appendChild(slideDiv);
+const dot = document.createElement('button');
+dot.className = `w-2 h-2 rounded-full ${index === 0 ? 'bg-white/80' : 'bg-white/50'} shadow-sm book-dot transition-all duration-300 cursor-pointer`;
+dot.dataset.slide = index;
+dot.addEventListener('click', function() {
+stopAutoSlide();
+updateSlide(index);
+startAutoSlide();
+});
+dotsContainer.appendChild(dot);
+};
+reader.readAsDataURL(file);
+}
+});
+uploadStatus.classList.remove('hidden');
+uploadCount.textContent = `${files.length} images loaded`;
+setTimeout(() => {
+currentSlide = 0;
+updateSlide(0);
+startAutoSlide();
+}, 500);
+}
+});
+resetSlideshowBtn.addEventListener('click', function() {
+stopAutoSlide();
+slidesTrack.innerHTML = '';
+const dotsContainer = document.getElementById('slideshow-dots');
+dotsContainer.innerHTML = '';
+originalImages.forEach((src, index) => {
+const slideDiv = document.createElement('div');
+slideDiv.className = 'w-full flex-shrink-0 h-full slideshow-slide';
+slideDiv.dataset.slide = index;
+const img = document.createElement('img');
+img.src = src;
+img.alt = ['MeTime Stories Book Cover', 'Character Introduction Page', 'Training Ground Story Page', 'Book Content and Story Page', 'Challenge and Growth Story Page', 'Success and Achievement Story Page'][index];
+img.className = 'w-full h-full rounded-xl object-cover shadow-lg';
+slideDiv.appendChild(img);
+slidesTrack.appendChild(slideDiv);
+const dot = document.createElement('button');
+dot.className = `w-2 h-2 rounded-full ${index === 0 ? 'bg-white/80' : 'bg-white/50'} shadow-sm book-dot transition-all duration-300 cursor-pointer`;
+dot.dataset.slide = index;
+dot.addEventListener('click', function() {
+stopAutoSlide();
+updateSlide(index);
+startAutoSlide();
+});
+dotsContainer.appendChild(dot);
+});
+uploadStatus.classList.add('hidden');
+slideshowImagesInput.value = '';
+setTimeout(() => {
+currentSlide = 0;
+updateSlide(0);
+startAutoSlide();
+}, 500);
+});
+startAutoSlide();
+});
+</script>
+<script id="process-carousel">
+document.addEventListener('DOMContentLoaded', function() {
+const carouselTrack = document.getElementById('carousel-track');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const dots = document.querySelectorAll('.process-nav-dot');
+const progressTrack = document.getElementById('progress-track');
+let currentSlide = 0;
+const totalSlides = 3;
+let autoSlideInterval;
+function updateSlide(index) {
+currentSlide = index;
+carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+dots.forEach((dot, i) => {
+if (i === currentSlide) {
+dot.classList.add('active');
+dot.style.backgroundColor = '#1e3a8a';
+} else {
+dot.classList.remove('active');
+dot.style.backgroundColor = '#d1d5db';
+}
+});
+const progressWidth = ((currentSlide + 1) / totalSlides) * 100;
+progressTrack.style.width = `${progressWidth}%`;
+}
+function nextSlide() {
+const nextIndex = (currentSlide + 1) % totalSlides;
+updateSlide(nextIndex);
+}
+function prevSlide() {
+const prevIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+updateSlide(prevIndex);
+}
+function startAutoSlide() {
+autoSlideInterval = setInterval(nextSlide, 6000);
+}
+function stopAutoSlide() {
+clearInterval(autoSlideInterval);
+}
+nextBtn.addEventListener('click', function() {
+stopAutoSlide();
+nextSlide();
+startAutoSlide();
+});
+prevBtn.addEventListener('click', function() {
+stopAutoSlide();
+prevSlide();
+startAutoSlide();
+});
+dots.forEach((dot, index) => {
+dot.addEventListener('click', function() {
+stopAutoSlide();
+updateSlide(index);
+startAutoSlide();
+});
+});
+const carousel = document.getElementById('process-carousel');
+carousel.addEventListener('mouseenter', stopAutoSlide);
+carousel.addEventListener('mouseleave', startAutoSlide);
+startAutoSlide();
+});
+</script>
+<script id="journey-interaction">
+document.addEventListener('DOMContentLoaded', function() {
+const journeySteps = document.querySelectorAll('.journey-step');
+const previewContent = document.getElementById('preview-content');
+const progressDots = document.querySelectorAll('[id^="progress-"]');
+const sceneData = {
+dream: {
+title: "The Vision",
+content: `<div class="flex items-start space-x-4">
+<div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+<i class="ri-star-fill text-white text-xl"></i>
+</div>
+<div>
+<h4 class="font-bold text-gray-900 mb-2">Pure Ambition Ignites</h4>
+<p class="text-sm text-gray-600 leading-relaxed">The player discovers their calling - that burning desire to reach the top. Everything seems possible in this moment of clarity.</p>
+</div>
+</div>`,
+color: "from-yellow-400 to-orange-500"
+},
+reality: {
+title: "The Storm",
+content: `<div class="flex items-start space-x-4">
+<div class="w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-600 rounded-xl flex items-center justify-center shadow-lg">
+<i class="ri-thunder-storms-fill text-white text-xl"></i>
+</div>
+<div>
+<h4 class="font-bold text-gray-900 mb-2">Reality Strikes Hard</h4>
+<p class="text-sm text-gray-600 leading-relaxed">The first taste of real competition reveals gaps in preparation. Pressure mounts as expectations clash with current ability.</p>
+</div>
+</div>`,
+color: "from-gray-500 to-gray-600"
+},
+loss: {
+title: "Rock Bottom",
+content: `<div class="flex items-start space-x-4">
+<div class="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
+<i class="ri-heart-crack-fill text-white text-xl"></i>
+</div>
+<div>
+<h4 class="font-bold text-gray-900 mb-2">The Defining Moment</h4>
+<p class="text-sm text-gray-600 leading-relaxed">A crushing defeat or mistake that tests everything. This is where champions are separated from the rest - how will they respond?</p>
+</div>
+</div>`,
+color: "from-red-500 to-red-600"
+},
+comeback: {
+title: "The Rise",
+content: `<div class="flex items-start space-x-4">
+<div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+<i class="ri-rocket-fill text-white text-xl"></i>
+</div>
+<div>
+<h4 class="font-bold text-gray-900 mb-2">Resilience Becomes Power</h4>
+<p class="text-sm text-gray-600 leading-relaxed">The player learns to transform setbacks into comebacks. Mental strength becomes their secret weapon.</p>
+</div>
+</div>`,
+color: "from-blue-500 to-blue-600"
+},
+mentorship: {
+title: "Elite Wisdom",
+content: `<div class="flex items-start space-x-4">
+<div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+<i class="ri-award-fill text-white text-xl"></i>
+</div>
+<div>
+<h4 class="font-bold text-gray-900 mb-2">Champions Share Secrets</h4>
+<p class="text-sm text-gray-600 leading-relaxed">Guidance from those who've walked this path before. The player gains perspective that accelerates their development.</p>
+</div>
+</div>`,
+color: "from-green-500 to-green-600"
+},
+cliffhanger: {
+title: "Next Level",
+content: `<div class="flex items-start space-x-4">
+<div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+<i class="ri-infinity-fill text-white text-xl"></i>
+</div>
+<div>
+<h4 class="font-bold text-gray-900 mb-2">The Journey Continues</h4>
+<p class="text-sm text-gray-600 leading-relaxed">Each achievement unlocks new challenges. The player realizes that growth never stops - there's always another level to reach.</p>
+</div>
+</div>`,
+color: "from-purple-500 to-purple-600"
+}
+};
+function updateProgress(stepIndex) {
+progressDots.forEach((dot, index) => {
+if (index <= stepIndex) {
+dot.style.backgroundColor = '#1e3a8a';
+dot.style.transform = 'scale(1.2)';
+} else {
+dot.style.backgroundColor = '#d1d5db';
+dot.style.transform = 'scale(1)';
+}
+});
+}
+journeySteps.forEach((step, index) => {
+step.addEventListener('mouseenter', function() {
+const scene = this.dataset.scene;
+const data = sceneData[scene];
+if (data) {
+previewContent.innerHTML = data.content;
+previewContent.parentElement.style.background = `linear-gradient(135deg, white 0%, rgba(59, 130, 246, 0.05) 100%)`;
+step.querySelector('.step-number').style.opacity = '1';
+step.querySelector('.journey-icon').style.transform = 'scale(1.1)';
+updateProgress(index);
+}
+});
+step.addEventListener('mouseleave', function() {
+step.querySelector('.step-number').style.opacity = '0';
+step.querySelector('.journey-icon').style.transform = 'scale(1)';
+});
+step.addEventListener('click', function() {
+const scene = this.dataset.scene;
+const data = sceneData[scene];
+if (data) {
+previewContent.innerHTML = data.content;
+updateProgress(index);
+journeySteps.forEach(s => s.classList.remove('active'));
+this.classList.add('active');
+}
+});
+});
+if (window.innerWidth <= 768) {
+let touchStartX = 0;
+let touchEndX = 0;
+const journeyContainer = document.getElementById('journey-container');
+journeyContainer.addEventListener('touchstart', function(e) {
+touchStartX = e.changedTouches[0].screenX;
+});
+journeyContainer.addEventListener('touchend', function(e) {
+touchEndX = e.changedTouches[0].screenX;
+handleSwipe();
+});
+function handleSwipe() {
+if (touchEndX < touchStartX - 50) {
+// Swipe left - next
+const current = document.querySelector('.journey-step.active') || journeySteps[0];
+const currentIndex = Array.from(journeySteps).indexOf(current);
+const nextIndex = Math.min(currentIndex + 1, journeySteps.length - 1);
+journeySteps[nextIndex].click();
+}
+if (touchEndX > touchStartX + 50) {
+// Swipe right - previous
+const current = document.querySelector('.journey-step.active') || journeySteps[0];
+const currentIndex = Array.from(journeySteps).indexOf(current);
+const prevIndex = Math.max(currentIndex - 1, 0);
+journeySteps[prevIndex].click();
+}
+}
+}
+});
+</script>
+<script id="form-handling">
+document.addEventListener('DOMContentLoaded', function() {
+const form = document.getElementById('enquiry-form');
+const submitBtn = document.getElementById('submit-btn');
+const submitText = document.getElementById('submit-text');
+const submitIcon = document.getElementById('submit-icon');
+const loadingIcon = document.getElementById('loading-icon');
+const successMessage = document.getElementById('success-message');
+const submitAnotherBtn = document.getElementById('submit-another');
+const messageTextarea = document.getElementById('message');
+const charCount = document.getElementById('char-count');
+messageTextarea.addEventListener('input', function() {
+const currentLength = this.value.length;
+charCount.textContent = `${currentLength}/500`;
+if (currentLength > 450) {
+charCount.style.color = '#ef4444';
+} else if (currentLength > 400) {
+charCount.style.color = '#f59e0b';
+} else {
+charCount.style.color = '#9ca3af';
+}
+});
+form.addEventListener('submit', async function(e) {
+e.preventDefault();
+submitBtn.disabled = true;
+submitText.textContent = 'Sending...';
+submitIcon.classList.add('hidden');
+loadingIcon.classList.remove('hidden');
+try {
+const formData = new FormData(form);
+const response = await fetch(form.action, {
+method: 'POST',
+body: formData,
+headers: {
+'Accept': 'application/json'
+}
+});
+if (response.ok) {
+form.classList.add('hidden');
+successMessage.classList.remove('hidden');
+} else {
+throw new Error('Form submission failed');
+}
+} catch (error) {
+console.error('Error:', error);
+alert('There was an error submitting your form. Please try again.');
+submitBtn.disabled = false;
+submitText.textContent = 'Send Enquiry';
+submitIcon.classList.remove('hidden');
+loadingIcon.classList.add('hidden');
+}
+});
+submitAnotherBtn.addEventListener('click', function() {
+form.classList.remove('hidden');
+successMessage.classList.add('hidden');
+form.reset();
+charCount.textContent = '0/500';
+charCount.style.color = '#9ca3af';
+submitBtn.disabled = false;
+submitText.textContent = 'Send Enquiry';
+submitIcon.classList.add('hidden');
+loadingIcon.classList.add('hidden');
+});
+});
+</script>
+<script id="modal-interactions">
+document.addEventListener('DOMContentLoaded', function() {
+const readSampleBtn = document.getElementById('read-sample-btn');
+const flipbookModal = document.getElementById('flipbook-modal');
+const closeFlipbookBtn = document.getElementById('close-flipbook-btn');
+const frameworkTrigger = document.getElementById('framework-trigger');
+const footballMatrixModal = document.getElementById('football-matrix-modal');
+const closeMatrixBtn = document.getElementById('close-matrix-btn');
+const matrixIframe = document.getElementById('matrix-iframe');
+readSampleBtn.addEventListener('click', function() {
+flipbookModal.classList.remove('hidden');
+flipbookModal.style.opacity = '0';
+setTimeout(() => {
+flipbookModal.style.opacity = '1';
+}, 10);
+});
+closeFlipbookBtn.addEventListener('click', function() {
+flipbookModal.style.opacity = '0';
+setTimeout(() => {
+flipbookModal.classList.add('hidden');
+}, 300);
+});
+flipbookModal.addEventListener('click', function(e) {
+if (e.target === flipbookModal) {
+closeFlipbookBtn.click();
+}
+});
+frameworkTrigger.addEventListener('click', function(e) {
+e.preventDefault();
+footballMatrixModal.classList.remove('hidden');
+matrixIframe.src = 'https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/9d1d3da4-a2fe-4550-895f-13a5c43ba635';
+});
+closeMatrixBtn.addEventListener('click', function() {
+footballMatrixModal.classList.add('hidden');
+matrixIframe.src = '';
+});
+footballMatrixModal.addEventListener('click', function(e) {
+if (e.target === footballMatrixModal) {
+closeMatrixBtn.click();
+}
+});
+});
+</script>
+<script id="counter-animation">
+document.addEventListener('DOMContentLoaded', function() {
+const counter = document.getElementById('animated-counter');
+let hasAnimated = false;
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting && !hasAnimated) {
+hasAnimated = true;
+animateCounter();
+}
+});
+}, {
+threshold: 0.5
+});
+observer.observe(counter);
+function animateCounter() {
+let current = 0;
+const target = 0.5;
+const increment = 0.01;
+const duration = 2000;
+const steps = duration / 50;
+const stepValue = target / steps;
+const timer = setInterval(() => {
+current += stepValue;
+if (current >= target) {
+current = target;
+clearInterval(timer);
+}
+counter.textContent = current.toFixed(1);
+}, 50);
+}
+});
+</script>
+<script id="floating-cta">
+document.addEventListener('DOMContentLoaded', function() {
+const floatingCta = document.getElementById('floating-cta');
+const enquirySection = document.getElementById('enquiry-form');
+let isVisible = false;
+function checkVisibility() {
+const scrollPosition = window.scrollY;
+const windowHeight = window.innerHeight;
+const heroSection = document.querySelector('section:first-of-type');
+const heroHeight = heroSection ? heroSection.offsetHeight : 800;
+const enquirySectionTop = enquirySection ? enquirySection.getBoundingClientRect().top + window.scrollY : document.body.scrollHeight;
+const enquirySectionVisible = enquirySection ? enquirySection.getBoundingClientRect().top < windowHeight * 0.8 : false;
+if (scrollPosition > heroHeight * 0.6 && !enquirySectionVisible && !isVisible) {
+isVisible = true;
+floatingCta.style.opacity = '1';
+floatingCta.style.transform = 'translateY(0)';
+} else if ((scrollPosition <= heroHeight * 0.6 || enquirySectionVisible) && isVisible) {
+isVisible = false;
+floatingCta.style.opacity = '0';
+floatingCta.style.transform = 'translateY(16px)';
+}
+}
+window.addEventListener('scroll', checkVisibility);
+window.addEventListener('resize', checkVisibility);
+checkVisibility();
+});
+</script>
+</body>
+</html>

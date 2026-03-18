@@ -5,7 +5,7 @@ import {
   Loader2,
   Save,
   ArrowLeft,
-  ChevronDown,
+  ChevronLeft,
   ChevronRight,
   BookOpen,
   Zap,
@@ -14,6 +14,22 @@ import {
   Lightbulb,
   Flag,
   CheckCircle2,
+  Lock,
+  Layout,
+  Image,
+  Type,
+  AlignLeft,
+  PanelLeftOpen,
+  PanelRightOpen,
+  Settings,
+  BookMarked,
+  Columns,
+  SplitSquareHorizontal,
+  SplitSquareVertical,
+  Maximize2,
+  LayoutGrid,
+  Info,
+  ChevronsRight,
 } from "lucide-react";
 import { InternalLayout } from "@/layouts/InternalLayout";
 import {
@@ -21,16 +37,21 @@ import {
   saveScene,
   fetchBlueprint,
   fetchPlayerProfile,
+  fetchProject,
   type StoryScene,
   type StoryBlueprint,
   type PlayerProfile,
 } from "@/lib/internalApi";
 
+const ACCENT = "#a78bfa";
+const BG_CANVAS = "#f8f5f0";
+const BG_PAGE = "#fdfcf9";
+
 const SCENE_DEFS = [
   {
     number: 1,
     title: "The Vision",
-    icon: <Flag size={16} />,
+    icon: Flag,
     color: "#a78bfa",
     purpose: "Introduce the player's dream, identity, world, and what they want.",
     emotionalBeat: "Hope · Ambition · Belonging",
@@ -39,12 +60,11 @@ const SCENE_DEFS = [
       "What does their best game feel like?",
       "What do they picture when they close their eyes and dream?",
     ],
-    avoid: ["Generic football clichés", "Starting with a match description"],
   },
   {
     number: 2,
     title: "The Storm",
-    icon: <AlertCircle size={16} />,
+    icon: AlertCircle,
     color: "#f97316",
     purpose: "Introduce challenge, pressure, disappointment, or conflict.",
     emotionalBeat: "Tension · Doubt · Frustration",
@@ -53,12 +73,11 @@ const SCENE_DEFS = [
       "What has gone wrong this season?",
       "Who or what feels like an obstacle?",
     ],
-    avoid: ["Making the challenge too dramatic or physical", "Simplifying the emotion"],
   },
   {
     number: 3,
     title: "Rock Bottom",
-    icon: <AlertCircle size={16} />,
+    icon: AlertCircle,
     color: "#ef4444",
     purpose: "Show the lowest point, fracture, doubt, or hardest test.",
     emotionalBeat: "Vulnerability · Isolation · Inner conflict",
@@ -67,379 +86,702 @@ const SCENE_DEFS = [
       "What did they nearly give up?",
       "What feels most unfair or invisible about their situation?",
     ],
-    avoid: ["Physical injury as the main crisis if avoidable", "Over-dramatising"],
   },
   {
     number: 4,
     title: "The Rise",
-    icon: <TrendingUp size={16} />,
+    icon: TrendingUp,
     color: "#34d399",
     purpose: "Show support, change, action, or new belief beginning to form.",
     emotionalBeat: "Connection · Shift · Quiet momentum",
     prompts: [
       "Who helped them or believed in them?",
-      "What small moment changed something?",
-      "What did they decide to do differently?",
+      "What changed — even slightly?",
+      "What small action did they take?",
     ],
-    avoid: ["Sudden miracle moments", "Preachy lessons"],
   },
   {
     number: 5,
-    title: "Elite Wisdom",
-    icon: <Lightbulb size={16} />,
+    title: "The Breakthrough",
+    icon: Zap,
     color: "#fbbf24",
-    purpose: "Show the deeper lesson, truth, or wisdom gained through the journey.",
-    emotionalBeat: "Clarity · Self-knowledge · Quiet confidence",
+    purpose: "The moment everything shifts. The test is passed. The new belief is proven.",
+    emotionalBeat: "Catharsis · Clarity · Power",
     prompts: [
-      "What do they understand about themselves now?",
-      "What would they tell a younger version of themselves?",
-      "What is their new football truth?",
+      "What is the moment that proves they've grown?",
+      "What do they say, do, or realise?",
+      "What does it feel like in the body?",
     ],
-    avoid: ["Sounding like a self-help book", "Motivational poster clichés"],
   },
   {
     number: 6,
-    title: "Next Level",
-    icon: <CheckCircle2 size={16} />,
-    color: "#60a5fa",
-    purpose: "End with transformation, momentum, and future promise.",
-    emotionalBeat: "Determination · Possibility · Earned optimism",
+    title: "A New Chapter",
+    icon: Lightbulb,
+    color: "#38bdf8",
+    purpose: "Close the story with identity confirmed, future open, legacy beginning.",
+    emotionalBeat: "Gratitude · Pride · Legacy",
     prompts: [
-      "What are they moving toward?",
-      "What is their next challenge or goal?",
-      "How have they changed?",
+      "What does the future look like now?",
+      "What would they say to a younger player?",
+      "What has this journey proved about who they are?",
     ],
-    avoid: ["Unrealistic promises", "Tying everything up too neatly"],
   },
 ];
 
-interface SceneCardProps {
-  def: typeof SCENE_DEFS[0];
-  scene: StoryScene;
-  blueprint: Partial<StoryBlueprint> | null;
-  onSave: (sceneNumber: number, fields: Partial<StoryScene>) => Promise<void>;
+type PageLayout = "text-only" | "image-top" | "image-bottom" | "image-left" | "image-right" | "full-image";
+type BookFormat = "a5" | "square" | "a4";
+
+const BOOK_FORMATS: { key: BookFormat; label: string; desc: string; w: number; h: number }[] = [
+  { key: "a5", label: "A5", desc: "U13+ standard", w: 148, h: 210 },
+  { key: "square", label: "Square", desc: "U9 picture book", w: 210, h: 210 },
+  { key: "a4", label: "A4", desc: "Premium large", w: 210, h: 297 },
+];
+
+const PAGE_LAYOUTS: { key: PageLayout; label: string; icon: React.ReactNode }[] = [
+  { key: "text-only", label: "Text only", icon: <Type size={14} /> },
+  { key: "image-top", label: "Image top", icon: <AlignLeft size={14} style={{ transform: "rotate(180deg)" }} /> },
+  { key: "image-bottom", label: "Image bottom", icon: <AlignLeft size={14} /> },
+  { key: "image-left", label: "Image left", icon: <SplitSquareHorizontal size={14} /> },
+  { key: "image-right", label: "Image right", icon: <Columns size={14} /> },
+  { key: "full-image", label: "Full image", icon: <Maximize2 size={14} /> },
+];
+
+function wordCount(text: string) {
+  return text.trim() ? text.trim().split(/\s+/).length : 0;
 }
 
-function SceneCard({ def, scene, blueprint, onSave }: SceneCardProps) {
-  const [open, setOpen] = useState(false);
-  const [manuscript, setManuscript] = useState(scene.manuscript ?? "");
-  const [notes, setNotes] = useState(scene.sceneNotes ?? "");
-  const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const saveTimeout = useRef<ReturnType<typeof setTimeout>>();
+interface PageCanvasProps {
+  scene: StoryScene;
+  layout: PageLayout;
+  format: BookFormat;
+  onTextChange: (t: string) => void;
+  saving: boolean;
+}
 
-  const wordCount = manuscript.trim().split(/\s+/).filter(Boolean).length;
-  const hasContent = manuscript.trim().length > 0;
+function PageCanvas({ scene, layout, format, onTextChange, saving }: PageCanvasProps) {
+  const fmt = BOOK_FORMATS.find((f) => f.key === format) ?? BOOK_FORMATS[0];
+  const aspectRatio = fmt.w / fmt.h;
 
-  const doSave = useCallback(async () => {
-    setSaving(true);
-    setSaved(false);
-    try {
-      await onSave(def.number, { manuscript, sceneNotes: notes });
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
-    } finally {
-      setSaving(false);
+  const MARGIN = 16;
+  const BLEED = 8;
+
+  const text = scene.manuscript || "";
+  const wc = wordCount(text);
+
+  const PageContent = () => {
+    const textArea = (
+      <textarea
+        className="w-full resize-none outline-none text-[#1a1a2a] leading-relaxed placeholder:text-gray-300"
+        style={{
+          fontFamily: "'Georgia', 'Times New Roman', serif",
+          fontSize: 14,
+          lineHeight: 1.75,
+          background: "transparent",
+          flex: 1,
+          minHeight: 80,
+        }}
+        placeholder="Begin writing here…"
+        value={text}
+        onChange={(e) => onTextChange(e.target.value)}
+      />
+    );
+
+    const imageArea = (
+      <div
+        className="flex items-center justify-center rounded-xl border-2 border-dashed flex-shrink-0"
+        style={{ borderColor: "rgba(0,0,0,0.1)", background: "rgba(0,0,0,0.025)", minHeight: 120 }}
+      >
+        <div className="flex flex-col items-center gap-2 text-gray-300 select-none">
+          <Image size={24} />
+          <span className="text-xs">Illustration placeholder</span>
+          {scene.imageUrl && (
+            <img src={scene.imageUrl} alt="scene" className="max-w-full max-h-48 rounded-lg mt-2" />
+          )}
+        </div>
+      </div>
+    );
+
+    if (layout === "text-only") {
+      return <div className="flex-1 flex flex-col overflow-auto">{textArea}</div>;
     }
-  }, [def.number, manuscript, notes, onSave]);
-
-  const handleChange = (val: string, type: "manuscript" | "notes") => {
-    if (type === "manuscript") setManuscript(val);
-    else setNotes(val);
-    if (saveTimeout.current) clearTimeout(saveTimeout.current);
-    saveTimeout.current = setTimeout(doSave, 2000);
+    if (layout === "image-top") {
+      return (
+        <div className="flex-1 flex flex-col gap-3 overflow-auto">
+          {imageArea}
+          {textArea}
+        </div>
+      );
+    }
+    if (layout === "image-bottom") {
+      return (
+        <div className="flex-1 flex flex-col gap-3 overflow-auto">
+          {textArea}
+          {imageArea}
+        </div>
+      );
+    }
+    if (layout === "image-left") {
+      return (
+        <div className="flex-1 flex flex-row gap-3 overflow-auto">
+          <div className="w-1/2">{imageArea}</div>
+          <div className="w-1/2 flex flex-col">{textArea}</div>
+        </div>
+      );
+    }
+    if (layout === "image-right") {
+      return (
+        <div className="flex-1 flex flex-row gap-3 overflow-auto">
+          <div className="w-1/2 flex flex-col">{textArea}</div>
+          <div className="w-1/2">{imageArea}</div>
+        </div>
+      );
+    }
+    if (layout === "full-image") {
+      return <div className="flex-1">{imageArea}</div>;
+    }
+    return null;
   };
 
   return (
     <div
-      className="rounded-2xl border overflow-hidden transition-all"
+      className="relative mx-auto"
       style={{
-        borderColor: open ? `${def.color}40` : "rgba(255,255,255,0.06)",
-        background: open ? `linear-gradient(135deg, ${def.color}06 0%, rgba(255,255,255,0.02) 100%)` : "rgba(255,255,255,0.02)",
+        maxWidth: 480,
+        aspectRatio: aspectRatio,
       }}
     >
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between p-5 transition-colors hover:bg-white/[0.02]"
+      {/* Bleed guides (dashed outer border) */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          outline: "1.5px dashed rgba(167,139,250,0.3)",
+          outlineOffset: BLEED,
+          borderRadius: 4,
+          zIndex: 0,
+        }}
+      />
+
+      {/* Book page */}
+      <div
+        className="absolute inset-0 shadow-2xl flex flex-col"
+        style={{
+          background: BG_PAGE,
+          borderRadius: 4,
+          boxShadow: "0 8px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10)",
+          overflow: "hidden",
+        }}
       >
-        <div className="flex items-center gap-4">
-          <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: `${def.color}18`, color: def.color }}
-          >
-            {def.icon}
+        {/* Page header bar */}
+        <div
+          className="flex-shrink-0 flex items-center justify-between px-5 py-2.5 border-b"
+          style={{ borderColor: "rgba(0,0,0,0.07)" }}
+        >
+          <div className="flex items-center gap-2">
+            <BookMarked size={13} className="text-gray-300" />
+            <span className="text-xs text-gray-300 font-medium" style={{ fontFamily: "'Georgia', serif" }}>
+              Chapter {scene.sceneNumber}
+            </span>
           </div>
-          <div className="text-left">
-            <div className="flex items-center gap-2">
-              <span className="text-white/30 text-[11px] font-semibold uppercase tracking-widest">Scene {def.number}</span>
-              {hasContent && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/70" />}
-            </div>
-            <div className="text-white font-bold text-base">{def.title}</div>
+          <div className="flex items-center gap-2">
+            {saving && <Loader2 size={10} className="animate-spin text-violet-400" />}
+            <span className="text-[10px] text-gray-300">{wc} words</span>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          {hasContent && <span className="text-white/30 text-xs">{wordCount}w</span>}
-          {saved && <span className="text-emerald-400 text-xs">Saved ✓</span>}
-          {saving && <Loader2 size={12} className="text-violet-400 animate-spin" />}
-          {open ? <ChevronDown size={16} className="text-white/30" /> : <ChevronRight size={16} className="text-white/30" />}
-        </div>
-      </button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="overflow-hidden"
-          >
-            <div className="border-t border-white/[0.05]">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
-                {/* Left: Guidance panel */}
-                <div className="md:col-span-1 p-5 border-r border-white/[0.05] space-y-4">
-                  <div>
-                    <div className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Section Purpose</div>
-                    <p className="text-white/60 text-xs leading-relaxed">{def.purpose}</p>
-                  </div>
-                  <div>
-                    <div className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Emotional Beat</div>
-                    <p className="text-xs" style={{ color: def.color }}>{def.emotionalBeat}</p>
-                  </div>
-                  <div>
-                    <div className="text-white/30 text-[10px] uppercase tracking-widest mb-2">Prompts</div>
-                    <ul className="space-y-1.5">
-                      {def.prompts.map((p) => (
-                        <li key={p} className="text-white/50 text-xs flex gap-1.5">
-                          <span style={{ color: def.color }}>›</span>
-                          {p}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="text-white/30 text-[10px] uppercase tracking-widest mb-2">Avoid</div>
-                    <ul className="space-y-1">
-                      {def.avoid.map((a) => (
-                        <li key={a} className="text-white/30 text-xs flex gap-1.5">
-                          <span className="text-red-400/50">✗</span>
-                          {a}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  {blueprint && (
-                    <div className="rounded-lg p-3 border border-white/[0.06]" style={{ background: "rgba(255,255,255,0.02)" }}>
-                      <div className="text-white/25 text-[10px] uppercase tracking-widest mb-2">From Blueprint</div>
-                      {blueprint.coreIdentity && (
-                        <div className="text-white/40 text-xs mb-1">
-                          <span className="text-white/25">Identity: </span>{blueprint.coreIdentity.slice(0, 60)}…
-                        </div>
-                      )}
-                      {blueprint.emotionalChallenge && (
-                        <div className="text-white/40 text-xs">
-                          <span className="text-white/25">Challenge: </span>{blueprint.emotionalChallenge.slice(0, 60)}…
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                {/* Right: Writing area */}
-                <div className="md:col-span-2 p-5 space-y-4">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="text-white/50 text-xs font-semibold uppercase tracking-widest">Manuscript</label>
-                      <div className="flex items-center gap-2 text-white/25 text-xs">
-                        <BookOpen size={11} />
-                        {wordCount} words
-                      </div>
-                    </div>
-                    <textarea
-                      value={manuscript}
-                      onChange={(e) => handleChange(e.target.value, "manuscript")}
-                      placeholder={`Begin writing ${def.title}…\n\nThe author writes. The system supports structure — not story.`}
-                      className="w-full bg-transparent text-white/80 text-sm placeholder-white/15 resize-none focus:outline-none leading-relaxed font-serif"
-                      style={{ minHeight: 280 }}
-                    />
-                  </div>
-
-                  <div className="border-t border-white/[0.05] pt-4">
-                    <label className="text-white/30 text-xs uppercase tracking-widest mb-2 block">Scene Notes (internal)</label>
-                    <textarea
-                      value={notes}
-                      onChange={(e) => handleChange(e.target.value, "notes")}
-                      placeholder="Private notes, reminders, illustration cues…"
-                      className="w-full bg-transparent text-white/50 text-xs placeholder-white/15 resize-none focus:outline-none leading-relaxed"
-                      style={{ minHeight: 60 }}
-                    />
-                  </div>
-
-                  <div className="flex justify-end pt-1">
-                    <button
-                      onClick={doSave}
-                      disabled={saving}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-violet-300 border border-violet-500/30 hover:bg-violet-500/10 transition-all disabled:opacity-50"
-                    >
-                      {saving ? <Loader2 size={11} className="animate-spin" /> : <Save size={11} />}
-                      Save
-                    </button>
-                  </div>
-                </div>
-              </div>
+        {/* Printable area */}
+        <div className="flex-1 flex flex-col overflow-hidden" style={{ padding: MARGIN }}>
+          {/* Scene title */}
+          {scene.title && (
+            <div
+              className="text-center font-bold text-gray-600 mb-3 flex-shrink-0"
+              style={{ fontFamily: "'Georgia', serif", fontSize: 15 }}
+            >
+              {scene.title}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <PageContent />
+          </div>
+        </div>
+
+        {/* Page footer */}
+        <div
+          className="flex-shrink-0 flex items-center justify-center px-5 py-2 border-t"
+          style={{ borderColor: "rgba(0,0,0,0.05)" }}
+        >
+          <span className="text-[9px] text-gray-300 tracking-widest uppercase" style={{ fontFamily: "'Georgia', serif" }}>
+            {scene.sceneNumber}
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
 
 export default function StoryBuilder() {
   const [, params] = useRoute("/internal/stories/:playerId/builder");
-  const playerId = params?.playerId ?? "";
   const [, navigate] = useLocation();
+  const playerId = params?.playerId ?? "";
 
   const [scenes, setScenes] = useState<StoryScene[]>([]);
-  const [blueprint, setBlueprint] = useState<Partial<StoryBlueprint> | null>(null);
+  const [blueprint, setBlueprint] = useState<StoryBlueprint | null>(null);
   const [player, setPlayer] = useState<PlayerProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [blueprintLocked, setBlueprintLocked] = useState(false);
+
+  const [activeScene, setActiveScene] = useState(1);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [dirty, setDirty] = useState(false);
+
+  const [bookFormat, setBookFormat] = useState<BookFormat>("a5");
+  const [pageLayouts, setPageLayouts] = useState<Record<number, PageLayout>>({});
+
+  const [leftOpen, setLeftOpen] = useState(true);
+  const [rightOpen, setRightOpen] = useState(true);
+
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!playerId) return;
-    Promise.all([
-      fetchScenes(playerId),
-      fetchBlueprint(playerId),
-      fetchPlayerProfile(playerId),
-    ])
-      .then(([scenesData, bpData, profileData]) => {
+    Promise.all([fetchScenes(playerId), fetchBlueprint(playerId), fetchProject(playerId)]).then(
+      ([scenesData, blueprintData, projectData]) => {
         setScenes(scenesData.scenes);
-        setBlueprint(bpData.blueprint);
-        setPlayer(profileData.player);
-      })
-      .catch((e) => setError(e.message))
-      .finally(() => setLoading(false));
+        setBlueprint(blueprintData.blueprint);
+        setBlueprintLocked(!(blueprintData.blueprint?.blueprintApproved ?? false));
+        if ((projectData.project as any).bookFormat) {
+          setBookFormat((projectData.project as any).bookFormat as BookFormat);
+        }
+        const layouts: Record<number, PageLayout> = {};
+        scenesData.scenes.forEach((s) => {
+          if ((s as any).pageLayout) layouts[s.sceneNumber] = (s as any).pageLayout as PageLayout;
+        });
+        setPageLayouts(layouts);
+        setLoading(false);
+      }
+    ).catch((err) => {
+      setError(err.message || "Failed to load story");
+      setLoading(false);
+    });
   }, [playerId]);
 
-  const handleSaveScene = async (sceneNumber: number, fields: Partial<StoryScene>) => {
-    const result = await saveScene(playerId, sceneNumber, fields);
-    setScenes((prev) => prev.map((s) => (s.sceneNumber === sceneNumber ? result.scene : s)));
+  const currentScene = scenes.find((s) => s.sceneNumber === activeScene);
+  const currentDef = SCENE_DEFS.find((d) => d.number === activeScene);
+  const currentLayout: PageLayout = pageLayouts[activeScene] ?? "text-only";
+
+  const handleTextChange = useCallback((text: string) => {
+    setScenes((prev) =>
+      prev.map((s) => (s.sceneNumber === activeScene ? { ...s, manuscript: text } : s))
+    );
+    setDirty(true);
+    setSaved(false);
+
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(async () => {
+      if (!playerId) return;
+      setSaving(true);
+      try {
+        await saveScene(playerId, activeScene, { manuscript: text });
+        setSaved(true);
+        setDirty(false);
+      } catch {
+        // silently fail — will retry on next keystroke
+      } finally {
+        setSaving(false);
+      }
+    }, 1200);
+  }, [activeScene, playerId]);
+
+  const handleLayoutChange = async (layout: PageLayout) => {
+    setPageLayouts((prev) => ({ ...prev, [activeScene]: layout }));
+    try {
+      await saveScene(playerId, activeScene, { pageLayout: layout } as any);
+    } catch {
+      // ignore
+    }
   };
 
-  const totalWords = scenes.reduce((acc, s) => {
-    return acc + (s.manuscript?.trim().split(/\s+/).filter(Boolean).length ?? 0);
-  }, 0);
+  const handleManualSave = async () => {
+    if (!currentScene || !dirty) return;
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    setSaving(true);
+    try {
+      await saveScene(playerId, activeScene, {
+        manuscript: currentScene.manuscript ?? "",
+        pageLayout: currentLayout,
+      } as any);
+      setSaved(true);
+      setDirty(false);
+    } finally {
+      setSaving(false);
+    }
+  };
 
-  const completedScenes = scenes.filter((s) => s.manuscript && s.manuscript.trim().length > 50).length;
+  if (loading) {
+    return (
+      <InternalLayout playerId={playerId}>
+        <div className="flex items-center justify-center h-96 gap-3 text-white/40">
+          <Loader2 size={20} className="animate-spin" />
+          Loading writing room…
+        </div>
+      </InternalLayout>
+    );
+  }
 
-  if (loading) return (
-    <InternalLayout>
-      <div className="flex items-center justify-center py-32">
-        <Loader2 size={24} className="text-violet-400 animate-spin" />
-      </div>
-    </InternalLayout>
-  );
+  if (error) {
+    return (
+      <InternalLayout playerId={playerId}>
+        <div className="flex flex-col items-center justify-center h-96 gap-3 text-center">
+          <AlertCircle size={24} className="text-red-400" />
+          <p className="text-white/60">{error}</p>
+          <button onClick={() => navigate(`/internal/stories/${playerId}/blueprint`)} className="text-violet-400 text-sm underline">
+            Go to Blueprint
+          </button>
+        </div>
+      </InternalLayout>
+    );
+  }
 
   return (
     <InternalLayout playerId={playerId} playerName={player?.playerName}>
-      <div className="space-y-5 max-w-5xl">
-        <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}>
-          <button
-            onClick={() => navigate(`/internal/stories/${playerId}/blueprint`)}
-            className="flex items-center gap-1.5 text-white/30 hover:text-white/60 text-xs mb-4 transition-colors"
-          >
-            <ArrowLeft size={12} />
-            Blueprint
-          </button>
+      <div className="flex flex-col h-[calc(100vh-64px)] lg:h-[calc(100vh-0px)] -m-4 md:-m-6 lg:-m-8" style={{ background: "#0a0a16" }}>
 
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-white">Story Builder</h1>
-              <p className="text-white/40 text-sm mt-1">
-                {player?.playerName} · {player?.academyName}
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex gap-3">
-                <div className="text-center">
-                  <div className="text-white font-bold text-lg">{completedScenes}/6</div>
-                  <div className="text-white/30 text-[10px] uppercase tracking-wide">Scenes</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-white font-bold text-lg">{totalWords.toLocaleString()}</div>
-                  <div className="text-white/30 text-[10px] uppercase tracking-wide">Words</div>
-                </div>
-              </div>
-            </div>
+        {/* Top toolbar */}
+        <div
+          className="flex-shrink-0 flex items-center justify-between px-4 py-2.5 border-b gap-3"
+          style={{ background: "rgba(10,10,22,0.95)", borderColor: "rgba(255,255,255,0.08)", height: 50 }}
+        >
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate(`/internal/stories/${playerId}/blueprint`)}
+              className="flex items-center gap-1.5 text-white/40 hover:text-white/70 text-xs transition-colors"
+            >
+              <ArrowLeft size={14} />
+              Blueprint
+            </button>
+            <span className="text-white/20 text-xs">›</span>
+            <span className="text-white/60 text-xs font-medium">Writing Room</span>
           </div>
 
-          <div className="flex gap-2 mt-4">
-            {SCENE_DEFS.map((def) => {
-              const scene = scenes.find((s) => s.sceneNumber === def.number);
-              const hasContent = scene?.manuscript && scene.manuscript.trim().length > 50;
-              return (
-                <div key={def.number} className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
-                  <div
-                    className="h-full rounded-full transition-all"
-                    style={{ width: hasContent ? "100%" : "0%", background: def.color }}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        </motion.div>
+          <div className="flex items-center gap-2">
+            {/* Book format selector */}
+            <div className="hidden md:flex items-center gap-1 rounded-lg p-1" style={{ background: "rgba(255,255,255,0.05)" }}>
+              {BOOK_FORMATS.map((f) => (
+                <button
+                  key={f.key}
+                  onClick={() => setBookFormat(f.key)}
+                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                    bookFormat === f.key ? "text-white" : "text-white/30 hover:text-white/60"
+                  }`}
+                  style={bookFormat === f.key ? { background: ACCENT } : {}}
+                  title={`${f.label} — ${f.desc}`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
 
-        {error && (
-          <div className="rounded-xl p-3 text-red-400 text-sm border border-red-500/20" style={{ background: "rgba(239,68,68,0.06)" }}>
-            {error}
+            <button
+              onClick={() => setLeftOpen((v) => !v)}
+              className={`p-1.5 rounded-lg transition-all ${leftOpen ? "text-violet-300" : "text-white/30 hover:text-white/60"}`}
+              style={leftOpen ? { background: `${ACCENT}18` } : {}}
+              title="Toggle chapter navigator"
+            >
+              <PanelLeftOpen size={15} />
+            </button>
+            <button
+              onClick={() => setRightOpen((v) => !v)}
+              className={`p-1.5 rounded-lg transition-all ${rightOpen ? "text-violet-300" : "text-white/30 hover:text-white/60"}`}
+              style={rightOpen ? { background: `${ACCENT}18` } : {}}
+              title="Toggle reference panel"
+            >
+              <PanelRightOpen size={15} />
+            </button>
+
+            <div className="w-px h-4 bg-white/10 mx-1" />
+
+            <button
+              onClick={handleManualSave}
+              disabled={saving || !dirty}
+              className={`flex items-center gap-1.5 text-xs font-semibold rounded-xl px-3 py-1.5 transition-all ${
+                saved ? "text-green-400" : dirty ? "text-white" : "text-white/30"
+              }`}
+              style={dirty ? { background: `${ACCENT}20`, border: `1px solid ${ACCENT}40` } : { border: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              {saving ? <Loader2 size={12} className="animate-spin" /> : saved ? <CheckCircle2 size={12} /> : <Save size={12} />}
+              {saving ? "Saving…" : saved ? "Saved" : "Save"}
+            </button>
+          </div>
+        </div>
+
+        {/* Blueprint locked banner */}
+        {blueprintLocked && (
+          <div className="flex-shrink-0 flex items-center justify-center gap-2.5 px-4 py-2.5 text-sm"
+            style={{ background: "rgba(234,179,8,0.08)", borderBottom: "1px solid rgba(234,179,8,0.15)" }}>
+            <Lock size={14} className="text-amber-400" />
+            <span className="text-amber-300/80">Blueprint not yet approved — an editor must approve it before writing is unlocked</span>
+            <button
+              onClick={() => navigate(`/internal/stories/${playerId}/blueprint`)}
+              className="flex items-center gap-1 text-amber-400 hover:text-amber-300 text-xs underline transition-colors"
+            >
+              View Blueprint <ChevronsRight size={12} />
+            </button>
           </div>
         )}
 
-        <div className="rounded-xl border border-violet-500/20 p-4 text-white/40 text-sm" style={{ background: "rgba(167,139,250,0.03)" }}>
-          <div className="flex items-start gap-2">
-            <Zap size={14} className="text-violet-400 mt-0.5 flex-shrink-0" />
-            <p>The author writes the story. This structure is a guide — not a constraint. Work in any order. Each scene auto-saves after two seconds of inactivity.</p>
-          </div>
-        </div>
+        {/* Main 3-column area */}
+        <div className="flex-1 flex overflow-hidden">
 
-        <div className="space-y-3">
-          {SCENE_DEFS.map((def) => {
-            const scene = scenes.find((s) => s.sceneNumber === def.number);
-            if (!scene) return null;
-            return (
-              <motion.div
-                key={def.number}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: def.number * 0.05 }}
+          {/* Left: Chapter Navigator */}
+          <AnimatePresence initial={false}>
+            {leftOpen && (
+              <motion.aside
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: 220, opacity: 1 }}
+                exit={{ width: 0, opacity: 0 }}
+                transition={{ type: "spring", damping: 28, stiffness: 280 }}
+                className="flex-shrink-0 flex flex-col border-r overflow-hidden"
+                style={{ borderColor: "rgba(255,255,255,0.07)", background: "rgba(8,8,16,0.8)" }}
               >
-                <SceneCard
-                  def={def}
-                  scene={scene}
-                  blueprint={blueprint}
-                  onSave={handleSaveScene}
-                />
-              </motion.div>
-            );
-          })}
-        </div>
+                <div className="px-3 pt-4 pb-2 border-b" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
+                  <div className="flex items-center gap-2">
+                    <LayoutGrid size={13} className="text-violet-400" />
+                    <span className="text-white/60 text-xs font-semibold uppercase tracking-widest">Chapters</span>
+                  </div>
+                </div>
 
-        <div className="flex justify-between items-center pt-2 pb-8">
-          <button
-            onClick={() => navigate(`/internal/stories/${playerId}/blueprint`)}
-            className="flex items-center gap-1.5 text-white/30 hover:text-white/60 text-sm transition-colors"
-          >
-            <ArrowLeft size={13} />
-            Back to Blueprint
-          </button>
-          <button
-            onClick={() => navigate(`/internal/stories/${playerId}/illustrations`)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white border border-white/10 hover:bg-white/5 transition-all"
-          >
-            Illustrations
-            <ChevronRight size={13} />
-          </button>
+                <div className="flex-1 overflow-y-auto py-2 px-2 space-y-1">
+                  {SCENE_DEFS.map((def) => {
+                    const scene = scenes.find((s) => s.sceneNumber === def.number);
+                    const wc = wordCount(scene?.manuscript || "");
+                    const isActive = activeScene === def.number;
+                    const Icon = def.icon;
+
+                    return (
+                      <button
+                        key={def.number}
+                        onClick={() => setActiveScene(def.number)}
+                        className={`w-full text-left rounded-xl px-3 py-2.5 transition-all group ${
+                          isActive ? "" : "hover:bg-white/4"
+                        }`}
+                        style={isActive ? { background: `${ACCENT}12`, border: `1px solid ${ACCENT}25` } : { border: "1px solid transparent" }}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <div
+                            className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
+                            style={{ background: `${def.color}20` }}
+                          >
+                            <Icon size={11} style={{ color: def.color }} />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className={`text-xs font-semibold truncate ${isActive ? "text-violet-300" : "text-white/60"}`}>
+                              {def.title}
+                            </div>
+                            <div className="text-[10px] text-white/25 mt-0.5">
+                              {wc > 0 ? `${wc} words` : "Empty"}
+                            </div>
+                          </div>
+                          {wc > 0 && (
+                            <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: def.color }} />
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="flex-shrink-0 border-t p-3" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
+                  <div className="text-[10px] text-white/20 text-center">
+                    {scenes.reduce((a, s) => a + wordCount(s.manuscript || ""), 0).toLocaleString()} total words
+                  </div>
+                </div>
+              </motion.aside>
+            )}
+          </AnimatePresence>
+
+          {/* Center: Writing Canvas */}
+          <div className="flex-1 flex flex-col overflow-hidden" style={{ background: BG_CANVAS }}>
+            {/* Layout selector bar */}
+            <div
+              className="flex-shrink-0 flex items-center gap-1 px-4 py-2.5 border-b"
+              style={{ background: "rgba(248,245,240,0.95)", borderColor: "rgba(0,0,0,0.08)" }}
+            >
+              <span className="text-xs text-gray-400 mr-1.5 font-medium">Layout:</span>
+              {PAGE_LAYOUTS.map((pl) => (
+                <button
+                  key={pl.key}
+                  onClick={() => handleLayoutChange(pl.key)}
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    currentLayout === pl.key
+                      ? "text-white"
+                      : "text-gray-400 hover:text-gray-700 hover:bg-black/5"
+                  }`}
+                  style={currentLayout === pl.key ? { background: ACCENT } : {}}
+                  title={pl.label}
+                >
+                  {pl.icon}
+                  <span className="hidden sm:inline">{pl.label}</span>
+                </button>
+              ))}
+
+              {/* Chapter nav arrows */}
+              <div className="ml-auto flex items-center gap-1">
+                <button
+                  onClick={() => setActiveScene((v) => Math.max(1, v - 1))}
+                  disabled={activeScene === 1}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-black/5 disabled:opacity-30 transition-all"
+                >
+                  <ChevronLeft size={14} />
+                </button>
+                <span className="text-gray-400 text-xs px-1">
+                  {activeScene} / {SCENE_DEFS.length}
+                </span>
+                <button
+                  onClick={() => setActiveScene((v) => Math.min(SCENE_DEFS.length, v + 1))}
+                  disabled={activeScene === SCENE_DEFS.length}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-black/5 disabled:opacity-30 transition-all"
+                >
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+            </div>
+
+            {/* Book page canvas */}
+            <div className="flex-1 overflow-auto flex items-center justify-center p-8 md:p-12">
+              {currentScene ? (
+                <div className="w-full" style={{ maxWidth: 560 }}>
+                  {/* Scene label above page */}
+                  <div className="flex items-center justify-center gap-2.5 mb-6">
+                    {currentDef && (
+                      <>
+                        <div
+                          className="w-6 h-6 rounded-lg flex items-center justify-center"
+                          style={{ background: `${currentDef.color}20` }}
+                        >
+                          {(() => { const Icon = currentDef.icon; return <Icon size={12} style={{ color: currentDef.color }} />; })()}
+                        </div>
+                        <span className="text-sm font-semibold" style={{ color: currentDef.color }}>
+                          Chapter {currentScene.sceneNumber}: {currentDef.title}
+                        </span>
+                        <span className="text-xs text-gray-400 italic">{currentDef.emotionalBeat}</span>
+                      </>
+                    )}
+                  </div>
+
+                  <PageCanvas
+                    scene={currentScene}
+                    layout={currentLayout}
+                    format={bookFormat}
+                    onTextChange={handleTextChange}
+                    saving={saving}
+                  />
+
+                  {/* Word count and format info below */}
+                  <div className="flex items-center justify-center gap-4 mt-5 text-xs text-gray-400">
+                    <span>{wordCount(currentScene.manuscript || "")} words</span>
+                    <span>·</span>
+                    <span>{BOOK_FORMATS.find((f) => f.key === bookFormat)?.label} format</span>
+                    <span>·</span>
+                    <span className="capitalize">{currentLayout.replace(/-/g, " ")} layout</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center text-gray-400 space-y-2">
+                  <BookOpen size={32} className="mx-auto opacity-30" />
+                  <p className="text-sm">Select a chapter to start writing</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right: Reference Panel */}
+          <AnimatePresence initial={false}>
+            {rightOpen && (
+              <motion.aside
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: 280, opacity: 1 }}
+                exit={{ width: 0, opacity: 0 }}
+                transition={{ type: "spring", damping: 28, stiffness: 280 }}
+                className="flex-shrink-0 border-l overflow-hidden flex flex-col"
+                style={{ borderColor: "rgba(255,255,255,0.07)", background: "rgba(8,8,16,0.8)" }}
+              >
+                <div className="px-4 pt-4 pb-3 border-b" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
+                  <div className="flex items-center gap-2">
+                    <Info size={13} className="text-violet-400" />
+                    <span className="text-white/60 text-xs font-semibold uppercase tracking-widest">Scene Guide</span>
+                  </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+                  {currentDef && (
+                    <>
+                      {/* Scene purpose */}
+                      <div>
+                        <div className="text-[10px] text-white/25 uppercase tracking-widest mb-2 font-medium">Purpose</div>
+                        <p className="text-white/60 text-xs leading-relaxed">{currentDef.purpose}</p>
+                      </div>
+
+                      {/* Writing prompts */}
+                      <div>
+                        <div className="text-[10px] text-white/25 uppercase tracking-widest mb-2 font-medium">Writing Prompts</div>
+                        <div className="space-y-2">
+                          {currentDef.prompts.map((p, i) => (
+                            <div key={i} className="flex gap-2">
+                              <span className="text-violet-500 text-xs mt-0.5 flex-shrink-0">›</span>
+                              <p className="text-white/50 text-xs leading-relaxed">{p}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="h-px bg-white/8" />
+                    </>
+                  )}
+
+                  {/* Blueprint snippets */}
+                  {blueprint && (
+                    <div>
+                      <div className="text-[10px] text-white/25 uppercase tracking-widest mb-2.5 font-medium">Blueprint Reference</div>
+                      <div className="space-y-3">
+                        {[
+                          { label: "Core Identity", value: blueprint.coreIdentity },
+                          { label: "Emotional Challenge", value: blueprint.emotionalChallenge },
+                          { label: "Hidden Strength", value: blueprint.hiddenStrength },
+                          { label: "Support Figure", value: blueprint.supportFigure },
+                          { label: "Turning Point", value: blueprint.turningPoint },
+                          { label: "Lesson Theme", value: blueprint.lessonTheme },
+                          { label: "Ending", value: blueprint.endingTransformation },
+                          { label: "Symbolic Object", value: blueprint.symbolicObject },
+                        ]
+                          .filter((item) => item.value)
+                          .map(({ label, value }) => (
+                            <div key={label} className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.04)" }}>
+                              <div className="text-[9px] text-white/25 uppercase tracking-wider font-semibold mb-1">{label}</div>
+                              <p className="text-white/60 text-xs leading-relaxed">{value}</p>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {!blueprint && (
+                    <div className="rounded-xl p-4 border text-center" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+                      <BookOpen size={18} className="text-white/20 mx-auto mb-2" />
+                      <p className="text-white/30 text-xs">No blueprint saved yet</p>
+                      <button
+                        onClick={() => navigate(`/internal/stories/${playerId}/blueprint`)}
+                        className="text-violet-400 text-xs mt-2 hover:text-violet-300 transition-colors"
+                      >
+                        Open Blueprint Editor →
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </motion.aside>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </InternalLayout>

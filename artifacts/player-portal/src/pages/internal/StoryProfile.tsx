@@ -18,9 +18,13 @@ import {
   ExternalLink,
   ArrowLeft,
   Edit3,
+  CheckCircle2,
+  Lock,
+  ShieldCheck,
 } from "lucide-react";
 import { InternalLayout } from "@/layouts/InternalLayout";
-import { fetchPlayerProfile, updateProject, getStatusMeta, STORY_STATUSES, type JourneyResponse } from "@/lib/internalApi";
+import { fetchPlayerProfile, updateProject, fetchBlueprint, approveBlueprint, revokeBlueprint, getStatusMeta, STORY_STATUSES, type JourneyResponse, type StoryBlueprint } from "@/lib/internalApi";
+import { useInternalAuth } from "@/context/InternalAuthContext";
 
 interface SectionProps {
   title: string;
@@ -130,20 +134,57 @@ export default function StoryProfile() {
   const [, params] = useRoute("/internal/stories/:playerId/profile");
   const playerId = params?.playerId ?? "";
   const [, navigate] = useLocation();
+  const { internalUser } = useInternalAuth();
 
   const [data, setData] = useState<Awaited<ReturnType<typeof fetchPlayerProfile>> | null>(null);
+  const [blueprint, setBlueprint] = useState<StoryBlueprint | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editingStatus, setEditingStatus] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [blueprintActing, setBlueprintActing] = useState(false);
 
   useEffect(() => {
     if (!playerId) return;
-    fetchPlayerProfile(playerId)
-      .then((d) => { setData(d); setError(""); })
+    Promise.all([
+      fetchPlayerProfile(playerId),
+      fetchBlueprint(playerId).catch(() => null),
+    ])
+      .then(([d, bp]) => {
+        setData(d);
+        if (bp) setBlueprint(bp.blueprint);
+        setError("");
+      })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, [playerId]);
+
+  const handleBlueprintApprove = async () => {
+    if (blueprintActing) return;
+    setBlueprintActing(true);
+    try {
+      const { blueprint: updated } = await approveBlueprint(playerId);
+      setBlueprint(updated);
+      setData((prev) => prev ? { ...prev, project: { ...prev.project, status: "draft_in_progress" } } : prev);
+    } catch (e: any) {
+      alert(e.message);
+    } finally {
+      setBlueprintActing(false);
+    }
+  };
+
+  const handleBlueprintRevoke = async () => {
+    if (blueprintActing) return;
+    setBlueprintActing(true);
+    try {
+      const { blueprint: updated } = await revokeBlueprint(playerId);
+      setBlueprint(updated);
+    } catch (e: any) {
+      alert(e.message);
+    } finally {
+      setBlueprintActing(false);
+    }
+  };
 
   const handleStatusChange = async (newStatus: string) => {
     if (!data) return;
@@ -253,7 +294,24 @@ export default function StoryProfile() {
                     <span className="px-2 py-0.5 rounded bg-white/5 text-white/20">No author assigned</span>
                   )}
                 </div>
-                <div className="flex gap-3 mt-2">
+                {/* Blueprint approval status */}
+                {blueprint && (
+                  <div className="flex items-center gap-2 mt-1">
+                    {blueprint.blueprintApproved ? (
+                      <span className="flex items-center gap-1.5 text-xs text-green-400 bg-green-500/10 border border-green-500/20 rounded-full px-2.5 py-0.5">
+                        <CheckCircle2 size={11} />
+                        Blueprint approved by {blueprint.blueprintApprovedBy}
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1.5 text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-full px-2.5 py-0.5">
+                        <Lock size={11} />
+                        Blueprint pending approval
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                <div className="flex flex-wrap gap-2 mt-2">
                   <button
                     onClick={() => navigate(`/internal/stories/${playerId}/blueprint`)}
                     className="px-4 py-2 rounded-lg text-sm font-semibold text-violet-300 border border-violet-500/30 hover:bg-violet-500/10 transition-all"
@@ -266,6 +324,29 @@ export default function StoryProfile() {
                   >
                     Story Builder →
                   </button>
+                  {blueprint && (internalUser?.role === "editor" || internalUser?.role === "admin") && (
+                    <>
+                      {!blueprint.blueprintApproved ? (
+                        <button
+                          onClick={handleBlueprintApprove}
+                          disabled={blueprintActing}
+                          className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-green-300 border border-green-500/30 hover:bg-green-500/10 transition-all disabled:opacity-50"
+                        >
+                          {blueprintActing ? <Loader2 size={12} className="animate-spin" /> : <ShieldCheck size={12} />}
+                          Approve Blueprint
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleBlueprintRevoke}
+                          disabled={blueprintActing}
+                          className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-white/30 border border-white/10 hover:bg-white/5 hover:text-white/60 transition-all disabled:opacity-50"
+                        >
+                          {blueprintActing ? <Loader2 size={11} className="animate-spin" /> : <Lock size={11} />}
+                          Revoke Approval
+                        </button>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </div>

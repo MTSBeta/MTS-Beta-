@@ -1,4 +1,4 @@
-import { pgTable, serial, integer, text, varchar, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, serial, integer, text, varchar, jsonb, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -10,6 +10,10 @@ export const storyScenesTable = pgTable("story_scenes", {
   manuscript: text("manuscript"),
   sceneNotes: text("scene_notes"),
   emotionalBeat: text("emotional_beat"),
+  pageLayout: varchar("page_layout", { length: 50 }),
+  imageUrl: text("image_url"),
+  pageType: varchar("page_type", { length: 50 }),
+  pagesData: jsonb("pages_data"),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 

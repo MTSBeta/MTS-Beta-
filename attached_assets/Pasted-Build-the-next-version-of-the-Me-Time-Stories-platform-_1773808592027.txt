@@ -1,0 +1,696 @@
+Build the next version of the Me Time Stories platform inside the current Replit codebase by migrating and improving the existing website and app into one unified product.
+
+IMPORTANT:
+This is not a rebuild from scratch.
+This is a migration, unification, and improvement job.
+
+We already have:
+- a current academy app / demo app built in this codebase
+- database-backed flows
+- Google Sheets sync
+- uploaded HTML pages that represent the current website / prototype experience
+
+I want you to build ON TOP of what already exists.
+
+DO NOT:
+- start a separate disconnected website project
+- throw away the current app logic
+- redesign everything from zero
+- replace the current uploaded page concepts with generic templates
+- break the existing player-facing or academy-facing demo flows
+
+DO:
+- inspect the current codebase
+- inspect the uploaded HTML pages
+- map them into a proper route structure
+- preserve the strongest parts of the current visual direction
+- improve the weak parts of the current structure
+- unify the website, academy product, and internal story production workflows into one coherent Replit app
+
+==================================================
+PRIMARY GOAL
+==================================================
+
+Turn the current website + academy app into one unified Me Time Stories platform with:
+
+1. Public website / marketing pages
+2. Academy Hub
+3. Parent / child product areas
+4. Internal Story Production Workspace
+
+The end result should feel like one real platform, not a collection of demo pages.
+
+==================================================
+CORE PLATFORM RULES
+==================================================
+
+1. Build on top of the current app and current codebase.
+2. Use the uploaded HTML files as reference for layout, sections, and route intent.
+3. Preserve the best current design patterns, but improve fragmented structure and overly demo-like behaviour.
+4. Database remains the source of truth.
+5. Google Sheets remains linked as a sync / operations / reporting layer only, not the main product interface.
+6. This must remain human-first: the product supports creativity and workflow, it does not replace them.
+7. Academy features must all sit together under one unified Academy Hub.
+8. Internal authoring and story production must sit in a separate internal workspace, not mixed into the public-facing site.
+9. Replace fake demo navigation and fake profile behaviour gradually with real product structure.
+10. Keep current flows intact where possible, but improve the product architecture.
+
+==================================================
+PART 1 — MIGRATE AND UNIFY THE EXISTING WEBSITE
+==================================================
+
+Inspect the uploaded HTML files and treat them as:
+- current page references
+- current layout references
+- route blueprints
+- component source material
+
+Map the uploaded pages into a route structure.
+
+Identify which pages are:
+- public marketing pages
+- internal dashboards
+- demo-only shells
+- product areas that should now become real routes
+- pages that should stay mostly static for now
+
+Rebuild these pages inside the current app as proper routes and reusable components.
+
+Extract shared UI where possible:
+- header
+- footer
+- nav
+- cards
+- buttons
+- section layouts
+- hero sections
+- dashboard shells
+
+Replace Readdy links and static demo navigation with proper internal routing.
+
+Keep enough placeholder/demo content where necessary so the UX stays intact, but structure it clearly in code so fake data can be replaced cleanly with live data later.
+
+==================================================
+PART 2 — PLATFORM INFORMATION ARCHITECTURE
+==================================================
+
+Create a clearer top-level structure for the whole platform.
+
+Public website / marketing routes:
+- Home
+- About / Company Story
+- Academies
+- Families
+- For Authors
+- CSR / Partnerships
+- relevant story or campaign landing pages where appropriate
+
+Signed-in / product routes:
+- Parent Portal
+- Child Journey
+- Academy Hub
+- Internal Story Production Workspace
+
+Important:
+Do not let the public site feel cluttered by fake demo logins.
+Move from “demo account” feeling toward real role-based product areas.
+
+==================================================
+PART 3 — ACADEMY HUB
+==================================================
+
+All academy-related functionality must be grouped together under one unified Academy Hub.
+
+This is a major rule:
+Do NOT leave academy functionality scattered across disconnected pages or demo routes.
+
+Create one main academy parent area, for example:
+- /academies
+or
+- /academy
+
+Suggested academy routes:
+- /academies/overview
+- /academies/player-intake
+- /academies/staff
+- /academies/story-production
+- /academies/review
+- /academies/settings
+
+Academy Hub should cover:
+- academy overview/dashboard
+- player intake and codes
+- staff input
+- player story profiles
+- story production tracking
+- preview/review
+- approvals/status
+
+Important:
+Preserve the strong football identity and premium tone from the existing academy/football pages, but improve:
+- navigation
+- structure
+- clarity
+- workflow continuity
+- reduced demo/prototype feel
+
+The Academy Hub should feel like one serious academy product area, not several stitched-together prototype pages.
+
+==================================================
+PART 4 — INTERNAL STORY PRODUCTION WORKSPACE
+==================================================
+
+Build the next internal layer of the platform as a full Story Production Workspace.
+
+This is an INTERNAL production tool for Me Time Stories.
+It must sit on top of the current academy intake app, current database structure, and current Google Sheets sync.
+
+Goal:
+Turn all submitted player intake data into one clean, human-first creative workspace where authors and internal creators can:
+- understand the player quickly
+- see all relevant inputs in one place
+- build the story inside the app
+- manage illustrations and media inside the app
+- track production status
+- send preview versions to academy admins before final sign-off
+
+Important principles:
+- authors should not begin with raw form data
+- all inputs should be unified into one readable player profile
+- the app should combine player answers, staff input, stakeholder input, images, and voice notes into one creator-facing experience
+- the database remains the source of truth
+- Google Sheets remains linked as a sync/ops layer, not the primary writing environment
+- this is an internal production tool, not a public-facing feature
+
+Build the internal Story Production Workspace with these sections:
+1. Story Projects Dashboard
+2. Player Story Profile
+3. Story Blueprint
+4. Story Builder
+5. Illustration Workspace
+6. Media & Source Materials
+7. Must-use Detail Tracker
+8. Notes / Status / Production Tracking
+9. Preview / Review Workflow
+
+Suggested internal routes:
+- /internal/stories
+- /internal/stories/:playerId
+- /internal/stories/:playerId/profile
+- /internal/stories/:playerId/blueprint
+- /internal/stories/:playerId/builder
+- /internal/stories/:playerId/illustrations
+- /internal/stories/:playerId/review
+
+==================================================
+PART 5 — STORY PROJECTS DASHBOARD
+==================================================
+
+Create an internal dashboard showing all player story projects currently in production.
+
+Each project row or card should display:
+- player name
+- player ID
+- academy
+- age band
+- position
+- intake completion
+- story status
+- assigned author
+- assigned illustrator if present
+- last updated
+- key input completeness
+- preview status
+
+Add:
+- search by player name, player ID, academy
+- filters by academy, age band, status, assigned author, assigned illustrator
+- sorting by last updated, status, academy, player name
+
+Suggested story statuses:
+- intake_in_progress
+- intake_complete
+- profile_ready
+- blueprint_in_progress
+- draft_in_progress
+- internal_review
+- academy_preview
+- revisions_in_progress
+- approved
+- ready_for_illustration
+- illustration_in_progress
+- final_ready
+
+Key input completeness should intelligently check for:
+- player intake complete
+- coach input present
+- staff input present where applicable
+- parent input if available
+- images if available
+- voice notes if available
+
+==================================================
+PART 6 — PLAYER STORY PROFILE
+==================================================
+
+Create a unified Player Story Profile page.
+
+This should be the first major screen the author sees.
+It should combine all relevant inputs into one editorial, elegant, easy-to-read creator brief.
+It must NOT feel like a spreadsheet dump or raw database view.
+
+The profile should combine:
+- player intake answers
+- coach input
+- internal staff observations
+- parent input if present
+- stakeholder responses if present
+- uploaded images
+- voice notes
+- transcripts if available
+- approved reference notes
+
+The profile should have these sections:
+
+A. At a Glance
+- name
+- age band
+- academy
+- position
+- current story status
+- assigned author
+- assigned illustrator
+- completion indicators
+
+B. Identity Summary
+- who the player is
+- key personality traits
+- how they describe themselves
+- how they describe their game
+- self-image and tone
+
+C. Emotional Profile
+- emotional challenge
+- pressure pattern
+- response to setbacks
+- hidden quality
+- what keeps them going
+- repeated internal tension that may shape the story
+
+D. Football Narrative
+- proud moment
+- overlooked / disappointment moment
+- hard period summary
+- turning point summary
+- dream / future goal
+- key football test
+
+E. Support Network
+- first person they tell good news to
+- support figures
+- who understands them best
+- coach voice summary
+- parent voice summary
+- staff highlights
+
+F. Signature Details
+- meaningful object
+- rituals / routines
+- image-based cues
+- appearance notes
+- values
+- themes
+- repeated phrases
+- symbolic details
+
+G. Creator Guidance
+- best themes to build around
+- emotional opportunities
+- academy values to embed
+- what to avoid
+- likely story spine
+
+H. Source Materials
+- uploaded images
+- voice notes
+- transcripts
+- staff submissions
+- stakeholder responses
+- raw source drawer (collapsible)
+
+Important:
+The default experience must be summarised and grouped.
+Add a collapsible raw source drawer for authors who want to verify the original wording.
+
+==================================================
+PART 7 — STORY BLUEPRINT
+==================================================
+
+Create a structured, editable blueprint for each player.
+
+This should be prefilled from intake data where possible but fully editable by the author or editor.
+
+Blueprint fields:
+- core identity
+- emotional challenge
+- false belief or inner tension
+- hidden strength
+- support figure
+- academy value(s) to embed
+- key football test
+- turning point
+- lesson/theme
+- ending transformation
+- symbolic object/detail
+- parent resonance note
+- coach resonance note
+
+Requirements:
+- save all blueprint fields in structured form
+- show supporting source references where helpful
+- allow manual editing at all times
+- do not lock the author into auto-generated phrasing
+
+==================================================
+PART 8 — STORY BUILDER
+==================================================
+
+Create a guided story-building interface using this fixed six-part structure:
+
+1. The Vision
+2. The Storm
+3. Rock Bottom
+4. The Rise
+5. Elite Wisdom
+6. Next Level
+
+For each of the six sections, show:
+- section title
+- section purpose
+- relevant source details
+- guided notes
+- emotional beat
+- football-specific prompts
+- academy-value prompts
+- what to avoid
+- editable manuscript writing area
+- optional scene notes area
+
+Suggested section purposes:
+
+The Vision
+- introduce the player’s dream, identity, world, and what they want
+
+The Storm
+- introduce challenge, pressure, disappointment, or conflict
+
+Rock Bottom
+- show the lowest point, fracture, doubt, or hardest test
+
+The Rise
+- show support, change, action, or new belief beginning to form
+
+Elite Wisdom
+- show the deeper lesson, truth, or wisdom gained through the journey
+
+Next Level
+- end with transformation, momentum, and future promise
+
+Important:
+The author writes the story.
+The system supports structure, not full automation.
+
+==================================================
+PART 9 — ILLUSTRATION WORKSPACE
+==================================================
+
+Inside the same player project, create an illustration workspace.
+
+Support:
+- uploaded illustration assets
+- image reference panel
+- page/scene-linked illustrations
+- illustrator notes
+- approved / unapproved flags
+- image placeholders when final illustrations are not ready
+
+Show:
+- player portrait reference
+- football kit reference
+- family/home reference if available
+- appearance notes
+- writer/illustrator notes
+- approved assets clearly marked
+
+If possible, allow mapping images or illustration placeholders to the six story sections.
+
+==================================================
+PART 10 — MEDIA & SOURCE MATERIALS
+==================================================
+
+Support media as part of the player project:
+- images
+- voice notes
+- optional transcripts
+- approved notes
+- review tags
+
+Voice notes should be visible to authors and linked to the player profile.
+If transcript generation already exists or is easy to add, support it.
+If not, allow manual transcript or summary notes.
+
+Media should be accessible without forcing the author to open raw storage structures.
+
+==================================================
+PART 11 — MUST-USE DETAIL TRACKER
+==================================================
+
+Add a checklist panel for important details that should be considered in the manuscript.
+
+Track:
+- meaningful object at home
+- support figure
+- overlooked moment
+- hidden quality
+- club value
+- future dream
+- image-based appearance notes
+
+Each item should have a usage status:
+- unused
+- partially used
+- clearly used
+
+Allow authors to update these manually.
+Save them per project.
+
+==================================================
+PART 12 — PRODUCTION NOTES AND STATUS
+==================================================
+
+Add structured internal fields for:
+- assigned author
+- assigned illustrator
+- draft status
+- editor notes
+- revision notes
+- approved status
+- final ready for illustration
+- final ready for academy preview
+- final approved
+- created_at
+- updated_at
+- last_edited_by
+
+If easy, also support:
+- draft version number
+- internal activity log
+
+==================================================
+PART 13 — PREVIEW / REVIEW WORKFLOW
+==================================================
+
+Create structured review gates.
+
+Gate 1: Story Direction Review
+Optional internal checkpoint
+Should show:
+- summary
+- blueprint
+- story spine
+
+Gate 2: Academy Preview
+Trigger around 60–80 percent completion
+At this point academy admins should be able to preview the story in a clean review mode
+
+Academy preview should show:
+- story draft sections
+- selected illustrations if present
+- overall review status
+- optional simple comment/note area if easy to add
+
+Gate 3: Final Approval
+- final manuscript
+- final illustrations
+- final sign-off
+
+Important:
+Academy preview must not be public.
+It should be restricted to the relevant internal/admin academy access pattern.
+
+==================================================
+PART 14 — PARENT / CHILD PRODUCT AREAS
+==================================================
+
+Preserve and improve the parent and child product areas from the current HTML/demo experience.
+
+However:
+- do not let fake demo logins dominate the public website
+- turn these into clearer product areas
+- preserve the strongest layouts and ideas
+- keep placeholder/demo data where needed for now, but structure it cleanly in code for later replacement with live data
+
+==================================================
+PART 15 — BRAND & VOICE GUIDANCE
+==================================================
+
+Add a visible writing guidance panel for authors.
+
+This should be editable by admin later.
+
+Include:
+- tone
+- age appropriateness
+- football realism
+- emotional realism
+- dialogue guidance
+- banned clichés
+- ending guidance
+
+Default intent:
+- emotionally intelligent
+- age-appropriate
+- football-specific
+- warm, not cheesy
+- inspiring without sounding fake
+- truthful, not generic
+- avoid exaggerated motivational clichés
+
+==================================================
+PART 16 — DATA MODEL
+==================================================
+
+Extend the database to support this workflow.
+
+Create or extend structured tables as needed, for example:
+- author_projects
+- author_profiles
+- author_blueprints
+- story_drafts
+- draft_scenes
+- illustration_assets
+- media_assets
+- author_notes
+- review_requests
+- review_feedback
+- detail_tracker
+- brand_guidance
+
+If the current codebase already has naming conventions, follow those conventions rather than forcing these exact names.
+
+Database must remain the source of truth.
+
+If useful, create matching Google Sheet tabs as mirrors only.
+Do not use sheet tabs as the main authoring store.
+
+==================================================
+PART 17 — LINK TO CURRENT DB + SHEETS
+==================================================
+
+Inspect the current codebase and existing database schema.
+
+Connect this new platform structure to current records including:
+- players
+- player journey responses
+- staff submissions
+- stakeholder responses
+- uploaded assets
+- academy relationships
+- current Google Sheets sync
+
+Important:
+Keep DB-first logic.
+If new sheet tabs are useful, create them only as mirrored operational views.
+
+==================================================
+PART 18 — WELCOME SCREEN ASSISTANT RULE
+==================================================
+
+Important rule:
+Automatically preload the assistant on app load so there is no delay, but only allow it to start on the Welcome screen.
+
+Key requirement:
+The assistant must not auto-start on any other screen.
+Its first live activation should happen only on the Welcome screen.
+After that, any further interaction should only happen when explicitly triggered by the user or by the intended workflow.
+
+==================================================
+PART 19 — HUMAN-FIRST RULE
+==================================================
+
+Do not over-automate.
+This must support the writer, illustrator, academy staff, and internal team.
+
+Do not make this a one-click story generator.
+
+The system should:
+- summarise intelligently
+- structure clearly
+- guide creatively
+- preserve human writing and editorial judgement
+
+==================================================
+PART 20 — IMPLEMENTATION ORDER
+==================================================
+
+Please build in this order unless the codebase strongly suggests a better order:
+1. inspect current codebase and uploaded HTMLs
+2. create recommended unified route map
+3. extract shared components
+4. migrate public website routes
+5. group academy features into one Academy Hub
+6. create/extend data model
+7. build story projects dashboard
+8. build player story profile
+9. build blueprint editor
+10. build six-scene story builder
+11. build media panel
+12. build illustration workspace
+13. build detail tracker
+14. build notes/status
+15. build preview workflow
+
+==================================================
+PART 21 — REQUIRED OUTPUT AFTER IMPLEMENTATION
+==================================================
+
+After implementing, clearly explain:
+- what new routes were added
+- what uploaded HTML pages mapped to which routes
+- what shared components were extracted
+- what pages remain partly demo/seeded for now
+- what new tables were added
+- what new mirrored sheet tabs were added, if any
+- how player data is transformed into profile data
+- how blueprint data is generated
+- how academy preview works
+- any assumptions you made
+- any incomplete areas or recommended next steps
+
+==================================================
+FINAL IMPORTANT RULE
+==================================================
+
+Preserve the current demo app and current flows.
+Add this as a new unified evolution of the current product, not a disconnected rebuild.
+Improve what is fragmented, fake, or overly demo-like, but preserve what is already strong.

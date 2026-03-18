@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Your Story Character - Me Time Beta</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#57B5E7',secondary:'#8DD3C7'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+min-height: 100vh;
+overflow-x: hidden;
+overflow-y: auto;
+}
+html {
+overflow-y: auto;
+}
+.sparkle-bg {
+position: relative;
+overflow: hidden;
+}
+.sparkle-bg::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-image: radial-gradient(circle at 20% 30%, rgba(87, 181, 231, 0.1) 0%, transparent 50%),
+radial-gradient(circle at 80% 70%, rgba(141, 211, 199, 0.1) 0%, transparent 50%),
+radial-gradient(circle at 60% 20%, rgba(251, 191, 114, 0.1) 0%, transparent 50%);
+animation: sparkleMove 8s ease-in-out infinite;
+}
+@keyframes sparkleMove {
+0%, 100% { transform: translateY(0px) rotate(0deg); }
+50% { transform: translateY(-10px) rotate(1deg); }
+}
+.avatar-preview {
+background: linear-gradient(135deg, #e2e8f0, #f8fafc);
+border: 3px dashed #cbd5e1;
+transition: all 0.3s ease;
+}
+.avatar-preview.has-color {
+box-shadow: 0 0 20px rgba(87, 181, 231, 0.3);
+}
+.trait-chip {
+transition: all 0.2s ease;
+cursor: pointer;
+}
+.trait-chip:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 12px rgba(87, 181, 231, 0.2);
+}
+.trait-chip.selected {
+background: linear-gradient(135deg, #57B5E7, #8DD3C7);
+color: white;
+transform: scale(1.05);
+}
+.theme-card {
+transition: all 0.3s ease;
+cursor: pointer;
+}
+.theme-card:hover {
+transform: translateY(-4px);
+box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+.theme-card.selected {
+border-color: #57B5E7;
+background: linear-gradient(135deg, rgba(87, 181, 231, 0.1), rgba(141, 211, 199, 0.1));
+}
+.progress-step {
+transition: all 0.3s ease;
+}
+.progress-step.active {
+transform: scale(1.1);
+color: #57B5E7;
+}
+.progress-step.completed {
+color: #10b981;
+}
+.save-button {
+background: linear-gradient(135deg, #57B5E7, #8DD3C7);
+transition: all 0.3s ease;
+animation: pulse 2s infinite;
+}
+@keyframes pulse {
+0%, 100% { transform: scale(1); }
+50% { transform: scale(1.02); }
+}
+.save-button:hover {
+transform: translateY(-2px);
+box-shadow: 0 10px 30px rgba(87, 181, 231, 0.3);
+}
+.confetti {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+pointer-events: none;
+z-index: 1000;
+}
+.confetti-piece {
+position: absolute;
+width: 10px;
+height: 10px;
+background: #57B5E7;
+animation: confettiFall 3s ease-out forwards;
+}
+@keyframes confettiFall {
+0% {
+transform: translateY(-100vh) rotate(0deg);
+opacity: 1;
+}
+100% {
+transform: translateY(100vh) rotate(720deg);
+opacity: 0;
+}
+}
+.step-section {
+opacity: 0;
+transform: translateY(20px);
+transition: all 0.5s ease;
+min-height: 600px;
+}
+.step-section.visible {
+opacity: 1;
+transform: translateY(0);
+}
+.greeting-animation {
+animation: slideInRight 0.5s ease-out;
+}
+@keyframes slideInRight {
+from {
+transform: translateX(20px);
+opacity: 0;
+}
+to {
+transform: translateX(0);
+opacity: 1;
+}
+}
+input[type="range"] {
+-webkit-appearance: none;
+appearance: none;
+background: transparent;
+cursor: pointer;
+}
+input[type="range"]::-webkit-slider-track {
+background: #e2e8f0;
+height: 6px;
+border-radius: 3px;
+}
+input[type="range"]::-webkit-slider-thumb {
+-webkit-appearance: none;
+appearance: none;
+background: #57B5E7;
+height: 20px;
+width: 20px;
+border-radius: 50%;
+cursor: pointer;
+}
+.custom-checkbox {
+appearance: none;
+width: 20px;
+height: 20px;
+border: 2px solid #cbd5e1;
+border-radius: 4px;
+cursor: pointer;
+position: relative;
+transition: all 0.2s ease;
+}
+.custom-checkbox:checked {
+background: #57B5E7;
+border-color: #57B5E7;
+}
+.custom-checkbox:checked::after {
+content: '✓';
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: white;
+font-size: 12px;
+font-weight: bold;
+}
+</style>
+</head>
+<body class="sparkle-bg overflow-y-auto">
+<div class="min-h-screen w-full">
+<header class="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<a href="/library" class="flex items-center space-x-2 text-gray-600 hover:text-gray-900">
+<i class="ri-arrow-left-line"></i><span class="text-sm underline">Return to Library</span>
+</a>
+<div class="text-center">
+<h1 class="font-['Pacifico'] text-2xl text-gray-800">Me Time</h1>
+</div>
+<div class="bg-gradient-to-r from-primary to-secondary text-white px-3 py-1 rounded-full text-xs font-medium">
+Beta Access
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="text-center mb-12">
+<h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+Create Your Story Character
+</h1>
+<p class="text-xl text-gray-600 mb-2">
+Every great story begins with a hero. Let's make yours.
+</p>
+<div class="inline-flex items-center space-x-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-magic-line"></i>
+</div>
+<span>Your feedback shapes the magic</span>
+</div>
+</div>
+<div class="flex justify-center mb-12">
+<div class="flex items-center space-x-8">
+<div class="progress-step active flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-full mb-2">
+<i class="ri-palette-line text-xl"></i>
+</div>
+<span class="text-sm font-medium">Bring your hero to life</span>
+</div>
+<div class="w-16 h-0.5 bg-gray-300"></div>
+<div class="progress-step flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center bg-gray-300 text-gray-600 rounded-full mb-2">
+<i class="ri-user-heart-line text-xl"></i>
+</div>
+<span class="text-sm font-medium text-gray-600">Discover who they are</span>
+</div>
+<div class="w-16 h-0.5 bg-gray-300"></div>
+<div class="progress-step flex flex-col items-center">
+<div class="w-12 h-12 flex items-center justify-center bg-gray-300 text-gray-600 rounded-full mb-2">
+<i class="ri-book-open-line text-xl"></i>
+</div>
+<span class="text-sm font-medium text-gray-600">Start your adventure</span>
+</div>
+</div>
+</div>
+<div class="step-section visible" id="step1">
+<div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+<h2 class="text-2xl font-bold text-gray-900 mb-6">Step 1: Character Builder</h2>
+<div class="grid md:grid-cols-2 gap-8">
+<div>
+<div class="avatar-preview w-48 h-48 mx-auto rounded-2xl flex flex-col items-center justify-center mb-6" id="avatarPreview">
+<div class="w-16 h-16 flex items-center justify-center text-gray-400 mb-2">
+<i class="ri-user-add-line text-4xl"></i>
+</div>
+<p class="text-gray-500 text-sm text-center">Upload photo or<br>let us create your avatar</p>
+</div>
+<div class="text-center">
+<input id="photoInput" type="file" accept="image/*" class="hidden">
+<button id="photoBtn" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2 !rounded-button font-medium whitespace-nowrap mb-2 mr-2">
+Upload Photo
+</button>
+<button class="border-2 border-primary text-primary px-6 py-2 !rounded-button font-medium whitespace-nowrap mb-2" id="surpriseBtn">
+Surprise Me!
+</button>
+</div>
+</div>
+<div class="space-y-6">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Child's First Name</label>
+<input type="text" id="childName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Enter your hero's name">
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Age</label>
+<input type="number" id="childAge" min="3" max="12" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="5">
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Pronouns</label>
+<select id="pronouns" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm pr-8">
+<option value="" disabled selected>Select pronouns</option>
+<option>she/her</option>
+<option>he/him</option>
+<option>they/them</option>
+<option>she/they</option>
+<option>he/they</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Skin Tone</label>
+<div class="flex space-x-2">
+<div class="w-8 h-8 rounded-full bg-amber-100 border-2 border-transparent cursor-pointer hover:border-primary skin-tone" data-tone="light"></div>
+<div class="w-8 h-8 rounded-full bg-amber-200 border-2 border-transparent cursor-pointer hover:border-primary skin-tone" data-tone="medium-light"></div>
+<div class="w-8 h-8 rounded-full bg-amber-300 border-2 border-transparent cursor-pointer hover:border-primary skin-tone" data-tone="medium"></div>
+<div class="w-8 h-8 rounded-full bg-amber-600 border-2 border-transparent cursor-pointer hover:border-primary skin-tone" data-tone="medium-dark"></div>
+<div class="w-8 h-8 rounded-full bg-amber-800 border-2 border-transparent cursor-pointer hover:border-primary skin-tone" data-tone="dark"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Favourite Colour</label>
+<div class="flex flex-wrap gap-2">
+<div class="w-8 h-8 rounded-full bg-red-500 border-2 border-transparent cursor-pointer hover:border-gray-400 fav-color" data-color="red"></div>
+<div class="w-8 h-8 rounded-full bg-blue-500 border-2 border-transparent cursor-pointer hover:border-gray-400 fav-color" data-color="blue"></div>
+<div class="w-8 h-8 rounded-full bg-green-500 border-2 border-transparent cursor-pointer hover:border-gray-400 fav-color" data-color="green"></div>
+<div class="w-8 h-8 rounded-full bg-purple-500 border-2 border-transparent cursor-pointer hover:border-gray-400 fav-color" data-color="purple"></div>
+<div class="w-8 h-8 rounded-full bg-pink-500 border-2 border-transparent cursor-pointer hover:border-gray-400 fav-color" data-color="pink"></div>
+<div class="w-8 h-8 rounded-full bg-yellow-500 border-2 border-transparent cursor-pointer hover:border-gray-400 fav-color" data-color="yellow"></div>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Favourite Animal</label>
+<input type="text" id="favAnimal" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Lion, Cat, Dragon...">
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-2">Their Biggest Dream</label>
+<input type="text" id="biggestDream" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="To become an astronaut, help animals...">
+</div>
+</div>
+</div>
+<div id="personalGreeting" class="hidden mt-6 p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg border border-primary/20">
+<p class="text-primary font-medium text-center greeting-animation"></p>
+</div>
+<div class="flex justify-end mt-8 pt-4 border-t border-gray-200">
+<button class="bg-primary text-white px-8 py-3 !rounded-button font-medium whitespace-nowrap hover:bg-primary/90 transition-colors shadow-lg" id="step1Next">
+Next: Personality & Themes
+<i class="ri-arrow-right-line ml-2"></i>
+</button>
+</div>
+</div>
+</div>
+<div class="step-section" id="step2" style="display: none;">
+<div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+<h2 class="text-2xl font-bold text-gray-900 mb-6">Step 2: Personality & Themes</h2>
+<div class="mb-8">
+<h3 class="text-lg font-semibold text-gray-800 mb-4">Choose 3 Personality Traits</h3>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+<div class="trait-chip bg-gray-100 px-4 py-3 rounded-lg text-center" data-trait="curious">
+<div class="w-6 h-6 flex items-center justify-center mx-auto mb-1">
+<i class="ri-search-line text-lg"></i>
+</div>
+<span class="text-sm font-medium">Curious</span>
+<p class="text-xs text-gray-600 mt-1">Loves asking why!</p>
+</div>
+<div class="trait-chip bg-gray-100 px-4 py-3 rounded-lg text-center" data-trait="brave">
+<div class="w-6 h-6 flex items-center justify-center mx-auto mb-1">
+<i class="ri-shield-line text-lg"></i>
+</div>
+<span class="text-sm font-medium">Brave</span>
+<p class="text-xs text-gray-600 mt-1">Faces any challenge</p>
+</div>
+<div class="trait-chip bg-gray-100 px-4 py-3 rounded-lg text-center" data-trait="kind">
+<div class="w-6 h-6 flex items-center justify-center mx-auto mb-1">
+<i class="ri-heart-line text-lg"></i>
+</div>
+<span class="text-sm font-medium">Kind</span>
+<p class="text-xs text-gray-600 mt-1">Cares for everyone</p>
+</div>
+<div class="trait-chip bg-gray-100 px-4 py-3 rounded-lg text-center" data-trait="creative">
+<div class="w-6 h-6 flex items-center justify-center mx-auto mb-1">
+<i class="ri-palette-line text-lg"></i>
+</div>
+<span class="text-sm font-medium">Creative</span>
+<p class="text-xs text-gray-600 mt-1">Imagines amazing things</p>
+</div>
+<div class="trait-chip bg-gray-100 px-4 py-3 rounded-lg text-center" data-trait="funny">
+<div class="w-6 h-6 flex items-center justify-center mx-auto mb-1">
+<i class="ri-emotion-laugh-line text-lg"></i>
+</div>
+<span class="text-sm font-medium">Funny</span>
+<p class="text-xs text-gray-600 mt-1">Makes others smile</p>
+</div>
+<div class="trait-chip bg-gray-100 px-4 py-3 rounded-lg text-center" data-trait="smart">
+<div class="w-6 h-6 flex items-center justify-center mx-auto mb-1">
+<i class="ri-lightbulb-line text-lg"></i>
+</div>
+<span class="text-sm font-medium">Smart</span>
+<p class="text-xs text-gray-600 mt-1">Solves problems well</p>
+</div>
+<div class="trait-chip bg-gray-100 px-4 py-3 rounded-lg text-center" data-trait="adventurous">
+<div class="w-6 h-6 flex items-center justify-center mx-auto mb-1">
+<i class="ri-compass-line text-lg"></i>
+</div>
+<span class="text-sm font-medium">Adventurous</span>
+<p class="text-xs text-gray-600 mt-1">Loves exploring</p>
+</div>
+<div class="trait-chip bg-gray-100 px-4 py-3 rounded-lg text-center" data-trait="gentle">
+<div class="w-6 h-6 flex items-center justify-center mx-auto mb-1">
+<i class="ri-leaf-line text-lg"></i>
+</div>
+<span class="text-sm font-medium">Gentle</span>
+<p class="text-xs text-gray-600 mt-1">Calm and caring</p>
+</div>
+</div>
+<p class="text-sm text-gray-600 mt-3" id="traitCounter">Select exactly 3 traits (0/3 selected)</p>
+</div>
+<div class="mb-8">
+<h3 class="text-lg font-semibold text-gray-800 mb-4">Preferred Story Themes</h3>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="theme-card bg-white border-2 border-gray-200 rounded-lg p-4 text-center" data-theme="adventure">
+<div class="w-8 h-8 flex items-center justify-center mx-auto mb-2 text-2xl">🗺️</div>
+<span class="text-sm font-medium">Adventure</span>
+<input type="checkbox" class="custom-checkbox mt-2 mx-auto block">
+</div>
+<div class="theme-card bg-white border-2 border-gray-200 rounded-lg p-4 text-center" data-theme="friendship">
+<div class="w-8 h-8 flex items-center justify-center mx-auto mb-2 text-2xl">🤝</div>
+<span class="text-sm font-medium">Friendship</span>
+<input type="checkbox" class="custom-checkbox mt-2 mx-auto block">
+</div>
+<div class="theme-card bg-white border-2 border-gray-200 rounded-lg p-4 text-center" data-theme="confidence">
+<div class="w-8 h-8 flex items-center justify-center mx-auto mb-2 text-2xl">💪</div>
+<span class="text-sm font-medium">Confidence</span>
+<input type="checkbox" class="custom-checkbox mt-2 mx-auto block">
+</div>
+<div class="theme-card bg-white border-2 border-gray-200 rounded-lg p-4 text-center" data-theme="change">
+<div class="w-8 h-8 flex items-center justify-center mx-auto mb-2 text-2xl">🌱</div>
+<span class="text-sm font-medium">Change</span>
+<input type="checkbox" class="custom-checkbox mt-2 mx-auto block">
+</div>
+<div class="theme-card bg-white border-2 border-gray-200 rounded-lg p-4 text-center" data-theme="bedtime">
+<div class="w-8 h-8 flex items-center justify-center mx-auto mb-2 text-2xl">🌙</div>
+<span class="text-sm font-medium">Bedtime Calm</span>
+<input type="checkbox" class="custom-checkbox mt-2 mx-auto block">
+</div>
+<div class="theme-card bg-white border-2 border-gray-200 rounded-lg p-4 text-center" data-theme="family">
+<div class="w-8 h-8 flex items-center justify-center mx-auto mb-2 text-2xl">👨‍👩‍👧‍👦</div>
+<span class="text-sm font-medium">Family</span>
+<input type="checkbox" class="custom-checkbox mt-2 mx-auto block">
+</div>
+<div class="theme-card bg-white border-2 border-gray-200 rounded-lg p-4 text-center" data-theme="discovery">
+<div class="w-8 h-8 flex items-center justify-center mx-auto mb-2 text-2xl">🔍</div>
+<span class="text-sm font-medium">Discovery</span>
+<input type="checkbox" class="custom-checkbox mt-2 mx-auto block">
+</div>
+<div class="theme-card bg-white border-2 border-gray-200 rounded-lg p-4 text-center" data-theme="magic">
+<div class="w-8 h-8 flex items-center justify-center mx-auto mb-2 text-2xl">✨</div>
+<span class="text-sm font-medium">Magic</span>
+<input type="checkbox" class="custom-checkbox mt-2 mx-auto block">
+</div>
+</div>
+</div>
+<div class="mb-8">
+<h3 class="text-lg font-semibold text-gray-800 mb-4">Parent Notes (Optional)</h3>
+<textarea id="parentNotes" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="e.g., 'Starting a new school soon, loves dinosaurs, needs confidence boost...'"></textarea>
+</div>
+<div class="flex justify-between mt-8 pt-4 border-t border-gray-200">
+<button class="border-2 border-gray-300 text-gray-600 px-8 py-3 !rounded-button font-medium whitespace-nowrap hover:bg-gray-50 transition-colors" id="step2Back">
+<i class="ri-arrow-left-line mr-2"></i>Back
+</button>
+<button class="bg-primary text-white px-8 py-3 !rounded-button font-medium whitespace-nowrap hover:bg-primary/90 transition-colors shadow-lg" id="step2Next">
+Next: Save & Explore
+<i class="ri-arrow-right-line ml-2"></i>
+</button>
+</div>
+</div>
+</div>
+<div class="step-section" id="step3" style="display: none;">
+<div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+<h2 class="text-2xl font-bold text-gray-900 mb-6">Your Personalized Story Library</h2>
+<div class="text-center mb-8">
+<div class="w-20 h-20 mx-auto bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mb-4">
+<div class="w-10 h-10 flex items-center justify-center text-white">
+<i class="ri-book-open-line text-2xl"></i>
+</div>
+</div>
+<h3 class="text-xl font-semibold text-gray-800 mb-2" id="libraryWelcome">Stories Made Just for You!</h3>
+<p class="text-gray-600" id="characterSummary">Each story features you as the hero, with adventures perfectly crafted for your personality and dreams.</p>
+</div>
+
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8" id="personalizedStories">
+<div class="story-card bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-6 border border-blue-200 hover:shadow-lg transition-all cursor-pointer">
+<div class="w-full h-32 bg-cover bg-center rounded-lg mb-4" style="background-image: url('https://readdy.ai/api/search-image?query=young%20brave%20child%20with%20wolf%20companion%20standing%20by%20magical%20ocean%20waves%20at%20sunset%2C%20adventure%20illustration%2C%20bright%20colors%2C%20children%20book%20style&width=300&height=200&seq=ocean_wolf_1&orientation=landscape')"></div>
+<h4 class="font-semibold text-gray-800 mb-2" id="story1Title">The Ocean Guardian</h4>
+<p class="text-sm text-gray-600 mb-3" id="story1Desc">Discover magical powers to communicate with sea creatures and embark on an underwater adventure to save the ocean.</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-2 text-xs text-gray-500" id="story1Tags">
+<span class="bg-blue-100 px-2 py-1 rounded">Adventure</span>
+<span class="bg-green-100 px-2 py-1 rounded">Magic</span>
+</div>
+<div class="w-6 h-6 flex items-center justify-center text-primary">
+<i class="ri-play-circle-line"></i>
+</div>
+</div>
+</div>
+
+<div class="story-card bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-6 border border-purple-200 hover:shadow-lg transition-all cursor-pointer">
+<div class="w-full h-32 bg-cover bg-center rounded-lg mb-4" style="background-image: url('https://readdy.ai/api/search-image?query=gentle%20child%20reading%20under%20starry%20night%20sky%20with%20glowing%20moon%20and%20peaceful%20animal%20friend%2C%20bedtime%20story%20illustration%2C%20soft%20colors%2C%20dreamy%20atmosphere&width=300&height=200&seq=bedtime_calm_2&orientation=landscape')"></div>
+<h4 class="font-semibold text-gray-800 mb-2" id="story2Title">Dreamland Lullaby</h4>
+<p class="text-sm text-gray-600 mb-3" id="story2Desc">When sleep won't come, discover the secret of the stars' bedtime song in a peaceful adventure through dreamland.</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-2 text-xs text-gray-500" id="story2Tags">
+<span class="bg-purple-100 px-2 py-1 rounded">Bedtime</span>
+<span class="bg-blue-100 px-2 py-1 rounded">Gentle</span>
+</div>
+<div class="w-6 h-6 flex items-center justify-center text-primary">
+<i class="ri-play-circle-line"></i>
+</div>
+</div>
+</div>
+
+<div class="story-card bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-6 border border-green-200 hover:shadow-lg transition-all cursor-pointer">
+<div class="w-full h-32 bg-cover bg-center rounded-lg mb-4" style="background-image: url('https://readdy.ai/api/search-image?query=smart%20child%20solving%20puzzle%20with%20animal%20friend%20in%20magical%20forest%2C%20bright%20morning%20light%2C%20adventure%20illustration%2C%20vibrant%20colors%2C%20children%20book%20style&width=300&height=200&seq=smart_solution_3&orientation=landscape')"></div>
+<h4 class="font-semibold text-gray-800 mb-2" id="story3Title">The Smart Solution</h4>
+<p class="text-sm text-gray-600 mb-3" id="story3Desc">When forest animals lose their way home, use clever thinking and kind heart to create a solution that helps everyone.</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-2 text-xs text-gray-500" id="story3Tags">
+<span class="bg-green-100 px-2 py-1 rounded">Smart</span>
+<span class="bg-yellow-100 px-2 py-1 rounded">Kind</span>
+</div>
+<div class="w-6 h-6 flex items-center justify-center text-primary">
+<i class="ri-play-circle-line"></i>
+</div>
+</div>
+</div>
+
+<div class="story-card bg-gradient-to-br from-orange-50 to-yellow-50 rounded-lg p-6 border border-orange-200 hover:shadow-lg transition-all cursor-pointer">
+<div class="w-full h-32 bg-cover bg-center rounded-lg mb-4" style="background-image: url('https://readdy.ai/api/search-image?query=confident%20child%20standing%20on%20mountain%20peak%20with%20animal%20companion%2C%20sunrise%20background%2C%20empowering%20illustration%2C%20warm%20colors%2C%20children%20book%20style&width=300&height=200&seq=confidence_mountain_4&orientation=landscape')"></div>
+<h4 class="font-semibold text-gray-800 mb-2" id="story4Title">The Confidence Mountain</h4>
+<p class="text-sm text-gray-600 mb-3" id="story4Desc">Feel nervous about a big challenge? Climb the Confidence Mountain and discover your inner strength with a trusted friend.</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-2 text-xs text-gray-500" id="story4Tags">
+<span class="bg-orange-100 px-2 py-1 rounded">Confidence</span>
+<span class="bg-blue-100 px-2 py-1 rounded">Adventure</span>
+</div>
+<div class="w-6 h-6 flex items-center justify-center text-primary">
+<i class="ri-play-circle-line"></i>
+</div>
+</div>
+</div>
+
+<div class="story-card bg-gradient-to-br from-indigo-50 to-blue-50 rounded-lg p-6 border border-indigo-200 hover:shadow-lg transition-all cursor-pointer">
+<div class="w-full h-32 bg-cover bg-center rounded-lg mb-4" style="background-image: url('https://readdy.ai/api/search-image?query=child%20with%20glowing%20magical%20powers%20and%20animal%20friend%20in%20enchanted%20underwater%20world%2C%20fantasy%20illustration%2C%20mystical%20colors%2C%20children%20book%20style&width=300&height=200&seq=magic_ocean_5&orientation=landscape')"></div>
+<h4 class="font-semibold text-gray-800 mb-2" id="story5Title">Ocean Magic Adventure</h4>
+<p class="text-sm text-gray-600 mb-3" id="story5Desc">Discover special powers to communicate with sea creatures and restore balance to the magical underwater world.</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-2 text-xs text-gray-500" id="story5Tags">
+<span class="bg-indigo-100 px-2 py-1 rounded">Magic</span>
+<span class="bg-teal-100 px-2 py-1 rounded">Ocean</span>
+</div>
+<div class="w-6 h-6 flex items-center justify-center text-primary">
+<i class="ri-play-circle-line"></i>
+</div>
+</div>
+</div>
+
+<div class="story-card bg-gradient-to-br from-pink-50 to-rose-50 rounded-lg p-6 border border-pink-200 hover:shadow-lg transition-all cursor-pointer">
+<div class="w-full h-32 bg-cover bg-center rounded-lg mb-4" style="background-image: url('https://readdy.ai/api/search-image?query=kind%20child%20helping%20small%20animals%20with%20companion%20in%20sunny%20meadow%2C%20heartwarming%20illustration%2C%20soft%20colors%2C%20children%20book%20style&width=300&height=200&seq=kind_helping_6&orientation=landscape')"></div>
+<h4 class="font-semibold text-gray-800 mb-2" id="story6Title">The Kindness Circle</h4>
+<p class="text-sm text-gray-600 mb-3" id="story6Desc">When small creatures need help, your gentle nature and smart ideas create a chain of kindness that spreads everywhere.</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-2 text-xs text-gray-500" id="story6Tags">
+<span class="bg-pink-100 px-2 py-1 rounded">Kind</span>
+<span class="bg-green-100 px-2 py-1 rounded">Gentle</span>
+</div>
+<div class="w-6 h-6 flex items-center justify-center text-primary">
+<i class="ri-play-circle-line"></i>
+</div>
+</div>
+</div>
+</div>
+
+<div class="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-6 mb-8">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+<div class="w-6 h-6 flex items-center justify-center text-primary">
+<i class="ri-user-star-line"></i>
+</div>
+</div>
+<div>
+<h4 class="font-semibold text-gray-800 mb-1">Character Profile Ready</h4>
+<div id="finalPreview" class="text-sm text-gray-600">
+</div>
+</div>
+</div>
+</div>
+
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<button class="bg-gradient-to-r from-primary to-secondary text-white px-8 py-3 !rounded-button font-medium whitespace-nowrap hover:shadow-lg transition-all" id="startReading">
+<i class="ri-play-line mr-2"></i>Start Reading Stories
+</button>
+<button class="border-2 border-primary text-primary px-6 py-3 !rounded-button font-medium whitespace-nowrap hover:bg-primary/5 transition-colors" id="editCharacter">
+<i class="ri-edit-line mr-2"></i>Edit Character
+</button>
+<button class="save-button text-white px-8 py-3 !rounded-button font-semibold whitespace-nowrap" id="saveCharacter">
+<i class="ri-bookmark-line mr-2"></i>Save to Library
+</button>
+</div>
+
+<div class="flex justify-between mt-8 pt-4 border-t border-gray-200">
+<button class="border-2 border-gray-300 text-gray-600 px-8 py-3 !rounded-button font-medium whitespace-nowrap hover:bg-gray-50 transition-colors" id="step3Back">
+<i class="ri-arrow-left-line mr-2"></i>Back to Edit
+</button>
+</div>
+</div>
+</div>
+</main>
+<div id="successMessage" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+<div class="bg-white rounded-2xl p-8 max-w-md mx-4 text-center">
+<div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-4">
+<div class="w-8 h-8 flex items-center justify-center text-green-600">
+<i class="ri-check-line text-2xl"></i>
+</div>
+</div>
+<h3 class="text-xl font-semibold text-gray-800 mb-2">✨ Character Saved!</h3>
+<p class="text-gray-600 mb-6">Saved to your Story Vault!</p>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/8f6ab83e-0b64-4739-8879-52d3da7e2852" data-readdy="true" class="bg-gradient-to-r from-primary to-secondary text-white px-8 py-3 !rounded-button font-medium whitespace-nowrap w-full inline-block text-center" id="goToLibrary">
+Go to My Library
+</a>
+</div>
+</div>
+</div>
+<script id="character-data">
+let characterData = {
+name: '',
+age: '',
+pronouns: '',
+skinTone: '',
+favoriteColor: '',
+favoriteAnimal: '',
+biggestDream: '',
+traits: [],
+themes: [],
+parentNotes: ''
+};
+let currentStep = 1;
+let selectedTraits = [];
+let selectedThemes = [];
+</script>
+<script id="step-navigation">
+function showStep(stepNumber) {
+document.querySelectorAll('.step-section').forEach(section => {
+section.style.display = 'none';
+section.classList.remove('visible');
+});
+document.getElementById(`step${stepNumber}`).style.display = 'block';
+setTimeout(() => {
+document.getElementById(`step${stepNumber}`).classList.add('visible');
+}, 50);
+updateProgressIndicator(stepNumber);
+currentStep = stepNumber;
+}
+function updateProgressIndicator(activeStep) {
+const defaults = ['ri-palette-line','ri-user-heart-line','ri-book-open-line'];
+document.querySelectorAll('.progress-step').forEach((step, i) => {
+const icon = step.querySelector('i');
+const pill = step.querySelector('.w-12');
+step.classList.remove('active','completed');
+if (icon) icon.className = `${defaults[i]} text-xl`;
+if (pill) {
+pill.classList.remove('bg-primary','text-white');
+pill.classList.add('bg-gray-300','text-gray-600');
+}
+if (i + 1 === activeStep) {
+step.classList.add('active');
+if (pill) { pill.classList.add('bg-primary','text-white'); pill.classList.remove('bg-gray-300','text-gray-600'); }
+} else if (i + 1 < activeStep) {
+step.classList.add('completed');
+if (icon) icon.className = 'ri-check-line text-xl';
+if (pill) pill.classList.remove('bg-gray-300','text-gray-600');
+}
+});
+}
+document.getElementById('step1Next').addEventListener('click', () => {
+if (validateStep1()) {
+showStep(2);
+}
+});
+document.getElementById('step2Next').addEventListener('click', () => {
+if (validateStep2()) {
+updateFinalPreview();
+showStep(3);
+}
+});
+document.getElementById('step2Back').addEventListener('click', () => {
+showStep(1);
+});
+document.getElementById('step3Back').addEventListener('click', () => {
+showStep(2);
+});
+function validateStep1() {
+const name = document.getElementById('childName').value.trim();
+if (!name) {
+showNotification('Please enter your hero\'s name', 'warning');
+return false;
+}
+characterData.name = name;
+return true;
+}
+function validateStep2() {
+if (selectedTraits.length !== 3) {
+showNotification('Please select exactly 3 personality traits', 'warning');
+return false;
+}
+characterData.traits = selectedTraits;
+characterData.themes = selectedThemes;
+return true;
+}
+function showNotification(message, type = 'info') {
+const notification = document.createElement('div');
+notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transition-transform duration-300 ${
+type === 'warning' ? 'bg-orange-500' : type === 'error' ? 'bg-red-500' : 'bg-primary'
+}`;
+notification.textContent = message;
+notification.style.transform = 'translateX(100%)';
+document.body.appendChild(notification);
+requestAnimationFrame(() => {
+notification.style.transform = 'translateX(0)';
+});
+setTimeout(() => {
+notification.style.transform = 'translateX(100%)';
+setTimeout(() => notification.remove(), 300);
+}, 3000);
+}
+</script>
+<script id="character-interactions">
+document.getElementById('childName').addEventListener('input', function(e) {
+const name = e.target.value.trim();
+const greeting = document.getElementById('personalGreeting');
+const greetingText = greeting.querySelector('p');
+if (name) {
+greetingText.textContent = `Hi ${name}! Ready to be the hero?`;
+greeting.classList.remove('hidden');
+characterData.name = name;
+} else {
+greeting.classList.add('hidden');
+}
+});
+document.getElementById('surpriseBtn').addEventListener('click', function() {
+const names = ['Alex', 'Sam', 'Jordan', 'Casey', 'Riley', 'Avery', 'Quinn', 'Blake'];
+const animals = ['Dragon', 'Unicorn', 'Lion', 'Eagle', 'Dolphin', 'Tiger', 'Wolf', 'Phoenix'];
+const dreams = ['Explore space', 'Save the ocean', 'Become a superhero', 'Help all animals', 'Build amazing inventions', 'Travel the world'];
+const randomName = names[Math.floor(Math.random() * names.length)];
+const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
+const randomDream = dreams[Math.floor(Math.random() * dreams.length)];
+document.getElementById('childName').value = randomName;
+document.getElementById('childAge').value = Math.floor(Math.random() * 6) + 4;
+document.getElementById('favAnimal').value = randomAnimal;
+document.getElementById('biggestDream').value = randomDream;
+document.getElementById('childName').dispatchEvent(new Event('input'));
+});
+document.querySelectorAll('.skin-tone').forEach(tone => {
+tone.addEventListener('click', function() {
+document.querySelectorAll('.skin-tone').forEach(t => t.classList.remove('border-primary'));
+this.classList.add('border-primary');
+characterData.skinTone = this.dataset.tone;
+});
+});
+const photoBtn = document.getElementById('photoBtn');
+const photoInput = document.getElementById('photoInput');
+const avatar = document.getElementById('avatarPreview');
+photoBtn.addEventListener('click', () => photoInput.click());
+photoInput.addEventListener('change', e => {
+const f = e.target.files[0];
+if (!f) return;
+const url = URL.createObjectURL(f);
+avatar.innerHTML = `<img src="${url}" alt="Avatar" class="w-full h-full object-cover rounded-2xl">`;
+avatar.classList.add('has-color');
+characterData.photo = url;
+});
+document.querySelectorAll('.fav-color').forEach(color => {
+color.addEventListener('click', function() {
+document.querySelectorAll('.fav-color').forEach(c => c.classList.remove('border-gray-800'));
+this.classList.add('border-gray-800');
+characterData.favoriteColor = this.dataset.color;
+const preview = document.getElementById('avatarPreview');
+preview.classList.add('has-color');
+preview.style.boxShadow = `0 0 20px ${this.style.backgroundColor}40`;
+});
+});
+document.querySelectorAll('.trait-chip').forEach(chip => {
+chip.addEventListener('click', function() {
+const trait = this.dataset.trait;
+if (this.classList.contains('selected')) {
+this.classList.remove('selected');
+selectedTraits = selectedTraits.filter(t => t !== trait);
+} else if (selectedTraits.length < 3) {
+this.classList.add('selected');
+selectedTraits.push(trait);
+} else {
+tooMany();
+return;
+}
+updateTraitCounter();
+});
+});
+function updateTraitCounter() {
+const counter = document.getElementById('traitCounter');
+counter.textContent = `Select exactly 3 traits (${selectedTraits.length}/3 selected)`;
+}
+function tooMany() {
+const counter = document.getElementById('traitCounter');
+counter.classList.add('text-red-600');
+setTimeout(() => counter.classList.remove('text-red-600'), 800);
+}
+document.querySelectorAll('.theme-card').forEach(card => {
+const checkbox = card.querySelector('.custom-checkbox');
+card.addEventListener('click', function() {
+const theme = this.dataset.theme;
+if (checkbox.checked) {
+checkbox.checked = false;
+this.classList.remove('selected');
+selectedThemes = selectedThemes.filter(t => t !== theme);
+} else {
+checkbox.checked = true;
+this.classList.add('selected');
+selectedThemes.push(theme);
+}
+});
+});
+function updateFinalPreview() {
+const name = characterData.name || 'Your Hero';
+const age = document.getElementById('childAge').value;
+const animal = document.getElementById('favAnimal').value;
+const dream = document.getElementById('biggestDream').value;
+const traits = selectedTraits.join(', ');
+const themes = selectedThemes.join(', ');
+
+const preview = document.getElementById('finalPreview');
+preview.innerHTML = `${name} • Age ${age} • Dreams: ${dream} • Traits: ${traits}`;
+
+const welcomeTitle = document.getElementById('libraryWelcome');
+welcomeTitle.textContent = `Stories Made Just for ${name}!`;
+
+const summary = document.getElementById('characterSummary');
+summary.textContent = `Each story features ${name} as the hero, with adventures perfectly crafted for their personality and dreams.`;
+
+personalizeStories(name, animal, dream, selectedTraits, selectedThemes);
+}
+
+function personalizeStories(name, animal, dream, traits, themes) {
+const storyUpdates = [
+{
+title: `${name} and the ${animal} Guardian`,
+desc: `${name} discovers a magical ${animal.toLowerCase()} who needs help saving the ocean. Together, they embark on an underwater adventure to fulfill ${name}'s dream.`,
+tags: themes.includes('magic') ? ['Magic', 'Adventure'] : ['Adventure', 'Ocean']
+},
+{
+title: `${name}'s Peaceful Dreams`,
+desc: `When ${name} can't fall asleep, a gentle ${animal.toLowerCase()} teaches them the secret of the stars' bedtime song. Perfect for ${traits.includes('gentle') ? 'gentle' : 'calm'} dreamers.`,
+tags: themes.includes('bedtime') ? ['Bedtime', 'Gentle'] : ['Calm', 'Dreams']
+},
+{
+title: `${name}'s Smart Solution`,
+desc: `When forest animals lose their way home, ${name} uses their ${traits.includes('smart') ? 'clever thinking' : 'creative ideas'} to help everyone find their path.`,
+tags: traits.includes('smart') ? ['Smart', 'Helpful'] : ['Creative', 'Kind']
+},
+{
+title: `${name}'s Confidence Journey`,
+desc: `${name} feels nervous about a big challenge. With their ${animal.toLowerCase()} friend's support, they discover their inner ${traits.includes('brave') ? 'bravery' : 'strength'}.`,
+tags: themes.includes('confidence') ? ['Confidence', 'Growth'] : ['Brave', 'Adventure']
+},
+{
+title: `${name}'s Ocean Magic`,
+desc: `When ${name} discovers they have special powers to help ${dream.toLowerCase()}, they team up with their ${animal.toLowerCase()} friend to make their dream come true.`,
+tags: themes.includes('magic') ? ['Magic', 'Dreams'] : ['Ocean', 'Adventure']
+},
+{
+title: `${name}'s Kindness Circle`,
+desc: `${name}'s ${traits.includes('kind') ? 'kind heart' : 'caring nature'} creates a chain of kindness that spreads throughout the woodland, helping all creatures.`,
+tags: traits.includes('kind') ? ['Kind', 'Caring'] : ['Gentle', 'Friendship']
+}
+];
+
+storyUpdates.forEach((story, index) => {
+const titleEl = document.getElementById(`story${index + 1}Title`);
+const descEl = document.getElementById(`story${index + 1}Desc`);
+const tagsEl = document.getElementById(`story${index + 1}Tags`);
+
+if (titleEl) titleEl.textContent = story.title;
+if (descEl) descEl.textContent = story.desc;
+if (tagsEl) {
+tagsEl.innerHTML = story.tags.map(tag => 
+`<span class="bg-blue-100 px-2 py-1 rounded">${tag}</span>`
+).join('');
+}
+});
+}
+</script>
+<script id="save-functionality">
+document.getElementById('pronouns').addEventListener('change', e => characterData.pronouns = e.target.value);
+document.getElementById('saveCharacter').addEventListener('click', function() {
+characterData.age = document.getElementById('childAge').value;
+characterData.favoriteAnimal = document.getElementById('favAnimal').value;
+characterData.biggestDream = document.getElementById('biggestDream').value;
+characterData.parentNotes = document.getElementById('parentNotes').value;
+localStorage.setItem('meTimeCharacter', JSON.stringify(characterData));
+createConfetti();
+setTimeout(() => {
+document.getElementById('successMessage').classList.remove('hidden');
+}, 1000);
+});
+document.getElementById('editCharacter').addEventListener('click', function() {
+showStep(1);
+});
+document.getElementById('goToLibrary').addEventListener('click', function() {
+const params = new URLSearchParams({
+name: characterData.name,
+dream: characterData.biggestDream,
+themes: selectedThemes.join(',')
+});
+window.location.href = `/library?${params.toString()}`;
+});
+function createConfetti() {
+const confetti = document.createElement('div');
+confetti.className = 'confetti';
+document.body.appendChild(confetti);
+const colors = ['#57B5E7', '#8DD3C7', '#FBB172', '#FC8D62'];
+for (let i = 0; i < 50; i++) {
+const piece = document.createElement('div');
+piece.className = 'confetti-piece';
+piece.style.left = Math.random() * 100 + '%';
+piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+piece.style.animationDelay = Math.random() * 2 + 's';
+confetti.appendChild(piece);
+}
+setTimeout(() => {
+confetti.remove();
+}, 3000);
+}
+</script>
+<script id="auto-save">
+setInterval(() => {
+const childName = document.getElementById('childName');
+const childAge = document.getElementById('childAge');
+const favAnimal = document.getElementById('favAnimal');
+const biggestDream = document.getElementById('biggestDream');
+const parentNotes = document.getElementById('parentNotes');
+const tempData = {
+name: childName ? childName.value : '',
+age: childAge ? childAge.value : '',
+favoriteAnimal: favAnimal ? favAnimal.value : '',
+biggestDream: biggestDream ? biggestDream.value : '',
+traits: selectedTraits,
+themes: selectedThemes,
+parentNotes: parentNotes ? parentNotes.value : '',
+skinTone: characterData.skinTone,
+favoriteColor: characterData.favoriteColor,
+pronouns: characterData.pronouns
+};
+localStorage.setItem('meTimeCharacterDraft', JSON.stringify(tempData));
+}, 5000);
+window.addEventListener('load', () => {
+const draft = localStorage.getItem('meTimeCharacterDraft');
+if (draft) {
+const data = JSON.parse(draft);
+if (data.name) document.getElementById('childName').value = data.name;
+if (data.age) document.getElementById('childAge').value = data.age;
+if (data.favoriteAnimal) document.getElementById('favAnimal').value = data.favoriteAnimal;
+if (data.biggestDream) document.getElementById('biggestDream').value = data.biggestDream;
+if (data.parentNotes) document.getElementById('parentNotes').value = data.parentNotes;
+if (data.pronouns) {
+document.getElementById('pronouns').value = data.pronouns;
+characterData.pronouns = data.pronouns;
+}
+if (data.skinTone) {
+characterData.skinTone = data.skinTone;
+document.querySelectorAll('.skin-tone').forEach(t => {
+if (t.dataset.tone === data.skinTone) t.classList.add('border-primary');
+});
+}
+if (data.favoriteColor) {
+characterData.favoriteColor = data.favoriteColor;
+document.querySelectorAll('.fav-color').forEach(c => {
+if (c.dataset.color === data.favoriteColor) c.classList.add('border-gray-800');
+});
+}
+if (data.traits) {
+selectedTraits = data.traits;
+document.querySelectorAll('.trait-chip').forEach(c => {
+if (selectedTraits.includes(c.dataset.trait)) c.classList.add('selected');
+});
+updateTraitCounter();
+}
+if (data.themes) {
+selectedThemes = data.themes;
+document.querySelectorAll('.theme-card').forEach(card => {
+if (selectedThemes.includes(card.dataset.theme)) {
+card.classList.add('selected');
+card.querySelector('.custom-checkbox').checked = true;
+}
+});
+}
+}
+});
+</script>
+</body>
+</html>

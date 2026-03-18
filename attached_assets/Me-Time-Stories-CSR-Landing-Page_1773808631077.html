@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Me Time Stories - Corporate Social Responsibility & Educational Partnerships</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+primary: '#2563eb',
+secondary: '#10b981'
+},
+borderRadius: {
+'none': '0px',
+'sm': '4px',
+DEFAULT: '8px',
+'md': '12px',
+'lg': '16px',
+'xl': '20px',
+'2xl': '24px',
+'3xl': '32px',
+'full': '9999px',
+'button': '12px'
+}
+}
+}
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before {
+content: "\f3c2";
+}
+body {
+font-family: 'Inter', sans-serif;
+}
+.hero-gradient {
+background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+/* Fade in animations */
+@keyframes fadeInUp {
+from {
+opacity: 0;
+transform: translateY(30px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+@keyframes fadeInLeft {
+from {
+opacity: 0;
+transform: translateX(-30px);
+}
+to {
+opacity: 1;
+transform: translateX(0);
+}
+}
+@keyframes fadeInRight {
+from {
+opacity: 0;
+transform: translateX(30px);
+}
+to {
+opacity: 1;
+transform: translateX(0);
+}
+}
+@keyframes fadeIn {
+from {
+opacity: 0;
+}
+to {
+opacity: 1;
+}
+}
+@keyframes float {
+0%, 100% {
+transform: translateY(0px);
+}
+50% {
+transform: translateY(-10px);
+}
+}
+@keyframes pulse {
+0%, 100% {
+transform: scale(1);
+}
+50% {
+transform: scale(1.05);
+}
+}
+@keyframes slideInFromTop {
+from {
+opacity: 0;
+transform: translateY(-50px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+.animate-on-scroll {
+opacity: 0;
+transform: translateY(30px);
+transition: all 0.8s ease-out;
+}
+.animate-on-scroll.visible {
+opacity: 1;
+transform: translateY(0);
+}
+.animate-float {
+animation: float 6s ease-in-out infinite;
+}
+.animate-pulse-slow {
+animation: pulse 3s ease-in-out infinite;
+}
+.hero-logo {
+animation: slideInFromTop 1.2s ease-out;
+}
+.hero-title {
+animation: fadeInUp 1.5s ease-out 0.3s both;
+}
+.hero-subtitle {
+animation: fadeInUp 1.5s ease-out 0.6s both;
+}
+.hero-buttons {
+animation: fadeInUp 1.5s ease-out 0.9s both;
+}
+.story-gallery {
+display: flex;
+gap: 0.75rem;
+overflow-x: auto;
+padding-bottom: 0.5rem;
+position: relative;
+}
+.story-gallery::-webkit-scrollbar {
+height: 6px;
+}
+.story-gallery::-webkit-scrollbar-track {
+background: #f1f5f9;
+border-radius: 3px;
+}
+.story-gallery::-webkit-scrollbar-thumb {
+background: #cbd5e1;
+border-radius: 3px;
+}
+.story-gallery::-webkit-scrollbar-thumb:hover {
+background: #94a3b8;
+}
+/* Enhanced story image slideshow */
+.story-slideshow {
+position: relative;
+width: 100%;
+height: 320px;
+overflow: hidden;
+border-radius: 1rem;
+background: #f8fafc;
+}
+.story-slide {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+opacity: 0;
+transform: scale(1.1);
+transition: all 0.8s ease-in-out;
+}
+.story-slide.active {
+opacity: 1;
+transform: scale(1);
+}
+.story-slide img {
+width: 100%;
+height: 100%;
+object-fit: contain;
+padding: 1rem;
+}
+.slideshow-nav {
+position: absolute;
+bottom: 1rem;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+gap: 0.5rem;
+z-index: 10;
+}
+.slideshow-dot {
+width: 10px;
+height: 10px;
+border-radius: 50%;
+background: rgba(255, 255, 255, 0.5);
+cursor: pointer;
+transition: all 0.3s ease;
+}
+.slideshow-dot.active {
+background: rgba(37, 99, 235, 0.8);
+transform: scale(1.2);
+}
+.slideshow-arrow {
+position: absolute;
+top: 50%;
+transform: translateY(-50%);
+width: 40px;
+height: 40px;
+background: rgba(255, 255, 255, 0.9);
+border: none;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+opacity: 0;
+transition: all 0.3s ease;
+z-index: 10;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.story-slideshow:hover .slideshow-arrow {
+opacity: 1;
+}
+.slideshow-arrow:hover {
+background: white;
+transform: translateY(-50%) scale(1.1);
+}
+.slideshow-arrow.prev {
+left: 1rem;
+}
+.slideshow-arrow.next {
+right: 1rem;
+}
+.story-image {
+min-width: 140px;
+width: 140px;
+height: 180px;
+object-fit: contain;
+cursor: pointer;
+transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+border-radius: 0.75rem;
+}
+.story-image:hover {
+transform: translateY(-8px) scale(1.05);
+box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+@media (min-width: 640px) {
+.story-image {
+min-width: 160px;
+width: 160px;
+height: 200px;
+}
+}
+@media (min-width: 1024px) {
+.story-image {
+min-width: 180px;
+width: 180px;
+height: 220px;
+}
+}
+/* Card hover effects */
+.hover-card {
+transition: all 0.3s ease;
+}
+.hover-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+/* Button animations */
+.btn-animated {
+position: relative;
+overflow: hidden;
+transition: all 0.3s ease;
+}
+.btn-animated::before {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 100%;
+height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+transition: left 0.5s;
+}
+.btn-animated:hover::before {
+left: 100%;
+}
+.btn-animated:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+}
+/* Stagger animation delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+/* Loading animation */
+@keyframes shimmer {
+0% {
+background-position: -200px 0;
+}
+100% {
+background-position: calc(200px + 100%) 0;
+}
+}
+.shimmer {
+background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+background-size: 200px 100%;
+animation: shimmer 1.5s infinite;
+}
+</style>
+</head>
+<body class="bg-gray-50">
+<header class="bg-white/95 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-40">
+<nav class="w-full px-6 py-5">
+<div class="max-w-6xl mx-auto flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/f4bcb585-ab47-4ff8-924f-358f0740a159" data-readdy="true">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/9d401bf3670cd7ec919739d6a9a0573b.png" alt="Me Time Stories" class="h-10 w-auto">
+</a>
+</div>
+<div class="hidden md:flex items-center space-x-8">
+<a href="#stories" class="text-gray-700 hover:text-primary transition-colors font-medium">Our Stories</a>
+<a href="#impact" class="text-gray-700 hover:text-primary transition-colors font-medium">Impact</a>
+<a href="#contact" class="text-gray-700 hover:text-primary transition-colors font-medium">Contact</a>
+<a href="https://calendar.app.google/zCHiT3piadXPf2VK9" target="_blank" class="bg-primary text-white px-6 py-2.5 !rounded-button hover:bg-blue-700 transition-colors whitespace-nowrap font-medium">
+Book Meeting
+</a>
+</div>
+<button id="mobile-menu-button" class="md:hidden w-10 h-10 flex items-center justify-center text-gray-700">
+<i class="ri-menu-line text-xl"></i>
+</button>
+</div>
+<div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 px-6 py-8">
+<div class="flex flex-col space-y-6">
+<a href="#stories" class="text-gray-700 hover:text-primary transition-colors font-medium">Our Stories</a>
+<a href="#impact" class="text-gray-700 hover:text-primary transition-colors font-medium">Impact</a>
+<a href="#contact" class="text-gray-700 hover:text-primary transition-colors font-medium">Contact</a>
+<a href="https://calendar.app.google/zCHiT3piadXPf2VK9" target="_blank" class="bg-primary text-white px-6 py-3 !rounded-button hover:bg-blue-700 transition-colors whitespace-nowrap text-center font-medium">
+Book Meeting
+</a>
+</div>
+</div>
+</nav>
+</header>
+<section class="hero-gradient py-20 lg:py-28 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-r from-blue-50/30 to-purple-50/30"></div>
+<div class="max-w-6xl mx-auto px-6 relative">
+<div class="text-center mb-16">
+<div class="flex items-center justify-center mb-8 hero-logo">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/9d401bf3670cd7ec919739d6a9a0573b.png" alt="Me Time Stories" class="h-16 w-auto opacity-80 animate-float">
+</div>
+<h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6 hero-title">
+<span class="text-primary bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">CSR Stories</span> That Transform Communities
+</h1>
+<p class="text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed hero-subtitle">
+Partner with us to create personalized storytelling experiences that bring your Corporate Social Responsibility goals to life through magical adventures children will treasure forever.
+</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center hero-buttons">
+<a href="https://calendar.app.google/zCHiT3piadXPf2VK9" target="_blank" class="bg-primary text-white px-8 py-4 !rounded-button hover:bg-blue-700 transition-colors whitespace-nowrap font-semibold text-lg btn-animated">
+Book Partnership Call
+</a>
+<a href="#contact" class="border-2 border-gray-300 text-gray-700 px-8 py-4 !rounded-button hover:border-gray-400 hover:bg-gray-50 transition-colors whitespace-nowrap font-semibold text-lg btn-animated">
+Send Enquiry
+</a>
+</div>
+</div>
+<div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 mb-24">
+<!-- Rose Goes to Mo's BBQ -->
+<div class="group relative bg-gradient-to-br from-white via-gray-50/30 to-white p-10 rounded-3xl border border-gray-100/80 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-on-scroll backdrop-blur-sm">
+<div class="absolute inset-0 bg-gradient-to-br from-secondary/3 via-transparent to-secondary/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative z-10">
+<!-- Book Cover Display -->
+<div class="flex items-start gap-8 mb-8">
+<div class="relative">
+<div class="book-spine absolute -left-2 top-2 w-3 h-72 bg-gradient-to-b from-secondary-600 to-secondary-800 rounded-l-md shadow-lg transform -rotate-1"></div>
+<div class="book-cover relative bg-white rounded-lg shadow-2xl overflow-hidden transform rotate-1 hover:rotate-0 transition-transform duration-300 border-4 border-white">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/4635e59c0d2d5eecabf0bad234d68a7a.png"
+alt="Rose Goes to Mo's BBQ book cover"
+class="w-48 h-72 object-cover object-top">
+<div class="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
+</div>
+</div>
+<div class="flex-1">
+<div class="inline-flex items-center bg-secondary/10 text-secondary-700 px-3 py-1 rounded-full text-xs font-semibold mb-4 uppercase tracking-wide">
+<div class="w-2 h-2 bg-secondary-500 rounded-full mr-2 animate-pulse"></div>
+Featured Story
+</div>
+<a href="https://readdy.ai/home/3e4bd657-93ae-4b12-a09d-b3e8c4d607b4/2c313e82-3bd4-484e-b7d2-a38ef2e97092" data-readdy="true">
+<h2 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-4 hover:text-secondary transition-colors cursor-pointer line-clamp-2">Rose Goes to Mo's BBQ</h2>
+</a>
+<div class="space-y-3 mb-6">
+<div class="flex items-center text-sm text-gray-600">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-user-line text-xs"></i>
+</div>
+Ages 5-12 years
+</div>
+<div class="flex items-center text-sm text-gray-600">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-time-line text-xs"></i>
+</div>
+15-20 min reading time
+</div>
+<div class="flex items-center text-sm text-gray-600">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-heart-line text-xs"></i>
+</div>
+Community & Friendship
+</div>
+</div>
+</div>
+</div>
+<!-- Story Preview Gallery -->
+<div class="mb-8">
+<h4 class="text-sm font-semibold text-gray-900 mb-4 flex items-center">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-image-line text-xs"></i>
+</div>
+Story Preview
+</h4>
+<div class="grid grid-cols-4 gap-3">
+<div class="aspect-square bg-white rounded-xl shadow-md overflow-hidden border-2 border-transparent hover:border-secondary/30 transition-all duration-300 cursor-pointer transform hover:scale-105" onclick="openImageModal('https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/350d72258c536db9782bf637260170d7.png', 'Rose approaching Mo\\'s BBQ')">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/350d72258c536db9782bf637260170d7.png" alt="Scene 1" class="w-full h-full object-cover">
+</div>
+<div class="aspect-square bg-white rounded-xl shadow-md overflow-hidden border-2 border-transparent hover:border-secondary/30 transition-all duration-300 cursor-pointer transform hover:scale-105" onclick="openImageModal('https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/4205ca64ca8670767deb7e93f481eb9c.png', 'Rose meeting customers at Mo\\'s BBQ')">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/4205ca64ca8670767deb7e93f481eb9c.png" alt="Scene 2" class="w-full h-full object-cover">
+</div>
+<div class="aspect-square bg-white rounded-xl shadow-md overflow-hidden border-2 border-transparent hover:border-secondary/30 transition-all duration-300 cursor-pointer transform hover:scale-105" onclick="openImageModal('https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/a33011f6ab6fd80f2647cbefd7ee853a.png', 'Rose learning about different cultures')">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/a33011f6ab6fd80f2647cbefd7ee853a.png" alt="Scene 3" class="w-full h-full object-cover">
+</div>
+<div class="aspect-square bg-white rounded-xl shadow-md overflow-hidden border-2 border-transparent hover:border-secondary/30 transition-all duration-300 cursor-pointer transform hover:scale-105" onclick="openImageModal('https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/10e798b240ee3e786d2cfa64145a560f.png', 'Rose celebrating with new friends')">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/10e798b240ee3e786d2cfa64145a560f.png" alt="Scene 4" class="w-full h-full object-cover">
+</div>
+</div>
+</div>
+<!-- Description -->
+<p class="text-gray-600 mb-6 leading-relaxed text-sm lg:text-base">
+A heartwarming story about friendship, community and belonging. Rose visits Mo's family-run BBQ shop and discovers the beauty of different cultures coming together through food, kindness and conversation.
+</p>
+<!-- Tags -->
+<div class="flex flex-wrap gap-2 mb-8">
+<span class="bg-secondary/10 text-secondary-700 px-3 py-1.5 rounded-full text-xs font-medium border border-secondary/20">Muslim Community</span>
+<span class="bg-secondary/10 text-secondary-700 px-3 py-1.5 rounded-full text-xs font-medium border border-secondary/20">Interfaith Friendship</span>
+<span class="bg-secondary/10 text-secondary-700 px-3 py-1.5 rounded-full text-xs font-medium border border-secondary/20">Cultural Bridge-Building</span>
+</div>
+<!-- Actions -->
+<div class="flex flex-col gap-3">
+<a href="https://calendar.app.google/zCHiT3piadXPf2VK9" target="_blank" class="bg-secondary text-white px-6 py-3.5 !rounded-button font-semibold hover:bg-emerald-600 transition-all duration-300 whitespace-nowrap text-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-calendar-line text-sm"></i>
+</div>
+Learn More About This Story
+</a>
+<a href="#contact" class="border-2 border-gray-200 text-gray-700 px-6 py-3.5 !rounded-button font-semibold hover:border-secondary hover:bg-secondary/5 hover:text-secondary transition-all duration-300 whitespace-nowrap text-center flex items-center justify-center">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-mail-line text-sm"></i>
+</div>
+Send Enquiry
+</a>
+</div>
+</div>
+</div>
+<!-- The Kilowatt Quest -->
+<div class="group relative bg-gradient-to-br from-white via-gray-50/30 to-white p-10 rounded-3xl border border-gray-100/80 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-on-scroll backdrop-blur-sm">
+<div class="absolute inset-0 bg-gradient-to-br from-amber-500/3 via-transparent to-orange-500/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative z-10">
+<!-- Book Cover Display -->
+<div class="flex items-start gap-8 mb-8">
+<div class="relative">
+<div class="book-spine absolute -left-2 top-2 w-3 h-72 bg-gradient-to-b from-amber-500 to-orange-600 rounded-l-md shadow-lg transform -rotate-1"></div>
+<div class="book-cover relative bg-white rounded-lg shadow-2xl overflow-hidden transform rotate-1 hover:rotate-0 transition-transform duration-300 border-4 border-white">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/cd4ede707f14fc355cb23f0e02d9dd4a.png"
+alt="The Kilowatt Quest book cover"
+class="w-48 h-72 object-cover object-top">
+<div class="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
+</div>
+</div>
+<div class="flex-1">
+<div class="inline-flex items-center bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold mb-4 uppercase tracking-wide">
+<div class="w-2 h-2 bg-amber-500 rounded-full mr-2 animate-pulse"></div>
+STEM Adventure
+</div>
+<h2 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-4 hover:text-amber-600 transition-colors cursor-pointer line-clamp-2">The Kilowatt Quest</h2>
+<div class="space-y-3 mb-6">
+<div class="flex items-center text-sm text-gray-600">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-user-line text-xs"></i>
+</div>
+Ages 7-14 years
+</div>
+<div class="flex items-center text-sm text-gray-600">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-time-line text-xs"></i>
+</div>
+20-25 min reading time
+</div>
+<div class="flex items-center text-sm text-gray-600">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-lightbulb-line text-xs"></i>
+</div>
+Energy & Sustainability
+</div>
+</div>
+</div>
+</div>
+<!-- Story Preview Gallery -->
+<div class="mb-8">
+<h4 class="text-sm font-semibold text-gray-900 mb-4 flex items-center">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-image-line text-xs"></i>
+</div>
+Story Preview
+</h4>
+<div class="grid grid-cols-4 gap-3">
+<div class="aspect-square bg-white rounded-xl shadow-md overflow-hidden border-2 border-transparent hover:border-amber-400/30 transition-all duration-300 cursor-pointer transform hover:scale-105" onclick="openImageModal('https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/c88bd7eec06408d8085e037f2748915e.png', 'Discovering energy waste in the neighborhood')">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/c88bd7eec06408d8085e037f2748915e.png" alt="Scene 1" class="w-full h-full object-cover">
+</div>
+<div class="aspect-square bg-white rounded-xl shadow-md overflow-hidden border-2 border-transparent hover:border-amber-400/30 transition-all duration-300 cursor-pointer transform hover:scale-105" onclick="openImageModal('https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/9b92d46d11dd464f3d9c8dc7f4f9f69d.png', 'Kids measuring electricity usage')">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/9b92d46d11dd464f3d9c8dc7f4f9f69d.png" alt="Scene 2" class="w-full h-full object-cover">
+</div>
+<div class="aspect-square bg-white rounded-xl shadow-md overflow-hidden border-2 border-transparent hover:border-amber-400/30 transition-all duration-300 cursor-pointer transform hover:scale-105" onclick="openImageModal('https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/b8d586ffef117ab54f567a1dc190f0af.png', 'Installing renewable energy solutions')">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/b8d586ffef117ab54f567a1dc190f0af.png" alt="Scene 3" class="w-full h-full object-cover">
+</div>
+<div class="aspect-square bg-white rounded-xl shadow-md overflow-hidden border-2 border-transparent hover:border-amber-400/30 transition-all duration-300 cursor-pointer transform hover:scale-105" onclick="openImageModal('https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/d05878de485bbe0bc577863e64e933de.png', 'Community celebration of energy efficiency')">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/d05878de485bbe0bc577863e64e933de.png" alt="Scene 4" class="w-full h-full object-cover">
+</div>
+</div>
+</div>
+<!-- Description -->
+<p class="text-gray-600 mb-6 leading-relaxed text-sm lg:text-base">
+An engaging STEM adventure that teaches energy literacy and environmental responsibility. Children become eco-heroes on a quest to save their community through sustainable practices.
+</p>
+<!-- Tags -->
+<div class="flex flex-wrap gap-2 mb-8">
+<span class="bg-amber-100 text-amber-700 px-3 py-1.5 rounded-full text-xs font-medium border border-amber-200">STEM Learning</span>
+<span class="bg-amber-100 text-amber-700 px-3 py-1.5 rounded-full text-xs font-medium border border-amber-200">Sustainability</span>
+<span class="bg-amber-100 text-amber-700 px-3 py-1.5 rounded-full text-xs font-medium border border-amber-200">Environmental Action</span>
+</div>
+<!-- Actions -->
+<div class="flex flex-col gap-3">
+<a href="https://calendar.app.google/zCHiT3piadXPf2VK9" target="_blank" class="bg-amber-500 text-white px-6 py-3.5 !rounded-button font-semibold hover:bg-amber-600 transition-all duration-300 whitespace-nowrap text-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-calendar-line text-sm"></i>
+</div>
+Book Partnership Call
+</a>
+<a href="#contact" class="border-2 border-gray-200 text-gray-700 px-6 py-3.5 !rounded-button font-semibold hover:border-amber-400 hover:bg-amber-50 hover:text-amber-700 transition-all duration-300 whitespace-nowrap text-center flex items-center justify-center">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-mail-line text-sm"></i>
+</div>
+Send Enquiry
+</a>
+</div>
+</div>
+</div>
+</div>
+<div class="text-center bg-gradient-to-br from-gray-50 to-blue-50/50 rounded-3xl p-12 animate-on-scroll">
+<div class="w-16 h-16 flex items-center justify-center bg-primary/10 rounded-2xl mx-auto mb-6 animate-pulse-slow">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/9d401bf3670cd7ec919739d6a9a0573b.png" alt="Me Time Stories" class="h-8 w-auto opacity-80">
+</div>
+<h3 class="text-2xl font-bold text-gray-900 mb-4">Custom Story Development</h3>
+<p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+We collaborate with organisations to develop bespoke stories aligned with your specific mission, values, and community objectives.
+</p>
+<a href="https://calendar.app.google/zCHiT3piadXPf2VK9" target="_blank" class="bg-primary text-white px-8 py-4 !rounded-button text-lg font-semibold hover:bg-blue-700 transition-colors whitespace-nowrap btn-animated">
+Discuss Custom Stories
+</a>
+</div>
+</div>
+</section>
+<section class="py-12 sm:py-16 lg:py-20 bg-gray-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6">
+<div class="text-center mb-12 sm:mb-16">
+<div class="flex items-center justify-center mb-6">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/9d401bf3670cd7ec919739d6a9a0573b.png" alt="Me Time Stories" class="h-8 w-auto opacity-60 mr-4">
+<h2 class="text-3xl sm:text-4xl font-bold text-gray-900">CSR & Community Partners</h2>
+</div>
+<p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4 sm:px-0">
+We collaborate with forward-thinking organisations to create meaningful community impact through the power of personalised storytelling, supporting your Corporate Social Responsibility and ESG objectives.
+</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+<div class="group relative bg-white p-6 sm:p-8 rounded-2xl text-center shadow-sm border border-gray-100 hover:shadow-xl hover:border-primary/30 transition-all duration-500 hover:-translate-y-1 animate-on-scroll stagger-1">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/3 to-primary/8 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative z-10">
+<div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-primary to-blue-600 rounded-2xl mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+<i class="ri-building-line text-2xl text-white"></i>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-4 group-hover:text-primary transition-colors duration-300">Corporations & CSR Teams</h3>
+<p class="text-gray-600 leading-relaxed">Transform your Corporate Social Responsibility goals and ESG commitments into captivating adventures that children understand, remember, and share with their families, creating lasting community connections.</p>
+</div>
+</div>
+<div class="group relative bg-white p-6 sm:p-8 rounded-2xl text-center shadow-sm border border-gray-100 hover:shadow-xl hover:border-secondary/30 transition-all duration-500 hover:-translate-y-1 animate-on-scroll stagger-2">
+<div class="absolute inset-0 bg-gradient-to-br from-secondary/3 to-secondary/8 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative z-10">
+<div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-secondary to-teal-600 rounded-2xl mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+<i class="ri-government-line text-2xl text-white"></i>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-4 group-hover:text-secondary transition-colors duration-300">Community Champions</h3>
+<p class="text-gray-600 leading-relaxed">Turn your town's hidden gems and forgotten tales into magical stories that make children proud ambassadors of their local heritage.</p>
+</div>
+</div>
+<div class="group relative bg-white p-6 sm:p-8 rounded-2xl text-center shadow-sm border border-gray-100 hover:shadow-xl hover:border-orange-300 transition-all duration-500 hover:-translate-y-1 animate-on-scroll stagger-3">
+<div class="absolute inset-0 bg-gradient-to-br from-orange-50/50 to-orange-100/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative z-10">
+<div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+<i class="ri-flashlight-line text-2xl text-white"></i>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-4 group-hover:text-orange-600 transition-colors duration-300">Energy Innovators</h3>
+<p class="text-gray-600 leading-relaxed">Make renewable energy and sustainability exciting through quest-based stories where children become eco-heroes saving their communities.</p>
+</div>
+</div>
+<div class="group relative bg-white p-6 sm:p-8 rounded-2xl text-center shadow-sm border border-gray-100 hover:shadow-xl hover:border-red-300 transition-all duration-500 hover:-translate-y-1 animate-on-scroll stagger-4">
+<div class="absolute inset-0 bg-gradient-to-br from-red-50/50 to-pink-50/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative z-10">
+<div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-red-500 to-pink-500 rounded-2xl mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+<i class="ri-heart-line text-2xl text-white"></i>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-4 group-hover:text-red-600 transition-colors duration-300">Charities</h3>
+<p class="text-gray-600 leading-relaxed">Amplify your mission and values through powerful storytelling that promotes inclusion, diversity, and positive social change in communities.</p>
+</div>
+</div>
+<div class="group relative bg-white p-6 sm:p-8 rounded-2xl text-center shadow-sm border border-gray-100 hover:shadow-xl hover:border-purple-300 transition-all duration-500 hover:-translate-y-1 animate-on-scroll stagger-5">
+<div class="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-indigo-50/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative z-10">
+<div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+<i class="ri-building-2-line text-2xl text-white"></i>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-4 group-hover:text-purple-600 transition-colors duration-300">Museums</h3>
+<p class="text-gray-600 leading-relaxed">Transform historical collections into immersive learning experiences that captivate young audiences and preserve cultural heritage for future generations.</p>
+</div>
+</div>
+<div class="group relative bg-white p-6 sm:p-8 rounded-2xl text-center shadow-sm border border-gray-100 hover:shadow-xl hover:border-green-300 transition-all duration-500 hover:-translate-y-1 animate-on-scroll stagger-6">
+<div class="absolute inset-0 bg-gradient-to-br from-green-50/50 to-emerald-50/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative z-10">
+<div class="w-16 h-16 flex items-center justify-center bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+<i class="ri-school-line text-2xl text-white"></i>
+</div>
+<h3 class="text-xl font-bold text-gray-900 mb-4 group-hover:text-green-600 transition-colors duration-300">Schools</h3>
+<p class="text-gray-600 leading-relaxed">Enhance curriculum delivery through personalised educational content that improves literacy outcomes and engages students across all subjects.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="stories" class="py-12 sm:py-16 lg:py-20 bg-white">
+<div class="max-w-7xl mx-auto px-4 sm:px-6">
+<div class="text-center mb-12 sm:mb-16">
+<div class="inline-flex items-center bg-gradient-to-r from-primary/10 to-secondary/10 px-4 py-2 rounded-full text-sm font-semibold text-primary mb-6">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-lightbulb-line text-sm"></i>
+</div>
+Emerging Opportunities
+</div>
+<h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+Heritage Projects & <span class="text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text">Custom Stories</span>
+</h2>
+<p class="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+Discover our upcoming heritage initiatives and explore how we create bespoke storytelling experiences tailored to your community's unique narrative.
+</p>
+</div>
+<div class="bg-gray-100 rounded-2xl p-6 sm:p-8 mb-8">
+<div class="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
+<div>
+<div class="inline-flex items-center bg-orange-100 text-orange-600 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+<div class="w-4 h-4 flex items-center justify-center mr-2">
+<i class="ri-search-line text-sm"></i>
+</div>
+Seeking Sponsor
+</div>
+<h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Coventry VR Remembrance Day Story</h3>
+<p class="text-sm sm:text-base text-gray-600 mb-6">
+An immersive AR/VR educational experience helping children explore Coventry's wartime history with respect and emotional depth. We're seeking a community-minded sponsor to bring this important heritage project to life.
+</p>
+<a href="https://calendar.app.google/zCHiT3piadXPf2VK9" target="_blank" class="bg-orange-500 text-white px-6 py-3 !rounded-button font-semibold hover:bg-orange-600 transition-colors whitespace-nowrap">
+Discuss Sponsorship
+</a>
+</div>
+<div class="relative">
+<img src="https://readdy.ai/api/search-image?query=Children%20wearing%20VR%20headsets%20in%20a%20modern%20classroom%20setting%20exploring%20historical%20Coventry%20cathedral%20and%20wartime%20scenes%20with%20respectful%20educational%20atmosphere%20featuring%20warm%20lighting%20and%20engaged%20teachers%20supervising%20the%20immersive%20learning%20experience%20with%20digital%20displays%20showing%20historical%20content%20and%20remembrance%20themes%20creating%20a%20thoughtful%20educational%20environment&width=600&height=400&seq=coventry001&orientation=landscape"
+alt="Coventry VR Remembrance Day Story concept"
+class="w-full h-48 sm:h-64 object-cover object-top rounded-xl shadow-lg opacity-75">
+</div>
+</div>
+</div>
+</div>
+<div class="text-center mt-12">
+<p class="text-lg text-gray-600 mb-6">
+<strong>Custom Story Creation:</strong> We also collaborate with organisations to develop bespoke stories aligned with your specific mission, values, and community objectives.
+</p>
+<a href="https://calendar.app.google/zCHiT3piadXPf2VK9" target="_blank" class="bg-secondary text-white px-8 py-3 !rounded-button font-semibold hover:bg-teal-600 transition-colors whitespace-nowrap">
+Book Time for Custom Story Discussion
+</a>
+</div>
+</div>
+</section>
+<section class="py-12 sm:py-16 lg:py-20 bg-white">
+<div class="max-w-7xl mx-auto px-4 sm:px-6">
+<div class="text-center mb-12 sm:mb-16">
+<div class="flex items-center justify-center mb-6">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/9d401bf3670cd7ec919739d6a9a0573b.png" alt="Me Time Stories" class="h-8 w-auto opacity-60 mr-4">
+<h2 class="text-3xl sm:text-4xl font-bold text-gray-900">From Vision to Adventure</h2>
+</div>
+<p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4 sm:px-0">
+Our collaborative journey transforms your organisation's deepest values and boldest aspirations into stories that children will treasure forever.
+</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+<div class="text-center group">
+<div class="w-16 sm:w-20 h-16 sm:h-20 flex items-center justify-center bg-gradient-to-br from-primary to-blue-600 rounded-full mx-auto mb-4 sm:mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+<span class="text-xl sm:text-2xl font-bold text-white">1</span>
+</div>
+<h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-3">Dream Together</h3>
+<p class="text-sm sm:text-base text-gray-600">Share your mission, values, and wildest ideas. We'll explore how to weave them into stories that captivate young hearts and minds.</p>
+</div>
+<div class="text-center group">
+<div class="w-20 h-20 flex items-center justify-center bg-gradient-to-br from-secondary to-teal-600 rounded-full mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+<span class="text-2xl font-bold text-white">2</span>
+</div>
+<h3 class="text-xl font-semibold text-gray-900 mb-3">Co-Create Magic</h3>
+<p class="text-gray-600">Together, we transform abstract concepts into adventures. Your expertise meets our storytelling craft to create something extraordinary.</p>
+</div>
+<div class="text-center group">
+<div class="w-20 h-20 flex items-center justify-center bg-gradient-to-br from-orange-500 to-red-500 rounded-full mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+<span class="text-2xl font-bold text-white">3</span>
+</div>
+<h3 class="text-xl font-semibold text-gray-900 mb-3">Craft Every Detail</h3>
+<p class="text-gray-600">We weave local landmarks, community heroes, and cultural treasures into every page, making each child the star of their own adventure.</p>
+</div>
+<div class="text-center">
+<div class="w-20 h-20 flex items-center justify-center bg-red-100 rounded-full mx-auto mb-6">
+<span class="text-2xl font-bold text-red-500">4</span>
+</div>
+<h3 class="text-xl font-semibold text-gray-900 mb-3">Digital/Print/VR Options</h3>
+<p class="text-gray-600">Receive your personalised stories in multiple formats: digital downloads, printed books, interactive apps, or immersive VR experiences.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="impact" class="py-12 sm:py-16 lg:py-20 bg-gray-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6">
+<div class="text-center mb-12 sm:mb-16">
+<div class="flex items-center justify-center mb-6">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/9d401bf3670cd7ec919739d6a9a0573b.png" alt="Me Time Stories" class="h-8 w-auto opacity-60 mr-4">
+<h2 class="text-3xl sm:text-4xl font-bold text-gray-900">Our Impact Areas</h2>
+</div>
+<p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4 sm:px-0">
+Educational storytelling initiatives that support literacy development, STEM engagement, heritage appreciation, and community connection.
+</p>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+<div class="bg-white p-6 sm:p-8 rounded-xl text-center shadow-lg">
+<div class="w-12 sm:w-16 h-12 sm:h-16 flex items-center justify-center bg-primary/10 rounded-full mx-auto mb-4">
+<i class="ri-book-read-line text-xl sm:text-2xl text-primary"></i>
+</div>
+<div class="text-base sm:text-lg font-semibold text-gray-900 mb-2">Literacy Development</div>
+<p class="text-gray-600 text-xs sm:text-sm">Personalised stories that engage children and support reading comprehension skills</p>
+</div>
+<div class="bg-white p-8 rounded-xl text-center shadow-lg">
+<div class="w-16 h-16 flex items-center justify-center bg-secondary/10 rounded-full mx-auto mb-4">
+<i class="ri-flask-line text-2xl text-secondary"></i>
+</div>
+<div class="text-lg font-semibold text-gray-900 mb-2">STEM Education</div>
+<p class="text-gray-600 text-sm">Interactive learning experiences that make science and technology accessible and exciting</p>
+</div>
+<div class="bg-white p-8 rounded-xl text-center shadow-lg">
+<div class="w-16 h-16 flex items-center justify-center bg-orange-100 rounded-full mx-auto mb-4">
+<i class="ri-building-3-line text-2xl text-orange-500"></i>
+</div>
+<div class="text-lg font-semibold text-gray-900 mb-2">Heritage Connection</div>
+<p class="text-gray-600 text-sm">Stories that help young people connect with local history and cultural heritage</p>
+</div>
+<div class="bg-white p-8 rounded-xl text-center shadow-lg">
+<div class="w-16 h-16 flex items-center justify-center bg-red-100 rounded-full mx-auto mb-4">
+<i class="ri-community-line text-2xl text-red-500"></i>
+</div>
+<div class="text-lg font-semibold text-gray-900 mb-2">Community Pride</div>
+<p class="text-gray-600 text-sm">Building stronger community connections through shared storytelling experiences</p>
+</div>
+</div>
+</div>
+</section>
+<section id="contact" class="py-12 sm:py-16 lg:py-20 bg-white">
+<div class="max-w-4xl mx-auto px-4 sm:px-6">
+<div class="text-center mb-8 sm:mb-12">
+<div class="flex items-center justify-center mb-6">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/9d401bf3670cd7ec919739d6a9a0573b.png" alt="Me Time Stories" class="h-8 w-auto opacity-60 mr-4">
+<h2 class="text-3xl sm:text-4xl font-bold text-gray-900">Start Your Partnership Journey</h2>
+</div>
+<p class="text-lg sm:text-xl text-gray-600 px-4 sm:px-0">
+Ready to create meaningful community impact through personalised storytelling? Let's discuss how we can support your CSR objectives.
+</p>
+</div>
+<div class="bg-gray-50 p-6 sm:p-8 rounded-2xl">
+<form class="space-y-6">
+<div class="grid md:grid-cols-2 gap-4 sm:gap-6">
+<div>
+<label class="block text-sm font-semibold text-gray-900 mb-2">Organisation Name *</label>
+<input type="text" class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Your organisation name" required>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-900 mb-2">Contact Name *</label>
+<input type="text" class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Your full name" required>
+</div>
+</div>
+<div class="grid md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-semibold text-gray-900 mb-2">Email Address *</label>
+<input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="your.email@organisation.com" required>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-900 mb-2">Phone Number</label>
+<input type="tel" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="+44 20 1234 5678">
+</div>
+</div>
+<div class="grid md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-semibold text-gray-900 mb-2">Story Interest</label>
+<div class="relative">
+<button type="button" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm text-left bg-white flex items-center justify-between" onclick="toggleDropdown('story-dropdown')">
+<span id="story-selected">Select a story option</span>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</button>
+<div id="story-dropdown" class="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg mt-1 shadow-lg z-10">
+<div class="py-2">
+<button type="button" class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm" onclick="selectStory('Coventry VR Remembrance Day Story')">Coventry VR Remembrance Day Story</button>
+<button type="button" class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm" onclick="selectStory('Rose Goes to Mo\'s')">Rose Goes to Mo's</button>
+<button type="button" class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm" onclick="selectStory('The Kilowatt Quest')">The Kilowatt Quest</button>
+<button type="button" class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm" onclick="selectStory('Custom Story Development')">Custom Story Development</button>
+<button type="button" class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm" onclick="selectStory('Multiple Stories')">Multiple Stories</button>
+</div>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-900 mb-2">Delivery Format</label>
+<div class="relative">
+<button type="button" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm text-left bg-white flex items-center justify-between" onclick="toggleDropdown('delivery-dropdown')">
+<span id="delivery-selected">Select delivery format</span>
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-arrow-down-s-line"></i>
+</div>
+</button>
+<div id="delivery-dropdown" class="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg mt-1 shadow-lg z-10">
+<div class="py-2">
+<button type="button" class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm" onclick="selectDelivery('Digital Download')">Digital Download</button>
+<button type="button" class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm" onclick="selectDelivery('Printed Books')">Printed Books</button>
+<button type="button" class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm" onclick="selectDelivery('Interactive App')">Interactive App</button>
+<button type="button" class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm" onclick="selectDelivery('VR Experience')">VR Experience</button>
+<button type="button" class="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm" onclick="selectDelivery('Multiple Formats')">Multiple Formats</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-900 mb-2">Estimated Quantity</label>
+<input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="e.g., 500 copies, 50 VR headsets, 1,000 digital licenses">
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-900 mb-2">Additional Notes</label>
+<textarea rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Tell us about your CSR objectives, target audience, timeline, and any specific customisation requirements..."></textarea>
+</div>
+<div class="text-center">
+<button type="submit" class="bg-primary text-white px-8 py-4 !rounded-button text-lg font-semibold hover:bg-blue-600 transition-colors whitespace-nowrap">
+Submit Partnership Enquiry
+</button>
+<p class="text-sm text-gray-500 mt-3">We'll respond within 24 hours with a tailored proposal for your organisation.</p>
+</div>
+</form>
+</div>
+</div>
+</section>
+<section class="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-primary via-blue-600 to-purple-600 relative overflow-hidden">
+<div class="absolute inset-0 bg-black/10"></div>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 text-center relative">
+<h2 class="text-3xl sm:text-4xl font-bold text-white mb-4 sm:mb-6">Let's Create Stories That Change Everything</h2>
+<p class="text-lg sm:text-xl text-blue-100 mb-6 sm:mb-8 max-w-2xl mx-auto">
+Your vision + our storytelling craft = magical experiences that transform how children see themselves, their communities, and their power to make a difference.
+</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<a href="https://calendar.app.google/zCHiT3piadXPf2VK9" target="_blank" class="bg-white text-primary px-6 sm:px-8 py-3 sm:py-4 !rounded-button text-base sm:text-lg font-semibold hover:bg-gray-50 transition-colors whitespace-nowrap text-center">
+Book Time with Me Time Team
+</a>
+<button class="border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 !rounded-button text-base sm:text-lg font-semibold hover:bg-white hover:text-primary transition-colors whitespace-nowrap">
+Download Case Studies
+</button>
+</div>
+<div class="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-blue-300">
+<div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+<div class="flex items-center space-x-2">
+<img src="https://static.readdy.ai/image/4fe5319b3f662521c3f694ffb3387e18/9d401bf3670cd7ec919739d6a9a0573b.png" alt="Me Time Stories" class="h-6 sm:h-8 w-auto brightness-0 invert">
+</div>
+<div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-blue-100">
+<a href="mailto:Admin@metimestories.co.uk" class="hover:text-white transition-colors text-sm sm:text-base">Admin@metimestories.co.uk</a>
+<a href="tel:+441234567890" class="hover:text-white transition-colors text-sm sm:text-base">+44 1234 567 890</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div id="image-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden p-4">
+<div class="max-w-4xl w-full relative">
+<button onclick="closeImageModal()" class="absolute top-2 right-2 sm:top-4 sm:right-4 text-white hover:text-gray-300 z-10 bg-black/50 rounded-full p-2">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-close-line text-xl"></i>
+</div>
+</button>
+<img id="modal-image" src="" alt="" class="max-w-full max-h-[90vh] object-contain rounded-lg">
+</div>
+</div>
+<div id="success-popup" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+<div class="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl transform scale-95 transition-transform">
+<div class="text-center">
+<div class="w-16 h-16 flex items-center justify-center bg-green-100 rounded-full mx-auto mb-4">
+<i class="ri-check-line text-2xl text-green-500"></i>
+</div>
+<h3 class="text-2xl font-bold text-gray-900 mb-3">Enquiry Sent Successfully!</h3>
+<p class="text-gray-600 mb-6">We'll respond within 24 hours with a tailored proposal for your organisation.</p>
+<button onclick="closeSuccessPopup()" class="bg-primary text-white px-6 py-3 !rounded-button font-semibold hover:bg-blue-600 transition-colors whitespace-nowrap">
+Close
+</button>
+</div>
+</div>
+</div>
+<script id="mobile-menu-functionality">
+document.addEventListener('DOMContentLoaded', function() {
+const mobileMenuButton = document.getElementById('mobile-menu-button');
+const mobileMenu = document.getElementById('mobile-menu');
+const menuIcon = mobileMenuButton.querySelector('i');
+mobileMenuButton.addEventListener('click', function() {
+mobileMenu.classList.toggle('hidden');
+if (mobileMenu.classList.contains('hidden')) {
+menuIcon.className = 'ri-menu-line text-xl';
+} else {
+menuIcon.className = 'ri-close-line text-xl';
+}
+});
+const mobileLinks = mobileMenu.querySelectorAll('a[href^="#"]');
+mobileLinks.forEach(link => {
+link.addEventListener('click', function() {
+mobileMenu.classList.add('hidden');
+menuIcon.className = 'ri-menu-line text-xl';
+});
+});
+});
+</script>
+<script id="dropdown-functionality">
+function toggleDropdown(dropdownId) {
+const dropdown = document.getElementById(dropdownId);
+const allDropdowns = document.querySelectorAll('[id$="-dropdown"]');
+allDropdowns.forEach(d => {
+if (d.id !== dropdownId) {
+d.classList.add('hidden');
+}
+});
+dropdown.classList.toggle('hidden');
+}
+function selectStory(story) {
+document.getElementById('story-selected').textContent = story;
+document.getElementById('story-dropdown').classList.add('hidden');
+}
+function selectDelivery(delivery) {
+document.getElementById('delivery-selected').textContent = delivery;
+document.getElementById('delivery-dropdown').classList.add('hidden');
+}
+document.addEventListener('click', function(event) {
+const dropdowns = document.querySelectorAll('[id$="-dropdown"]');
+const buttons = document.querySelectorAll('button[onclick*="toggleDropdown"]');
+let clickedButton = false;
+buttons.forEach(button => {
+if (button.contains(event.target)) {
+clickedButton = true;
+}
+});
+if (!clickedButton) {
+dropdowns.forEach(dropdown => {
+if (!dropdown.contains(event.target)) {
+dropdown.classList.add('hidden');
+}
+});
+}
+});
+</script>
+<script id="image-modal-functionality">
+function openImageModal(imageSrc, altText) {
+const modal = document.getElementById('image-modal');
+const modalImage = document.getElementById('modal-image');
+modalImage.src = imageSrc;
+modalImage.alt = altText;
+modal.classList.remove('hidden');
+document.body.style.overflow = 'hidden';
+}
+function closeImageModal() {
+const modal = document.getElementById('image-modal');
+modal.classList.add('hidden');
+document.body.style.overflow = 'auto';
+}
+document.addEventListener('DOMContentLoaded', function() {
+const storyImages = document.querySelectorAll('.story-image');
+storyImages.forEach(image => {
+image.addEventListener('click', function() {
+openImageModal(this.src, this.alt);
+});
+});
+document.getElementById('image-modal').addEventListener('click', function(e) {
+if (e.target === this) {
+closeImageModal();
+}
+});
+document.addEventListener('keydown', function(e) {
+if (e.key === 'Escape') {
+closeImageModal();
+}
+});
+});
+</script>
+<script id="slideshow-functionality">
+let slideshows = {};
+function initializeSlideshow(slideshowId) {
+if (!slideshows[slideshowId]) {
+slideshows[slideshowId] = {
+currentSlide: 1,
+totalSlides: document.querySelectorAll(`#${slideshowId} .story-slide`).length,
+autoPlayInterval: null
+};
+startAutoPlay(slideshowId);
+}
+}
+function showSlide(slideshowId, n) {
+const slideshow = slideshows[slideshowId];
+if (!slideshow) return;
+const slides = document.querySelectorAll(`#${slideshowId} .story-slide`);
+const dots = document.querySelectorAll(`#${slideshowId} .slideshow-dot`);
+if (n > slideshow.totalSlides) slideshow.currentSlide = 1;
+if (n < 1) slideshow.currentSlide = slideshow.totalSlides;
+slides.forEach(slide => slide.classList.remove('active'));
+dots.forEach(dot => dot.classList.remove('active'));
+if (slides[slideshow.currentSlide - 1]) {
+slides[slideshow.currentSlide - 1].classList.add('active');
+}
+if (dots[slideshow.currentSlide - 1]) {
+dots[slideshow.currentSlide - 1].classList.add('active');
+}
+}
+function nextSlide(slideshowId) {
+const slideshow = slideshows[slideshowId];
+if (!slideshow) return;
+slideshow.currentSlide++;
+showSlide(slideshowId, slideshow.currentSlide);
+resetAutoPlay(slideshowId);
+}
+function previousSlide(slideshowId) {
+const slideshow = slideshows[slideshowId];
+if (!slideshow) return;
+slideshow.currentSlide--;
+showSlide(slideshowId, slideshow.currentSlide);
+resetAutoPlay(slideshowId);
+}
+function currentSlide(slideshowId, n) {
+const slideshow = slideshows[slideshowId];
+if (!slideshow) return;
+slideshow.currentSlide = n;
+showSlide(slideshowId, n);
+resetAutoPlay(slideshowId);
+}
+function startAutoPlay(slideshowId) {
+const slideshow = slideshows[slideshowId];
+if (!slideshow) return;
+slideshow.autoPlayInterval = setInterval(() => {
+slideshow.currentSlide++;
+if (slideshow.currentSlide > slideshow.totalSlides) {
+slideshow.currentSlide = 1;
+}
+showSlide(slideshowId, slideshow.currentSlide);
+}, 4000);
+}
+function resetAutoPlay(slideshowId) {
+const slideshow = slideshows[slideshowId];
+if (!slideshow) return;
+clearInterval(slideshow.autoPlayInterval);
+startAutoPlay(slideshowId);
+}
+document.addEventListener('DOMContentLoaded', function() {
+initializeSlideshow('rose-slideshow');
+initializeSlideshow('kilowatt-slideshow');
+// Pause autoplay on hover
+document.querySelectorAll('.story-slideshow').forEach(slideshow => {
+slideshow.addEventListener('mouseenter', () => {
+const slideshowId = slideshow.id;
+if (slideshows[slideshowId]) {
+clearInterval(slideshows[slideshowId].autoPlayInterval);
+}
+});
+slideshow.addEventListener('mouseleave', () => {
+const slideshowId = slideshow.id;
+startAutoPlay(slideshowId);
+});
+});
+});
+</script>
+<script id="scroll-animations">
+function observeElements() {
+const elements = document.querySelectorAll('.animate-on-scroll');
+const observer = new IntersectionObserver((entries) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('visible');
+observer.unobserve(entry.target);
+}
+});
+}, {
+threshold: 0.1,
+rootMargin: '0px 0px -50px 0px'
+});
+elements.forEach(element => {
+observer.observe(element);
+});
+}
+document.addEventListener('DOMContentLoaded', function() {
+observeElements();
+// Add staggered animation delays to grid items
+const gridItems = document.querySelectorAll('.grid > div');
+gridItems.forEach((item, index) => {
+if (!item.classList.contains('animate-on-scroll')) {
+item.classList.add('animate-on-scroll');
+}
+item.style.animationDelay = `${index * 0.1}s`;
+});
+});
+</script>
+<script id="smooth-scrolling">
+document.addEventListener('DOMContentLoaded', function() {
+const links = document.querySelectorAll('a[href^="#"]');
+links.forEach(link => {
+link.addEventListener('click', function(e) {
+e.preventDefault();
+const targetId = this.getAttribute('href').substring(1);
+const targetElement = document.getElementById(targetId);
+if (targetElement) {
+targetElement.scrollIntoView({
+behavior: 'smooth',
+block: 'start'
+});
+}
+});
+});
+});
+</script>
+<script id="form-enhancement">
+function showSuccessPopup() {
+const popup = document.getElementById('success-popup');
+popup.classList.remove('hidden');
+popup.querySelector('.bg-white').classList.remove('scale-95');
+popup.querySelector('.bg-white').classList.add('scale-100');
+}
+function closeSuccessPopup() {
+const popup = document.getElementById('success-popup');
+popup.querySelector('.bg-white').classList.remove('scale-100');
+popup.querySelector('.bg-white').classList.add('scale-95');
+setTimeout(() => {
+popup.classList.add('hidden');
+}, 200);
+}
+document.addEventListener('DOMContentLoaded', function() {
+const form = document.querySelector('form');
+form.addEventListener('submit', function(e) {
+e.preventDefault();
+const submitButton = form.querySelector('button[type="submit"]');
+const originalText = submitButton.textContent;
+submitButton.textContent = 'Sending Enquiry...';
+submitButton.disabled = true;
+setTimeout(() => {
+submitButton.textContent = originalText;
+submitButton.disabled = false;
+form.reset();
+document.getElementById('story-selected').textContent = 'Select a story option';
+document.getElementById('delivery-selected').textContent = 'Select delivery format';
+showSuccessPopup();
+}, 1500);
+});
+});
+</script>
+</body>
+</html>
