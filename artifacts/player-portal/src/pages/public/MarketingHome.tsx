@@ -114,8 +114,8 @@ export default function MarketingHome() {
               </Link>
               <Link
                 href="/stories/time-travelling-tractor"
-                className="flex items-center justify-center gap-2 px-8 py-4 border font-semibold text-lg rounded-xl transition-all hover:bg-white/10"
-                style={{ borderColor: "rgba(254,243,226,0.3)", color: "#fef3e2", backdropFilter: "blur(8px)", background: "rgba(255,255,255,0.08)" }}
+                className="flex items-center justify-center gap-2 px-8 py-4 font-semibold text-lg rounded-xl transition-all hover:bg-white/15"
+                style={{ borderColor: "rgba(254,243,226,0.55)", color: "#fef3e2", backdropFilter: "blur(8px)", background: "rgba(255,255,255,0.10)", border: "1.5px solid rgba(254,243,226,0.55)" }}
               >
                 🚜 Try the Free Story
               </Link>

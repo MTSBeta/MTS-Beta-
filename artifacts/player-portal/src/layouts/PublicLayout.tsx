@@ -48,19 +48,16 @@ export function PublicLayout({ children }: PublicLayoutProps) {
       >
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <img
-              src={publicAssetUrl("images/metime-logo.png")}
-              alt="Me Time Stories"
-              className="h-8 w-auto object-contain"
-              style={{ filter: "brightness(0) saturate(100%) invert(37%) sepia(67%) saturate(5000%) hue-rotate(230deg) brightness(100%) contrast(100%)" }}
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-                (e.currentTarget.nextElementSibling as HTMLElement)!.style.display = "block";
-              }}
-            />
-            <span className="text-2xl hidden" style={{ fontFamily: "Pacifico, cursive", color: "#6366f1" }}>
-              Me Time
+          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0 shadow-sm"
+              style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)" }}
+            >
+              🌙
+            </div>
+            <span className="font-bold text-gray-900 text-sm leading-tight">
+              Me Time<br />
+              <span className="text-amber-500 text-[11px] font-semibold tracking-wide">Stories</span>
             </span>
           </Link>
 
@@ -98,24 +95,25 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           </nav>
 
           {/* Desktop CTA buttons */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2.5">
             <Link
               href="/stories/time-travelling-tractor"
-              className="text-sm font-medium transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-lg transition-all hover:bg-orange-50"
               style={{ color: "#f97316" }}
             >
               🚜 Try Free Story
             </Link>
             <Link
               href="/portal"
-              className="px-4 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 text-sm font-semibold rounded-lg transition-all hover:bg-amber-50"
+              style={{ color: "#92400e", border: "1.5px solid rgba(249,115,22,0.25)" }}
             >
               Sign In
             </Link>
             <Link
               href="/characters/create"
-              className="px-4 py-2 text-sm font-bold text-amber-900 rounded-lg transition-all hover:scale-[1.03] hover:shadow-md shadow-sm"
-              style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)" }}
+              className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold rounded-lg transition-all hover:scale-[1.03] hover:shadow-md shadow-sm"
+              style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
             >
               ✨ Build Character
             </Link>
