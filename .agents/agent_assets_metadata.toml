@@ -6,3 +6,9 @@ id = "cv4oGbMsPQrYnraYuvzTW"
 uri = "file://user-logins-export.csv"
 type = "table"
 title = "Full User Logins Export"
+
+[[outputs]]
+id = "yKiAA7zFY1kPX4RC2Lge_"
+uri = "file://api-server-code.txt"
+type = "text"
+title = "API Server — All Route & Middleware Files"
