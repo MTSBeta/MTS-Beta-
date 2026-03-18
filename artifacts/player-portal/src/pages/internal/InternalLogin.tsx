@@ -81,7 +81,7 @@ export default function InternalLogin() {
             style={{ background: "linear-gradient(90deg, transparent, rgba(167,139,250,0.5), transparent)" }}
           />
 
-          <h1 className="text-white font-bold text-xl mb-1">Staff login</h1>
+          <h1 className="text-white font-bold text-xl mb-1">Author login</h1>
           <p className="text-white/40 text-sm mb-7">MeTime Stories authors and illustrators only</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -154,14 +154,20 @@ export default function InternalLogin() {
           </form>
         </div>
 
-        <p className="text-white/20 text-xs text-center mt-6">
-          This area is for MeTime Stories staff only.
-          <br />
-          Not an author or illustrator?{" "}
-          <button onClick={() => navigate("/staff-login")} className="text-white/40 hover:text-white/70 underline transition-colors">
-            Academy staff login
+        <div className="mt-6 flex flex-col items-center gap-2">
+          <p className="text-white/20 text-xs text-center">
+            Not an author or illustrator?{" "}
+            <button onClick={() => navigate("/staff-login")} className="text-white/40 hover:text-white/70 underline transition-colors">
+              Academy staff login
+            </button>
+          </p>
+          <button
+            onClick={() => navigate("/admin-login")}
+            className="text-white/15 hover:text-white/40 text-xs underline transition-colors"
+          >
+            Website admin
           </button>
-        </p>
+        </div>
       </motion.div>
     </div>
   );

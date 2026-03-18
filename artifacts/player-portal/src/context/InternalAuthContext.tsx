@@ -22,7 +22,7 @@ const InternalAuthContext = createContext<InternalAuthContextValue>({
 });
 
 const TOKEN_KEY = "metime_internal_token";
-const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const API_BASE = `${import.meta.env.BASE_URL}api`.replace(/\/+api$/, "/api");
 
 export function InternalAuthProvider({ children }: { children: ReactNode }) {
   const [internalUser, setInternalUser] = useState<InternalUser | null>(null);
@@ -34,7 +34,7 @@ export function InternalAuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
       return;
     }
-    fetch(`${base}/api/internal/auth/me`, {
+    fetch(`${API_BASE}/internal/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((r) => (r.ok ? r.json() : Promise.reject()))
@@ -44,7 +44,7 @@ export function InternalAuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const res = await fetch(`${base}/api/internal/auth/login`, {
+    const res = await fetch(`${API_BASE}/internal/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -74,6 +74,3 @@ export function useInternalAuth() {
   return useContext(InternalAuthContext);
 }
 
-export function getInternalToken(): string | null {
-  return localStorage.getItem(TOKEN_KEY);
-}
