@@ -10,6 +10,8 @@ import { JOURNEY_STAGES } from "@/data/questions";
 import { ensureMusicPlaying, stopMusic, isMusicPlaying } from "@/lib/globalAudio";
 import { getAcademyMascot } from "@/data/mascots";
 import { publicAssetUrl } from "@/lib/publicAssetUrl";
+import { preloadIntroAudio } from "@/lib/introAudioCache";
+import { DEFAULT_ASSISTANT } from "@/data/assistantProfiles";
 
 const TIPS = [
   { Icon: Mic2, title: "Talk, don't type", body: "Every question has a voice note. Use it — your actual voice tells more of the story." },
@@ -258,6 +260,15 @@ export default function Welcome() {
     const t = setTimeout(() => setSoundOn(isMusicPlaying()), 300);
     return () => clearTimeout(t);
   }, []);
+
+  // Silently preload the Chapter 1 assistant audio in the background.
+  // This means when the player reaches the "Your World" screen the voice plays
+  // immediately with no loading delay. The assistant UI never appears here.
+  useEffect(() => {
+    if (!playerData || !selectedAcademy) return;
+    const firstName = playerData.playerName.split(" ")[0];
+    preloadIntroAudio(DEFAULT_ASSISTANT, firstName);
+  }, [playerData?.playerName, selectedAcademy?.key]);
 
   const handleSoundToggle = () => {
     if (soundOn) {

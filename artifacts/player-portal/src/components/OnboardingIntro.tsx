@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SkipForward, RotateCcw, Loader2, Volume2 } from "lucide-react";
 import { ASSISTANT_PROFILES, type AssistantId } from "@/data/assistantProfiles";
 import { duckMusic, restoreMusic, playAudioElement } from "@/lib/globalAudio";
+import { getPreloadedAudio } from "@/lib/introAudioCache";
 
 const API_BASE = `${import.meta.env.BASE_URL}api`.replace(/\/api$/, "/api");
 const STORAGE_KEY_PREFIX = "metime_intro_played_";
@@ -77,23 +78,27 @@ export default function OnboardingIntro({
 
   const startIntro = useCallback(async () => {
     setAudioError(false);
-    setPhase("preloading");
     setSubtitleIdx(-1);
 
-    let audioUrl: string;
-    try {
-      const nameParam = encodeURIComponent(playerFirstName || "there");
-      const res = await fetch(`${API_BASE}/tts/intro/${assistantId}?name=${nameParam}`);
-      if (!res.ok) throw new Error("TTS fetch failed");
-      const blob = await res.blob();
-      audioUrl = URL.createObjectURL(blob);
-    } catch {
-      setAudioError(true);
-      setPhase("done");
-      setShowReplay(true);
-      localStorage.setItem(storageKey, "1");
-      onDone?.();
-      return;
+    // Use preloaded audio if available — skip straight to preroll, no loading state
+    let audioUrl = getPreloadedAudio(assistantId, playerFirstName);
+
+    if (!audioUrl) {
+      setPhase("preloading");
+      try {
+        const nameParam = encodeURIComponent(playerFirstName || "there");
+        const res = await fetch(`${API_BASE}/tts/intro/${assistantId}?name=${nameParam}`);
+        if (!res.ok) throw new Error("TTS fetch failed");
+        const blob = await res.blob();
+        audioUrl = URL.createObjectURL(blob);
+      } catch {
+        setAudioError(true);
+        setPhase("done");
+        setShowReplay(true);
+        localStorage.setItem(storageKey, "1");
+        onDone?.();
+        return;
+      }
     }
 
     setPhase("preroll");
