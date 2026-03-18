@@ -48,8 +48,21 @@ lib/
 
 ## Routes
 
-### Frontend Routes — Player Journey
-- `/` — Landing: academy selection + "Academy Staff Login" entry point
+### Frontend Routes — Public Marketing Site
+All wrapped in `PublicLayout` (shared header/nav/footer). No MetyButton on these routes.
+- `/` — Marketing home (hero, features, stories, academy proof, CTA)
+- `/about` — About Me Time Stories (mission, team, values)
+- `/for-academies` — Football Academy programme (pitch, ecosystem, benefits, enquiry modal)
+- `/csr` — Corporate Social Responsibility / partnerships (3 tiers, enquiry form)
+- `/families` — For Families (stub)
+- `/for-authors` — For Authors (stub)
+- `/stories/rose-goes-to-mos` — Ramadan campaign: Rose Goes to Mo's (order modal)
+- `/football-matrix` — Interactive Football Position Matrix (pitch SVG, dashboard, training, academy tabs)
+- `/characters/create` — 3-step Character Creator (avatar + name, personality traits, story library)
+- `/stories/time-travelling-tractor` — Interactive Story Engine (name → pronouns → appearance → companion → 6-page story)
+
+### Frontend Routes — Academy Player Portal (was at `/`)
+- `/portal` — Academy portal launcher: league/club selection (was Home.tsx at `/`)
 - `/register` — Player registration form
 - `/welcome` — Post-registration welcome screen
 - `/journey` — 6-stage multi-step reflection form
