@@ -1,0 +1,4019 @@
+
+================================================================================
+// FILE: index.ts
+================================================================================
+
+import app from "./app";
+import { seedAcademies } from "./lib/seedAcademies.js";
+import { seedAdminAccounts } from "./lib/seedAdminAccounts.js";
+
+const rawPort = process.env["PORT"];
+
+if (!rawPort) {
+  throw new Error(
+    "PORT environment variable is required but was not provided.",
+  );
+}
+
+const port = Number(rawPort);
+
+if (Number.isNaN(port) || port <= 0) {
+  throw new Error(`Invalid PORT value: "${rawPort}"`);
+}
+
+app.listen(port, async () => {
+  console.log(`Server listening on port ${port}`);
+  await seedAcademies();
+  await seedAdminAccounts();
+});
+
+
+================================================================================
+// FILE: package.json
+================================================================================
+
+{
+  "name": "@workspace/api-server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "NODE_ENV=development tsx ./src/index.ts",
+    "build": "pnpm --filter @workspace/db run push-force && tsx ./build.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^7.19.0",
+    "@types/multer": "^2.1.0",
+    "@workspace/api-zod": "workspace:*",
+    "@workspace/db": "workspace:*",
+    "@workspace/integrations-openai-ai-server": "workspace:*",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2",
+    "drizzle-orm": "catalog:",
+    "express": "^5",
+    "google-auth-library": "^10.6.1",
+    "googleapis": "^171.4.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "catalog:",
+    "esbuild": "^0.27.3",
+    "tsx": "catalog:"
+  }
+}
+
+
+================================================================================
+// FILE: routes/index.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import healthRouter from "./health.js";
+import academiesRouter from "./academies.js";
+import playersRouter from "./players.js";
+import journeyRouter from "./journey.js";
+import stakeholdersRouter from "./stakeholders.js";
+import adminRouter from "./admin.js";
+import storageRouter from "./storage.js";
+import parentRouter from "./parent.js";
+import staffAuthRouter from "./staffAuth.js";
+import staffPlayersRouter from "./staffPlayers.js";
+import staffSubmissionsRouter from "./staffSubmissions.js";
+import staffTeamRouter from "./staffTeam.js";
+import staffAcademyRouter from "./staffAcademy.js";
+import ttsRouter from "./tts.js";
+import assistantRouter from "./assistant.js";
+import sheetsAdminRouter from "./sheetsAdmin.js";
+import imageUploadRouter from "./imageUpload.js";
+import internalRouter from "./internal.js";
+import internalAuthRouter from "./internalAuthRoutes.js";
+
+const router: IRouter = Router();
+
+router.use(healthRouter);
+router.use(academiesRouter);
+router.use(playersRouter);
+router.use(journeyRouter);
+router.use(stakeholdersRouter);
+router.use(adminRouter);
+router.use(storageRouter);
+router.use(parentRouter);
+router.use(staffAuthRouter);
+router.use(staffPlayersRouter);
+router.use(staffSubmissionsRouter);
+router.use(staffTeamRouter);
+router.use(staffAcademyRouter);
+router.use(ttsRouter);
+router.use(assistantRouter);
+router.use(sheetsAdminRouter);
+router.use(imageUploadRouter);
+router.use(internalAuthRouter);
+router.use(internalRouter);
+
+export default router;
+
+
+================================================================================
+// FILE: routes/health.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { HealthCheckResponse } from "@workspace/api-zod";
+
+const router: IRouter = Router();
+
+router.get("/healthz", (_req, res) => {
+  const data = HealthCheckResponse.parse({ status: "ok" });
+  res.json(data);
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/academies.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import { sql } from "drizzle-orm";
+
+const router: IRouter = Router();
+
+router.get("/academies", async (_req, res) => {
+  const result = await db.execute(
+    sql`SELECT id, key, name, logo_text, primary_color, secondary_color, welcome_message
+        FROM academies ORDER BY name`
+  );
+
+  const data = (result.rows ?? []).map((r: any) => ({
+    id: r.id,
+    key: r.key,
+    name: r.name,
+    logoText: r.logo_text,
+    primaryColor: r.primary_color,
+    secondaryColor: r.secondary_color,
+    welcomeMessage: r.welcome_message,
+  }));
+
+  res.json(data);
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/admin.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import {
+  playersTable,
+  playerJourneyResponsesTable,
+  stakeholderLinksTable,
+  stakeholderResponsesTable,
+} from "@workspace/db/schema";
+import { eq, sql } from "drizzle-orm";
+import { desc } from "drizzle-orm";
+
+const ADMIN_PASSCODE = process.env.ADMIN_PASSCODE ?? "metime2024";
+
+const router: IRouter = Router();
+
+router.get("/admin/players", async (req, res) => {
+  const { passcode } = req.query;
+  if (passcode !== ADMIN_PASSCODE) {
+    res.status(401).json({ error: "Invalid passcode" });
+    return;
+  }
+
+  const players = await db
+    .select()
+    .from(playersTable)
+    .orderBy(desc(playersTable.createdAt));
+
+  // Count stakeholder links and submissions per player
+  const linkCounts = players.length
+    ? await db
+        .select({
+          playerId: stakeholderLinksTable.playerId,
+          total: sql<number>`count(*)::int`,
+          submitted: sql<number>`count(*) FILTER (WHERE submitted = true)::int`,
+        })
+        .from(stakeholderLinksTable)
+        .groupBy(stakeholderLinksTable.playerId)
+    : [];
+
+  const countMap = new Map(linkCounts.map((r) => [r.playerId, r]));
+
+  const result = players.map((p) => {
+    const counts = countMap.get(p.id) ?? { total: 0, submitted: 0 };
+    return {
+      id: p.id,
+      playerName: p.playerName,
+      academyName: p.academyName,
+      age: p.age,
+      position: p.position,
+      status: p.status,
+      stakeholderCounts: {
+        total: counts.total,
+        submitted: counts.submitted,
+      },
+      createdAt: p.createdAt.toISOString(),
+    };
+  });
+
+  res.json(result);
+});
+
+router.get("/admin/players/:playerId", async (req, res) => {
+  const { passcode } = req.query;
+  if (passcode !== ADMIN_PASSCODE) {
+    res.status(401).json({ error: "Invalid passcode" });
+    return;
+  }
+
+  const { playerId } = req.params;
+
+  const [player] = await db
+    .select()
+    .from(playersTable)
+    .where(eq(playersTable.id, playerId))
+    .limit(1);
+
+  if (!player) {
+    res.status(404).json({ error: "Player not found" });
+    return;
+  }
+
+  const journeyResponses = await db
+    .select()
+    .from(playerJourneyResponsesTable)
+    .where(eq(playerJourneyResponsesTable.playerId, playerId))
+    .orderBy(playerJourneyResponsesTable.questionNumber);
+
+  const stakeholderLinks = await db
+    .select()
+    .from(stakeholderLinksTable)
+    .where(eq(stakeholderLinksTable.playerId, playerId))
+    .orderBy(stakeholderLinksTable.id);
+
+  const stakeholderResponseRows = await db
+    .select()
+    .from(stakeholderResponsesTable)
+    .where(eq(stakeholderResponsesTable.playerId, playerId))
+    .orderBy(stakeholderResponsesTable.questionNumber);
+
+  // Group responses by stakeholder link
+  const responsesByLink = new Map<number, typeof stakeholderResponseRows>();
+  for (const r of stakeholderResponseRows) {
+    const arr = responsesByLink.get(r.stakeholderLinkId) ?? [];
+    arr.push(r);
+    responsesByLink.set(r.stakeholderLinkId, arr);
+  }
+
+  const stakeholderResponses = stakeholderLinks
+    .filter((l) => l.submitted)
+    .map((l) => ({
+      stakeholderLinkId: l.id,
+      type: l.type,
+      label: l.label,
+      responses: (responsesByLink.get(l.id) ?? []).map((r) => ({
+        questionNumber: r.questionNumber,
+        questionText: r.questionText,
+        answerText: r.answerText,
+        audioUrl: r.audioUrl,
+        mediaUrls: (r.mediaUrls as string[]) ?? [],
+      })),
+    }));
+
+  res.json({
+    player: {
+      id: player.id,
+      playerName: player.playerName,
+      age: player.age,
+      shirtNumber: player.shirtNumber,
+      academyKey: player.academyKey,
+      academyName: player.academyName,
+      position: player.position,
+      accessCode: player.accessCode,
+      status: player.status,
+      createdAt: player.createdAt.toISOString(),
+    },
+    journeyResponses: journeyResponses.map((r) => ({
+      stage: r.stage,
+      questionNumber: r.questionNumber,
+      questionText: r.questionText,
+      answerText: r.answerText,
+      audioUrl: r.audioUrl,
+      mediaUrls: (r.mediaUrls as string[]) ?? [],
+    })),
+    stakeholderLinks: stakeholderLinks.map((l) => ({
+      id: l.id,
+      playerId: l.playerId,
+      type: l.type,
+      label: l.label,
+      code: l.code,
+      submitted: l.submitted,
+      createdAt: l.createdAt.toISOString(),
+    })),
+    stakeholderResponses,
+  });
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/assistant.ts
+================================================================================
+
+import { Router } from "express";
+import { openai } from "@workspace/integrations-openai-ai-server";
+
+const router = Router();
+
+interface ActiveQuestion {
+  text: string;
+  hint?: string;
+  prompts?: string[];
+  options?: string[];
+  type?: string;
+  stageName?: string;
+}
+
+const PAGE_CONTEXT: Record<string, string> = {
+  "/welcome":    "The player is on the Welcome page, about to start their MeTime Stories journey. They can see chapter previews and a 'Begin My Story' button.",
+  "/welcome-u9": "The player is on the Welcome page for U9s (younger players), about to start their MeTime Stories journey.",
+  "/journey":    "The player is actively answering scenario-based questions about their football life and personality.",
+  "/journey-u9": "The younger player (U9) is answering simplified photo-based questions about themselves and their football.",
+  "/invite":     "The player is on the Invite page, where they can send unique links to parents, friends, or coaches to contribute to their story.",
+  "/complete":   "The player has finished all their questions and their story is being compiled.",
+};
+
+function getSystemPrompt(page: string, mascotName: string, activeQuestion?: ActiveQuestion): string {
+  const pageCtx = PAGE_CONTEXT[page] ?? "The player is using the MeTime Stories Football Academy Player Portal.";
+
+  let questionCtx = "";
+  if (activeQuestion) {
+    questionCtx = `\n\nThe player is currently on this specific question:\nQuestion: "${activeQuestion.text}"`;
+    if (activeQuestion.hint) questionCtx += `\nHint shown to player: "${activeQuestion.hint}"`;
+    if (activeQuestion.stageName) questionCtx += `\nSection: ${activeQuestion.stageName}`;
+    if (activeQuestion.prompts?.length) questionCtx += `\nPrompts shown: ${activeQuestion.prompts.join(", ")}`;
+    if (activeQuestion.options?.length) questionCtx += `\nOptions available: ${activeQuestion.options.join(", ")}`;
+    if (activeQuestion.type === "voice-text") questionCtx += `\nAnswer format: player speaks or types a free response.`;
+    if (activeQuestion.type === "multiselect") questionCtx += `\nAnswer format: player picks multiple options from the list.`;
+    if (activeQuestion.type === "select") questionCtx += `\nAnswer format: player picks one option from the list.`;
+    questionCtx += `\n\nYour job is to help them understand what this question is asking and how to answer it well. Give specific, concrete guidance for THIS question — not generic advice.`;
+  }
+
+  return `You are ${mascotName}, a helpful football academy assistant inside the MeTime Stories app.
+You help young academy players understand and complete their player journey.
+
+Current page context: ${pageCtx}${questionCtx}
+
+Keep answers short, warm, and clear — 2 to 4 sentences max.
+Use plain, friendly language suitable for a young football player (age 9–18).
+Don't use bullet points or headers — just a natural, conversational reply.
+Never say you can't help — always give a useful, specific answer or suggestion.
+Stay focused on the MeTime Stories experience.`;
+}
+
+router.post("/assistant/ask", async (req, res) => {
+  const { question, page, mascotName, activeQuestion } = req.body as {
+    question?: string;
+    page?: string;
+    mascotName?: string;
+    activeQuestion?: ActiveQuestion;
+  };
+
+  if (!question || !question.trim()) {
+    return res.status(400).json({ error: "Question is required" });
+  }
+
+  try {
+    const systemPrompt = getSystemPrompt(page ?? "/", mascotName ?? "Mety", activeQuestion);
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: question.trim() },
+      ],
+      max_tokens: 150,
+      temperature: 0.7,
+    });
+
+    const answer = completion.choices[0]?.message?.content?.trim() ?? "I'm not sure — ask your coach if you're stuck!";
+    return res.json({ answer });
+  } catch (err) {
+    console.error("[Assistant] error:", err);
+    return res.status(500).json({ error: "Failed to get a response. Try again in a moment." });
+  }
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/coach.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import { playersTable, academiesTable } from "@workspace/db/schema";
+import { eq } from "drizzle-orm";
+
+const router: IRouter = Router();
+
+// Legacy endpoint - redirects to staff submission flow
+// This endpoint is deprecated but kept for backward compatibility
+router.get("/coach/:coachCode", async (req, res) => {
+  const { coachCode } = req.params;
+
+  const [row] = await db
+    .select({
+      id: playersTable.id,
+      playerName: playersTable.playerName,
+      academyName: playersTable.academyName,
+      position: playersTable.position,
+      crestUrl: academiesTable.crestUrl,
+    })
+    .from(playersTable)
+    .leftJoin(academiesTable, eq(academiesTable.key, playersTable.academyKey))
+    .where(eq(playersTable.coachCode, coachCode))
+    .limit(1);
+
+  if (!row) {
+    res.status(404).json({ error: "Invalid staff access code" });
+    return;
+  }
+
+  res.json({
+    id: row.id,
+    playerName: row.playerName,
+    academyName: row.academyName,
+    position: row.position,
+    crestUrl: row.crestUrl ?? null,
+  });
+});
+
+// Legacy endpoint - deprecated, use /staff/submissions instead
+router.post("/coach/:coachCode", async (req, res) => {
+  res.status(410).json({ 
+    error: "This endpoint is deprecated. Please use the staff submission portal instead.",
+    message: "Coach submissions have been unified under the staff submissions system."
+  });
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/imageUpload.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import multer from "multer";
+import { uploadToDrive, isDriveConfigured } from "../lib/googleDrive.js";
+import { registerImageAsset } from "../lib/googleSheets.js";
+import { staffAuth } from "../middlewares/staffAuth.js";
+
+const router: IRouter = Router();
+
+// Store uploads in memory — files go straight to Drive, not disk
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB max (audio can be larger)
+  fileFilter(_req, file, cb) {
+    if (
+      file.mimetype.startsWith("image/") ||
+      file.mimetype.startsWith("video/") ||
+      file.mimetype.startsWith("audio/")
+    ) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image, video, and audio files are allowed"));
+    }
+  },
+});
+
+/**
+ * POST /api/images/upload
+ *
+ * Multipart form-data fields:
+ *   file            — the image, video, or audio file (required)
+ *   player_id       — UUID of the player
+ *   player_code     — e.g. PLY-DEMO-001
+ *   player_name     — full name
+ *   academy_name    — e.g. Arsenal
+ *   contributor_role — e.g. player, education, psychology …
+ *   contributor_name — name of the uploader
+ *   image_type      — e.g. likeness_face, likeness_action, journey_media
+ *   upload_source   — e.g. welcome_screen, journey, staff_upload
+ *   notes           — optional freeform notes
+ *
+ * Authentication: staff JWT (optional — omit for player uploads)
+ */
+router.post(
+  "/images/upload",
+  upload.single("file"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        res.status(400).json({ error: "No file provided" });
+        return;
+      }
+
+      if (!isDriveConfigured()) {
+        res.status(503).json({ error: "Google Drive is not configured on this server." });
+        return;
+      }
+
+      const {
+        player_id = "",
+        player_code = "unknown",
+        player_name = "Unknown Player",
+        academy_name = "Unknown Academy",
+        contributor_role = "player",
+        contributor_name = "",
+        image_type = "general",
+        upload_source = "portal",
+        notes = "",
+      } = req.body as Record<string, string>;
+
+      const { originalname, mimetype, buffer } = req.file;
+
+      // Timestamp-prefix the filename to avoid collisions
+      const timestamp = Date.now();
+      const safeName = originalname.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const fileName = `${image_type}_${timestamp}_${safeName}`;
+
+      // Upload to Google Drive
+      const driveResult = await uploadToDrive({
+        fileBuffer: buffer,
+        fileName,
+        mimeType: mimetype,
+        academyName: academy_name,
+        playerCode: player_code,
+      });
+
+      // Log metadata to Google Sheets (fire-and-forget)
+      registerImageAsset({
+        playerId: player_id,
+        playerCode: player_code,
+        playerName: player_name,
+        academyName: academy_name,
+        contributorRole: contributor_role,
+        contributorName: contributor_name,
+        imageType: image_type,
+        originalFileName: originalname,
+        mimeType: mimetype,
+        driveFileId: driveResult.fileId,
+        driveFileLink: driveResult.fileLink,
+        driveFolderId: driveResult.folderId,
+        uploadSource: upload_source,
+        notes,
+      }).catch(err => {
+        console.error("[imageUpload] Sheets log failed (non-fatal):", err?.message);
+      });
+
+      res.json({
+        ok: true,
+        driveFileId: driveResult.fileId,
+        driveFileLink: driveResult.fileLink,
+        driveFolderId: driveResult.folderId,
+        fileName,
+      });
+    } catch (err: any) {
+      console.error("[imageUpload] Upload failed:", err?.message ?? err);
+      res.status(500).json({ error: err?.message ?? "Upload failed" });
+    }
+  }
+);
+
+export default router;
+
+
+================================================================================
+// FILE: routes/internal.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import {
+  playersTable,
+  playerJourneyResponsesTable,
+  stakeholderLinksTable,
+  stakeholderResponsesTable,
+  staffSubmissionsTable,
+  academyStaffTable,
+  academiesTable,
+  storyProjectsTable,
+  storyBlueprintsTable,
+  storyScenesTable,
+  illustrationAssetsTable,
+  detailTrackerTable,
+  productionNotesTable,
+  meTimeStaffTable,
+  DEFAULT_TRACKER_ITEMS,
+} from "@workspace/db/schema";
+import { eq, and, ilike, or, desc } from "drizzle-orm";
+import { internalAuth } from "../middlewares/internalAuth.js";
+
+const router: IRouter = Router();
+
+// All internal routes require MeTime Stories internal staff auth
+router.use("/internal", internalAuth);
+
+// ─────────────────────────────────────────────────────────
+// HELPER: ensure a story project exists for a player
+// ─────────────────────────────────────────────────────────
+async function ensureProject(playerId: string) {
+  const existing = await db
+    .select()
+    .from(storyProjectsTable)
+    .where(eq(storyProjectsTable.playerId, playerId))
+    .limit(1);
+
+  if (existing.length > 0) return existing[0];
+
+  const [project] = await db
+    .insert(storyProjectsTable)
+    .values({ playerId, status: "intake_in_progress" })
+    .returning();
+
+  // Seed 6 scenes
+  const sceneInserts = [1, 2, 3, 4, 5, 6].map((n) => ({
+    projectId: project.id,
+    sceneNumber: n,
+    title: null,
+    manuscript: null,
+    sceneNotes: null,
+    emotionalBeat: null,
+  }));
+  await db.insert(storyScenesTable).values(sceneInserts);
+
+  // Seed detail tracker items
+  const trackerInserts = DEFAULT_TRACKER_ITEMS.map((item) => ({
+    projectId: project.id,
+    itemKey: item.key,
+    itemLabel: item.label,
+    itemValue: null,
+    usageStatus: "unused",
+  }));
+  await db.insert(detailTrackerTable).values(trackerInserts);
+
+  return project;
+}
+
+// ─────────────────────────────────────────────────────────
+// GET /api/internal/projects
+// All story projects with player data (cross-academy)
+// ─────────────────────────────────────────────────────────
+router.get("/internal/projects", async (req, res) => {
+  const search = req.query.search as string | undefined;
+  const academy = req.query.academy as string | undefined;
+  const status = req.query.status as string | undefined;
+  const author = req.query.author as string | undefined;
+
+  const allPlayers = await db
+    .select()
+    .from(playersTable)
+    .orderBy(playersTable.playerName);
+
+  const projects = await db
+    .select()
+    .from(storyProjectsTable)
+    .orderBy(desc(storyProjectsTable.updatedAt));
+
+  const projectMap = new Map(projects.map((p) => [p.playerId, p]));
+
+  // Auto-ensure projects for all players
+  const playerIds = allPlayers.map((p) => p.id);
+  const existingProjectPlayerIds = new Set(projects.map((p) => p.playerId));
+  const missing = playerIds.filter((id) => !existingProjectPlayerIds.has(id));
+  for (const pid of missing) {
+    await ensureProject(pid);
+  }
+
+  // Re-fetch updated projects after seeding
+  const allProjects = await db
+    .select()
+    .from(storyProjectsTable)
+    .orderBy(desc(storyProjectsTable.updatedAt));
+  const allProjectMap = new Map(allProjects.map((p) => [p.playerId, p]));
+
+  // Check journey response counts for completeness
+  const allResponses = await db
+    .select()
+    .from(playerJourneyResponsesTable);
+
+  const responsesByPlayer = new Map<string, number>();
+  for (const r of allResponses) {
+    responsesByPlayer.set(r.playerId, (responsesByPlayer.get(r.playerId) ?? 0) + 1);
+  }
+
+  // Check stakeholder links
+  const allStakeholderLinks = await db
+    .select()
+    .from(stakeholderLinksTable);
+
+  const stakeholdersByPlayer = new Map<string, { total: number; submitted: number }>();
+  for (const sl of allStakeholderLinks) {
+    const cur = stakeholdersByPlayer.get(sl.playerId) ?? { total: 0, submitted: 0 };
+    cur.total += 1;
+    if (sl.submitted) cur.submitted += 1;
+    stakeholdersByPlayer.set(sl.playerId, cur);
+  }
+
+  // Check staff submissions
+  const allStaffSubs = await db.select().from(staffSubmissionsTable);
+  const staffSubsByPlayer = new Map<string, number>();
+  for (const s of allStaffSubs) {
+    staffSubsByPlayer.set(s.playerId, (staffSubsByPlayer.get(s.playerId) ?? 0) + 1);
+  }
+
+  let rows = allPlayers.map((player) => {
+    const project = allProjectMap.get(player.id);
+    const journeyCount = responsesByPlayer.get(player.id) ?? 0;
+    const stakeholders = stakeholdersByPlayer.get(player.id);
+    const staffSubs = staffSubsByPlayer.get(player.id) ?? 0;
+
+    const completeness = {
+      intakeComplete: player.status === "journey_complete" || player.status === "links_generated" || journeyCount > 0,
+      coachInputPresent: staffSubs > 0,
+      stakeholderPresent: (stakeholders?.submitted ?? 0) > 0,
+      journeyResponseCount: journeyCount,
+    };
+
+    const completenessScore = Object.values(completeness).filter((v) => v === true).length;
+
+    return {
+      playerId: player.id,
+      playerName: player.playerName,
+      accessCode: player.accessCode,
+      academy: player.academyName,
+      academyKey: player.academyKey,
+      ageGroup: player.ageGroup,
+      position: player.position,
+      playerStatus: player.status,
+      storyStatus: project?.status ?? "intake_in_progress",
+      assignedAuthor: project?.assignedAuthor ?? null,
+      assignedIllustrator: project?.assignedIllustrator ?? null,
+      updatedAt: project?.updatedAt?.toISOString() ?? player.createdAt.toISOString(),
+      academyPreviewEnabled: project?.academyPreviewEnabled ?? false,
+      finalApproved: project?.finalApproved ?? false,
+      projectId: project?.id ?? null,
+      completeness,
+      completenessScore,
+      createdAt: player.createdAt.toISOString(),
+    };
+  });
+
+  // Apply filters
+  if (search) {
+    const q = search.toLowerCase();
+    rows = rows.filter(
+      (r) =>
+        r.playerName.toLowerCase().includes(q) ||
+        r.accessCode.toLowerCase().includes(q) ||
+        r.academy.toLowerCase().includes(q)
+    );
+  }
+  if (academy) rows = rows.filter((r) => r.academyKey === academy || r.academy.toLowerCase().includes(academy.toLowerCase()));
+  if (status) rows = rows.filter((r) => r.storyStatus === status);
+  if (author) rows = rows.filter((r) => r.assignedAuthor?.toLowerCase().includes(author.toLowerCase()));
+
+  // Get unique academies for filter options
+  const academiesList = [...new Set(allPlayers.map((p) => ({ key: p.academyKey, name: p.academyName }))
+    .map(JSON.stringify))].map((s) => JSON.parse(s as string));
+
+  res.json({ projects: rows, academies: academiesList });
+});
+
+// ─────────────────────────────────────────────────────────
+// GET /api/internal/projects/:playerId
+// Get a single project (ensure it exists)
+// ─────────────────────────────────────────────────────────
+router.get("/internal/projects/:playerId", async (req, res) => {
+  const { playerId } = req.params;
+
+  const [player] = await db
+    .select()
+    .from(playersTable)
+    .where(eq(playersTable.id, playerId))
+    .limit(1);
+
+  if (!player) {
+    res.status(404).json({ error: "Player not found" });
+    return;
+  }
+
+  const project = await ensureProject(playerId);
+
+  res.json({ project, player });
+});
+
+// ─────────────────────────────────────────────────────────
+// PUT /api/internal/projects/:playerId
+// Update project status / assignments / notes
+// ─────────────────────────────────────────────────────────
+router.put("/internal/projects/:playerId", async (req, res) => {
+  const { playerId } = req.params;
+  const staffUser = req.internalUser!;
+  const {
+    status,
+    assignedAuthor,
+    assignedIllustrator,
+    academyPreviewEnabled,
+    academyApproved,
+    finalApproved,
+    editorNotes,
+    revisionNotes,
+  } = req.body;
+
+  const project = await ensureProject(playerId);
+
+  const updates: Record<string, unknown> = {
+    updatedAt: new Date(),
+    lastEditedBy: staffUser.fullName,
+  };
+  if (status !== undefined) updates.status = status;
+  if (assignedAuthor !== undefined) updates.assignedAuthor = assignedAuthor;
+  if (assignedIllustrator !== undefined) updates.assignedIllustrator = assignedIllustrator;
+  if (academyPreviewEnabled !== undefined) updates.academyPreviewEnabled = academyPreviewEnabled;
+  if (academyApproved !== undefined) updates.academyApproved = academyApproved;
+  if (finalApproved !== undefined) updates.finalApproved = finalApproved;
+  if (editorNotes !== undefined) updates.editorNotes = editorNotes;
+  if (revisionNotes !== undefined) updates.revisionNotes = revisionNotes;
+
+  const [updated] = await db
+    .update(storyProjectsTable)
+    .set(updates)
+    .where(eq(storyProjectsTable.id, project.id))
+    .returning();
+
+  // Log activity
+  if (status !== undefined && status !== project.status) {
+    await db.insert(productionNotesTable).values({
+      projectId: project.id,
+      noteType: "activity",
+      content: `Status changed to "${status}"`,
+      createdBy: staffUser.fullName,
+    });
+  }
+
+  res.json({ project: updated });
+});
+
+// ─────────────────────────────────────────────────────────
+// GET /api/internal/projects/:playerId/profile
+// Assembled player story profile
+// ─────────────────────────────────────────────────────────
+router.get("/internal/projects/:playerId/profile", async (req, res) => {
+  const { playerId } = req.params;
+
+  const [player] = await db
+    .select()
+    .from(playersTable)
+    .where(eq(playersTable.id, playerId))
+    .limit(1);
+
+  if (!player) {
+    res.status(404).json({ error: "Player not found" });
+    return;
+  }
+
+  const project = await ensureProject(playerId);
+
+  const [journeyResponses, stakeholderLinks, staffSubmissions] = await Promise.all([
+    db
+      .select()
+      .from(playerJourneyResponsesTable)
+      .where(eq(playerJourneyResponsesTable.playerId, playerId))
+      .orderBy(playerJourneyResponsesTable.stage, playerJourneyResponsesTable.questionNumber),
+    db
+      .select()
+      .from(stakeholderLinksTable)
+      .where(eq(stakeholderLinksTable.playerId, playerId)),
+    db
+      .select()
+      .from(staffSubmissionsTable)
+      .where(eq(staffSubmissionsTable.playerId, playerId))
+      .orderBy(staffSubmissionsTable.createdAt),
+  ]);
+
+  // Fetch stakeholder responses for submitted links
+  const submittedLinks = stakeholderLinks.filter((l) => l.submitted);
+  const stakeholderResponses: Record<number, typeof stakeholderLinks[0] & { responses: any[] }> = {};
+
+  for (const link of submittedLinks) {
+    const responses = await db
+      .select()
+      .from(stakeholderResponsesTable)
+      .where(eq(stakeholderResponsesTable.stakeholderLinkId, link.id))
+      .orderBy(stakeholderResponsesTable.questionNumber);
+
+    stakeholderResponses[link.id] = { ...link, responses };
+  }
+
+  // Group journey responses by stage
+  const journeyByStage = journeyResponses.reduce<Record<string, typeof journeyResponses>>((acc, r) => {
+    acc[r.stage] = acc[r.stage] ?? [];
+    acc[r.stage].push(r);
+    return acc;
+  }, {});
+
+  // Group staff submissions by role
+  const staffByRole = staffSubmissions.reduce<Record<string, typeof staffSubmissions>>((acc, s) => {
+    acc[s.role] = acc[s.role] ?? [];
+    acc[s.role].push(s);
+    return acc;
+  }, {});
+
+  // Collect all media URLs from journey
+  const allImages = journeyResponses.flatMap((r) => (r.mediaUrls as string[]) ?? []);
+  const allVoiceNotes = journeyResponses
+    .filter((r) => r.audioUrl)
+    .map((r) => ({ questionText: r.questionText, url: r.audioUrl!, stage: r.stage }));
+
+  // Stakeholder voice notes
+  const stakeholderVoiceNotes = Object.values(stakeholderResponses).flatMap((sl) =>
+    sl.responses
+      .filter((r) => r.audio_url)
+      .map((r) => ({ questionText: r.question_text, url: r.audio_url, type: (sl as any).type }))
+  );
+
+  res.json({
+    player: {
+      id: player.id,
+      playerName: player.playerName,
+      age: player.age,
+      ageGroup: player.ageGroup,
+      position: player.position,
+      secondPosition: player.secondPosition,
+      shirtNumber: player.shirtNumber,
+      academyKey: player.academyKey,
+      academyName: player.academyName,
+      accessCode: player.accessCode,
+      status: player.status,
+      createdAt: player.createdAt,
+    },
+    project: {
+      id: project.id,
+      status: project.status,
+      assignedAuthor: project.assignedAuthor,
+      assignedIllustrator: project.assignedIllustrator,
+      editorNotes: project.editorNotes,
+      updatedAt: project.updatedAt,
+    },
+    journeyByStage,
+    journeyResponses,
+    staffByRole,
+    staffSubmissions,
+    stakeholderLinks,
+    stakeholderResponses: Object.values(stakeholderResponses),
+    media: {
+      images: allImages,
+      voiceNotes: allVoiceNotes,
+      stakeholderVoiceNotes,
+    },
+  });
+});
+
+// ─────────────────────────────────────────────────────────
+// GET /api/internal/projects/:playerId/blueprint
+// ─────────────────────────────────────────────────────────
+router.get("/internal/projects/:playerId/blueprint", async (req, res) => {
+  const { playerId } = req.params;
+  const project = await ensureProject(playerId);
+
+  const [blueprint] = await db
+    .select()
+    .from(storyBlueprintsTable)
+    .where(eq(storyBlueprintsTable.projectId, project.id))
+    .limit(1);
+
+  res.json({ blueprint: blueprint ?? null, projectId: project.id });
+});
+
+// ─────────────────────────────────────────────────────────
+// PUT /api/internal/projects/:playerId/blueprint
+// ─────────────────────────────────────────────────────────
+router.put("/internal/projects/:playerId/blueprint", async (req, res) => {
+  const { playerId } = req.params;
+  const staffUser = req.internalUser!;
+  const project = await ensureProject(playerId);
+
+  const fields = req.body;
+  const allowedFields = [
+    "coreIdentity",
+    "emotionalChallenge",
+    "falseBelief",
+    "hiddenStrength",
+    "supportFigure",
+    "academyValues",
+    "keyFootballTest",
+    "turningPoint",
+    "lessonTheme",
+    "endingTransformation",
+    "symbolicObject",
+    "parentResonanceNote",
+    "coachResonanceNote",
+  ];
+
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  for (const f of allowedFields) {
+    if (fields[f] !== undefined) updates[f] = fields[f];
+  }
+
+  const [existing] = await db
+    .select()
+    .from(storyBlueprintsTable)
+    .where(eq(storyBlueprintsTable.projectId, project.id))
+    .limit(1);
+
+  let blueprint;
+  if (existing) {
+    [blueprint] = await db
+      .update(storyBlueprintsTable)
+      .set(updates)
+      .where(eq(storyBlueprintsTable.id, existing.id))
+      .returning();
+  } else {
+    [blueprint] = await db
+      .insert(storyBlueprintsTable)
+      .values({ projectId: project.id, ...updates })
+      .returning();
+  }
+
+  // Update project status if needed
+  await db
+    .update(storyProjectsTable)
+    .set({
+      updatedAt: new Date(),
+      lastEditedBy: staffUser.fullName,
+      status: "blueprint_in_progress",
+    })
+    .where(eq(storyProjectsTable.id, project.id));
+
+  res.json({ blueprint });
+});
+
+// ─────────────────────────────────────────────────────────
+// GET /api/internal/projects/:playerId/scenes
+// All 6 story scenes
+// ─────────────────────────────────────────────────────────
+router.get("/internal/projects/:playerId/scenes", async (req, res) => {
+  const { playerId } = req.params;
+  const project = await ensureProject(playerId);
+
+  const scenes = await db
+    .select()
+    .from(storyScenesTable)
+    .where(eq(storyScenesTable.projectId, project.id))
+    .orderBy(storyScenesTable.sceneNumber);
+
+  res.json({ scenes, projectId: project.id });
+});
+
+// ─────────────────────────────────────────────────────────
+// PUT /api/internal/projects/:playerId/scenes/:sceneNum
+// Update a single scene
+// ─────────────────────────────────────────────────────────
+router.put("/internal/projects/:playerId/scenes/:sceneNum", async (req, res) => {
+  const { playerId, sceneNum } = req.params;
+  const staffUser = req.internalUser!;
+  const sceneNumber = parseInt(sceneNum, 10);
+
+  if (isNaN(sceneNumber) || sceneNumber < 1 || sceneNumber > 6) {
+    res.status(400).json({ error: "Invalid scene number (1–6)" });
+    return;
+  }
+
+  const project = await ensureProject(playerId);
+  const { manuscript, sceneNotes, emotionalBeat, title } = req.body;
+
+  const [existing] = await db
+    .select()
+    .from(storyScenesTable)
+    .where(
+      and(
+        eq(storyScenesTable.projectId, project.id),
+        eq(storyScenesTable.sceneNumber, sceneNumber)
+      )
+    )
+    .limit(1);
+
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (manuscript !== undefined) updates.manuscript = manuscript;
+  if (sceneNotes !== undefined) updates.sceneNotes = sceneNotes;
+  if (emotionalBeat !== undefined) updates.emotionalBeat = emotionalBeat;
+  if (title !== undefined) updates.title = title;
+
+  let scene;
+  if (existing) {
+    [scene] = await db
+      .update(storyScenesTable)
+      .set(updates)
+      .where(eq(storyScenesTable.id, existing.id))
+      .returning();
+  } else {
+    [scene] = await db
+      .insert(storyScenesTable)
+      .values({ projectId: project.id, sceneNumber, ...updates })
+      .returning();
+  }
+
+  await db
+    .update(storyProjectsTable)
+    .set({
+      updatedAt: new Date(),
+      lastEditedBy: staffUser.fullName,
+      status: "draft_in_progress",
+    })
+    .where(eq(storyProjectsTable.id, project.id));
+
+  res.json({ scene });
+});
+
+// ─────────────────────────────────────────────────────────
+// GET /api/internal/projects/:playerId/tracker
+// ─────────────────────────────────────────────────────────
+router.get("/internal/projects/:playerId/tracker", async (req, res) => {
+  const { playerId } = req.params;
+  const project = await ensureProject(playerId);
+
+  const items = await db
+    .select()
+    .from(detailTrackerTable)
+    .where(eq(detailTrackerTable.projectId, project.id))
+    .orderBy(detailTrackerTable.id);
+
+  res.json({ items, projectId: project.id });
+});
+
+// ─────────────────────────────────────────────────────────
+// PUT /api/internal/projects/:playerId/tracker/:itemKey
+// ─────────────────────────────────────────────────────────
+router.put("/internal/projects/:playerId/tracker/:itemKey", async (req, res) => {
+  const { playerId, itemKey } = req.params;
+  const { usageStatus, itemValue } = req.body;
+
+  const project = await ensureProject(playerId);
+
+  const [existing] = await db
+    .select()
+    .from(detailTrackerTable)
+    .where(
+      and(
+        eq(detailTrackerTable.projectId, project.id),
+        eq(detailTrackerTable.itemKey, itemKey)
+      )
+    )
+    .limit(1);
+
+  if (!existing) {
+    res.status(404).json({ error: "Tracker item not found" });
+    return;
+  }
+
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (usageStatus !== undefined) updates.usageStatus = usageStatus;
+  if (itemValue !== undefined) updates.itemValue = itemValue;
+
+  const [updated] = await db
+    .update(detailTrackerTable)
+    .set(updates)
+    .where(eq(detailTrackerTable.id, existing.id))
+    .returning();
+
+  res.json({ item: updated });
+});
+
+// ─────────────────────────────────────────────────────────
+// GET /api/internal/projects/:playerId/notes
+// ─────────────────────────────────────────────────────────
+router.get("/internal/projects/:playerId/notes", async (req, res) => {
+  const { playerId } = req.params;
+  const project = await ensureProject(playerId);
+
+  const notes = await db
+    .select()
+    .from(productionNotesTable)
+    .where(eq(productionNotesTable.projectId, project.id))
+    .orderBy(desc(productionNotesTable.createdAt));
+
+  res.json({ notes, projectId: project.id });
+});
+
+// ─────────────────────────────────────────────────────────
+// POST /api/internal/projects/:playerId/notes
+// ─────────────────────────────────────────────────────────
+router.post("/internal/projects/:playerId/notes", async (req, res) => {
+  const { playerId } = req.params;
+  const staffUser = req.internalUser!;
+  const { content, noteType = "general" } = req.body;
+
+  if (!content?.trim()) {
+    res.status(400).json({ error: "content is required" });
+    return;
+  }
+
+  const project = await ensureProject(playerId);
+
+  const [note] = await db
+    .insert(productionNotesTable)
+    .values({
+      projectId: project.id,
+      noteType,
+      content: content.trim(),
+      createdBy: staffUser.fullName,
+    })
+    .returning();
+
+  res.status(201).json({ note });
+});
+
+// ─────────────────────────────────────────────────────────
+// GET /api/internal/projects/:playerId/illustrations
+// ─────────────────────────────────────────────────────────
+router.get("/internal/projects/:playerId/illustrations", async (req, res) => {
+  const { playerId } = req.params;
+  const project = await ensureProject(playerId);
+
+  const assets = await db
+    .select()
+    .from(illustrationAssetsTable)
+    .where(eq(illustrationAssetsTable.projectId, project.id))
+    .orderBy(illustrationAssetsTable.createdAt);
+
+  res.json({ assets, projectId: project.id });
+});
+
+// ─────────────────────────────────────────────────────────
+// POST /api/internal/projects/:playerId/illustrations
+// Add illustration asset record
+// ─────────────────────────────────────────────────────────
+router.post("/internal/projects/:playerId/illustrations", async (req, res) => {
+  const { playerId } = req.params;
+  const { fileName, driveFileId, driveLink, assetType, sceneNumber, illustratorNotes } = req.body;
+
+  const project = await ensureProject(playerId);
+
+  const [asset] = await db
+    .insert(illustrationAssetsTable)
+    .values({
+      projectId: project.id,
+      fileName: fileName ?? null,
+      driveFileId: driveFileId ?? null,
+      driveLink: driveLink ?? null,
+      assetType: assetType ?? "reference_image",
+      sceneNumber: sceneNumber ?? null,
+      illustratorNotes: illustratorNotes ?? null,
+      approved: false,
+    })
+    .returning();
+
+  res.status(201).json({ asset });
+});
+
+// ─────────────────────────────────────────────────────────
+// PUT /api/internal/projects/:playerId/illustrations/:assetId
+// Approve / update notes
+// ─────────────────────────────────────────────────────────
+router.put("/internal/projects/:playerId/illustrations/:assetId", async (req, res) => {
+  const { assetId } = req.params;
+  const { approved, illustratorNotes, sceneNumber, assetType } = req.body;
+
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (approved !== undefined) updates.approved = approved;
+  if (illustratorNotes !== undefined) updates.illustratorNotes = illustratorNotes;
+  if (sceneNumber !== undefined) updates.sceneNumber = sceneNumber;
+  if (assetType !== undefined) updates.assetType = assetType;
+
+  const [updated] = await db
+    .update(illustrationAssetsTable)
+    .set(updates)
+    .where(eq(illustrationAssetsTable.id, parseInt(assetId, 10)))
+    .returning();
+
+  res.json({ asset: updated });
+});
+
+// ─────────────────────────────────────────────────────────
+// POST /api/internal/projects/:playerId/blueprint/approve
+// Editor approves a blueprint — unlocks Story Builder
+// ─────────────────────────────────────────────────────────
+router.post("/internal/projects/:playerId/blueprint/approve", async (req, res) => {
+  const { playerId } = req.params;
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can approve blueprints" });
+    return;
+  }
+
+  const project = await ensureProject(playerId);
+
+  const [existing] = await db
+    .select()
+    .from(storyBlueprintsTable)
+    .where(eq(storyBlueprintsTable.projectId, project.id))
+    .limit(1);
+
+  if (!existing) {
+    res.status(404).json({ error: "No blueprint found — author must save blueprint first" });
+    return;
+  }
+
+  const [blueprint] = await db
+    .update(storyBlueprintsTable)
+    .set({
+      blueprintApproved: true,
+      blueprintApprovedBy: staffUser.fullName,
+      blueprintApprovedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(eq(storyBlueprintsTable.id, existing.id))
+    .returning();
+
+  await db
+    .update(storyProjectsTable)
+    .set({ status: "draft_in_progress", updatedAt: new Date() })
+    .where(eq(storyProjectsTable.id, project.id));
+
+  res.json({ blueprint });
+});
+
+// ─────────────────────────────────────────────────────────
+// POST /api/internal/projects/:playerId/blueprint/revoke
+// Editor revokes blueprint approval
+// ─────────────────────────────────────────────────────────
+router.post("/internal/projects/:playerId/blueprint/revoke", async (req, res) => {
+  const { playerId } = req.params;
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can revoke blueprint approval" });
+    return;
+  }
+
+  const project = await ensureProject(playerId);
+
+  const [existing] = await db
+    .select()
+    .from(storyBlueprintsTable)
+    .where(eq(storyBlueprintsTable.projectId, project.id))
+    .limit(1);
+
+  if (!existing) {
+    res.status(404).json({ error: "No blueprint found" });
+    return;
+  }
+
+  const [blueprint] = await db
+    .update(storyBlueprintsTable)
+    .set({
+      blueprintApproved: false,
+      blueprintApprovedBy: null,
+      blueprintApprovedAt: null,
+      updatedAt: new Date(),
+    })
+    .where(eq(storyBlueprintsTable.id, existing.id))
+    .returning();
+
+  await db
+    .update(storyProjectsTable)
+    .set({ status: "blueprint_in_progress", updatedAt: new Date() })
+    .where(eq(storyProjectsTable.id, project.id));
+
+  res.json({ blueprint });
+});
+
+// ─────────────────────────────────────────────────────────
+// PUT /api/internal/projects/:playerId/assign
+// Assign author/editor to a project
+// ─────────────────────────────────────────────────────────
+router.put("/internal/projects/:playerId/assign", async (req, res) => {
+  const { playerId } = req.params;
+  const staffUser = req.internalUser!;
+  const { assignedAuthor, assignedIllustrator, assignedAuthorId, assignedEditorId, bookFormat } = req.body;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can assign staff to projects" });
+    return;
+  }
+
+  const project = await ensureProject(playerId);
+
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (assignedAuthor !== undefined) updates.assignedAuthor = assignedAuthor;
+  if (assignedIllustrator !== undefined) updates.assignedIllustrator = assignedIllustrator;
+  if (assignedAuthorId !== undefined) updates.assignedAuthorId = assignedAuthorId;
+  if (assignedEditorId !== undefined) updates.assignedEditorId = assignedEditorId;
+  if (bookFormat !== undefined) updates.bookFormat = bookFormat;
+
+  const [updated] = await db
+    .update(storyProjectsTable)
+    .set(updates)
+    .where(eq(storyProjectsTable.id, project.id))
+    .returning();
+
+  res.json({ project: updated });
+});
+
+// ─────────────────────────────────────────────────────────
+// PUT /api/internal/projects/:playerId/book-format
+// Update book format/size
+// ─────────────────────────────────────────────────────────
+router.put("/internal/projects/:playerId/book-format", async (req, res) => {
+  const { playerId } = req.params;
+  const { bookFormat } = req.body;
+
+  const project = await ensureProject(playerId);
+
+  const [updated] = await db
+    .update(storyProjectsTable)
+    .set({ bookFormat, updatedAt: new Date() })
+    .where(eq(storyProjectsTable.id, project.id))
+    .returning();
+
+  res.json({ project: updated });
+});
+
+// ─────────────────────────────────────────────────────────
+// GET /api/internal/staff
+// List all MeTime Stories staff (editor/admin only)
+// ─────────────────────────────────────────────────────────
+router.get("/internal/staff", async (req, res) => {
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can manage staff" });
+    return;
+  }
+
+  const staff = await db
+    .select({
+      id: meTimeStaffTable.id,
+      email: meTimeStaffTable.email,
+      fullName: meTimeStaffTable.fullName,
+      role: meTimeStaffTable.role,
+      isActive: meTimeStaffTable.isActive,
+      createdAt: meTimeStaffTable.createdAt,
+    })
+    .from(meTimeStaffTable)
+    .orderBy(meTimeStaffTable.createdAt);
+
+  res.json({ staff });
+});
+
+// ─────────────────────────────────────────────────────────
+// POST /api/internal/staff
+// Add a new MeTime Stories staff member (editor/admin only)
+// ─────────────────────────────────────────────────────────
+router.post("/internal/staff", async (req, res) => {
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can add staff" });
+    return;
+  }
+
+  const { email, fullName, role, password } = req.body;
+  if (!email || !fullName || !role || !password) {
+    res.status(400).json({ error: "email, fullName, role, and password are required" });
+    return;
+  }
+
+  const bcrypt = await import("bcryptjs");
+  const passwordHash = await bcrypt.default.hash(password, 10);
+
+  try {
+    const [newStaff] = await db
+      .insert(meTimeStaffTable)
+      .values({ email: email.toLowerCase().trim(), passwordHash, fullName, role, isActive: true })
+      .returning({
+        id: meTimeStaffTable.id,
+        email: meTimeStaffTable.email,
+        fullName: meTimeStaffTable.fullName,
+        role: meTimeStaffTable.role,
+        isActive: meTimeStaffTable.isActive,
+      });
+
+    res.json({ staff: newStaff });
+  } catch (e: any) {
+    if (e.code === "23505") {
+      res.status(409).json({ error: "Email already exists" });
+    } else {
+      throw e;
+    }
+  }
+});
+
+// ─────────────────────────────────────────────────────────
+// PUT /api/internal/staff/:id
+// Update a staff member (editor/admin only)
+// ─────────────────────────────────────────────────────────
+router.put("/internal/staff/:id", async (req, res) => {
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can update staff" });
+    return;
+  }
+
+  const { id } = req.params;
+  const { fullName, role, isActive, password } = req.body;
+
+  const updates: Record<string, unknown> = {};
+  if (fullName !== undefined) updates.fullName = fullName;
+  if (role !== undefined) updates.role = role;
+  if (isActive !== undefined) updates.isActive = isActive;
+  if (password) {
+    const bcrypt = await import("bcryptjs");
+    updates.passwordHash = await bcrypt.default.hash(password, 10);
+  }
+
+  const [updated] = await db
+    .update(meTimeStaffTable)
+    .set(updates)
+    .where(eq(meTimeStaffTable.id, parseInt(id, 10)))
+    .returning({
+      id: meTimeStaffTable.id,
+      email: meTimeStaffTable.email,
+      fullName: meTimeStaffTable.fullName,
+      role: meTimeStaffTable.role,
+      isActive: meTimeStaffTable.isActive,
+    });
+
+  if (!updated) {
+    res.status(404).json({ error: "Staff member not found" });
+    return;
+  }
+
+  res.json({ staff: updated });
+});
+
+// ─────────────────────────────────────────────────────────
+// DELETE /api/internal/staff/:id
+// Deactivate (soft-delete) a staff member
+// ─────────────────────────────────────────────────────────
+router.delete("/internal/staff/:id", async (req, res) => {
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Only editors can deactivate staff" });
+    return;
+  }
+
+  const { id } = req.params;
+  const numId = parseInt(id, 10);
+
+  if (numId === staffUser.id) {
+    res.status(400).json({ error: "You cannot deactivate your own account" });
+    return;
+  }
+
+  const [updated] = await db
+    .update(meTimeStaffTable)
+    .set({ isActive: false })
+    .where(eq(meTimeStaffTable.id, numId))
+    .returning({
+      id: meTimeStaffTable.id,
+      email: meTimeStaffTable.email,
+      fullName: meTimeStaffTable.fullName,
+      role: meTimeStaffTable.role,
+      isActive: meTimeStaffTable.isActive,
+    });
+
+  if (!updated) {
+    res.status(404).json({ error: "Staff member not found" });
+    return;
+  }
+
+  res.json({ staff: updated });
+});
+
+// ─────────────────────────────────────────────────────────
+// GET /api/internal/editor/stats
+// Dashboard stats for editor view
+// ─────────────────────────────────────────────────────────
+router.get("/internal/editor/stats", async (req, res) => {
+  const staffUser = req.internalUser!;
+
+  if (staffUser.role !== "editor" && staffUser.role !== "admin") {
+    res.status(403).json({ error: "Editor access required" });
+    return;
+  }
+
+  const [allProjects, allStaff, allBlueprints] = await Promise.all([
+    db.select().from(storyProjectsTable),
+    db.select({
+      id: meTimeStaffTable.id,
+      email: meTimeStaffTable.email,
+      fullName: meTimeStaffTable.fullName,
+      role: meTimeStaffTable.role,
+      isActive: meTimeStaffTable.isActive,
+    }).from(meTimeStaffTable),
+    db.select().from(storyBlueprintsTable),
+  ]);
+
+  const authors = allStaff.filter((s) => s.role === "author" && s.isActive);
+  const blueprintsPendingApproval = allBlueprints.filter((b) => !b.blueprintApproved);
+  const blueprintsApproved = allBlueprints.filter((b) => b.blueprintApproved);
+  const inDraft = allProjects.filter((p) => p.status === "draft_in_progress" || p.status === "internal_review");
+  const complete = allProjects.filter((p) => p.status === "final_ready" || p.status === "approved");
+
+  res.json({
+    stats: {
+      totalProjects: allProjects.length,
+      activeAuthors: authors.length,
+      totalAuthors: authors.length,
+      blueprintsPendingApproval: blueprintsPendingApproval.length,
+      blueprintsApproved: blueprintsApproved.length,
+      storiesInDraft: inDraft.length,
+      storiesComplete: complete.length,
+    },
+    staff: allStaff,
+    recentBlueprints: allBlueprints.slice(0, 20),
+  });
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/internalAuthRoutes.ts
+================================================================================
+
+import { Router } from "express";
+import { db } from "@workspace/db";
+import { meTimeStaffTable } from "@workspace/db/schema";
+import { eq } from "drizzle-orm";
+import { verifyPassword, signInternalToken } from "../lib/auth.js";
+import { internalAuth } from "../middlewares/internalAuth.js";
+
+const router = Router();
+
+// POST /api/internal/auth/login
+router.post("/internal/auth/login", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(400).json({ error: "Email and password are required" });
+    return;
+  }
+
+  const [staff] = await db
+    .select()
+    .from(meTimeStaffTable)
+    .where(eq(meTimeStaffTable.email, email.toLowerCase().trim()))
+    .limit(1);
+
+  if (!staff || !staff.isActive) {
+    res.status(401).json({ error: "Invalid email or password" });
+    return;
+  }
+
+  const valid = await verifyPassword(password, staff.passwordHash);
+  if (!valid) {
+    res.status(401).json({ error: "Invalid email or password" });
+    return;
+  }
+
+  const token = signInternalToken({
+    internalStaffId: staff.id,
+    email: staff.email,
+    role: staff.role,
+  });
+
+  res.json({
+    token,
+    user: {
+      id: staff.id,
+      email: staff.email,
+      fullName: staff.fullName,
+      role: staff.role,
+    },
+  });
+});
+
+// GET /api/internal/auth/me
+router.get("/internal/auth/me", internalAuth, (req, res) => {
+  res.json({ user: req.internalUser });
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/journey.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import { playersTable, playerJourneyResponsesTable } from "@workspace/db/schema";
+import { SaveJourneyResponsesBody } from "@workspace/api-zod";
+import { eq } from "drizzle-orm";
+import { logResponses, updateWorkflowStatus, syncPlayer } from "../lib/googleSheets.js";
+
+const router: IRouter = Router();
+
+router.post("/players/:playerId/journey", async (req, res) => {
+  const { playerId } = req.params;
+
+  const parsed = SaveJourneyResponsesBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+
+  const [player] = await db
+    .select()
+    .from(playersTable)
+    .where(eq(playersTable.id, playerId))
+    .limit(1);
+
+  if (!player) {
+    res.status(404).json({ error: "Player not found" });
+    return;
+  }
+
+  await db
+    .delete(playerJourneyResponsesTable)
+    .where(eq(playerJourneyResponsesTable.playerId, playerId));
+
+  const rows = parsed.data.responses.map((r) => ({
+    playerId,
+    stage: r.stage,
+    questionNumber: r.questionNumber,
+    questionText: r.questionText,
+    answerText: r.answerText ?? "",
+    audioUrl: r.audioUrl ?? null,
+    mediaUrls: r.mediaUrls ?? [],
+  }));
+
+  if (rows.length > 0) {
+    await db.insert(playerJourneyResponsesTable).values(rows);
+  }
+
+  res.json({ saved: rows.length });
+
+  // Sync to Google Sheets (fire-and-forget — never blocks the response)
+  logResponses(
+    rows.map((r) => ({
+      playerId: player.accessCode,
+      playerName: player.playerName,
+      role: "player",
+      questionId: `${r.stage}-Q${r.questionNumber}`,
+      stage: r.stage,
+      questionText: r.questionText,
+      responseType: "long-text",
+      responseValue: r.answerText,
+      source: "portal",
+    }))
+  ).catch(e => console.error("[sheets] logResponses failed:", e));
+
+  syncPlayer({
+    id: player.id,
+    playerName: player.playerName,
+    academyKey: player.academyKey,
+    academyName: player.academyName,
+    ageGroup: player.ageGroup ?? null,
+    position: player.position,
+    secondPosition: player.secondPosition ?? null,
+    shirtNumber: player.shirtNumber ?? null,
+    accessCode: player.accessCode,
+    parentCode: player.parentCode ?? null,
+    status: player.status,
+  }).catch(e => console.error("[sheets] syncPlayer failed:", e));
+});
+
+router.patch("/players/:playerId/journey/status", async (req, res) => {
+  const { playerId } = req.params;
+
+  const [player] = await db
+    .select()
+    .from(playersTable)
+    .where(eq(playersTable.id, playerId))
+    .limit(1);
+
+  if (!player) {
+    res.status(404).json({ error: "Player not found" });
+    return;
+  }
+
+  await db
+    .update(playersTable)
+    .set({ status: "journey_complete" })
+    .where(eq(playersTable.id, playerId));
+
+  res.json({ status: "journey_complete" });
+
+  // Sync status to Sheets
+  updateWorkflowStatus({
+    accessCode: player.accessCode,
+    playerName: player.playerName,
+    status: "journey_complete",
+    journeyStatus: "complete",
+  }).catch(e => console.error("[sheets] updateWorkflowStatus failed:", e));
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/parent.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import { playersTable, parentResponsesTable } from "@workspace/db/schema";
+import { eq } from "drizzle-orm";
+
+const router: IRouter = Router();
+
+router.get("/parent/:parentCode", async (req, res) => {
+  const parentCode = req.params.parentCode as string;
+
+  const [player] = await db
+    .select()
+    .from(playersTable)
+    .where(eq(playersTable.parentCode, parentCode))
+    .limit(1);
+
+  if (!player) {
+    res.status(404).json({ error: "Invalid parent code" });
+    return;
+  }
+
+  res.json({
+    id: player.id,
+    playerName: player.playerName,
+    academyName: player.academyName,
+    position: player.position,
+  });
+});
+
+router.post("/parent/:parentCode", async (req, res) => {
+  const parentCode = req.params.parentCode as string;
+  const { responses } = req.body;
+
+  if (!Array.isArray(responses) || responses.length === 0) {
+    res.status(400).json({ error: "responses array is required" });
+    return;
+  }
+
+  for (const r of responses) {
+    if (typeof r.questionNumber !== "number" || typeof r.questionText !== "string" || typeof r.answerText !== "string") {
+      res.status(400).json({ error: "Each response must have questionNumber (number), questionText (string), and answerText (string)" });
+      return;
+    }
+  }
+
+  const [player] = await db
+    .select()
+    .from(playersTable)
+    .where(eq(playersTable.parentCode, parentCode))
+    .limit(1);
+
+  if (!player) {
+    res.status(404).json({ error: "Invalid parent code" });
+    return;
+  }
+
+  await db
+    .delete(parentResponsesTable)
+    .where(eq(parentResponsesTable.playerId, player.id));
+
+  const rows = responses.map((r: { questionNumber: number; questionText: string; answerText: string }) => ({
+    playerId: player.id,
+    parentCode,
+    questionNumber: r.questionNumber,
+    questionText: r.questionText,
+    answerText: r.answerText,
+  }));
+
+  await db.insert(parentResponsesTable).values(rows);
+
+  res.status(201).json({ success: true, message: "Parent responses saved successfully" });
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/players.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import { playersTable, academiesTable } from "@workspace/db/schema";
+import { RegisterPlayerBody, GetPlayerResponse } from "@workspace/api-zod";
+import { generateCode } from "../lib/codeGenerator.js";
+import { eq, sql } from "drizzle-orm";
+import { syncPlayer, updateWorkflowStatus } from "../lib/googleSheets.js";
+
+const router: IRouter = Router();
+
+function normalizeCode(s: string): string {
+  return s.trim().toUpperCase().replace(/O/g, "0").replace(/[Il]/g, "1");
+}
+
+router.post("/players", async (req, res) => {
+  const parsed = RegisterPlayerBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+
+  const { playerName, age, shirtNumber, academyKey, position, secondPosition, accessCode: submittedCode } = parsed.data;
+
+  // Get academy with only existing columns
+  const academyResult = await db.execute(
+    sql`SELECT id, key, name, access_code FROM academies WHERE key = ${academyKey} LIMIT 1`
+  );
+
+  if (!academyResult.rows || academyResult.rows.length === 0) {
+    res.status(400).json({ error: "Invalid academy key" });
+    return;
+  }
+
+  const academy = academyResult.rows[0];
+
+  // Validate coach access code matches academy
+  if (!submittedCode || normalizeCode(submittedCode) !== normalizeCode(String(academy.access_code ?? ""))) {
+    res.status(400).json({ error: "Invalid access code" });
+    return;
+  }
+
+  const playerAccessCode = generateCode("PLY");
+  const parentCode = generateCode("PAR");
+
+  const [player] = await db
+    .insert(playersTable)
+    .values({
+      playerName,
+      age,
+      shirtNumber,
+      academyKey,
+      academyName: academy.name,
+      position,
+      secondPosition: secondPosition || null,
+      accessCode: playerAccessCode,
+      parentCode,
+      status: "registered",
+    })
+    .returning();
+
+  res.status(201).json(
+    GetPlayerResponse.parse({
+      id: player.id,
+      playerName: player.playerName,
+      age: player.age,
+      shirtNumber: player.shirtNumber,
+      academyKey: player.academyKey,
+      academyName: player.academyName,
+      position: player.position,
+      secondPosition: player.secondPosition ?? null,
+      accessCode: player.accessCode,
+      status: player.status,
+      createdAt: player.createdAt.toISOString(),
+    })
+  );
+
+  // Sync to Google Sheets (fire-and-forget)
+  syncPlayer({
+    id: player.id,
+    playerName: player.playerName,
+    academyKey: player.academyKey,
+    academyName: player.academyName,
+    ageGroup: player.ageGroup ?? null,
+    position: player.position,
+    secondPosition: player.secondPosition ?? null,
+    shirtNumber: player.shirtNumber ?? null,
+    accessCode: player.accessCode,
+    parentCode: player.parentCode ?? null,
+    status: player.status,
+  }).catch(e => console.error("[sheets] syncPlayer failed:", e));
+
+  updateWorkflowStatus({
+    accessCode: player.accessCode,
+    playerName: player.playerName,
+    status: player.status,
+  }).catch(e => console.error("[sheets] updateWorkflowStatus failed:", e));
+});
+
+router.get("/players/by-code/:code", async (req, res) => {
+  const { code } = req.params;
+
+  const normalizedInput = normalizeCode(code);
+  const [player] = await db
+    .select()
+    .from(playersTable)
+    .where(
+      sql`UPPER(REPLACE(REPLACE(${playersTable.accessCode}, 'O', '0'), 'I', '1')) = ${normalizedInput}`
+    )
+    .limit(1);
+
+  if (!player) {
+    res.status(404).json({ error: "Access code not found" });
+    return;
+  }
+
+  res.json(
+    GetPlayerResponse.parse({
+      id: player.id,
+      playerName: player.playerName,
+      age: player.age,
+      shirtNumber: player.shirtNumber,
+      academyKey: player.academyKey,
+      academyName: player.academyName,
+      position: player.position,
+      secondPosition: player.secondPosition ?? null,
+      accessCode: player.accessCode,
+      status: player.status,
+      createdAt: player.createdAt.toISOString(),
+    })
+  );
+});
+
+router.get("/players/:playerId", async (req, res) => {
+  const { playerId } = req.params;
+
+  const [player] = await db
+    .select()
+    .from(playersTable)
+    .where(eq(playersTable.id, playerId))
+    .limit(1);
+
+  if (!player) {
+    res.status(404).json({ error: "Player not found" });
+    return;
+  }
+
+  res.json(
+    GetPlayerResponse.parse({
+      id: player.id,
+      playerName: player.playerName,
+      age: player.age,
+      shirtNumber: player.shirtNumber,
+      academyKey: player.academyKey,
+      academyName: player.academyName,
+      position: player.position,
+      accessCode: player.accessCode,
+      status: player.status,
+      createdAt: player.createdAt.toISOString(),
+    })
+  );
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/sheetsAdmin.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import { playersTable } from "@workspace/db/schema";
+import { eq } from "drizzle-orm";
+import {
+  testConnection,
+  syncPlayer,
+  isSheetsConfigured,
+  getRecentResponseLogs,
+  TABS,
+} from "../lib/googleSheets.js";
+import { testDriveConnection, uploadToDrive, isDriveConfigured } from "../lib/googleDrive.js";
+import { staffAuth } from "../middlewares/staffAuth.js";
+
+const router: IRouter = Router();
+
+// Test connection
+router.get("/admin/sheets/test", staffAuth, async (req, res) => {
+  const staffUser = req.staffUser!;
+  if (staffUser.systemRole !== "academy_admin") {
+    res.status(403).json({ error: "Admin access required" });
+    return;
+  }
+  const result = await testConnection();
+  res.json(result);
+});
+
+// Get config status
+router.get("/admin/sheets/status", staffAuth, async (req, res) => {
+  const staffUser = req.staffUser!;
+  if (staffUser.systemRole !== "academy_admin") {
+    res.status(403).json({ error: "Admin access required" });
+    return;
+  }
+  res.json({
+    configured: isSheetsConfigured(),
+    sheetId: process.env["GOOGLE_SHEET_ID"] ?? null,
+    serviceAccountEmail: process.env["GOOGLE_SERVICE_ACCOUNT_EMAIL"] ?? null,
+    hasPrivateKey: !!(process.env["GOOGLE_PRIVATE_KEY"]),
+    tabs: Object.values(TABS),
+  });
+});
+
+// Manually sync all demo players to the sheet
+router.post("/admin/sheets/sync-players", staffAuth, async (req, res) => {
+  const staffUser = req.staffUser!;
+  if (staffUser.systemRole !== "academy_admin") {
+    res.status(403).json({ error: "Admin access required" });
+    return;
+  }
+
+  const players = await db.select().from(playersTable);
+  const errors: string[] = [];
+  let synced = 0;
+
+  for (const player of players) {
+    try {
+      await syncPlayer({
+        id: player.id,
+        playerName: player.playerName,
+        academyKey: player.academyKey,
+        academyName: player.academyName,
+        ageGroup: player.ageGroup ?? null,
+        position: player.position,
+        secondPosition: player.secondPosition ?? null,
+        shirtNumber: player.shirtNumber ?? null,
+        accessCode: player.accessCode,
+        parentCode: player.parentCode ?? null,
+        status: player.status,
+      });
+      synced++;
+    } catch (e: any) {
+      errors.push(`${player.playerName}: ${e?.message ?? String(e)}`);
+    }
+  }
+
+  res.json({ synced, total: players.length, errors });
+});
+
+// Get recent Response_Log rows
+router.get("/admin/sheets/recent-logs", staffAuth, async (req, res) => {
+  const staffUser = req.staffUser!;
+  if (staffUser.systemRole !== "academy_admin") {
+    res.status(403).json({ error: "Admin access required" });
+    return;
+  }
+  const rows = await getRecentResponseLogs(30);
+  res.json({ rows });
+});
+
+// Test Google Drive connection
+router.get("/admin/drive/test", staffAuth, async (req, res) => {
+  const staffUser = req.staffUser!;
+  if (staffUser.systemRole !== "academy_admin") {
+    res.status(403).json({ error: "Admin access required" });
+    return;
+  }
+  const result = await testDriveConnection();
+  res.json({
+    ...result,
+    configured: isDriveConfigured(),
+    rootFolderId: process.env["GOOGLE_DRIVE_FOLDER_ID"] ?? "1Lk6-18xcNw7llQ2TjvoNfGDSLcCCf4VR",
+    serviceAccountEmail: process.env["GOOGLE_SERVICE_ACCOUNT_EMAIL"] ?? null,
+  });
+});
+
+// Test upload — uploads a tiny PNG to Drive to verify the full pipeline
+router.post("/admin/drive/test-upload", staffAuth, async (req, res) => {
+  const staffUser = req.staffUser!;
+  if (staffUser.systemRole !== "academy_admin") {
+    res.status(403).json({ error: "Admin access required" });
+    return;
+  }
+  try {
+    // Create a minimal 1×1 red PNG in memory
+    const png1x1 = Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwADhQGAWjR9awAAAABJRU5ErkJggg==",
+      "base64"
+    );
+    const result = await uploadToDrive({
+      fileBuffer: png1x1,
+      fileName: `test_upload_${Date.now()}.png`,
+      mimeType: "image/png",
+      academyName: staffUser.academyName ?? "Test Academy",
+      playerCode: "TEST-UPLOAD",
+    });
+    res.json({
+      ok: true,
+      message: "Test upload succeeded. Check your Drive folder.",
+      ...result,
+    });
+  } catch (err: any) {
+    res.status(500).json({ ok: false, error: err?.message ?? String(err) });
+  }
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/staffAcademy.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import { academiesTable } from "@workspace/db/schema";
+import { eq } from "drizzle-orm";
+import { staffAuth } from "../middlewares/staffAuth.js";
+import { requireRole } from "../middlewares/staffAuth.js";
+
+const router: IRouter = Router();
+
+const HEX_COLOR_RE = /^#[0-9a-fA-F]{6}$/;
+
+router.get("/staff/academy", staffAuth, async (req, res) => {
+  const staffUser = req.staffUser!;
+
+  const [academy] = await db
+    .select()
+    .from(academiesTable)
+    .where(eq(academiesTable.id, staffUser.academyId))
+    .limit(1);
+
+  if (!academy) {
+    res.status(404).json({ error: "Academy not found" });
+    return;
+  }
+
+  res.json({
+    id: academy.id,
+    name: academy.name,
+    logoText: academy.logoText,
+    primaryColor: academy.primaryColor,
+    secondaryColor: academy.secondaryColor,
+    accentColor: academy.accentColor ?? null,
+    crestUrl: academy.crestUrl ?? null,
+    welcomeMessage: academy.welcomeMessage,
+    chantUrl: academy.chantUrl ?? null,
+  });
+});
+
+router.patch("/staff/academy", staffAuth, requireRole("academy_admin"), async (req, res) => {
+  const staffUser = req.staffUser!;
+  const { primaryColor, secondaryColor, accentColor, crestUrl, logoText, welcomeMessage, chantUrl } = req.body;
+
+  const updates: Record<string, unknown> = {};
+
+  if (primaryColor !== undefined) {
+    if (typeof primaryColor !== "string" || !HEX_COLOR_RE.test(primaryColor)) {
+      res.status(400).json({ error: "primaryColor must be a valid hex color (e.g. #FF0000)" });
+      return;
+    }
+    updates.primaryColor = primaryColor;
+  }
+
+  if (secondaryColor !== undefined) {
+    if (typeof secondaryColor !== "string" || !HEX_COLOR_RE.test(secondaryColor)) {
+      res.status(400).json({ error: "secondaryColor must be a valid hex color (e.g. #FFFFFF)" });
+      return;
+    }
+    updates.secondaryColor = secondaryColor;
+  }
+
+  if (accentColor !== undefined) {
+    if (accentColor !== null && accentColor !== "" && (typeof accentColor !== "string" || !HEX_COLOR_RE.test(accentColor))) {
+      res.status(400).json({ error: "accentColor must be a valid hex color or empty" });
+      return;
+    }
+    updates.accentColor = accentColor === "" ? null : accentColor;
+  }
+
+  if (crestUrl !== undefined) {
+    if (crestUrl !== null && crestUrl !== "" && typeof crestUrl !== "string") {
+      res.status(400).json({ error: "crestUrl must be a string URL or empty" });
+      return;
+    }
+    updates.crestUrl = crestUrl === "" ? null : crestUrl;
+  }
+
+  if (logoText !== undefined) {
+    if (typeof logoText !== "string" || logoText.length === 0 || logoText.length > 20) {
+      res.status(400).json({ error: "logoText must be 1-20 characters" });
+      return;
+    }
+    updates.logoText = logoText;
+  }
+
+  if (welcomeMessage !== undefined) {
+    if (typeof welcomeMessage !== "string" || welcomeMessage.length === 0) {
+      res.status(400).json({ error: "welcomeMessage cannot be empty" });
+      return;
+    }
+    updates.welcomeMessage = welcomeMessage;
+  }
+
+  if (chantUrl !== undefined) {
+    if (chantUrl !== null && chantUrl !== "" && typeof chantUrl !== "string") {
+      res.status(400).json({ error: "chantUrl must be a string URL or empty" });
+      return;
+    }
+    updates.chantUrl = chantUrl === "" ? null : chantUrl;
+  }
+
+  if (Object.keys(updates).length === 0) {
+    res.status(400).json({ error: "No valid fields provided" });
+    return;
+  }
+
+  const [updated] = await db
+    .update(academiesTable)
+    .set(updates)
+    .where(eq(academiesTable.id, staffUser.academyId))
+    .returning();
+
+  res.json({
+    id: updated.id,
+    name: updated.name,
+    logoText: updated.logoText,
+    primaryColor: updated.primaryColor,
+    secondaryColor: updated.secondaryColor,
+    accentColor: updated.accentColor ?? null,
+    crestUrl: updated.crestUrl ?? null,
+    welcomeMessage: updated.welcomeMessage,
+    chantUrl: updated.chantUrl ?? null,
+  });
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/staffAuth.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import { academyStaffTable, academiesTable } from "@workspace/db/schema";
+import { eq, sql } from "drizzle-orm";
+import { verifyPassword, signToken, hashPassword } from "../lib/auth.js";
+import { staffAuth } from "../middlewares/staffAuth.js";
+
+const router: IRouter = Router();
+
+function normalizeCode(s: string): string {
+  return s.trim().toUpperCase().replace(/O/g, "0").replace(/[Il]/g, "1");
+}
+
+function buildUser(staff: typeof academyStaffTable.$inferSelect, academy: typeof academiesTable.$inferSelect) {
+  return {
+    id: staff.id,
+    academyId: staff.academyId,
+    academyName: academy.name,
+    academyPrimaryColor: academy.primaryColor,
+    academySecondaryColor: academy.secondaryColor,
+    academyAccentColor: academy.accentColor ?? null,
+    academyCrestUrl: academy.crestUrl ?? null,
+    academyLogoText: academy.logoText,
+    academyWelcomeMessage: academy.welcomeMessage,
+    academyChantUrl: academy.chantUrl ?? null,
+    name: staff.fullName,
+    fullName: staff.fullName,
+    email: staff.email,
+    role: staff.systemRole,
+    systemRole: staff.systemRole,
+    questionRole: staff.questionRole ?? null,
+    jobTitle: staff.jobTitle ?? "",
+    teamName: staff.teamName ?? null,
+    ageGroup: staff.ageGroup ?? null,
+    isActive: staff.isActive,
+  };
+}
+
+// Look up which academy a coach access code belongs to
+router.get("/staff/lookup-academy", async (req, res) => {
+  const code = String(req.query["code"] ?? "").trim();
+  if (!code) { res.status(400).json({ error: "code required" }); return; }
+
+  const result = await db.execute(
+    sql`SELECT key, name FROM academies WHERE UPPER(REPLACE(access_code,' ','')) = UPPER(REPLACE(${code},' ','')) LIMIT 1`
+  );
+  if (!result.rows || result.rows.length === 0) {
+    res.status(404).json({ error: "No academy found for this code" });
+    return;
+  }
+  res.json({ key: result.rows[0].key, name: result.rows[0].name });
+});
+
+router.post("/staff/register", async (req, res) => {
+  const { fullName, email, password, academyKey: rawAcademyKey, accessCode } = req.body;
+
+  if (!fullName || !email || !password || !accessCode) {
+    res.status(400).json({ error: "All fields are required" });
+    return;
+  }
+  if (password.length < 8) {
+    res.status(400).json({ error: "Password must be at least 8 characters" });
+    return;
+  }
+
+  // Look up academy by access code (academyKey is now optional — code is enough)
+  const academyResult = await db.execute(
+    sql`SELECT id, key, name, logo_text, primary_color, secondary_color, welcome_message, access_code
+        FROM academies
+        WHERE UPPER(REPLACE(access_code,' ','')) = UPPER(REPLACE(${accessCode.trim()},' ',''))
+        ${rawAcademyKey ? sql`AND key = ${rawAcademyKey.trim().toLowerCase()}` : sql``}
+        LIMIT 1`
+  );
+
+  if (!academyResult.rows || academyResult.rows.length === 0) {
+    res.status(401).json({ error: "Invalid access code. Please check your code and try again." });
+    return;
+  }
+
+  const academyRow = academyResult.rows[0];
+
+  const [existing] = await db
+    .select({ id: academyStaffTable.id })
+    .from(academyStaffTable)
+    .where(eq(academyStaffTable.email, email.toLowerCase().trim()))
+    .limit(1);
+
+  if (existing) {
+    res.status(400).json({ error: "An account with this email already exists" });
+    return;
+  }
+
+  const authUserId = await hashPassword(password);
+
+  const [newStaff] = await db
+    .insert(academyStaffTable)
+    .values({
+      academyId: academyRow.id as number,
+      email: email.toLowerCase().trim(),
+      authUserId,
+      fullName: fullName.trim(),
+      systemRole: "academy_admin",
+      questionRole: null,
+      jobTitle: "Academy Admin",
+      teamName: null,
+      ageGroup: null,
+    })
+    .returning();
+
+  const academy = {
+    id: academyRow.id,
+    key: academyRow.key,
+    name: academyRow.name,
+    logoText: academyRow.logo_text,
+    primaryColor: academyRow.primary_color,
+    secondaryColor: academyRow.secondary_color,
+    accentColor: null,
+    crestUrl: null,
+    welcomeMessage: academyRow.welcome_message,
+    chantUrl: null,
+  } as any;
+
+  const token = signToken({
+    staffId: newStaff.id,
+    academyId: newStaff.academyId,
+    role: "academy_admin",
+  });
+
+  const user = buildUser(newStaff, academy);
+  res.status(201).json({ token, user, staff: user });
+});
+
+router.post("/staff/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    res.status(400).json({ error: "Email and password are required" });
+    return;
+  }
+
+  const [staff] = await db
+    .select()
+    .from(academyStaffTable)
+    .where(eq(academyStaffTable.email, email.toLowerCase().trim()))
+    .limit(1);
+
+  if (!staff) {
+    res.status(401).json({ error: "Invalid email or password" });
+    return;
+  }
+
+  if (!staff.isActive) {
+    res.status(401).json({ error: "Account is deactivated" });
+    return;
+  }
+
+  const valid = await verifyPassword(password, staff.authUserId);
+  if (!valid) {
+    res.status(401).json({ error: "Invalid email or password" });
+    return;
+  }
+
+  // Get academy - use only columns that exist in the database
+  const academyResult = await db.execute(
+    sql`SELECT id, key, name, logo_text, primary_color, secondary_color, welcome_message 
+        FROM academies WHERE id = ${staff.academyId} LIMIT 1`
+  );
+
+  if (!academyResult.rows || academyResult.rows.length === 0) {
+    res.status(500).json({ error: "Academy not found" });
+    return;
+  }
+
+  const academyRow = academyResult.rows[0];
+  const academy = {
+    id: academyRow.id,
+    key: academyRow.key,
+    name: academyRow.name,
+    logoText: academyRow.logo_text,
+    primaryColor: academyRow.primary_color,
+    secondaryColor: academyRow.secondary_color,
+    accentColor: null,
+    crestUrl: null,
+    welcomeMessage: academyRow.welcome_message,
+    chantUrl: null,
+  };
+
+  const token = signToken({
+    staffId: staff.id,
+    academyId: staff.academyId,
+    role: staff.systemRole,
+  });
+
+  const user = buildUser(staff, academy as any);
+  res.json({ token, user, staff: user });
+});
+
+router.get("/staff/me", staffAuth, async (req, res) => {
+  const rawStaff = req.staffUser!;
+
+  const [staff] = await db
+    .select()
+    .from(academyStaffTable)
+    .where(eq(academyStaffTable.id, rawStaff.id))
+    .limit(1);
+
+  if (!staff) {
+    res.status(404).json({ error: "Staff not found" });
+    return;
+  }
+
+  const academyResult = await db.execute(
+    sql`SELECT id, key, name, logo_text, primary_color, secondary_color, welcome_message 
+        FROM academies WHERE id = ${staff.academyId} LIMIT 1`
+  );
+
+  if (!academyResult.rows || academyResult.rows.length === 0) {
+    res.status(404).json({ error: "Academy not found" });
+    return;
+  }
+
+  const academyRow = academyResult.rows[0];
+  const academy = {
+    id: academyRow.id,
+    key: academyRow.key,
+    name: academyRow.name,
+    logoText: academyRow.logo_text,
+    primaryColor: academyRow.primary_color,
+    secondaryColor: academyRow.secondary_color,
+    accentColor: null,
+    crestUrl: null,
+    welcomeMessage: academyRow.welcome_message,
+    chantUrl: null,
+  } as any;
+
+  const user = buildUser(staff, academy);
+  res.json({ staff: user, user });
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/staffPlayers.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import {
+  playersTable,
+  playerJourneyResponsesTable,
+  stakeholderLinksTable,
+  stakeholderResponsesTable,
+  staffSubmissionsTable,
+  academyStaffTable,
+  academiesTable,
+  storyProjectsTable,
+} from "@workspace/db/schema";
+import { eq, and, ilike, sql } from "drizzle-orm";
+import { staffAuth, requireRole } from "../middlewares/staffAuth.js";
+import { generateCode } from "../lib/codeGenerator.js";
+
+const router: IRouter = Router();
+
+router.get("/staff/players", staffAuth, async (req, res) => {
+  const ageGroup = req.query.age_group as string | undefined;
+  const status = req.query.status as string | undefined;
+  const search = req.query.search as string | undefined;
+
+  const staffUser = req.staffUser!;
+
+  const conditions = [];
+
+  const academyResult = await db.execute(
+    sql`SELECT id, key, name FROM academies WHERE id = ${staffUser.academyId} LIMIT 1`
+  );
+  if (!academyResult.rows || academyResult.rows.length === 0) {
+    res.status(400).json({ error: "Staff academy not found" });
+    return;
+  }
+  const academyRow = academyResult.rows[0] as any;
+
+  conditions.push(eq(playersTable.academyKey, academyRow.key as string));
+
+  if (ageGroup) {
+    conditions.push(eq(playersTable.ageGroup, ageGroup));
+  }
+  if (status) {
+    conditions.push(eq(playersTable.status, status));
+  }
+  if (search) {
+    conditions.push(ilike(playersTable.playerName, `%${search}%`));
+  }
+
+  const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions);
+
+  const players = await db
+    .select()
+    .from(playersTable)
+    .where(whereClause)
+    .orderBy(playersTable.playerName);
+
+  res.json(
+    players.map((p) => ({
+      id: p.id,
+      accessCode: p.accessCode,
+      playerName: p.playerName,
+      age: p.age,
+      shirtNumber: p.shirtNumber,
+      academyKey: p.academyKey,
+      academyName: p.academyName,
+      position: p.position,
+      ageGroup: p.ageGroup,
+      parentCode: p.parentCode,
+      status: p.status,
+      createdAt: p.createdAt.toISOString(),
+    }))
+  );
+});
+
+router.post("/staff/players", staffAuth, requireRole("academy_admin"), async (req, res) => {
+  const staffUser = req.staffUser!;
+  const { playerName, age, shirtNumber, position, secondPosition } = req.body;
+
+  if (!playerName?.trim() || !age || !position) {
+    res.status(400).json({ error: "playerName, age, and position are required" });
+    return;
+  }
+  if (age < 6 || age > 21) {
+    res.status(400).json({ error: "Age must be between 6 and 21" });
+    return;
+  }
+
+  const postAcademyResult = await db.execute(
+    sql`SELECT id, key, name FROM academies WHERE id = ${staffUser.academyId} LIMIT 1`
+  );
+  if (!postAcademyResult.rows || postAcademyResult.rows.length === 0) {
+    res.status(400).json({ error: "Academy not found" });
+    return;
+  }
+  const postAcademy = postAcademyResult.rows[0] as any;
+
+  // Derive age group string from age
+  const ageGroup = age <= 9 ? "U9" : `U${age <= 10 ? 10 : age <= 11 ? 11 : age <= 12 ? 12 : age <= 13 ? 13 : age <= 14 ? 14 : age <= 15 ? 15 : age <= 16 ? 16 : age <= 17 ? 17 : age <= 18 ? 18 : "U21"}`;
+
+  const accessCode = generateCode("PLY");
+  const parentCode = generateCode("PAR");
+
+  const [player] = await db
+    .insert(playersTable)
+    .values({
+      playerName: playerName.trim(),
+      age,
+      shirtNumber: shirtNumber ?? 0,
+      academyKey: postAcademy.key,
+      academyName: postAcademy.name,
+      position,
+      secondPosition: secondPosition || null,
+      accessCode,
+      parentCode,
+      ageGroup,
+      status: "registered",
+    })
+    .returning();
+
+  res.status(201).json({
+    id: player.id,
+    accessCode: player.accessCode,
+    parentCode: player.parentCode,
+    playerName: player.playerName,
+    age: player.age,
+    shirtNumber: player.shirtNumber,
+    position: player.position,
+    secondPosition: player.secondPosition ?? null,
+    ageGroup: player.ageGroup,
+    academyKey: player.academyKey,
+    academyName: player.academyName,
+    status: player.status,
+    createdAt: player.createdAt.toISOString(),
+  });
+});
+
+router.get("/staff/players/:id", staffAuth, async (req, res) => {
+  const id = req.params.id as string;
+  const staffUser = req.staffUser!;
+
+  const [academy] = await db
+    .select()
+    .from(academiesTable)
+    .where(eq(academiesTable.id, staffUser.academyId))
+    .limit(1);
+
+  if (!academy) {
+    res.status(400).json({ error: "Staff academy not found" });
+    return;
+  }
+
+  const [player] = await db
+    .select()
+    .from(playersTable)
+    .where(and(eq(playersTable.id, id), eq(playersTable.academyKey, academy.key)))
+    .limit(1);
+
+  if (!player) {
+    res.status(404).json({ error: "Player not found" });
+    return;
+  }
+
+  const journeyResponses = await db
+    .select()
+    .from(playerJourneyResponsesTable)
+    .where(eq(playerJourneyResponsesTable.playerId, id))
+    .orderBy(playerJourneyResponsesTable.questionNumber);
+
+  // Load all stakeholder links for this player with their responses
+  const stakeholderLinks = await db
+    .select()
+    .from(stakeholderLinksTable)
+    .where(eq(stakeholderLinksTable.playerId, id));
+
+  const stakeholderResponses = await db
+    .select()
+    .from(stakeholderResponsesTable)
+    .where(eq(stakeholderResponsesTable.playerId, id))
+    .orderBy(stakeholderResponsesTable.questionNumber);
+
+  // Build parentSubmission from the 'parent' stakeholder link
+  const parentLink = stakeholderLinks.find((l) => l.type === "parent");
+  const parentResponses = parentLink
+    ? stakeholderResponses.filter((r) => r.stakeholderLinkId === parentLink.id)
+    : [];
+
+  const submissions = await db
+    .select({
+      id: staffSubmissionsTable.id,
+      staffId: staffSubmissionsTable.staffId,
+      playerId: staffSubmissionsTable.playerId,
+      role: staffSubmissionsTable.role,
+      category: staffSubmissionsTable.category,
+      content: staffSubmissionsTable.content,
+      metadata: staffSubmissionsTable.metadata,
+      createdAt: staffSubmissionsTable.createdAt,
+      updatedAt: staffSubmissionsTable.updatedAt,
+      staffName: academyStaffTable.fullName,
+    })
+    .from(staffSubmissionsTable)
+    .leftJoin(academyStaffTable, eq(staffSubmissionsTable.staffId, academyStaffTable.id))
+    .where(eq(staffSubmissionsTable.playerId, id))
+    .orderBy(staffSubmissionsTable.createdAt);
+
+  type ResponseItem = { questionNumber: number; questionText: string; answerText: string };
+  const flatSubmissions = submissions.map(s => {
+    const meta = (s.metadata ?? {}) as Record<string, unknown>;
+    const responses: ResponseItem[] = Array.isArray(meta.responses)
+      ? (meta.responses as ResponseItem[])
+      : [];
+    return {
+      id: s.id,
+      staffId: s.staffId,
+      staffName: s.staffName ?? "Unknown",
+      role: s.role,
+      responses,
+      createdAt: s.createdAt.toISOString(),
+      updatedAt: s.updatedAt?.toISOString(),
+    };
+  });
+
+  const rolesWithSubmissions = new Set(flatSubmissions.map(s => s.role));
+  const completionStatus = {
+    journey: journeyResponses.length > 0,
+    parent: parentResponses.length > 0,
+    footballCoaching: rolesWithSubmissions.has("football_coaching"),
+    psychology: rolesWithSubmissions.has("psychology"),
+    education: rolesWithSubmissions.has("education"),
+    playerCare: rolesWithSubmissions.has("player_care"),
+  };
+
+  res.json({
+    player: {
+      id: player.id,
+      playerName: player.playerName,
+      age: player.age,
+      shirtNumber: player.shirtNumber,
+      academyKey: player.academyKey,
+      academyName: player.academyName,
+      position: player.position,
+      ageGroup: player.ageGroup,
+      accessCode: player.accessCode,
+      parentCode: player.parentCode,
+      status: player.status,
+      createdAt: player.createdAt.toISOString(),
+    },
+    journeyResponses: journeyResponses.map((r) => ({
+      stage: r.stage,
+      questionNumber: r.questionNumber,
+      questionText: r.questionText,
+      answerText: r.answerText,
+      audioUrl: r.audioUrl,
+      mediaUrls: (r.mediaUrls as string[]) ?? [],
+    })),
+    parentSubmission: parentResponses.length > 0
+      ? {
+          submitted: true,
+          responses: parentResponses.map((r) => ({
+            questionNumber: r.questionNumber,
+            questionText: r.questionText,
+            answerText: r.answerText,
+          })),
+        }
+      : null,
+    staffSubmissions: flatSubmissions,
+    completionStatus,
+  });
+});
+
+router.get("/staff/stories", staffAuth, async (req, res) => {
+  const staffUser = req.staffUser!;
+
+  const academyResult = await db.execute(
+    sql`SELECT id, key, name FROM academies WHERE id = ${staffUser.academyId} LIMIT 1`
+  );
+  if (!academyResult.rows || academyResult.rows.length === 0) {
+    res.status(400).json({ error: "Staff academy not found" });
+    return;
+  }
+  const academyRow = academyResult.rows[0] as any;
+
+  const players = await db
+    .select()
+    .from(playersTable)
+    .where(eq(playersTable.academyKey, academyRow.key as string))
+    .orderBy(playersTable.playerName);
+
+  const projects = await db
+    .select()
+    .from(storyProjectsTable);
+
+  const projectMap = new Map(projects.map((p) => [p.playerId, p]));
+
+  const result = players.map((pl) => {
+    const proj = projectMap.get(pl.id);
+    return {
+      id: pl.id,
+      playerName: pl.playerName,
+      age: pl.age,
+      position: pl.position,
+      ageGroup: pl.ageGroup,
+      onboardingStatus: pl.status,
+      storyStatus: proj?.status ?? null,
+      blueprintApproved: proj?.blueprintApproved ?? false,
+      lastUpdated: proj?.updatedAt ?? null,
+      hasProject: !!proj,
+    };
+  });
+
+  res.json(result);
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/staffSubmissions.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import { staffSubmissionsTable, playersTable, academiesTable } from "@workspace/db/schema";
+import { eq, and } from "drizzle-orm";
+import { staffAuth } from "../middlewares/staffAuth.js";
+import { logResponses, updateWorkflowStatus } from "../lib/googleSheets.js";
+
+const router: IRouter = Router();
+
+const VALID_ROLES = ["football_coaching", "psychology", "education", "player_care"];
+
+async function getAcademyKey(academyId: number): Promise<string | null> {
+  const [academy] = await db
+    .select({ key: academiesTable.key })
+    .from(academiesTable)
+    .where(eq(academiesTable.id, academyId))
+    .limit(1);
+  return academy?.key ?? null;
+}
+
+async function playerBelongsToAcademy(playerId: string, academyKey: string): Promise<boolean> {
+  const [player] = await db
+    .select({ id: playersTable.id })
+    .from(playersTable)
+    .where(and(eq(playersTable.id, playerId), eq(playersTable.academyKey, academyKey)))
+    .limit(1);
+  return !!player;
+}
+
+router.post("/staff/submissions", staffAuth, async (req, res) => {
+  const staffUser = req.staffUser!;
+  const { playerId, role: bodyRole, responses } = req.body;
+
+  if (!playerId) {
+    res.status(400).json({ error: "playerId is required" });
+    return;
+  }
+  if (!Array.isArray(responses) || responses.length === 0) {
+    res.status(400).json({ error: "responses array is required" });
+    return;
+  }
+
+  const role = bodyRole ?? staffUser.questionRole;
+  if (!role || !VALID_ROLES.includes(role)) {
+    res.status(400).json({ error: `Invalid or missing role. Must be one of: ${VALID_ROLES.join(", ")}` });
+    return;
+  }
+
+  // Non-admin staff can only submit for their assigned pillar
+  if (staffUser.systemRole !== "academy_admin") {
+    if (staffUser.questionRole !== role) {
+      res.status(403).json({ error: "Insufficient permissions. You can only submit observations for your assigned pillar" });
+      return;
+    }
+  }
+
+  const academyKey = await getAcademyKey(staffUser.academyId);
+  if (!academyKey || !(await playerBelongsToAcademy(playerId, academyKey))) {
+    res.status(403).json({ error: "Access denied. Player does not belong to your academy" });
+    return;
+  }
+
+  const content = (responses as { questionNumber: number; questionText: string; answerText: string }[])
+    .map(r => `Q${r.questionNumber}: ${r.answerText}`)
+    .join("\n");
+
+  const [submission] = await db
+    .insert(staffSubmissionsTable)
+    .values({ staffId: staffUser.id, playerId, role, content, metadata: { responses } })
+    .returning();
+
+  res.status(201).json({ id: submission.id });
+
+  // Sync to Google Sheets (fire-and-forget)
+  const [playerForSheets] = await db.select().from(playersTable).where(eq(playersTable.id, playerId)).limit(1);
+  if (playerForSheets) {
+    const typedResponses = responses as { questionNumber: number; questionText: string; answerText: string }[];
+    logResponses(
+      typedResponses.map(r => ({
+        playerId: playerForSheets.accessCode,
+        playerName: playerForSheets.playerName,
+        role,
+        contributorName: staffUser.fullName,
+        questionId: `${role}-Q${r.questionNumber}`,
+        stage: role,
+        questionText: r.questionText,
+        responseType: "long-text",
+        responseValue: r.answerText,
+        source: "staff-portal",
+      }))
+    ).catch(e => console.error("[sheets] logResponses(staff) failed:", e));
+
+    updateWorkflowStatus({
+      accessCode: playerForSheets.accessCode,
+      playerName: playerForSheets.playerName,
+      status: playerForSheets.status,
+      staffInputsStatus: "partial",
+    }).catch(e => console.error("[sheets] updateWorkflowStatus(staff) failed:", e));
+  }
+});
+
+router.put("/staff/submissions/:id", staffAuth, async (req, res) => {
+  const submissionId = parseInt(req.params.id as string, 10);
+  const staffUser = req.staffUser!;
+
+  if (isNaN(submissionId)) {
+    res.status(400).json({ error: "Invalid submission ID" });
+    return;
+  }
+
+  const [existing] = await db
+    .select()
+    .from(staffSubmissionsTable)
+    .where(eq(staffSubmissionsTable.id, submissionId))
+    .limit(1);
+
+  if (!existing) {
+    res.status(404).json({ error: "Submission not found" });
+    return;
+  }
+
+  const academyKey = await getAcademyKey(staffUser.academyId);
+  if (!academyKey || !(await playerBelongsToAcademy(existing.playerId, academyKey))) {
+    res.status(403).json({ error: "Submission does not belong to your academy" });
+    return;
+  }
+
+  if (existing.staffId !== staffUser.id && staffUser.systemRole !== "academy_admin") {
+    res.status(403).json({ error: "Insufficient permissions. You can only edit your own submissions" });
+    return;
+  }
+
+  const { responses } = req.body;
+  if (!Array.isArray(responses) || responses.length === 0) {
+    res.status(400).json({ error: "responses array is required" });
+    return;
+  }
+
+  const content = (responses as { questionNumber: number; questionText: string; answerText: string }[])
+    .map(r => `Q${r.questionNumber}: ${r.answerText}`)
+    .join("\n");
+
+  const [updated] = await db
+    .update(staffSubmissionsTable)
+    .set({ content, metadata: { responses }, updatedAt: new Date() })
+    .where(eq(staffSubmissionsTable.id, submissionId))
+    .returning();
+
+  res.json({ id: updated.id });
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/staffTeam.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import { academyStaffTable, academiesTable } from "@workspace/db/schema";
+import { eq, and, sql } from "drizzle-orm";
+import { staffAuth, requireRole } from "../middlewares/staffAuth.js";
+import { hashPassword } from "../lib/auth.js";
+
+const router: IRouter = Router();
+
+router.get("/staff/team", staffAuth, requireRole("academy_admin"), async (req, res) => {
+  const staffUser = req.staffUser!;
+
+  const rows = await db
+    .select({
+      id: academyStaffTable.id,
+      academyId: academyStaffTable.academyId,
+      email: academyStaffTable.email,
+      fullName: academyStaffTable.fullName,
+      systemRole: academyStaffTable.systemRole,
+      jobTitle: academyStaffTable.jobTitle,
+      teamName: academyStaffTable.teamName,
+      ageGroup: academyStaffTable.ageGroup,
+      isActive: academyStaffTable.isActive,
+      createdAt: academyStaffTable.createdAt,
+    })
+    .from(academyStaffTable)
+    .where(eq(academyStaffTable.academyId, staffUser.academyId))
+    .orderBy(academyStaffTable.fullName);
+
+  res.json(rows.map(r => ({
+    ...r,
+    name: r.fullName,
+    role: r.systemRole,
+  })));
+});
+
+router.post("/staff/team", staffAuth, requireRole("academy_admin"), async (req, res) => {
+  const staffUser = req.staffUser!;
+  const { email, password, fullName: fullNameField, name, systemRole, role, questionRole, jobTitle, teamName, ageGroup } = req.body;
+  const fullName = fullNameField ?? name;
+
+  if (!email || !password || !fullName) {
+    res.status(400).json({ error: "email, password, and name are required" });
+    return;
+  }
+
+  const createAcademyResult = await db.execute(
+    sql`SELECT max_staff_accounts FROM academies WHERE id = ${staffUser.academyId} LIMIT 1`
+  );
+  const maxStaff = (createAcademyResult.rows?.[0] as any)?.max_staff_accounts ?? 8;
+
+  const [countResult] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(academyStaffTable)
+    .where(
+      and(
+        eq(academyStaffTable.academyId, staffUser.academyId),
+        eq(academyStaffTable.isActive, true)
+      )
+    );
+
+  if (countResult.count >= maxStaff) {
+    res.status(400).json({ error: `Maximum of ${maxStaff} active staff accounts reached` });
+    return;
+  }
+
+  const existingEmail = await db
+    .select({ id: academyStaffTable.id })
+    .from(academyStaffTable)
+    .where(eq(academyStaffTable.email, email.toLowerCase().trim()))
+    .limit(1);
+
+  if (existingEmail.length > 0) {
+    res.status(400).json({ error: "Email already in use" });
+    return;
+  }
+
+  const authUserId = await hashPassword(password);
+
+  const [newStaff] = await db
+    .insert(academyStaffTable)
+    .values({
+      academyId: staffUser.academyId,
+      email: email.toLowerCase().trim(),
+      authUserId,
+      fullName,
+      systemRole: systemRole ?? "staff",
+      questionRole: questionRole ?? null,
+      jobTitle: jobTitle ?? null,
+      teamName: teamName ?? null,
+      ageGroup: ageGroup ?? null,
+    })
+    .returning({
+      id: academyStaffTable.id,
+      academyId: academyStaffTable.academyId,
+      email: academyStaffTable.email,
+      fullName: academyStaffTable.fullName,
+      systemRole: academyStaffTable.systemRole,
+      jobTitle: academyStaffTable.jobTitle,
+      teamName: academyStaffTable.teamName,
+      ageGroup: academyStaffTable.ageGroup,
+      isActive: academyStaffTable.isActive,
+      createdAt: academyStaffTable.createdAt,
+    });
+
+  res.status(201).json(newStaff);
+});
+
+router.put("/staff/team/:id", staffAuth, requireRole("academy_admin"), async (req, res) => {
+  const staffId = parseInt(req.params.id as string, 10);
+  const staffUser = req.staffUser!;
+
+  if (isNaN(staffId)) {
+    res.status(400).json({ error: "Invalid staff ID" });
+    return;
+  }
+
+  const [existing] = await db
+    .select()
+    .from(academyStaffTable)
+    .where(
+      and(
+        eq(academyStaffTable.id, staffId),
+        eq(academyStaffTable.academyId, staffUser.academyId)
+      )
+    )
+    .limit(1);
+
+  if (!existing) {
+    res.status(404).json({ error: "Staff member not found" });
+    return;
+  }
+
+  const { systemRole, role, questionRole, jobTitle, teamName, ageGroup, isActive, fullName, name } = req.body;
+  const updateData: Record<string, unknown> = {};
+  if (systemRole !== undefined) updateData.systemRole = systemRole;
+  if (role !== undefined) updateData.systemRole = role;
+  if (questionRole !== undefined) updateData.questionRole = questionRole;
+  if (jobTitle !== undefined) updateData.jobTitle = jobTitle;
+  if (teamName !== undefined) updateData.teamName = teamName;
+  if (ageGroup !== undefined) updateData.ageGroup = ageGroup;
+  if (isActive !== undefined) updateData.isActive = isActive;
+  if (fullName !== undefined) updateData.fullName = fullName;
+  if (name !== undefined) updateData.fullName = name;
+
+  if (Object.keys(updateData).length === 0) {
+    res.status(400).json({ error: "No fields to update" });
+    return;
+  }
+
+  if (isActive === true && !existing.isActive) {
+    const updateAcademyResult = await db.execute(
+      sql`SELECT max_staff_accounts FROM academies WHERE id = ${staffUser.academyId} LIMIT 1`
+    );
+    const maxStaff = (updateAcademyResult.rows?.[0] as any)?.max_staff_accounts ?? 8;
+
+    const [countResult] = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(academyStaffTable)
+      .where(
+        and(
+          eq(academyStaffTable.academyId, staffUser.academyId),
+          eq(academyStaffTable.isActive, true)
+        )
+      );
+
+    if (countResult.count >= maxStaff) {
+      res.status(400).json({ error: `Maximum of ${maxStaff} active staff accounts reached` });
+      return;
+    }
+  }
+
+  const [updated] = await db
+    .update(academyStaffTable)
+    .set(updateData)
+    .where(eq(academyStaffTable.id, staffId))
+    .returning({
+      id: academyStaffTable.id,
+      academyId: academyStaffTable.academyId,
+      email: academyStaffTable.email,
+      fullName: academyStaffTable.fullName,
+      systemRole: academyStaffTable.systemRole,
+      jobTitle: academyStaffTable.jobTitle,
+      teamName: academyStaffTable.teamName,
+      ageGroup: academyStaffTable.ageGroup,
+      isActive: academyStaffTable.isActive,
+      createdAt: academyStaffTable.createdAt,
+    });
+
+  res.json(updated);
+});
+
+router.patch("/staff/team/:id/toggle", staffAuth, requireRole("academy_admin"), async (req, res) => {
+  const staffId = parseInt(req.params.id as string, 10);
+  const staffUser = req.staffUser!;
+
+  if (isNaN(staffId)) {
+    res.status(400).json({ error: "Invalid staff ID" });
+    return;
+  }
+
+  if (staffId === staffUser.id) {
+    res.status(400).json({ error: "Cannot deactivate your own account" });
+    return;
+  }
+
+  const [existing] = await db
+    .select()
+    .from(academyStaffTable)
+    .where(and(eq(academyStaffTable.id, staffId), eq(academyStaffTable.academyId, staffUser.academyId)))
+    .limit(1);
+
+  if (!existing) {
+    res.status(404).json({ error: "Staff member not found" });
+    return;
+  }
+
+  const { isActive } = req.body;
+  const newActive = typeof isActive === "boolean" ? isActive : !existing.isActive;
+
+  if (newActive === true && !existing.isActive) {
+    const toggleAcademyResult = await db.execute(
+      sql`SELECT max_staff_accounts FROM academies WHERE id = ${staffUser.academyId} LIMIT 1`
+    );
+    const maxStaff = (toggleAcademyResult.rows?.[0] as any)?.max_staff_accounts ?? 8;
+    const [countResult] = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(academyStaffTable)
+      .where(and(eq(academyStaffTable.academyId, staffUser.academyId), eq(academyStaffTable.isActive, true)));
+    if (countResult.count >= maxStaff) {
+      res.status(400).json({ error: `Maximum of ${maxStaff} active staff accounts reached` });
+      return;
+    }
+  }
+
+  await db.update(academyStaffTable).set({ isActive: newActive }).where(eq(academyStaffTable.id, staffId));
+  res.json({ success: true, isActive: newActive });
+});
+
+router.delete("/staff/team/:id", staffAuth, requireRole("academy_admin"), async (req, res) => {
+  const staffId = parseInt(req.params.id as string, 10);
+  const staffUser = req.staffUser!;
+
+  if (isNaN(staffId)) {
+    res.status(400).json({ error: "Invalid staff ID" });
+    return;
+  }
+
+  if (staffId === staffUser.id) {
+    res.status(400).json({ error: "Cannot delete your own account" });
+    return;
+  }
+
+  const [existing] = await db
+    .select()
+    .from(academyStaffTable)
+    .where(
+      and(
+        eq(academyStaffTable.id, staffId),
+        eq(academyStaffTable.academyId, staffUser.academyId)
+      )
+    )
+    .limit(1);
+
+  if (!existing) {
+    res.status(404).json({ error: "Staff member not found" });
+    return;
+  }
+
+  await db.delete(academyStaffTable).where(eq(academyStaffTable.id, staffId));
+
+  res.json({ success: true });
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/stakeholders.ts
+================================================================================
+
+import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
+import {
+  playersTable,
+  stakeholderLinksTable,
+  stakeholderResponsesTable,
+  academiesTable,
+} from "@workspace/db/schema";
+import {
+  CreateStakeholderLinksBody,
+  SubmitStakeholderResponsesBody,
+} from "@workspace/api-zod";
+import { generateCode } from "../lib/codeGenerator.js";
+import { eq } from "drizzle-orm";
+import { logResponses, syncContributor, updateWorkflowStatus } from "../lib/googleSheets.js";
+
+const router: IRouter = Router();
+
+const ACADEMY_STAFF_TYPES = [
+  { type: "football_coach", label: "Football Coach" },
+  { type: "education", label: "Education Staff" },
+  { type: "psychology", label: "Psychology Staff" },
+  { type: "player_care", label: "Player Care" },
+];
+
+// GET stakeholder links for a player
+router.get("/players/:playerId/stakeholder-links", async (req, res) => {
+  const { playerId } = req.params;
+  const links = await db
+    .select()
+    .from(stakeholderLinksTable)
+    .where(eq(stakeholderLinksTable.playerId, playerId))
+    .orderBy(stakeholderLinksTable.id);
+
+  res.json(
+    links.map((l) => ({
+      id: l.id,
+      playerId: l.playerId,
+      type: l.type,
+      label: l.label,
+      code: l.code,
+      submitted: l.submitted,
+      createdAt: l.createdAt.toISOString(),
+    }))
+  );
+});
+
+// POST create stakeholder links
+router.post("/players/:playerId/stakeholder-links", async (req, res) => {
+  const { playerId } = req.params;
+
+  const parsed = CreateStakeholderLinksBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+
+  const [player] = await db
+    .select()
+    .from(playersTable)
+    .where(eq(playersTable.id, playerId))
+    .limit(1);
+
+  if (!player) {
+    res.status(404).json({ error: "Player not found" });
+    return;
+  }
+
+  const { parentCount, friendCount } = parsed.data;
+
+  const linksToCreate: { playerId: string; type: string; label: string; code: string; submitted: boolean }[] = [];
+
+  // Parent links
+  for (let i = 1; i <= parentCount; i++) {
+    linksToCreate.push({
+      playerId,
+      type: "parent",
+      label: parentCount === 1 ? "Parent / Guardian" : `Parent ${i}`,
+      code: generateCode("PAR"),
+      submitted: false,
+    });
+  }
+
+  // Friend links
+  for (let i = 1; i <= friendCount; i++) {
+    linksToCreate.push({
+      playerId,
+      type: "friend",
+      label: `Friend ${i}`,
+      code: generateCode("FRD"),
+      submitted: false,
+    });
+  }
+
+  // Academy staff (always 4 types)
+  for (const staff of ACADEMY_STAFF_TYPES) {
+    linksToCreate.push({
+      playerId,
+      type: staff.type,
+      label: staff.label,
+      code: generateCode(staff.type.slice(0, 3).toUpperCase()),
+      submitted: false,
+    });
+  }
+
+  // Remove existing links before creating new ones (allow regeneration)
+  await db
+    .delete(stakeholderLinksTable)
+    .where(eq(stakeholderLinksTable.playerId, playerId));
+
+  const created = await db.insert(stakeholderLinksTable).values(linksToCreate).returning();
+
+  // Mark player as links_generated
+  await db
+    .update(playersTable)
+    .set({ status: "links_generated" })
+    .where(eq(playersTable.id, playerId));
+
+  res.status(201).json(
+    created.map((l) => ({
+      id: l.id,
+      playerId: l.playerId,
+      type: l.type,
+      label: l.label,
+      code: l.code,
+      submitted: l.submitted,
+      createdAt: l.createdAt.toISOString(),
+    }))
+  );
+});
+
+// GET stakeholder info by code
+router.get("/stakeholder/:code", async (req, res) => {
+  const { code } = req.params;
+
+  const [link] = await db
+    .select()
+    .from(stakeholderLinksTable)
+    .where(eq(stakeholderLinksTable.code, code))
+    .limit(1);
+
+  if (!link) {
+    res.status(404).json({ error: "Invalid code" });
+    return;
+  }
+
+  const [row] = await db
+    .select({
+      id: playersTable.id,
+      playerName: playersTable.playerName,
+      academyName: playersTable.academyName,
+      position: playersTable.position,
+      crestUrl: academiesTable.crestUrl,
+    })
+    .from(playersTable)
+    .leftJoin(academiesTable, eq(academiesTable.key, playersTable.academyKey))
+    .where(eq(playersTable.id, link.playerId))
+    .limit(1);
+
+  if (!row) {
+    res.status(404).json({ error: "Player not found" });
+    return;
+  }
+
+  res.json({
+    linkId: link.id,
+    playerId: row.id,
+    playerName: row.playerName,
+    academyName: row.academyName,
+    position: row.position,
+    crestUrl: row.crestUrl ?? null,
+    type: link.type,
+    label: link.label,
+    submitted: link.submitted,
+  });
+});
+
+// POST submit stakeholder responses
+router.post("/stakeholder/:code", async (req, res) => {
+  const { code } = req.params;
+
+  const parsed = SubmitStakeholderResponsesBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+
+  const [link] = await db
+    .select()
+    .from(stakeholderLinksTable)
+    .where(eq(stakeholderLinksTable.code, code))
+    .limit(1);
+
+  if (!link) {
+    res.status(404).json({ error: "Invalid code" });
+    return;
+  }
+
+  // Delete existing responses before inserting (allow resubmission)
+  await db
+    .delete(stakeholderResponsesTable)
+    .where(eq(stakeholderResponsesTable.stakeholderLinkId, link.id));
+
+  const rows = parsed.data.responses.map((r) => ({
+    stakeholderLinkId: link.id,
+    playerId: link.playerId,
+    questionNumber: r.questionNumber,
+    questionText: r.questionText,
+    answerText: r.answerText ?? "",
+    audioUrl: r.audioUrl ?? null,
+    mediaUrls: r.mediaUrls ?? [],
+  }));
+
+  if (rows.length > 0) {
+    await db.insert(stakeholderResponsesTable).values(rows);
+  }
+
+  await db
+    .update(stakeholderLinksTable)
+    .set({ submitted: true })
+    .where(eq(stakeholderLinksTable.id, link.id));
+
+  res.status(201).json({ success: true, message: "Responses saved successfully" });
+
+  // Sync to Google Sheets (fire-and-forget)
+  const [playerForSheets] = await db.select().from(playersTable).where(eq(playersTable.id, link.playerId)).limit(1);
+  if (playerForSheets) {
+    logResponses(
+      rows.map(r => ({
+        playerId: playerForSheets.accessCode,
+        playerName: playerForSheets.playerName,
+        role: link.type,
+        contributorName: link.label,
+        questionId: `${link.type}-Q${r.questionNumber}`,
+        stage: link.type,
+        questionText: r.questionText,
+        responseType: "long-text",
+        responseValue: r.answerText,
+        source: "stakeholder",
+      }))
+    ).catch(e => console.error("[sheets] logResponses(stakeholder) failed:", e));
+
+    syncContributor({
+      id: String(link.id),
+      playerId: playerForSheets.accessCode,
+      playerName: playerForSheets.playerName,
+      role: link.type,
+      type: link.type,
+      code: link.code,
+      submitted: true,
+    }).catch(e => console.error("[sheets] syncContributor failed:", e));
+
+    updateWorkflowStatus({
+      accessCode: playerForSheets.accessCode,
+      playerName: playerForSheets.playerName,
+      status: playerForSheets.status,
+      stakeholderStatus: "partial",
+    }).catch(e => console.error("[sheets] updateWorkflowStatus(stakeholder) failed:", e));
+  }
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/storage.ts
+================================================================================
+
+import { Router, type IRouter, type Request, type Response } from "express";
+import { Readable } from "stream";
+import {
+  RequestUploadUrlBody,
+  RequestUploadUrlResponse,
+} from "@workspace/api-zod";
+import { ObjectStorageService, ObjectNotFoundError } from "../lib/objectStorage";
+import { ObjectPermission } from "../lib/objectAcl";
+
+const router: IRouter = Router();
+const objectStorageService = new ObjectStorageService();
+
+/**
+ * POST /storage/uploads/request-url
+ *
+ * Request a presigned URL for file upload.
+ * The client sends JSON metadata (name, size, contentType) — NOT the file.
+ * Then uploads the file directly to the returned presigned URL.
+ */
+router.post("/storage/uploads/request-url", async (req: Request, res: Response) => {
+  const parsed = RequestUploadUrlBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: "Missing or invalid required fields" });
+    return;
+  }
+
+  try {
+    const { name, size, contentType } = parsed.data;
+
+    const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+    const objectPath = objectStorageService.normalizeObjectEntityPath(uploadURL);
+
+    res.json(
+      RequestUploadUrlResponse.parse({
+        uploadURL,
+        objectPath,
+        metadata: { name, size, contentType },
+      }),
+    );
+  } catch (error) {
+    console.error("Error generating upload URL:", error);
+    res.status(500).json({ error: "Failed to generate upload URL" });
+  }
+});
+
+/**
+ * GET /storage/public-objects/*
+ *
+ * Serve public assets from PUBLIC_OBJECT_SEARCH_PATHS.
+ * These are unconditionally public — no authentication or ACL checks.
+ * IMPORTANT: Always provide this endpoint when object storage is set up.
+ */
+router.get("/storage/public-objects/*filePath", async (req: Request, res: Response) => {
+  try {
+    const raw = req.params.filePath;
+    const filePath = Array.isArray(raw) ? raw.join("/") : raw;
+    const file = await objectStorageService.searchPublicObject(filePath);
+    if (!file) {
+      res.status(404).json({ error: "File not found" });
+      return;
+    }
+
+    const response = await objectStorageService.downloadObject(file);
+
+    res.status(response.status);
+    response.headers.forEach((value, key) => res.setHeader(key, value));
+
+    if (response.body) {
+      const nodeStream = Readable.fromWeb(response.body as ReadableStream<Uint8Array>);
+      nodeStream.pipe(res);
+    } else {
+      res.end();
+    }
+  } catch (error) {
+    console.error("Error serving public object:", error);
+    res.status(500).json({ error: "Failed to serve public object" });
+  }
+});
+
+/**
+ * GET /storage/objects/*
+ *
+ * Serve object entities from PRIVATE_OBJECT_DIR.
+ * These are served from a separate path from /public-objects and can optionally
+ * be protected with authentication or ACL checks based on the use case.
+ */
+router.get("/storage/objects/*path", async (req: Request, res: Response) => {
+  try {
+    const raw = req.params.path;
+    const wildcardPath = Array.isArray(raw) ? raw.join("/") : raw;
+    const objectPath = `/objects/${wildcardPath}`;
+    const objectFile = await objectStorageService.getObjectEntityFile(objectPath);
+
+    // --- Protected route example (uncomment when using replit-auth) ---
+    // if (!req.isAuthenticated()) {
+    //   res.status(401).json({ error: "Unauthorized" });
+    //   return;
+    // }
+    // const canAccess = await objectStorageService.canAccessObjectEntity({
+    //   userId: req.user.id,
+    //   objectFile,
+    //   requestedPermission: ObjectPermission.READ,
+    // });
+    // if (!canAccess) {
+    //   res.status(403).json({ error: "Forbidden" });
+    //   return;
+    // }
+
+    const response = await objectStorageService.downloadObject(objectFile);
+
+    res.status(response.status);
+    response.headers.forEach((value, key) => res.setHeader(key, value));
+
+    if (response.body) {
+      const nodeStream = Readable.fromWeb(response.body as ReadableStream<Uint8Array>);
+      nodeStream.pipe(res);
+    } else {
+      res.end();
+    }
+  } catch (error) {
+    console.error("Error serving object:", error);
+    if (error instanceof ObjectNotFoundError) {
+      res.status(404).json({ error: "Object not found" });
+      return;
+    }
+    res.status(500).json({ error: "Failed to serve object" });
+  }
+});
+
+export default router;
+
+
+================================================================================
+// FILE: routes/tts.ts
+================================================================================
+
+import { Router } from "express";
+import { textToSpeech } from "@workspace/integrations-openai-ai-server/audio";
+import { existsSync } from "fs";
+import { writeFile, readFile, mkdir } from "fs/promises";
+import { join } from "path";
+
+const router = Router();
+
+// Use process.cwd() instead of import.meta.url — the latter is undefined
+// when bundled to CJS format (esbuild format:"cjs") and crashes at startup.
+const CACHE_DIR = join(process.cwd(), ".tts-cache");
+
+const ASSISTANT_VOICE_MAP: Record<string, "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer"> = {
+  cheeky: "onyx",
+  chilled: "nova",
+  driven: "echo",
+};
+
+function buildScript(assistantId: string, playerName: string): string | null {
+  const n = playerName.trim() || "there";
+  switch (assistantId) {
+    case "cheeky":
+      return (
+        `Hiya ${n} — we're about to get some information from you so we can write a book about you. ` +
+        `This is your story that we're making, so we need your help to bring it to life properly. ` +
+        `Your coaches and your academy are going to help too, and even your parents and friends might have a part to play as well. ` +
+        `If you've got 20 to 30 minutes now, that would be great, but don't worry if not — you can always come back and finish it later. ` +
+        `I'd also check with your coaches to see when they need this done by. ` +
+        `If you ever get stuck on any of the questions, just click me and I'll help you through it.`
+      );
+    case "chilled":
+      return (
+        `Hey ${n}. Welcome. Take a breath — there's no rush here. ` +
+        `This is your space to be honest, to go deep, and to tell your story properly. ` +
+        `Your coaches, your academy, even your parents and friends might all have a part to play. ` +
+        `If you've got 20 to 30 minutes now, great — but you can always come back and finish it later. ` +
+        `If you ever get stuck, just click me and I'll help you through it.`
+      );
+    case "driven":
+      return (
+        `Right, ${n} — let's do this. We're writing a book about you, and we need your help to make it real. ` +
+        `Your coaches and your academy are involved. Your parents and friends too. ` +
+        `Set aside 20 to 30 minutes and get it done. If not now, come back later — but check with your coaches on the deadline. ` +
+        `If you get stuck, click me. Let's get to work.`
+      );
+    default:
+      return null;
+  }
+}
+
+function slugifyName(name: string): string {
+  return name.trim().toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").slice(0, 40);
+}
+
+router.get("/tts/intro/:assistantId", async (req, res) => {
+  const { assistantId } = req.params;
+  const playerName = (req.query.name as string | undefined) || "there";
+
+  const script = buildScript(assistantId, playerName);
+  if (!script) {
+    return res.status(404).json({ error: "Unknown assistant" });
+  }
+
+  try {
+    await mkdir(CACHE_DIR, { recursive: true });
+    const slug = slugifyName(playerName);
+    const cachePath = join(CACHE_DIR, `intro-${assistantId}-${slug}.wav`);
+
+    if (existsSync(cachePath)) {
+      const cached = await readFile(cachePath);
+      res.setHeader("Content-Type", "audio/wav");
+      res.setHeader("Cache-Control", "public, max-age=86400");
+      return res.send(cached);
+    }
+
+    const voice = ASSISTANT_VOICE_MAP[assistantId] ?? "onyx";
+    const audioBuffer = await textToSpeech(script, voice, "wav");
+    await writeFile(cachePath, audioBuffer);
+
+    res.setHeader("Content-Type", "audio/wav");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    return res.send(audioBuffer);
+  } catch (err) {
+    console.error("[TTS] generation error:", err);
+    return res.status(500).json({ error: "Audio generation failed" });
+  }
+});
+
+router.delete("/tts/intro/:assistantId", async (req, res) => {
+  const { unlink } = await import("fs/promises");
+  const files = (await import("fs")).readdirSync(CACHE_DIR).filter(f => f.startsWith(`intro-${req.params.assistantId}`));
+  await Promise.all(files.map(f => unlink(join(CACHE_DIR, f)).catch(() => {})));
+  return res.json({ ok: true, cleared: files.length });
+});
+
+export default router;
+
+
+================================================================================
+// FILE: middlewares/internalAuth.ts
+================================================================================
+
+import { Request, Response, NextFunction } from "express";
+import { db } from "@workspace/db";
+import { meTimeStaffTable } from "@workspace/db/schema";
+import { eq } from "drizzle-orm";
+import { verifyInternalToken, type InternalTokenPayload } from "../lib/auth.js";
+
+declare global {
+  namespace Express {
+    interface Request {
+      internalUser?: {
+        id: number;
+        email: string;
+        fullName: string;
+        role: string;
+        isActive: boolean;
+      };
+    }
+  }
+}
+
+export async function internalAuth(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).json({ error: "Missing or invalid authorization header" });
+    return;
+  }
+
+  const token = authHeader.slice(7);
+
+  let payload: InternalTokenPayload;
+  try {
+    payload = verifyInternalToken(token);
+  } catch {
+    res.status(401).json({ error: "Invalid or expired token" });
+    return;
+  }
+
+  const [staff] = await db
+    .select()
+    .from(meTimeStaffTable)
+    .where(eq(meTimeStaffTable.id, payload.internalStaffId))
+    .limit(1);
+
+  if (!staff || !staff.isActive) {
+    res.status(401).json({ error: "Account not found or inactive" });
+    return;
+  }
+
+  req.internalUser = {
+    id: staff.id,
+    email: staff.email,
+    fullName: staff.fullName,
+    role: staff.role,
+    isActive: staff.isActive,
+  };
+
+  next();
+}
+
+
+================================================================================
+// FILE: middlewares/staffAuth.ts
+================================================================================
+
+import { Request, Response, NextFunction } from "express";
+import { db } from "@workspace/db";
+import { academyStaffTable } from "@workspace/db/schema";
+import { eq } from "drizzle-orm";
+import { verifyToken, type TokenPayload } from "../lib/auth.js";
+
+declare global {
+  namespace Express {
+    interface Request {
+      staffUser?: {
+        id: number;
+        academyId: number;
+        email: string;
+        fullName: string;
+        systemRole: string;
+        questionRole: string | null;
+        jobTitle: string | null;
+        teamName: string | null;
+        ageGroup: string | null;
+        isActive: boolean;
+      };
+    }
+  }
+}
+
+export async function staffAuth(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).json({ error: "Missing or invalid authorization header" });
+    return;
+  }
+
+  const token = authHeader.slice(7);
+
+  let payload: TokenPayload;
+  try {
+    payload = verifyToken(token);
+  } catch {
+    res.status(401).json({ error: "Invalid or expired token" });
+    return;
+  }
+
+  const [staff] = await db
+    .select()
+    .from(academyStaffTable)
+    .where(eq(academyStaffTable.id, payload.staffId))
+    .limit(1);
+
+  if (!staff || !staff.isActive) {
+    res.status(401).json({ error: "Staff account not found or inactive" });
+    return;
+  }
+
+  req.staffUser = {
+    id: staff.id,
+    academyId: staff.academyId,
+    email: staff.email,
+    fullName: staff.fullName,
+    systemRole: staff.systemRole,
+    questionRole: staff.questionRole ?? null,
+    jobTitle: staff.jobTitle,
+    teamName: staff.teamName,
+    ageGroup: staff.ageGroup,
+    isActive: staff.isActive,
+  };
+
+  next();
+}
+
+export function requireRole(...roles: string[]) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.staffUser) {
+      res.status(401).json({ error: "Not authenticated" });
+      return;
+    }
+    if (!roles.includes(req.staffUser.systemRole)) {
+      res.status(403).json({ error: "Insufficient permissions" });
+      return;
+    }
+    next();
+  };
+}
+
