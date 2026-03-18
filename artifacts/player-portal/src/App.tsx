@@ -53,6 +53,7 @@ import RoseStory from "@/pages/public/RoseStory";
 import FootballMatrix from "@/pages/public/FootballMatrix";
 import CharacterCreator from "@/pages/public/CharacterCreator";
 import StoryEngine from "@/pages/public/StoryEngine";
+import Demo from "@/pages/public/Demo";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -86,6 +87,7 @@ function Router() {
       <Route path="/football-matrix" component={FootballMatrix} />
       <Route path="/characters/create" component={CharacterCreator} />
       <Route path="/stories/time-travelling-tractor" component={StoryEngine} />
+      <Route path="/demo" component={Demo} />
 
       {/* ── Academy Player Portal (moved from /) ── */}
       <Route path="/portal" component={PortalHome} />
