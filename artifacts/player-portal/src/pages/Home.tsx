@@ -604,6 +604,21 @@ export default function Home() {
             </button>
 
             <button
+              onClick={() => navigate("/internal/login")}
+              className="flex-1 group flex items-center gap-3 px-5 py-3 rounded-2xl border border-violet-500/20 bg-violet-500/[0.04] hover:bg-violet-500/[0.09] hover:border-violet-500/35 transition-all duration-300"
+            >
+              <div className="w-8 h-8 rounded-lg bg-violet-500/15 flex items-center justify-center group-hover:bg-violet-500/25 transition-colors shrink-0">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-violet-400/80">
+                  <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+              </div>
+              <div className="text-left">
+                <div className="text-violet-300 text-sm font-bold font-display uppercase tracking-wider">Author Login</div>
+                <div className="text-violet-400/40 text-xs">MeTime Stories authors</div>
+              </div>
+            </button>
+
+            <button
               onClick={() => navigate("/admin-login")}
               className="flex-1 group flex items-center gap-3 px-5 py-3 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
             >
