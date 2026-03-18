@@ -12,6 +12,7 @@ import {
   Image,
   Pencil,
   X,
+  Lock,
 } from "lucide-react";
 import { InternalLayout } from "@/layouts/InternalLayout";
 import {
@@ -19,6 +20,8 @@ import {
   addIllustrationAsset,
   updateIllustrationAsset,
   fetchPlayerProfile,
+  fetchProject,
+  getStatusMeta,
   type IllustrationAsset,
   type PlayerProfile,
 } from "@/lib/internalApi";
@@ -157,21 +160,26 @@ export default function IllustrationWorkspace() {
   const [assets, setAssets] = useState<IllustrationAsset[]>([]);
   const [player, setPlayer] = useState<PlayerProfile | null>(null);
   const [media, setMedia] = useState<{ images: string[]; voiceNotes: any[] }>({ images: [], voiceNotes: [] });
+  const [storyStatus, setStoryStatus] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
   const [newAsset, setNewAsset] = useState({ fileName: "", driveLink: "", assetType: "reference_image", sceneNumber: "", illustratorNotes: "" });
   const [adding, setAdding] = useState(false);
+
+  const ILLUSTRATION_STATUSES = ["ready_for_illustration", "illustration_in_progress", "final_ready"];
 
   useEffect(() => {
     if (!playerId) return;
     Promise.all([
       fetchIllustrations(playerId),
       fetchPlayerProfile(playerId),
+      fetchProject(playerId),
     ])
-      .then(([illData, profileData]) => {
+      .then(([illData, profileData, projectData]) => {
         setAssets(illData.assets);
         setPlayer(profileData.player);
         setMedia(profileData.media);
+        setStoryStatus((projectData.project as any).status ?? "");
       })
       .finally(() => setLoading(false));
   }, [playerId]);
@@ -210,6 +218,9 @@ export default function IllustrationWorkspace() {
     </InternalLayout>
   );
 
+  const isIllustrationReady = !storyStatus || ILLUSTRATION_STATUSES.includes(storyStatus);
+  const statusMeta = getStatusMeta(storyStatus);
+
   return (
     <InternalLayout playerId={playerId} playerName={player?.playerName}>
       <div className="space-y-5 max-w-4xl">
@@ -229,13 +240,15 @@ export default function IllustrationWorkspace() {
                 {player?.playerName} · {player?.academyName}
               </p>
             </div>
-            <button
-              onClick={() => setShowAdd((v) => !v)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-violet-300 border border-violet-500/30 hover:bg-violet-500/10 transition-all"
-            >
-              <Plus size={14} />
-              Add Asset
-            </button>
+            {isIllustrationReady && (
+              <button
+                onClick={() => setShowAdd((v) => !v)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-violet-300 border border-violet-500/30 hover:bg-violet-500/10 transition-all"
+              >
+                <Plus size={14} />
+                Add Asset
+              </button>
+            )}
           </div>
         </motion.div>
 
@@ -297,6 +310,33 @@ export default function IllustrationWorkspace() {
               </button>
             </div>
           </motion.div>
+        )}
+
+        {/* ── Story Status Gate ── */}
+        {!isIllustrationReady && (
+          <div
+            className="rounded-2xl border p-5 flex items-start gap-4"
+            style={{ background: "rgba(245,158,11,0.06)", borderColor: "rgba(245,158,11,0.25)" }}
+          >
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(245,158,11,0.15)" }}>
+              <Lock size={18} className="text-amber-400" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-amber-300 font-semibold text-sm mb-1">
+                Illustration workspace not yet unlocked
+              </div>
+              <p className="text-amber-200/60 text-xs leading-relaxed">
+                This story is currently <span className="font-semibold" style={{ color: statusMeta.color }}>{statusMeta.label}</span>. The illustration workspace unlocks once an editor advances the story to <strong className="text-white/50">Ready for Illustration</strong>.
+              </p>
+              <button
+                onClick={() => navigate(`/internal/stories/${playerId}/builder`)}
+                className="flex items-center gap-1.5 text-amber-400 hover:text-amber-300 text-xs mt-3 transition-colors"
+              >
+                <ArrowLeft size={11} />
+                Go to Story Builder
+              </button>
+            </div>
+          </div>
         )}
 
         {/* Player intake images from Drive */}

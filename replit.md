@@ -74,7 +74,7 @@ All wrapped in `PublicLayout` (shared header/nav/footer). No MetyButton on these
 
 ### Frontend Routes — Staff Portal
 - `/staff-login` — Staff email + password login
-- `/staff-dashboard` — Staff welcome card, player counts, recent activity (protected)
+- `/staff-dashboard` — Academy Hub: player counts, story pipeline overview (per-player status, pipeline stage pills, academy preview alerts), recent players (protected)
 - `/staff/players` — Filterable/searchable player list with age group, position, status (protected)
 - `/staff/players/:id` — Full player profile with journey, parent, staff submissions, completion tracker (protected)
 - `/staff/team` — Admin-only team management: list/create staff, toggle active/inactive (protected)
@@ -83,11 +83,11 @@ All wrapped in `PublicLayout` (shared header/nav/footer). No MetyButton on these
 ### Frontend Routes — Story Production Workspace (`/internal/stories/*`)
 All routes JWT-protected via `ProtectedInternalRoute`. Dark editorial UI with violet accent (#a78bfa). Layout: `InternalLayout.tsx`.
 - `/internal/login` — MeTime Stories author/editor login (`metime_staff` table, role-based)
-- `/internal/editor` — Editor Dashboard (editors/admins only): stats, blueprint approval queue, staff management, author assignments
+- `/internal/editor` — Editor Dashboard (editors/admins only): stats, story review queue (approve → ready_for_illustration / reject → revisions_in_progress), blueprint approval queue, staff management, author assignments
 - `/internal/stories` — Cross-academy dashboard: all players, completeness bars, filters by academy/status/author
 - `/internal/stories/:playerId/profile` — 8 collapsible data sections + blueprint approval indicator + Approve/Revoke Blueprint buttons (editors only)
 - `/internal/stories/:playerId/blueprint` — 13-field narrative blueprint with 2.5s auto-save + approval status
-- `/internal/stories/:playerId/builder` — Writing Room: 3-column layout (chapter navigator, book page canvas with bleed/margins, reference panel). Supports A5/Square/A4 formats, 6 page layout modes, auto-save. Locked until blueprint approved by editor.
+- `/internal/stories/:playerId/builder` — Writing Room: 3-column layout (chapter navigator, book page canvas with bleed/margins, reference panel). Supports A5/Square/A4 formats, 6 page layout modes, auto-save. Locked until blueprint approved by editor. Chapter navigator footer shows completion dots + "Submit for Review" button (gated: all 6 chapters ≥100 chars + blueprint approved + status=draft_in_progress).
 - `/internal/stories/:playerId/illustrations` — Drive asset management by type (portrait, kit, scene, etc.) with approval workflow
 - `/internal/stories/:playerId/notes` — Production notes (tabbed) + detail tracker (usage status: unused / partly / clearly)
 
@@ -133,6 +133,7 @@ All routes JWT-protected via `ProtectedInternalRoute`. Dark editorial UI with vi
 - `GET /api/staff/me` — Current staff profile
 - `GET /api/staff/players` — List players for staff's academy (filter by age_group, status, search)
 - `GET /api/staff/players/:id` — Full player detail (journey, parent responses, staff submissions)
+- `GET /api/staff/stories` — Story pipeline for staff's academy: players + story statuses + blueprint flags
 - `POST /api/staff/submissions` — Create staff submission
 - `PUT /api/staff/submissions/:id` — Update staff submission (own only, unless admin)
 - `GET /api/staff/team` — List team members (admin only)

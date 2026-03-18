@@ -8,6 +8,7 @@ import {
   staffSubmissionsTable,
   academyStaffTable,
   academiesTable,
+  storyProjectsTable,
 } from "@workspace/db/schema";
 import { eq, and, ilike, sql } from "drizzle-orm";
 import { staffAuth, requireRole } from "../middlewares/staffAuth.js";
@@ -264,6 +265,61 @@ router.get("/staff/players/:id", staffAuth, async (req, res) => {
     staffSubmissions: flatSubmissions,
     completionStatus,
   });
+});
+
+router.get("/staff/stories", staffAuth, async (req, res) => {
+  const staffUser = req.staffUser!;
+
+  const academyResult = await db.execute(
+    sql`SELECT id, key, name FROM academies WHERE id = ${staffUser.academyId} LIMIT 1`
+  );
+  if (!academyResult.rows || academyResult.rows.length === 0) {
+    res.status(400).json({ error: "Staff academy not found" });
+    return;
+  }
+  const academyRow = academyResult.rows[0] as any;
+
+  const players = await db
+    .select({
+      id: playersTable.id,
+      playerName: playersTable.playerName,
+      age: playersTable.age,
+      position: playersTable.position,
+      ageGroup: playersTable.ageGroup,
+      status: playersTable.status,
+    })
+    .from(playersTable)
+    .where(eq(playersTable.academyKey, academyRow.key as string))
+    .orderBy(playersTable.playerName);
+
+  const projects = await db
+    .select({
+      playerId: storyProjectsTable.playerId,
+      storyStatus: storyProjectsTable.status,
+      blueprintApproved: storyProjectsTable.blueprintApproved,
+      updatedAt: storyProjectsTable.updatedAt,
+    })
+    .from(storyProjectsTable);
+
+  const projectMap = new Map(projects.map((p) => [p.playerId, p]));
+
+  const result = players.map((pl) => {
+    const proj = projectMap.get(pl.id);
+    return {
+      id: pl.id,
+      playerName: pl.playerName,
+      age: pl.age,
+      position: pl.position,
+      ageGroup: pl.ageGroup,
+      onboardingStatus: pl.status,
+      storyStatus: proj?.storyStatus ?? null,
+      blueprintApproved: proj?.blueprintApproved ?? false,
+      lastUpdated: proj?.updatedAt ?? null,
+      hasProject: !!proj,
+    };
+  });
+
+  res.json(result);
 });
 
 export default router;

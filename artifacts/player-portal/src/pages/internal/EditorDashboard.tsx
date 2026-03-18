@@ -19,6 +19,7 @@ import {
   Loader2,
   ChevronRight,
   Zap,
+  XCircle,
 } from "lucide-react";
 import { InternalLayout } from "@/layouts/InternalLayout";
 import {
@@ -27,6 +28,7 @@ import {
   fetchStaff,
   approveBlueprint,
   revokeBlueprint,
+  updateProject,
   createStaffMember,
   updateStaffMember,
   deactivateStaffMember,
@@ -175,6 +177,7 @@ export default function EditorDashboard() {
   const [stats, setStats] = useState<EditorStats | null>(null);
   const [staff, setStaff] = useState<MeTimeStaffMember[]>([]);
   const [projects, setProjects] = useState<ProjectRow[]>([]);
+  const [reviewProjects, setReviewProjects] = useState<ProjectRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showAddStaff, setShowAddStaff] = useState(false);
@@ -188,17 +191,43 @@ export default function EditorDashboard() {
     setLoading(true);
     setError("");
     try {
-      const [editorData, projectsData] = await Promise.all([
+      const [editorData, projectsData, reviewData] = await Promise.all([
         fetchEditorStats(),
         fetchProjects({ status: "blueprint_in_progress" }),
+        fetchProjects({ status: "internal_review" }),
       ]);
       setStats(editorData.stats);
       setStaff(editorData.staff);
       setProjects(projectsData.projects);
+      setReviewProjects(reviewData.projects);
     } catch (err: any) {
       setError(err.message || "Failed to load data");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleApproveForIllustrations = async (playerId: string) => {
+    setActionLoading((prev) => ({ ...prev, [`ill-approve-${playerId}`]: true }));
+    try {
+      await updateProject(playerId, { status: "ready_for_illustration" });
+      setReviewProjects((prev) => prev.filter((p) => p.playerId !== playerId));
+    } catch (err: any) {
+      console.error(err);
+    } finally {
+      setActionLoading((prev) => ({ ...prev, [`ill-approve-${playerId}`]: false }));
+    }
+  };
+
+  const handleRequestRevisions = async (playerId: string) => {
+    setActionLoading((prev) => ({ ...prev, [`revisions-${playerId}`]: true }));
+    try {
+      await updateProject(playerId, { status: "revisions_in_progress" });
+      setReviewProjects((prev) => prev.filter((p) => p.playerId !== playerId));
+    } catch (err: any) {
+      console.error(err);
+    } finally {
+      setActionLoading((prev) => ({ ...prev, [`revisions-${playerId}`]: false }));
     }
   };
 
@@ -306,6 +335,66 @@ export default function EditorDashboard() {
             <StatCard icon={<CheckCircle2 size={20} />} label="Stories in Draft" value={stats.storiesInDraft} color="#34d399" />
           </div>
         )}
+
+        {/* ── Review Queue ── */}
+        <div className="rounded-2xl border overflow-hidden" style={{ background: BG_CARD, borderColor: BORDER }}>
+          <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: BORDER }}>
+            <div className="flex items-center gap-2">
+              <BookOpen size={15} style={{ color: "#60a5fa" }} />
+              <span className="text-white font-semibold text-sm">Story Review Queue</span>
+            </div>
+            <span className="text-xs text-white/30 bg-blue-500/10 border border-blue-500/20 rounded-full px-2.5 py-0.5">
+              {reviewProjects.length} awaiting review
+            </span>
+          </div>
+
+          <div className="divide-y" style={{ divideColor: BORDER }}>
+            {reviewProjects.length === 0 ? (
+              <div className="px-5 py-10 text-center">
+                <CheckCircle2 size={24} className="text-green-400 mx-auto mb-2" />
+                <p className="text-white/40 text-sm">No stories awaiting review</p>
+              </div>
+            ) : (
+              reviewProjects.map((p) => (
+                <div key={p.playerId} className="flex items-center gap-3 px-5 py-4">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0" style={{ background: "rgba(96,165,250,0.15)" }}>
+                    {p.playerName.charAt(0)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-white text-sm font-medium truncate">{p.playerName}</div>
+                    <div className="text-white/30 text-xs truncate">{p.academy} · {p.ageGroup}</div>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <button
+                      onClick={() => navigate(`/internal/stories/${p.playerId}/builder`)}
+                      className="text-xs text-white/40 hover:text-white/70 px-2 py-1 rounded-lg border border-white/10 hover:bg-white/5 transition-all"
+                    >
+                      Read
+                    </button>
+                    <button
+                      onClick={() => handleRequestRevisions(p.playerId)}
+                      disabled={actionLoading[`revisions-${p.playerId}`]}
+                      className="text-xs font-semibold rounded-lg px-3 py-1.5 flex items-center gap-1.5 transition-all"
+                      style={{ background: "rgba(239,68,68,0.1)", color: "#f87171", border: "1px solid rgba(239,68,68,0.25)" }}
+                    >
+                      {actionLoading[`revisions-${p.playerId}`] ? <Loader2 size={12} className="animate-spin" /> : <XCircle size={12} />}
+                      Revisions
+                    </button>
+                    <button
+                      onClick={() => handleApproveForIllustrations(p.playerId)}
+                      disabled={actionLoading[`ill-approve-${p.playerId}`]}
+                      className="text-xs font-semibold rounded-lg px-3 py-1.5 flex items-center gap-1.5 transition-all"
+                      style={{ background: "rgba(52,211,153,0.1)", color: "#34d399", border: "1px solid rgba(52,211,153,0.25)" }}
+                    >
+                      {actionLoading[`ill-approve-${p.playerId}`] ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle2 size={12} />}
+                      Approve for Illustrations
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Blueprint Approvals */}

@@ -99,6 +99,25 @@ export async function fetchStaffPlayers(): Promise<StaffPlayer[]> {
   return res.json();
 }
 
+export interface StaffStoryEntry {
+  id: string;
+  playerName: string;
+  age: number;
+  position: string;
+  ageGroup: string;
+  onboardingStatus: string;
+  storyStatus: string | null;
+  blueprintApproved: boolean;
+  lastUpdated: string | null;
+  hasProject: boolean;
+}
+
+export async function fetchStaffStoryPipeline(): Promise<StaffStoryEntry[]> {
+  const res = await staffFetch('/staff/stories');
+  if (!res.ok) throw new Error('Failed to fetch story pipeline');
+  return res.json();
+}
+
 export interface CreatePlayerPayload {
   playerName: string;
   age: number;

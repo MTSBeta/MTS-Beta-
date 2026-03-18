@@ -38,10 +38,13 @@ import {
   fetchBlueprint,
   fetchPlayerProfile,
   fetchProject,
+  updateProject,
+  getStatusMeta,
   type StoryScene,
   type StoryBlueprint,
   type PlayerProfile,
 } from "@/lib/internalApi";
+import { Send } from "lucide-react";
 
 const ACCENT = "#a78bfa";
 const BG_CANVAS = "#f8f5f0";
@@ -330,6 +333,9 @@ export default function StoryBuilder() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [blueprintLocked, setBlueprintLocked] = useState(false);
+  const [storyStatus, setStoryStatus] = useState<string>("draft_in_progress");
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
 
   const [activeScene, setActiveScene] = useState(1);
   const [saving, setSaving] = useState(false);
@@ -346,13 +352,19 @@ export default function StoryBuilder() {
 
   useEffect(() => {
     if (!playerId) return;
-    Promise.all([fetchScenes(playerId), fetchBlueprint(playerId), fetchProject(playerId)]).then(
-      ([scenesData, blueprintData, projectData]) => {
+    Promise.all([fetchScenes(playerId), fetchBlueprint(playerId), fetchProject(playerId), fetchPlayerProfile(playerId)]).then(
+      ([scenesData, blueprintData, projectData, profileData]) => {
         setScenes(scenesData.scenes);
         setBlueprint(blueprintData.blueprint);
+        setPlayer((profileData as any).player ?? null);
         setBlueprintLocked(!(blueprintData.blueprint?.blueprintApproved ?? false));
-        if ((projectData.project as any).bookFormat) {
-          setBookFormat((projectData.project as any).bookFormat as BookFormat);
+        const proj = projectData.project as any;
+        if (proj.bookFormat) setBookFormat(proj.bookFormat as BookFormat);
+        if (proj.status) {
+          setStoryStatus(proj.status);
+          if (["internal_review", "academy_preview", "approved", "ready_for_illustration", "illustration_in_progress", "final_ready"].includes(proj.status)) {
+            setReviewSubmitted(true);
+          }
         }
         const layouts: Record<number, PageLayout> = {};
         scenesData.scenes.forEach((s) => {
@@ -418,6 +430,24 @@ export default function StoryBuilder() {
       setSaving(false);
     }
   };
+
+  const handleSubmitForReview = async () => {
+    setSubmittingReview(true);
+    try {
+      await updateProject(playerId, { status: "internal_review" } as any);
+      setStoryStatus("internal_review");
+      setReviewSubmitted(true);
+    } catch (err: any) {
+      alert(err.message || "Failed to submit for review");
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
+  const statusMeta = getStatusMeta(storyStatus);
+  const chaptersWithContent = scenes.filter((s) => (s.manuscript?.trim().length ?? 0) > 100).length;
+  const allChaptersWritten = chaptersWithContent >= 6;
+  const canSubmitReview = allChaptersWritten && !blueprintLocked && storyStatus === "draft_in_progress" && !reviewSubmitted;
 
   if (loading) {
     return (
@@ -499,6 +529,17 @@ export default function StoryBuilder() {
             >
               <PanelRightOpen size={15} />
             </button>
+
+            <div className="w-px h-4 bg-white/10 mx-1" />
+
+            {/* Story status badge */}
+            <div
+              className="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border"
+              style={{ background: `${statusMeta.color}15`, color: statusMeta.color, borderColor: `${statusMeta.color}35` }}
+            >
+              <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: statusMeta.color }} />
+              <span className="hidden md:inline">{statusMeta.label}</span>
+            </div>
 
             <div className="w-px h-4 bg-white/10 mx-1" />
 
@@ -592,10 +633,46 @@ export default function StoryBuilder() {
                   })}
                 </div>
 
-                <div className="flex-shrink-0 border-t p-3" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
+                <div className="flex-shrink-0 border-t p-3 space-y-2" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
                   <div className="text-[10px] text-white/20 text-center">
                     {scenes.reduce((a, s) => a + wordCount(s.manuscript || ""), 0).toLocaleString()} total words
                   </div>
+                  {/* Chapter completion indicator */}
+                  <div className="flex gap-0.5 justify-center">
+                    {[1, 2, 3, 4, 5, 6].map((n) => {
+                      const sc = scenes.find((s) => s.sceneNumber === n);
+                      const hasContent = (sc?.manuscript?.trim().length ?? 0) > 100;
+                      return (
+                        <div
+                          key={n}
+                          className="h-1 flex-1 rounded-full transition-colors"
+                          style={{ backgroundColor: hasContent ? ACCENT : "rgba(255,255,255,0.1)" }}
+                        />
+                      );
+                    })}
+                  </div>
+                  <div className="text-[10px] text-white/20 text-center">{chaptersWithContent}/6 chapters written</div>
+                  {/* Submit for Review CTA */}
+                  {canSubmitReview && (
+                    <button
+                      onClick={handleSubmitForReview}
+                      disabled={submittingReview}
+                      className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold text-white transition-all"
+                      style={{ background: `${ACCENT}30`, border: `1px solid ${ACCENT}50` }}
+                    >
+                      {submittingReview ? <Loader2 size={11} className="animate-spin" /> : <Send size={11} />}
+                      Submit for Review
+                    </button>
+                  )}
+                  {reviewSubmitted && storyStatus !== "draft_in_progress" && (
+                    <div
+                      className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold"
+                      style={{ background: `${statusMeta.color}20`, color: statusMeta.color, border: `1px solid ${statusMeta.color}35` }}
+                    >
+                      <CheckCircle2 size={11} />
+                      {statusMeta.label}
+                    </div>
+                  )}
                 </div>
               </motion.aside>
             )}
