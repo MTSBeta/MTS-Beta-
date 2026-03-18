@@ -3,6 +3,7 @@ import { db } from "@workspace/db";
 import { playersTable, playerJourneyResponsesTable } from "@workspace/db/schema";
 import { SaveJourneyResponsesBody } from "@workspace/api-zod";
 import { eq } from "drizzle-orm";
+import { logResponses, updateWorkflowStatus, syncPlayer } from "../lib/googleSheets.js";
 
 const router: IRouter = Router();
 
@@ -26,7 +27,6 @@ router.post("/players/:playerId/journey", async (req, res) => {
     return;
   }
 
-  // Delete existing and reinsert
   await db
     .delete(playerJourneyResponsesTable)
     .where(eq(playerJourneyResponsesTable.playerId, playerId));
@@ -46,6 +46,35 @@ router.post("/players/:playerId/journey", async (req, res) => {
   }
 
   res.json({ saved: rows.length });
+
+  // Sync to Google Sheets (fire-and-forget — never blocks the response)
+  logResponses(
+    rows.map((r) => ({
+      playerId: player.accessCode,
+      playerName: player.playerName,
+      role: "player",
+      questionId: `${r.stage}-Q${r.questionNumber}`,
+      stage: r.stage,
+      questionText: r.questionText,
+      responseType: "long-text",
+      responseValue: r.answerText,
+      source: "portal",
+    }))
+  ).catch(e => console.error("[sheets] logResponses failed:", e));
+
+  syncPlayer({
+    id: player.id,
+    playerName: player.playerName,
+    academyKey: player.academyKey,
+    academyName: player.academyName,
+    ageGroup: player.ageGroup ?? null,
+    position: player.position,
+    secondPosition: player.secondPosition ?? null,
+    shirtNumber: player.shirtNumber ?? null,
+    accessCode: player.accessCode,
+    parentCode: player.parentCode ?? null,
+    status: player.status,
+  }).catch(e => console.error("[sheets] syncPlayer failed:", e));
 });
 
 router.patch("/players/:playerId/journey/status", async (req, res) => {
@@ -68,6 +97,14 @@ router.patch("/players/:playerId/journey/status", async (req, res) => {
     .where(eq(playersTable.id, playerId));
 
   res.json({ status: "journey_complete" });
+
+  // Sync status to Sheets
+  updateWorkflowStatus({
+    accessCode: player.accessCode,
+    playerName: player.playerName,
+    status: "journey_complete",
+    journeyStatus: "complete",
+  }).catch(e => console.error("[sheets] updateWorkflowStatus failed:", e));
 });
 
 export default router;

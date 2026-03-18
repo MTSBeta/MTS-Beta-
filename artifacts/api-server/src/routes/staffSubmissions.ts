@@ -3,6 +3,7 @@ import { db } from "@workspace/db";
 import { staffSubmissionsTable, playersTable, academiesTable } from "@workspace/db/schema";
 import { eq, and } from "drizzle-orm";
 import { staffAuth } from "../middlewares/staffAuth.js";
+import { logResponses, updateWorkflowStatus } from "../lib/googleSheets.js";
 
 const router: IRouter = Router();
 
@@ -69,6 +70,33 @@ router.post("/staff/submissions", staffAuth, async (req, res) => {
     .returning();
 
   res.status(201).json({ id: submission.id });
+
+  // Sync to Google Sheets (fire-and-forget)
+  const [playerForSheets] = await db.select().from(playersTable).where(eq(playersTable.id, playerId)).limit(1);
+  if (playerForSheets) {
+    const typedResponses = responses as { questionNumber: number; questionText: string; answerText: string }[];
+    logResponses(
+      typedResponses.map(r => ({
+        playerId: playerForSheets.accessCode,
+        playerName: playerForSheets.playerName,
+        role,
+        contributorName: staffUser.fullName,
+        questionId: `${role}-Q${r.questionNumber}`,
+        stage: role,
+        questionText: r.questionText,
+        responseType: "long-text",
+        responseValue: r.answerText,
+        source: "staff-portal",
+      }))
+    ).catch(e => console.error("[sheets] logResponses(staff) failed:", e));
+
+    updateWorkflowStatus({
+      accessCode: playerForSheets.accessCode,
+      playerName: playerForSheets.playerName,
+      status: playerForSheets.status,
+      staffInputsStatus: "partial",
+    }).catch(e => console.error("[sheets] updateWorkflowStatus(staff) failed:", e));
+  }
 });
 
 router.put("/staff/submissions/:id", staffAuth, async (req, res) => {

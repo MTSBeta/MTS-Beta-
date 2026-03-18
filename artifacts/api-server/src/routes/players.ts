@@ -4,6 +4,7 @@ import { playersTable, academiesTable } from "@workspace/db/schema";
 import { RegisterPlayerBody, GetPlayerResponse } from "@workspace/api-zod";
 import { generateCode } from "../lib/codeGenerator.js";
 import { eq, sql } from "drizzle-orm";
+import { syncPlayer, updateWorkflowStatus } from "../lib/googleSheets.js";
 
 const router: IRouter = Router();
 
@@ -72,6 +73,27 @@ router.post("/players", async (req, res) => {
       createdAt: player.createdAt.toISOString(),
     })
   );
+
+  // Sync to Google Sheets (fire-and-forget)
+  syncPlayer({
+    id: player.id,
+    playerName: player.playerName,
+    academyKey: player.academyKey,
+    academyName: player.academyName,
+    ageGroup: player.ageGroup ?? null,
+    position: player.position,
+    secondPosition: player.secondPosition ?? null,
+    shirtNumber: player.shirtNumber ?? null,
+    accessCode: player.accessCode,
+    parentCode: player.parentCode ?? null,
+    status: player.status,
+  }).catch(e => console.error("[sheets] syncPlayer failed:", e));
+
+  updateWorkflowStatus({
+    accessCode: player.accessCode,
+    playerName: player.playerName,
+    status: player.status,
+  }).catch(e => console.error("[sheets] updateWorkflowStatus failed:", e));
 });
 
 router.get("/players/by-code/:code", async (req, res) => {

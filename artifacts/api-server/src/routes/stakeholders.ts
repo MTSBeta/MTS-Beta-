@@ -12,6 +12,7 @@ import {
 } from "@workspace/api-zod";
 import { generateCode } from "../lib/codeGenerator.js";
 import { eq } from "drizzle-orm";
+import { logResponses, syncContributor, updateWorkflowStatus } from "../lib/googleSheets.js";
 
 const router: IRouter = Router();
 
@@ -220,6 +221,42 @@ router.post("/stakeholder/:code", async (req, res) => {
     .where(eq(stakeholderLinksTable.id, link.id));
 
   res.status(201).json({ success: true, message: "Responses saved successfully" });
+
+  // Sync to Google Sheets (fire-and-forget)
+  const [playerForSheets] = await db.select().from(playersTable).where(eq(playersTable.id, link.playerId)).limit(1);
+  if (playerForSheets) {
+    logResponses(
+      rows.map(r => ({
+        playerId: playerForSheets.accessCode,
+        playerName: playerForSheets.playerName,
+        role: link.type,
+        contributorName: link.label,
+        questionId: `${link.type}-Q${r.questionNumber}`,
+        stage: link.type,
+        questionText: r.questionText,
+        responseType: "long-text",
+        responseValue: r.answerText,
+        source: "stakeholder",
+      }))
+    ).catch(e => console.error("[sheets] logResponses(stakeholder) failed:", e));
+
+    syncContributor({
+      id: String(link.id),
+      playerId: playerForSheets.accessCode,
+      playerName: playerForSheets.playerName,
+      role: link.type,
+      type: link.type,
+      code: link.code,
+      submitted: true,
+    }).catch(e => console.error("[sheets] syncContributor failed:", e));
+
+    updateWorkflowStatus({
+      accessCode: playerForSheets.accessCode,
+      playerName: playerForSheets.playerName,
+      status: playerForSheets.status,
+      stakeholderStatus: "partial",
+    }).catch(e => console.error("[sheets] updateWorkflowStatus(stakeholder) failed:", e));
+  }
 });
 
 export default router;

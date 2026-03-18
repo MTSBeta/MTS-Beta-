@@ -14,6 +14,7 @@ import staffTeamRouter from "./staffTeam.js";
 import staffAcademyRouter from "./staffAcademy.js";
 import ttsRouter from "./tts.js";
 import assistantRouter from "./assistant.js";
+import sheetsAdminRouter from "./sheetsAdmin.js";
 
 const router: IRouter = Router();
 
@@ -32,5 +33,6 @@ router.use(staffTeamRouter);
 router.use(staffAcademyRouter);
 router.use(ttsRouter);
 router.use(assistantRouter);
+router.use(sheetsAdminRouter);
 
 export default router;

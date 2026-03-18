@@ -19,6 +19,7 @@
     "drizzle-orm": "catalog:",
     "express": "^5",
     "google-auth-library": "^10.6.1",
+    "googleapis": "^171.4.0",
     "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {
