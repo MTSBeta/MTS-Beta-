@@ -12,3 +12,9 @@ id = "yKiAA7zFY1kPX4RC2Lge_"
 uri = "file://api-server-code.txt"
 type = "text"
 title = "API Server — All Route & Middleware Files"
+
+[[outputs]]
+id = "V5I6iVLmyKLWDgp-IwIsy"
+uri = "file://lib-auth.txt"
+type = "text"
+title = "lib/auth.ts"
