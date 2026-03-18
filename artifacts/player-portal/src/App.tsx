@@ -32,6 +32,13 @@ import StaffPlayerProfile from "@/pages/staff/StaffPlayerProfile";
 import StaffTeam from "@/pages/staff/StaffTeam";
 import StaffSettings from "@/pages/staff/StaffSettings";
 
+import StoriesDashboard from "@/pages/internal/StoriesDashboard";
+import StoryProfile from "@/pages/internal/StoryProfile";
+import BlueprintEditor from "@/pages/internal/BlueprintEditor";
+import StoryBuilder from "@/pages/internal/StoryBuilder";
+import IllustrationWorkspace from "@/pages/internal/IllustrationWorkspace";
+import ProductionPanel from "@/pages/internal/ProductionPanel";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -93,6 +100,50 @@ function Router() {
           </ProtectedStaffRoute>
         )}
       </Route>
+
+      <Route path="/internal/stories">
+        {() => (
+          <ProtectedStaffRoute>
+            <StoriesDashboard />
+          </ProtectedStaffRoute>
+        )}
+      </Route>
+      <Route path="/internal/stories/:playerId/profile">
+        {() => (
+          <ProtectedStaffRoute>
+            <StoryProfile />
+          </ProtectedStaffRoute>
+        )}
+      </Route>
+      <Route path="/internal/stories/:playerId/blueprint">
+        {() => (
+          <ProtectedStaffRoute>
+            <BlueprintEditor />
+          </ProtectedStaffRoute>
+        )}
+      </Route>
+      <Route path="/internal/stories/:playerId/builder">
+        {() => (
+          <ProtectedStaffRoute>
+            <StoryBuilder />
+          </ProtectedStaffRoute>
+        )}
+      </Route>
+      <Route path="/internal/stories/:playerId/illustrations">
+        {() => (
+          <ProtectedStaffRoute>
+            <IllustrationWorkspace />
+          </ProtectedStaffRoute>
+        )}
+      </Route>
+      <Route path="/internal/stories/:playerId/notes">
+        {() => (
+          <ProtectedStaffRoute>
+            <ProductionPanel />
+          </ProtectedStaffRoute>
+        )}
+      </Route>
+
       <Route component={NotFound} />
     </Switch>
   );

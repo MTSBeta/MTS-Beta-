@@ -67,6 +67,15 @@ lib/
 - `/staff/team` — Admin-only team management: list/create staff, toggle active/inactive (protected)
 - `/staff/settings` — Admin-only placeholder settings page (protected)
 
+### Frontend Routes — Story Production Workspace (`/internal/stories/*`)
+All routes JWT-protected via `ProtectedStaffRoute`. Dark editorial UI with violet accent (#a78bfa). Layout: `InternalLayout.tsx`.
+- `/internal/stories` — Cross-academy dashboard: all players, completeness bars, filters by academy/status/author
+- `/internal/stories/:playerId/profile` — 8 collapsible data sections + raw JSON drawer
+- `/internal/stories/:playerId/blueprint` — 13-field narrative blueprint with 2.5s auto-save
+- `/internal/stories/:playerId/builder` — 6 scene cards (Vision → Storm → Rock Bottom → Rise → Wisdom → Next Level), each with guidance panel + manuscript area + 2s auto-save
+- `/internal/stories/:playerId/illustrations` — Drive asset management by type (portrait, kit, scene, etc.) with approval workflow
+- `/internal/stories/:playerId/notes` — Production notes (tabbed) + detail tracker (usage status: unused / partly / clearly)
+
 ### API Routes
 - `GET /api/academies` — List all academies
 - `POST /api/players` — Register a player
@@ -79,6 +88,18 @@ lib/
 - `POST /api/coach/:code` — Submit coach responses
 - `GET /api/admin/players?passcode=X` — Admin list players
 - `GET /api/admin/players/:id?passcode=X` — Admin full player profile
+
+### Internal Story Production API Routes (JWT-protected, all staff)
+- `GET /api/internal/projects` — All story projects cross-academy (filters: search, academy, status, author)
+- `GET /api/internal/profile/:playerId` — Full player data: all responses + computed sections + media links
+- `GET/PUT /api/internal/blueprint/:playerId` — Get/save 13-field narrative blueprint
+- `GET /api/internal/scenes/:playerId` — All 6 scenes for a player
+- `PUT /api/internal/scenes/:playerId/:sceneNumber` — Save a scene (manuscript + notes)
+- `GET/PUT /api/internal/tracker/:playerId` — Detail tracker items + update usage status
+- `GET/POST /api/internal/notes/:playerId` — Production notes (add/list)
+- `GET /api/internal/illustrations/:playerId` — List illustration assets
+- `POST /api/internal/illustrations/:playerId` — Add illustration asset
+- `PUT /api/internal/illustrations/:playerId/:assetId` — Update/approve asset
 
 ### Staff API Routes (JWT-protected)
 - `POST /api/staff/login` — Staff login (email + password → JWT)
