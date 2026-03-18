@@ -31,5 +31,8 @@ channel = "stable-25_05"
 [userenv]
 
 [userenv.shared]
+GOOGLE_SERVICE_ACCOUNT_EMAIL = "replitpers@me-time-stories-beta-a.iam.gserviceaccount.com"
+GOOGLE_PRIVATE_KEY_ID = "c7c02864706256a38d072ed11dc8e3ca940706e3"
+GOOGLE_SHEET_ID = "14qvEC3w_5_CbBy4yDNXBHkkCJi2cCvv33NOl9UWIC54"
 
 [userenv.development]
