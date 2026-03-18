@@ -5,7 +5,6 @@ import playersRouter from "./players.js";
 import journeyRouter from "./journey.js";
 import stakeholdersRouter from "./stakeholders.js";
 import adminRouter from "./admin.js";
-import storageRouter from "./storage.js";
 import parentRouter from "./parent.js";
 import staffAuthRouter from "./staffAuth.js";
 import staffPlayersRouter from "./staffPlayers.js";
@@ -27,7 +26,6 @@ router.use(playersRouter);
 router.use(journeyRouter);
 router.use(stakeholdersRouter);
 router.use(adminRouter);
-router.use(storageRouter);
 router.use(parentRouter);
 router.use(staffAuthRouter);
 router.use(staffPlayersRouter);
@@ -42,3 +40,4 @@ router.use(internalAuthRouter);
 router.use(internalRouter);
 
 export default router;
+remove replit storage route
