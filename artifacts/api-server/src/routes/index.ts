@@ -40,4 +40,3 @@ router.use(internalAuthRouter);
 router.use(internalRouter);
 
 export default router;
-remove replit storage route
