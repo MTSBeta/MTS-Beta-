@@ -184,6 +184,12 @@ export default function StoryEngine() {
           {/* ── NAME ── */}
           {screen === "name" && (
             <div className="text-center w-full max-w-md">
+              <button
+                onClick={() => setScreen("welcome")}
+                className="flex items-center gap-2 text-sm text-blue-300 hover:text-white transition-colors mb-6 mx-auto"
+              >
+                <i className="ri-arrow-left-line"></i> Back
+              </button>
               <div className="text-5xl mb-4">👤</div>
               <h2 className="text-3xl font-bold text-white mb-2">What's your name, brave adventurer?</h2>
               <p className="text-blue-300 mb-6">Your name will be written on every page of the story.</p>
@@ -211,6 +217,12 @@ export default function StoryEngine() {
           {/* ── PRONOUNS ── */}
           {screen === "pronouns" && (
             <div className="text-center w-full max-w-md">
+              <button
+                onClick={() => setScreen("name")}
+                className="flex items-center gap-2 text-sm text-blue-300 hover:text-white transition-colors mb-6 mx-auto"
+              >
+                <i className="ri-arrow-left-line"></i> Back
+              </button>
               <div className="text-5xl mb-4">✌️</div>
               <h2 className="text-3xl font-bold text-white mb-2">Choose your pronouns</h2>
               <p className="text-blue-300 mb-8">The story will use these when telling {story.name}'s adventure.</p>
@@ -237,6 +249,21 @@ export default function StoryEngine() {
           {/* ── COMPANION ── */}
           {screen === "companion" && (
             <div className="text-center w-full max-w-md">
+              {fromBuilder ? (
+                <Link
+                  href="/characters/create"
+                  className="flex items-center gap-2 text-sm text-blue-300 hover:text-white transition-colors mb-6 mx-auto w-fit"
+                >
+                  <i className="ri-arrow-left-line"></i> Edit character
+                </Link>
+              ) : (
+                <button
+                  onClick={() => setScreen("pronouns")}
+                  className="flex items-center gap-2 text-sm text-blue-300 hover:text-white transition-colors mb-6 mx-auto"
+                >
+                  <i className="ri-arrow-left-line"></i> Back
+                </button>
+              )}
               <div className="text-5xl mb-4">🤝</div>
               <h2 className="text-3xl font-bold text-white mb-2">
                 Choose {story.name ? `${story.name}'s` : "your"} adventure companion
