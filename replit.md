@@ -201,6 +201,32 @@ Lightweight Web Audio API-based sound system with four sound types:
 - Volume: 10% (0.1) — subtle, non-intrusive
 - Can be toggled via SoundContext `setEnabled(boolean)`
 
+## MeTime Stories Production Workspace (`/internal/*`)
+
+A separate internal tool for MeTime Stories staff (authors, illustrators, editors) to manage personalised story production for each player.
+
+### Auth — completely separate from academy staff
+- Login page: `/internal/login`
+- Token stored in `localStorage` key: `metime_internal_token`
+- JWT claim: `type: "internal"` (validated by `internalAuth` middleware)
+- DB table: `metime_staff` (id, email, password_hash, full_name, role, is_active)
+- Roles: `author`, `illustrator`, `editor`, `admin`
+- Demo account: `author@metimestories.com` / `MetiAuthor2024!`
+- Context: `InternalAuthContext` / `useInternalAuth`
+- Route guard: `ProtectedInternalRoute` (redirects to `/internal/login`)
+
+### Workspace routes
+- `/internal/stories` — Dashboard (all players with story projects)
+- `/internal/stories/:playerId/profile` — StoryProfile
+- `/internal/stories/:playerId/blueprint` — BlueprintEditor
+- `/internal/stories/:playerId/builder` — StoryBuilder
+- `/internal/stories/:playerId/illustrations` — IllustrationWorkspace
+- `/internal/stories/:playerId/notes` — ProductionPanel
+
+### API files
+- `internalApi.ts` — reads `metime_internal_token`, redirects to `/internal/login` on 401
+- Backend routes: `/api/internal/*` all protected by `internalAuth` middleware
+
 ## Common Commands
 
 ```bash

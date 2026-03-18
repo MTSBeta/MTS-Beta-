@@ -17,6 +17,7 @@ import assistantRouter from "./assistant.js";
 import sheetsAdminRouter from "./sheetsAdmin.js";
 import imageUploadRouter from "./imageUpload.js";
 import internalRouter from "./internal.js";
+import internalAuthRouter from "./internalAuthRoutes.js";
 
 const router: IRouter = Router();
 
@@ -37,6 +38,7 @@ router.use(ttsRouter);
 router.use(assistantRouter);
 router.use(sheetsAdminRouter);
 router.use(imageUploadRouter);
+router.use(internalAuthRouter);
 router.use(internalRouter);
 
 export default router;

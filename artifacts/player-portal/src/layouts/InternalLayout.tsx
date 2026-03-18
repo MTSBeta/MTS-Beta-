@@ -8,11 +8,10 @@ import {
   Menu,
   X,
   Feather,
-  ChevronRight,
   Palette,
   StickyNote,
 } from "lucide-react";
-import { useStaffAuth } from "@/hooks/useStaffAuth";
+import { useInternalAuth } from "@/context/InternalAuthContext";
 
 interface NavItem {
   label: string;
@@ -45,7 +44,7 @@ interface InternalLayoutProps {
 }
 
 export function InternalLayout({ children, playerId, playerName }: InternalLayoutProps) {
-  const { staffUser, logout } = useStaffAuth();
+  const { internalUser, logout } = useInternalAuth();
   const [location, navigate] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -120,23 +119,17 @@ export function InternalLayout({ children, playerId, playerName }: InternalLayou
       <div className="p-4 border-t border-white/8">
         <div className="flex items-center gap-2.5 mb-3">
           <div className="w-7 h-7 rounded-lg flex items-center justify-center text-violet-300 text-xs font-bold flex-shrink-0" style={{ background: "#1a1a2e" }}>
-            {staffUser?.name?.charAt(0)?.toUpperCase() || "S"}
+            {internalUser?.fullName?.charAt(0)?.toUpperCase() || "M"}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-white text-xs font-medium truncate">{staffUser?.name}</div>
-            <div className="text-white/30 text-[10px] truncate">{staffUser?.email}</div>
+            <div className="text-white text-xs font-medium truncate">{internalUser?.fullName}</div>
+            <div className="text-white/30 text-[10px] truncate capitalize">{internalUser?.role}</div>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <Link href="/staff-dashboard">
-            <div className="text-white/30 hover:text-white/60 text-xs transition-colors cursor-pointer flex items-center gap-1">
-              <ChevronRight size={12} />
-              Academy Portal
-            </div>
-          </Link>
+        <div className="flex items-center justify-end">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1.5 text-white/30 hover:text-red-400 text-xs transition-colors ml-auto"
+            className="flex items-center gap-1.5 text-white/30 hover:text-red-400 text-xs transition-colors"
           >
             <LogOut size={12} />
             Sign out

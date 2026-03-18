@@ -4,9 +4,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { PlayerProvider } from "@/context/PlayerContext";
 import { StaffAuthProvider } from "@/context/StaffAuthContext";
+import { InternalAuthProvider } from "@/context/InternalAuthContext";
 import { SoundProvider } from "@/context/SoundContext";
 import { AssistantProvider } from "@/context/AssistantContext";
 import { ProtectedStaffRoute } from "@/components/ProtectedStaffRoute";
+import { ProtectedInternalRoute } from "@/components/ProtectedInternalRoute";
 import NotFound from "@/pages/not-found";
 import MetyButton from "@/components/MetyButton";
 
@@ -32,6 +34,7 @@ import StaffPlayerProfile from "@/pages/staff/StaffPlayerProfile";
 import StaffTeam from "@/pages/staff/StaffTeam";
 import StaffSettings from "@/pages/staff/StaffSettings";
 
+import InternalLogin from "@/pages/internal/InternalLogin";
 import StoriesDashboard from "@/pages/internal/StoriesDashboard";
 import StoryProfile from "@/pages/internal/StoryProfile";
 import BlueprintEditor from "@/pages/internal/BlueprintEditor";
@@ -101,46 +104,48 @@ function Router() {
         )}
       </Route>
 
+      {/* MeTime Stories internal production workspace — separate auth */}
+      <Route path="/internal/login" component={InternalLogin} />
       <Route path="/internal/stories">
         {() => (
-          <ProtectedStaffRoute>
+          <ProtectedInternalRoute>
             <StoriesDashboard />
-          </ProtectedStaffRoute>
+          </ProtectedInternalRoute>
         )}
       </Route>
       <Route path="/internal/stories/:playerId/profile">
         {() => (
-          <ProtectedStaffRoute>
+          <ProtectedInternalRoute>
             <StoryProfile />
-          </ProtectedStaffRoute>
+          </ProtectedInternalRoute>
         )}
       </Route>
       <Route path="/internal/stories/:playerId/blueprint">
         {() => (
-          <ProtectedStaffRoute>
+          <ProtectedInternalRoute>
             <BlueprintEditor />
-          </ProtectedStaffRoute>
+          </ProtectedInternalRoute>
         )}
       </Route>
       <Route path="/internal/stories/:playerId/builder">
         {() => (
-          <ProtectedStaffRoute>
+          <ProtectedInternalRoute>
             <StoryBuilder />
-          </ProtectedStaffRoute>
+          </ProtectedInternalRoute>
         )}
       </Route>
       <Route path="/internal/stories/:playerId/illustrations">
         {() => (
-          <ProtectedStaffRoute>
+          <ProtectedInternalRoute>
             <IllustrationWorkspace />
-          </ProtectedStaffRoute>
+          </ProtectedInternalRoute>
         )}
       </Route>
       <Route path="/internal/stories/:playerId/notes">
         {() => (
-          <ProtectedStaffRoute>
+          <ProtectedInternalRoute>
             <ProductionPanel />
-          </ProtectedStaffRoute>
+          </ProtectedInternalRoute>
         )}
       </Route>
 
@@ -155,15 +160,17 @@ function App() {
       <AssistantProvider>
       <PlayerProvider>
         <StaffAuthProvider>
-          <SoundProvider>
-            <TooltipProvider>
-              <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-                <Router />
-                <MetyButton />
-              </WouterRouter>
-              <Toaster />
-            </TooltipProvider>
-          </SoundProvider>
+          <InternalAuthProvider>
+            <SoundProvider>
+              <TooltipProvider>
+                <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+                  <Router />
+                  <MetyButton />
+                </WouterRouter>
+                <Toaster />
+              </TooltipProvider>
+            </SoundProvider>
+          </InternalAuthProvider>
         </StaffAuthProvider>
       </PlayerProvider>
       </AssistantProvider>

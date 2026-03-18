@@ -17,12 +17,12 @@ import {
   DEFAULT_TRACKER_ITEMS,
 } from "@workspace/db/schema";
 import { eq, and, ilike, or, desc } from "drizzle-orm";
-import { staffAuth } from "../middlewares/staffAuth.js";
+import { internalAuth } from "../middlewares/internalAuth.js";
 
 const router: IRouter = Router();
 
-// All internal routes require staff auth
-router.use("/internal", staffAuth);
+// All internal routes require MeTime Stories internal staff auth
+router.use("/internal", internalAuth);
 
 // ─────────────────────────────────────────────────────────
 // HELPER: ensure a story project exists for a player
@@ -219,7 +219,7 @@ router.get("/internal/projects/:playerId", async (req, res) => {
 // ─────────────────────────────────────────────────────────
 router.put("/internal/projects/:playerId", async (req, res) => {
   const { playerId } = req.params;
-  const staffUser = req.staffUser!;
+  const staffUser = req.internalUser!;
   const {
     status,
     assignedAuthor,
@@ -401,7 +401,7 @@ router.get("/internal/projects/:playerId/blueprint", async (req, res) => {
 // ─────────────────────────────────────────────────────────
 router.put("/internal/projects/:playerId/blueprint", async (req, res) => {
   const { playerId } = req.params;
-  const staffUser = req.staffUser!;
+  const staffUser = req.internalUser!;
   const project = await ensureProject(playerId);
 
   const fields = req.body;
@@ -482,7 +482,7 @@ router.get("/internal/projects/:playerId/scenes", async (req, res) => {
 // ─────────────────────────────────────────────────────────
 router.put("/internal/projects/:playerId/scenes/:sceneNum", async (req, res) => {
   const { playerId, sceneNum } = req.params;
-  const staffUser = req.staffUser!;
+  const staffUser = req.internalUser!;
   const sceneNumber = parseInt(sceneNum, 10);
 
   if (isNaN(sceneNumber) || sceneNumber < 1 || sceneNumber > 6) {
@@ -611,7 +611,7 @@ router.get("/internal/projects/:playerId/notes", async (req, res) => {
 // ─────────────────────────────────────────────────────────
 router.post("/internal/projects/:playerId/notes", async (req, res) => {
   const { playerId } = req.params;
-  const staffUser = req.staffUser!;
+  const staffUser = req.internalUser!;
   const { content, noteType = "general" } = req.body;
 
   if (!content?.trim()) {

@@ -1,7 +1,7 @@
 const API_BASE = `${import.meta.env.BASE_URL}api`.replace(/\/api$/, '/api');
 
 function getToken(): string | null {
-  return localStorage.getItem('staff_token');
+  return localStorage.getItem('metime_internal_token');
 }
 
 async function internalFetch(path: string, options: RequestInit = {}): Promise<Response> {
@@ -15,9 +15,8 @@ async function internalFetch(path: string, options: RequestInit = {}): Promise<R
   }
   const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
   if (res.status === 401) {
-    localStorage.removeItem('staff_token');
-    localStorage.removeItem('staff_user');
-    window.location.href = `${import.meta.env.BASE_URL}staff-login`.replace(/\/+/g, '/');
+    localStorage.removeItem('metime_internal_token');
+    window.location.href = `${import.meta.env.BASE_URL}internal/login`.replace(/\/+/g, '/');
   }
   return res;
 }
