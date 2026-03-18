@@ -15,6 +15,7 @@ import staffAcademyRouter from "./staffAcademy.js";
 import ttsRouter from "./tts.js";
 import assistantRouter from "./assistant.js";
 import sheetsAdminRouter from "./sheetsAdmin.js";
+import imageUploadRouter from "./imageUpload.js";
 
 const router: IRouter = Router();
 
@@ -34,5 +35,6 @@ router.use(staffAcademyRouter);
 router.use(ttsRouter);
 router.use(assistantRouter);
 router.use(sheetsAdminRouter);
+router.use(imageUploadRouter);
 
 export default router;

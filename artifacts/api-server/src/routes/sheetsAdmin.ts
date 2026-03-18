@@ -9,6 +9,7 @@ import {
   getRecentResponseLogs,
   TABS,
 } from "../lib/googleSheets.js";
+import { testDriveConnection, uploadToDrive, isDriveConfigured } from "../lib/googleDrive.js";
 import { staffAuth } from "../middlewares/staffAuth.js";
 
 const router: IRouter = Router();
@@ -85,6 +86,52 @@ router.get("/admin/sheets/recent-logs", staffAuth, async (req, res) => {
   }
   const rows = await getRecentResponseLogs(30);
   res.json({ rows });
+});
+
+// Test Google Drive connection
+router.get("/admin/drive/test", staffAuth, async (req, res) => {
+  const staffUser = req.staffUser!;
+  if (staffUser.systemRole !== "academy_admin") {
+    res.status(403).json({ error: "Admin access required" });
+    return;
+  }
+  const result = await testDriveConnection();
+  res.json({
+    ...result,
+    configured: isDriveConfigured(),
+    rootFolderId: process.env["GOOGLE_DRIVE_FOLDER_ID"] ?? "1Lk6-18xcNw7llQ2TjvoNfGDSLcCCf4VR",
+    serviceAccountEmail: process.env["GOOGLE_SERVICE_ACCOUNT_EMAIL"] ?? null,
+  });
+});
+
+// Test upload — uploads a tiny PNG to Drive to verify the full pipeline
+router.post("/admin/drive/test-upload", staffAuth, async (req, res) => {
+  const staffUser = req.staffUser!;
+  if (staffUser.systemRole !== "academy_admin") {
+    res.status(403).json({ error: "Admin access required" });
+    return;
+  }
+  try {
+    // Create a minimal 1×1 red PNG in memory
+    const png1x1 = Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwADhQGAWjR9awAAAABJRU5ErkJggg==",
+      "base64"
+    );
+    const result = await uploadToDrive({
+      fileBuffer: png1x1,
+      fileName: `test_upload_${Date.now()}.png`,
+      mimeType: "image/png",
+      academyName: staffUser.academyName ?? "Test Academy",
+      playerCode: "TEST-UPLOAD",
+    });
+    res.json({
+      ok: true,
+      message: "Test upload succeeded. Check your Drive folder.",
+      ...result,
+    });
+  } catch (err: any) {
+    res.status(500).json({ ok: false, error: err?.message ?? String(err) });
+  }
 });
 
 export default router;

@@ -255,29 +255,41 @@ export async function updateWorkflowStatus(player: {
   }
 }
 
-/** Register an image/media asset in Image_Asset_Register */
+/** Register an image/media asset in Image_Asset_Register — full 16-field schema */
 export async function registerImageAsset(asset: {
   playerId: string;
+  playerCode: string;
   playerName: string;
-  assetType: string;
-  fileUrl: string;
-  uploadedBy: string;
+  academyName: string;
+  contributorRole: string;
+  contributorName: string;
+  imageType: string;
+  originalFileName: string;
+  mimeType: string;
+  driveFileId: string;
+  driveFileLink: string;
+  driveFolderId: string;
+  uploadSource: string;
+  notes?: string;
 }): Promise<void> {
-  const assetId = `IMG-${asset.playerId}-${Date.now()}`;
-  const now = new Date().toISOString().slice(0, 10);
+  const now = new Date().toISOString();
   await appendRows(TABS.IMAGE_ASSET_REGISTER, [[
-    assetId,
     asset.playerId,
+    asset.playerCode,
     asset.playerName,
-    asset.assetType,
-    asset.fileUrl,
-    asset.uploadedBy,
+    asset.academyName,
+    asset.contributorRole,
+    asset.contributorName,
+    asset.imageType,
+    asset.originalFileName,
+    asset.mimeType,
+    asset.driveFileId,
+    asset.driveFileLink,
+    asset.driveFolderId,
     now,
-    "No",  // Approved?
-    "",    // Use For
-    "",    // Visual Notes
-    "",    // Author Relevance
-    "",    // Illustrator Relevance
+    asset.uploadSource,
+    "pending",         // approval_status
+    asset.notes ?? "", // notes
   ]]);
 }
 

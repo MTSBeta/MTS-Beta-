@@ -630,7 +630,15 @@ export default function Welcome() {
           <p className="text-white/50 text-sm leading-relaxed mt-3 mb-4">
             Add up to 3 photos — face, kit, anything that looks like you — so the illustrator can bring you to life on the page.
           </p>
-          <LikenessUploader primaryColor={selectedAcademy.primaryColor} />
+          <LikenessUploader
+            primaryColor={selectedAcademy.primaryColor}
+            uploadContext={{
+              playerId: playerData.id,
+              playerCode: playerData.accessCode,
+              playerName: playerData.playerName,
+              academyName: selectedAcademy.name,
+            }}
+          />
         </motion.div>
 
         {/* ── TIPS: horizontal scroll ── */}
