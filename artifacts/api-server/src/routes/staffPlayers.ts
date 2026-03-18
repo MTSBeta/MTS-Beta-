@@ -280,25 +280,13 @@ router.get("/staff/stories", staffAuth, async (req, res) => {
   const academyRow = academyResult.rows[0] as any;
 
   const players = await db
-    .select({
-      id: playersTable.id,
-      playerName: playersTable.playerName,
-      age: playersTable.age,
-      position: playersTable.position,
-      ageGroup: playersTable.ageGroup,
-      status: playersTable.status,
-    })
+    .select()
     .from(playersTable)
     .where(eq(playersTable.academyKey, academyRow.key as string))
     .orderBy(playersTable.playerName);
 
   const projects = await db
-    .select({
-      playerId: storyProjectsTable.playerId,
-      storyStatus: storyProjectsTable.status,
-      blueprintApproved: storyProjectsTable.blueprintApproved,
-      updatedAt: storyProjectsTable.updatedAt,
-    })
+    .select()
     .from(storyProjectsTable);
 
   const projectMap = new Map(projects.map((p) => [p.playerId, p]));
@@ -312,7 +300,7 @@ router.get("/staff/stories", staffAuth, async (req, res) => {
       position: pl.position,
       ageGroup: pl.ageGroup,
       onboardingStatus: pl.status,
-      storyStatus: proj?.storyStatus ?? null,
+      storyStatus: proj?.status ?? null,
       blueprintApproved: proj?.blueprintApproved ?? false,
       lastUpdated: proj?.updatedAt ?? null,
       hasProject: !!proj,
