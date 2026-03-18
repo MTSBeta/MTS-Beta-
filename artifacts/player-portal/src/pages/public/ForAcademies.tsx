@@ -48,7 +48,7 @@ export default function ForAcademies() {
               className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6"
               style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.25)", color: "#fbbf24" }}
             >
-              🏟️ Football Academy Programme
+              <i className="ri-football-line"></i> Football Academy Programme
             </span>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-[1.05] mb-6" style={{ color: "#fef3e2" }}>
@@ -235,10 +235,10 @@ export default function ForAcademies() {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
             {[
-              { step: "01", icon: "🤝", title: "Academy Onboarding",           desc: "We set up your dedicated staff portal, branded to your club. Your coaching and welfare team get secure logins and access to the player dashboard.", color: "#fbbf24" },
-              { step: "02", icon: "📱", title: "Players Complete Their Journey", desc: "Each player receives a unique access code and completes an immersive digital questionnaire — sharing their story, personality, position, and dreams.", color: "#60a5fa" },
-              { step: "03", icon: "✍️", title: "We Write & Illustrate",         desc: "Our editorial team crafts a bespoke story where the player is the hero facing real footballing challenges. Reviewed by your welfare team before delivery.", color: "#a78bfa" },
-              { step: "04", icon: "📚", title: "Delivered to the Family",       desc: "The finished story arrives as a premium printed book and digitally via the parent portal. Families read it together. The club's values live in the home.", color: "#34d399" },
+              { step: "01", icon: "ri-handshake-line",    title: "Academy Onboarding",           desc: "We set up your dedicated staff portal, branded to your club. Your coaching and welfare team get secure logins and access to the player dashboard.", color: "#fbbf24" },
+              { step: "02", icon: "ri-smartphone-line",   title: "Players Complete Their Journey", desc: "Each player receives a unique access code and completes an immersive digital questionnaire — sharing their story, personality, position, and dreams.", color: "#60a5fa" },
+              { step: "03", icon: "ri-quill-pen-line",    title: "We Write & Illustrate",         desc: "Our editorial team crafts a bespoke story where the player is the hero facing real footballing challenges. Reviewed by your welfare team before delivery.", color: "#a78bfa" },
+              { step: "04", icon: "ri-book-open-line",    title: "Delivered to the Family",       desc: "The finished story arrives as a premium printed book and digitally via the parent portal. Families read it together. The club's values live in the home.", color: "#34d399" },
             ].map(({ step, icon, title, desc, color }) => (
               <div
                 key={step}
@@ -246,7 +246,7 @@ export default function ForAcademies() {
                 style={{ backdropFilter: "blur(16px)", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)" }}
               >
                 <div className="text-4xl font-black mb-4 opacity-10" style={{ color }}>{step}</div>
-                <div className="text-3xl mb-3">{icon}</div>
+                <div className="text-2xl mb-3" style={{ color }}><i className={icon}></i></div>
                 <h3 className="font-bold mb-2 text-sm" style={{ color: "#fef3e2" }}>{title}</h3>
                 <p className="text-xs leading-relaxed" style={{ color: "rgba(254,243,226,0.45)" }}>{desc}</p>
                 <div className="absolute top-0 left-0 w-1 h-full rounded-l-2xl" style={{ background: color }} />
@@ -257,7 +257,7 @@ export default function ForAcademies() {
           {/* Portal callout */}
           <div className="mt-8 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6"
             style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.18)" }}>
-            <div className="text-4xl flex-shrink-0">🖥️</div>
+            <div className="text-3xl flex-shrink-0 text-amber-400"><i className="ri-computer-line"></i></div>
             <div className="flex-1">
               <h3 className="font-bold text-base mb-1" style={{ color: "#fef3e2" }}>The Staff Portal is where it all begins</h3>
               <p className="text-sm leading-relaxed" style={{ color: "rgba(254,243,226,0.50)" }}>
@@ -286,18 +286,18 @@ export default function ForAcademies() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
-              { icon: "⚽", label: "The Player",           color: "#f97316" },
-              { icon: "👨‍👩‍👧", label: "Family & Parents",    color: "#fbbf24" },
-              { icon: "🎯", label: "Academy Coaches",      color: "#60a5fa" },
-              { icon: "🛡️", label: "Welfare Officers",     color: "#34d399" },
-              { icon: "🧠", label: "Sports Psychologists", color: "#a78bfa" },
-              { icon: "🏟️", label: "Club Management",      color: "#f87171" },
+              { icon: "ri-football-line",      label: "The Player",           color: "#f97316" },
+              { icon: "ri-home-heart-line",    label: "Family & Parents",    color: "#fbbf24" },
+              { icon: "ri-whistle-line",        label: "Academy Coaches",      color: "#60a5fa" },
+              { icon: "ri-shield-check-line",   label: "Welfare Officers",     color: "#34d399" },
+              { icon: "ri-mental-health-line",  label: "Sports Psychologists", color: "#a78bfa" },
+              { icon: "ri-building-4-line",     label: "Club Management",      color: "#f87171" },
             ].map(({ icon, label, color }) => (
               <div key={label} className="text-center p-5 rounded-2xl transition-all hover:-translate-y-0.5"
                 style={{ background: "white", border: "1px solid rgba(0,0,0,0.06)", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}>
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mx-auto mb-3"
-                  style={{ background: `${color}18`, border: `1px solid ${color}30` }}>
-                  {icon}
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
+                  style={{ background: `${color}18`, border: `1px solid ${color}30`, color }}>
+                  <i className={icon}></i>
                 </div>
                 <p className="text-xs font-semibold text-gray-700">{label}</p>
               </div>
@@ -318,19 +318,19 @@ export default function ForAcademies() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
-              { icon: "📚", title: "Personalised player stories",   desc: "Each player receives their own story — a genuine differentiation in your pastoral programme.", color: "#fbbf24" },
-              { icon: "📊", title: "Staff dashboard",               desc: "Monitor engagement, wellbeing indicators, and story delivery across your entire squad.", color: "#60a5fa" },
-              { icon: "👨‍👩‍👧", title: "Parent engagement portal",     desc: "Parents read alongside their children, deepening the family-club relationship.", color: "#34d399" },
-              { icon: "⚽", title: "Position-specific content",     desc: "Stories aligned to each player's position, role, and developmental challenges.", color: "#f97316" },
-              { icon: "📅", title: "Season-aligned delivery",       desc: "Stories timed around key moments — selection, cup runs, winter breaks, tournaments.", color: "#a78bfa" },
-              { icon: "🛡️", title: "Safeguarding compliant",        desc: "All content reviewed by child safeguarding professionals and welfare-approved.", color: "#34d399" },
+              { icon: "ri-book-2-line",        title: "Personalised player stories",   desc: "Each player receives their own story — a genuine differentiation in your pastoral programme.", color: "#fbbf24" },
+              { icon: "ri-bar-chart-2-line",   title: "Staff dashboard",               desc: "Monitor engagement, wellbeing indicators, and story delivery across your entire squad.", color: "#60a5fa" },
+              { icon: "ri-home-heart-line",    title: "Parent engagement portal",      desc: "Parents read alongside their children, deepening the family-club relationship.", color: "#34d399" },
+              { icon: "ri-football-line",      title: "Position-specific content",     desc: "Stories aligned to each player's position, role, and developmental challenges.", color: "#f97316" },
+              { icon: "ri-calendar-check-line",title: "Season-aligned delivery",       desc: "Stories timed around key moments — selection, cup runs, winter breaks, tournaments.", color: "#a78bfa" },
+              { icon: "ri-shield-check-line",  title: "Safeguarding compliant",        desc: "All content reviewed by child safeguarding professionals and welfare-approved.", color: "#34d399" },
             ].map(({ icon, title, desc, color }) => (
               <div
                 key={title}
                 className="rounded-2xl p-6 transition-all hover:-translate-y-0.5"
                 style={{ backdropFilter: "blur(16px)", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)", boxShadow: `0 0 20px ${color}10` }}
               >
-                <div className="text-3xl mb-4">{icon}</div>
+                <div className="text-xl mb-4" style={{ color }}><i className={icon}></i></div>
                 <h3 className="font-bold mb-2 text-sm" style={{ color: "#fef3e2" }}>{title}</h3>
                 <p className="text-xs leading-relaxed" style={{ color: "rgba(254,243,226,0.45)" }}>{desc}</p>
               </div>
@@ -342,7 +342,7 @@ export default function ForAcademies() {
       {/* ── CTA ─────────────────────────────────────────────────────── */}
       <section className="py-24 text-center" style={{ background: "linear-gradient(180deg, #fef9f0 0%, #fef3e2 100%)" }}>
         <div className="max-w-2xl mx-auto px-4">
-          <div className="text-5xl mb-5">🏟️</div>
+          <div className="text-4xl mb-5 text-amber-500"><i className="ri-building-4-line"></i></div>
           <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">Ready to Talk?</h2>
           <p className="text-gray-500 text-base mb-8 leading-relaxed">
             Book a 20-minute call with our academy partnerships team and see a live demo with your club's branding.

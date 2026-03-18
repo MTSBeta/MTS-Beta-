@@ -53,7 +53,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0 shadow-sm"
               style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)" }}
             >
-              🌙
+              <i className="ri-book-heart-fill text-white" style={{ fontSize: 15 }}></i>
             </div>
             <span className="font-bold text-gray-900 text-sm leading-tight">
               Me Time<br />
@@ -101,7 +101,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               className="flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-lg transition-all hover:bg-orange-50"
               style={{ color: "#f97316" }}
             >
-              🚜 Try Free Story
+              <i className="ri-play-circle-fill"></i> Try Free Story
             </Link>
             <Link
               href="/portal"
@@ -115,7 +115,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold rounded-lg transition-all hover:scale-[1.03] hover:shadow-md shadow-sm"
               style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
             >
-              ✨ Build Character
+              <i className="ri-user-smile-line"></i> Build Character
             </Link>
           </div>
 
@@ -165,21 +165,21 @@ export function PublicLayout({ children }: PublicLayoutProps) {
         <nav className="flex-1 overflow-y-auto px-6 py-5">
           <div className="space-y-1">
             {[
-              { href: "/", label: "🏠 Home" },
-              { href: "/about", label: "📖 About" },
-              { href: "/families", label: "👨‍👩‍👧 For Families" },
-              { href: "/for-authors", label: "✍️ For Authors" },
-            ].map(({ href, label }) => (
+              { href: "/", label: "Home", icon: "ri-home-5-line" },
+              { href: "/about", label: "About", icon: "ri-information-line" },
+              { href: "/families", label: "For Families", icon: "ri-heart-2-line" },
+              { href: "/for-authors", label: "For Authors", icon: "ri-pen-nib-line" },
+            ].map(({ href, label, icon }) => (
               <Link
                 key={href}
                 href={href}
-                className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium transition-colors ${
                   isActive(href)
                     ? "bg-amber-100 text-amber-800"
                     : "text-gray-700 hover:bg-amber-50 hover:text-amber-700"
                 }`}
               >
-                {label}
+                <i className={`${icon} text-lg`}></i> {label}
               </Link>
             ))}
           </div>
@@ -206,13 +206,13 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             className="w-full flex items-center justify-center gap-2 px-4 py-3.5 font-bold rounded-xl text-amber-900 shadow-md"
             style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)" }}
           >
-            ✨ Build Character
+            <i className="ri-user-smile-line"></i> Build Character
           </Link>
           <Link
             href="/stories/time-travelling-tractor"
             className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-orange-200 text-orange-700 font-semibold rounded-xl hover:bg-orange-50 transition-colors"
           >
-            🚜 Try Free Story
+            <i className="ri-play-circle-fill"></i> Try Free Story
           </Link>
           <Link
             href="/portal"

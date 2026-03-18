@@ -16,7 +16,7 @@ const CREDENTIALS: Credential[] = [
     email: "michael@metimestories.com",
     password: "MichaelEditor2024!",
     role: "Internal Editor",
-    icon: "🔐",
+    icon: "ri-lock-2-line",
     color: "#8b5cf6",
   },
   {
@@ -24,7 +24,7 @@ const CREDENTIALS: Credential[] = [
     email: "admin@arsenal.co.uk",
     password: "COACH-ARS-003",
     role: "Academy Admin",
-    icon: "⚽",
+    icon: "ri-football-line",
     color: "#EF0107",
   },
   {
@@ -32,7 +32,7 @@ const CREDENTIALS: Credential[] = [
     email: "admin@chelsea.co.uk",
     password: "COACH-CHE-002",
     role: "Academy Admin",
-    icon: "⚽",
+    icon: "ri-football-line",
     color: "#034694",
   },
   {
@@ -40,7 +40,7 @@ const CREDENTIALS: Credential[] = [
     email: "admin@liverpool.co.uk",
     password: "COACH-LIV-004",
     role: "Academy Admin",
-    icon: "⚽",
+    icon: "ri-football-line",
     color: "#C8102E",
   },
   {
@@ -48,7 +48,7 @@ const CREDENTIALS: Credential[] = [
     email: "admin@manchester-city.co.uk",
     password: "COACH-MAN-005",
     role: "Academy Admin",
-    icon: "⚽",
+    icon: "ri-football-line",
     color: "#6CABDD",
   },
   {
@@ -56,7 +56,7 @@ const CREDENTIALS: Credential[] = [
     email: "admin@manchester-united.co.uk",
     password: "COACH-MAN-006",
     role: "Academy Admin",
-    icon: "⚽",
+    icon: "ri-football-line",
     color: "#DA291C",
   },
   {
@@ -64,7 +64,7 @@ const CREDENTIALS: Credential[] = [
     email: "admin@tottenham.co.uk",
     password: "COACH-TOT-007",
     role: "Academy Admin",
-    icon: "⚽",
+    icon: "ri-football-line",
     color: "#132257",
   },
 ];
@@ -130,10 +130,10 @@ export default function Demo() {
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
-              style={{ background: "rgba(139,92,246,0.15)", border: "1px solid rgba(139,92,246,0.30)" }}
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-base"
+              style={{ background: "rgba(139,92,246,0.15)", border: "1px solid rgba(139,92,246,0.30)", color: "#a78bfa" }}
             >
-              🔑
+              <i className="ri-key-2-line"></i>
             </div>
             <div>
               <p className="text-sm font-bold text-white">Me Time Stories</p>
@@ -184,10 +184,10 @@ export default function Demo() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2.5">
                   <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
-                    style={{ background: `${cred.color}20`, border: `1px solid ${cred.color}40` }}
+                    className="w-9 h-9 rounded-xl flex items-center justify-center text-base"
+                    style={{ background: `${cred.color}20`, border: `1px solid ${cred.color}40`, color: cred.color }}
                   >
-                    {cred.icon}
+                    <i className={cred.icon}></i>
                   </div>
                   <div>
                     <p className="text-sm font-bold text-white leading-none">{cred.label}</p>
@@ -228,24 +228,24 @@ export default function Demo() {
           </p>
           <div className="flex flex-wrap gap-3">
             {[
-              { href: "/staff-login",                  label: "⚽ Staff Portal Login" },
-              { href: "/admin-login",                  label: "🔐 Internal Admin Login" },
-              { href: "/characters/create",            label: "✨ Character Creator" },
-              { href: "/stories/time-travelling-tractor", label: "🚜 Story Engine" },
-              { href: "/football-matrix",              label: "📊 Football Matrix" },
-              { href: "/for-academies",                label: "🏟️ Academy Page" },
-            ].map(({ href, label }) => (
+              { href: "/staff-login",                     label: "Staff Portal Login",   icon: "ri-football-line" },
+              { href: "/admin-login",                     label: "Internal Admin Login",  icon: "ri-lock-2-line" },
+              { href: "/characters/create",               label: "Character Creator",     icon: "ri-user-smile-line" },
+              { href: "/stories/time-travelling-tractor", label: "Story Engine",          icon: "ri-play-circle-line" },
+              { href: "/football-matrix",                 label: "Football Matrix",       icon: "ri-bar-chart-2-line" },
+              { href: "/for-academies",                   label: "Academy Page",          icon: "ri-building-4-line" },
+            ].map(({ href, label, icon }) => (
               <Link
                 key={href}
                 href={href}
-                className="px-3.5 py-2 rounded-xl text-xs font-semibold transition-all hover:scale-[1.02]"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all hover:scale-[1.02]"
                 style={{
                   background: "rgba(255,255,255,0.06)",
                   border: "1px solid rgba(255,255,255,0.10)",
                   color: "rgba(255,255,255,0.60)",
                 }}
               >
-                {label}
+                <i className={icon}></i> {label}
               </Link>
             ))}
           </div>

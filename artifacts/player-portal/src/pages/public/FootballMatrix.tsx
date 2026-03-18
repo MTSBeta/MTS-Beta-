@@ -74,11 +74,11 @@ const positions: Position[] = [
 ];
 
 const trainingPaths = [
-  { position: "Goalkeepers", focus: "Courage & Decision-Making",   stories: 4, color: "#3b82f6", icon: "🧤" },
-  { position: "Defenders",   focus: "Leadership & Communication",  stories: 6, color: "#8b5cf6", icon: "🛡️" },
-  { position: "Midfielders", focus: "Resilience & Tempo Control",  stories: 5, color: "#10b981", icon: "⚡" },
-  { position: "Wingers",     focus: "Confidence & 1v1 Duels",      stories: 4, color: "#f97316", icon: "💨" },
-  { position: "Strikers",    focus: "Belief & Mental Bounce-Back", stories: 5, color: "#ef4444", icon: "🎯" },
+  { position: "Goalkeepers", focus: "Courage & Decision-Making",   stories: 4, color: "#3b82f6", icon: "ri-shield-user-line" },
+  { position: "Defenders",   focus: "Leadership & Communication",  stories: 6, color: "#8b5cf6", icon: "ri-shield-star-line" },
+  { position: "Midfielders", focus: "Resilience & Tempo Control",  stories: 5, color: "#10b981", icon: "ri-flashlight-line" },
+  { position: "Wingers",     focus: "Confidence & 1v1 Duels",      stories: 4, color: "#f97316", icon: "ri-speed-up-line" },
+  { position: "Strikers",    focus: "Belief & Mental Bounce-Back", stories: 5, color: "#ef4444", icon: "ri-focus-3-line" },
 ];
 
 const GLASS = "backdrop-blur-xl bg-white/[0.06] border border-white/[0.10]";
@@ -96,11 +96,11 @@ export default function FootballMatrix() {
     setTimeout(() => { setEnquiryOpen(false); setFormSubmitted(false); }, 2500);
   };
 
-  const SECTION_LABELS: Record<Section, string> = {
-    pitch:     "⚽ Pitch",
-    dashboard: "📊 Dashboard",
-    training:  "🏋️ Training",
-    academy:   "🏟️ Academy",
+  const SECTION_LABELS: Record<Section, { label: string; icon: string }> = {
+    pitch:     { label: "Pitch",     icon: "ri-football-line" },
+    dashboard: { label: "Stats",     icon: "ri-bar-chart-2-line" },
+    training:  { label: "Training",  icon: "ri-run-line" },
+    academy:   { label: "Academy",   icon: "ri-building-4-line" },
   };
 
   return (
@@ -128,7 +128,7 @@ export default function FootballMatrix() {
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
                 style={{ background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.30)", boxShadow: "0 0 12px rgba(251,191,36,0.20)" }}>
-                ⚽
+                <i className="ri-football-line text-amber-400"></i>
               </div>
               <div>
                 <p className="text-xs font-bold text-white leading-none">Me Time Stories</p>
@@ -138,11 +138,11 @@ export default function FootballMatrix() {
 
             {/* Section tabs */}
             <div className="flex items-center gap-1 p-1 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-              {(Object.entries(SECTION_LABELS) as [Section, string][]).map(([s, label]) => (
+              {(Object.entries(SECTION_LABELS) as [Section, { label: string; icon: string }][]).map(([s, { label, icon }]) => (
                 <button
                   key={s}
                   onClick={() => setActiveSection(s)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200"
                   style={activeSection === s ? {
                     background: "rgba(251,191,36,0.18)",
                     color: "#fbbf24",
@@ -153,7 +153,7 @@ export default function FootballMatrix() {
                     border: "1px solid transparent",
                   }}
                 >
-                  {label}
+                  <i className={icon}></i> {label}
                 </button>
               ))}
             </div>
@@ -359,17 +359,17 @@ export default function FootballMatrix() {
             {/* Stat cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               {[
-                { num: "42", label: "Active Players",   icon: "👥", color: "#3b82f6", glow: "rgba(59,130,246,0.20)" },
-                { num: "28", label: "Stories Delivered", icon: "📚", color: "#10b981", glow: "rgba(16,185,129,0.20)" },
-                { num: "94%", label: "Read Rate",        icon: "👁️", color: "#f97316", glow: "rgba(249,115,22,0.20)" },
-                { num: "4.8", label: "Parent Rating",    icon: "⭐", color: "#fbbf24", glow: "rgba(251,191,36,0.20)" },
+                { num: "42", label: "Active Players",   icon: "ri-team-line",     color: "#3b82f6", glow: "rgba(59,130,246,0.20)" },
+                { num: "28", label: "Stories Delivered", icon: "ri-book-2-line",   color: "#10b981", glow: "rgba(16,185,129,0.20)" },
+                { num: "94%", label: "Read Rate",        icon: "ri-eye-line",      color: "#f97316", glow: "rgba(249,115,22,0.20)" },
+                { num: "4.8", label: "Parent Rating",    icon: "ri-star-line",     color: "#fbbf24", glow: "rgba(251,191,36,0.20)" },
               ].map(({ num, label, icon, color, glow }) => (
                 <div
                   key={label}
                   className={`rounded-2xl p-5 text-center ${GLASS}`}
                   style={{ boxShadow: `0 0 24px ${glow}, 0 8px 24px rgba(0,0,0,0.30)` }}
                 >
-                  <div className="text-3xl mb-2">{icon}</div>
+                  <div className="text-2xl mb-2" style={{ color }}><i className={icon}></i></div>
                   <div
                     className="text-3xl font-black mb-1"
                     style={{ color, textShadow: `0 0 16px ${color}` }}
@@ -440,10 +440,10 @@ export default function FootballMatrix() {
                 >
                   <div className="flex items-center gap-4">
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
-                      style={{ background: `${color}18`, border: `1px solid ${color}40`, boxShadow: `0 0 16px ${color}25` }}
+                      className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                      style={{ background: `${color}18`, border: `1px solid ${color}40`, boxShadow: `0 0 16px ${color}25`, color }}
                     >
-                      {icon}
+                      <i className={icon}></i>
                     </div>
                     <div>
                       <h3 className="font-bold text-white text-sm">{position}</h3>
@@ -495,10 +495,10 @@ export default function FootballMatrix() {
 
             <div className="grid md:grid-cols-2 gap-4 mb-6">
               {[
-                { icon: "⚽", title: "Players",              desc: "Receive stories personalised to their position, personality, and current developmental challenges.",          color: "#fbbf24" },
-                { icon: "👨‍👩‍👧", title: "Parents",              desc: "Read alongside their children at home, deepening family-club bonds and pastoral engagement.",              color: "#3b82f6" },
-                { icon: "🎯", title: "Coaches",              desc: "Stories reinforce coaching values and culture. Wellbeing data surfaces in the staff dashboard.",              color: "#10b981" },
-                { icon: "🧠", title: "Sports Psychologists", desc: "Complement existing mental performance programmes with narrative-based therapeutic content.",                 color: "#8b5cf6" },
+                { icon: "ri-football-line",     title: "Players",              desc: "Receive stories personalised to their position, personality, and current developmental challenges.",  color: "#fbbf24" },
+                { icon: "ri-home-heart-line",   title: "Parents",              desc: "Read alongside their children at home, deepening family-club bonds and pastoral engagement.",          color: "#3b82f6" },
+                { icon: "ri-whistle-line",       title: "Coaches",              desc: "Stories reinforce coaching values and culture. Wellbeing data surfaces in the staff dashboard.",        color: "#10b981" },
+                { icon: "ri-mental-health-line", title: "Sports Psychologists", desc: "Complement existing mental performance programmes with narrative-based therapeutic content.",           color: "#8b5cf6" },
               ].map(({ icon, title, desc, color }) => (
                 <div
                   key={title}
@@ -506,10 +506,10 @@ export default function FootballMatrix() {
                   style={{ boxShadow: `0 0 20px ${color}12, 0 8px 24px rgba(0,0,0,0.25)` }}
                 >
                   <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4"
-                    style={{ background: `${color}18`, border: `1px solid ${color}40` }}
+                    className="w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-4"
+                    style={{ background: `${color}18`, border: `1px solid ${color}40`, color }}
                   >
-                    {icon}
+                    <i className={icon}></i>
                   </div>
                   <h3 className="text-base font-bold text-white mb-2">{title}</h3>
                   <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.50)" }}>{desc}</p>

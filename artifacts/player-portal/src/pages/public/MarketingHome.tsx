@@ -84,7 +84,7 @@ export default function MarketingHome() {
           <div>
             {/* Eyebrow */}
             <span className="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-400/30 text-amber-300 text-sm font-medium px-4 py-2 rounded-full mb-8">
-              🌙 The Time-Travelling Tractor — free to try tonight
+              <i className="ri-moon-line"></i> The Time-Travelling Tractor — free to try tonight
             </span>
 
             <h1 className="text-4xl sm:text-5xl lg:text-[3.75rem] font-bold leading-[1.08] mb-6" style={{ color: "#fef3e2" }}>
@@ -110,14 +110,14 @@ export default function MarketingHome() {
                 className="flex items-center justify-center gap-2 px-8 py-4 font-bold text-lg rounded-xl shadow-xl transition-all hover:scale-[1.02] hover:shadow-2xl"
                 style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
               >
-                ✨ Build Your Character
+                <i className="ri-user-smile-line"></i> Build Your Character
               </Link>
               <Link
                 href="/stories/time-travelling-tractor"
                 className="flex items-center justify-center gap-2 px-8 py-4 font-semibold text-lg rounded-xl transition-all hover:bg-white/15"
                 style={{ borderColor: "rgba(254,243,226,0.55)", color: "#fef3e2", backdropFilter: "blur(8px)", background: "rgba(255,255,255,0.10)", border: "1.5px solid rgba(254,243,226,0.55)" }}
               >
-                🚜 Try the Free Story
+                <i className="ri-play-circle-fill"></i> Try the Free Story
               </Link>
             </div>
 
@@ -162,10 +162,10 @@ export default function MarketingHome() {
       <section className="py-4 border-b" style={{ background: "#0d0a08", borderColor: "rgba(251,191,36,0.12)" }}>
         <div className="max-w-5xl mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-x-10 gap-y-3 text-sm" style={{ color: "rgba(254,243,226,0.40)" }}>
-            <span>🏆 Premier League & Championship academies</span>
-            <span>📚 Truly personalised — not just name-stamped</span>
-            <span>👨‍👩‍👧 1,200+ families reading tonight</span>
-            <span>🔒 Safeguarding compliant</span>
+            <span><i className="ri-shield-star-line"></i> Premier League & Championship academies</span>
+            <span><i className="ri-book-heart-line"></i> Truly personalised — not just name-stamped</span>
+            <span><i className="ri-group-line"></i> 1,200+ families reading tonight</span>
+            <span><i className="ri-shield-check-line"></i> Safeguarding compliant</span>
           </div>
         </div>
       </section>
@@ -283,21 +283,21 @@ export default function MarketingHome() {
                 {[
                   {
                     step: "01",
-                    icon: "🧒",
+                    icon: "ri-user-heart-line",
                     title: "Tell us who they are",
                     desc: "Name, age, pronouns, personality traits, favourite animal, and their biggest dream. Takes 2 minutes.",
                     color: "#f97316",
                   },
                   {
                     step: "02",
-                    icon: "✍️",
+                    icon: "ri-quill-pen-line",
                     title: "Every chapter is personalised",
                     desc: "Their traits drive the hero's decisions. Their animal appears in the story. Their dream shapes the ending.",
                     color: "#f59e0b",
                   },
                   {
                     step: "03",
-                    icon: "📖",
+                    icon: "ri-book-open-line",
                     title: "They see themselves on every page",
                     desc: "Our illustrators bring their likeness to life. They'll point at the page and say \"That's me!\"",
                     color: "#10b981",
@@ -311,7 +311,7 @@ export default function MarketingHome() {
                       {step}
                     </div>
                     <div>
-                      <div className="font-bold text-gray-900 mb-0.5">{icon} {title}</div>
+                      <div className="font-bold text-gray-900 mb-0.5"><i className={icon} style={{ color }}></i> {title}</div>
                       <div className="text-gray-500 text-sm leading-relaxed">{desc}</div>
                     </div>
                   </div>
@@ -664,7 +664,7 @@ export default function MarketingHome() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <span className="inline-block bg-amber-200 text-amber-800 text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
-                ✍️ For Authors & Illustrators
+                <i className="ri-pen-nib-line"></i> For Authors & Illustrators
               </span>
               <h2 className="text-3xl font-bold text-gray-900 mb-5 leading-tight">
                 Talented storytellers create the worlds. We personalise them for every child.
