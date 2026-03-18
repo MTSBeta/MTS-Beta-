@@ -1,0 +1,586 @@
+Absolutely. The right move is to **replace**, not just tweak.
+
+Below is a tighter **v2 question set** built for story quality first. It keeps the soul of what you already have, but reduces drag, lowers safeguarding risk, improves answer quality, and makes the outputs easier to convert into story blueprints later.
+
+The design principle is simple:
+
+**every question must earn its place by giving authors something they can actually use.**
+
+---
+
+# Me Time Stories Academy Question Set — v2
+
+## 1) PLAYER JOURNEY — Older Players
+
+Target: **24 core questions max**, plus position branch and 2–4 adaptive follow-ups.
+
+## Stage 1 — Your World
+
+1. **Pick the words that describe you best as a person.**
+   *(multiselect)*
+
+2. **Tell me about one football moment you always go back to when you remember why you love the game.**
+
+3. **Describe the way you play in your own words — not your position, your game.**
+
+4. **Who do you usually tell first when something good happens in football, and what do they normally say?**
+
+5. **Is there anything at home that means something to you about football — a shirt, boots, notebook, photo, anything like that? Why does it matter?**
+
+**Adaptive only if second position selected:**
+
+6. **When you switch positions, what changes most in the way you think or play?**
+
+Why this is better:
+
+* stronger warm-in
+* keeps your best narrative questions
+* removes early overload
+* gets identity, voice, support, and symbolism quickly
+
+---
+
+## Stage 2 — Your Football Mind
+
+### Position-specific question: one only
+
+**GK**
+
+1. **A striker is through on goal and your defender is recovering. What are you reading, and what is your decision?**
+
+**CB**
+
+1. **The striker drops deep to receive. What tells you whether to step in or hold your line?**
+
+**FB (LB/RB)**
+
+1. **Your winger has the ball ahead of you in attack. What tells you whether to overlap, underlap, or hold your position?**
+
+**CDM**
+
+1. **The opposition break through the middle and you are the last midfielder back. What are you looking at first, and how do you deal with it?**
+
+**CM**
+
+1. **Your holding midfielder is under pressure in build-up. Where do you move, and what are you trying to give the team?**
+
+**CAM**
+
+1. **You are about to receive between the lines. What are you checking before the ball arrives, and what are you hoping to create?**
+
+**Winger**
+
+1. **You are 1v1 out wide. What tells you whether to go outside, come inside, or wait for support?**
+
+**ST/CF**
+
+1. **Your team wins the ball and breaks quickly. What is your first movement, and what are you trying to open up?**
+
+### All-player questions
+
+2. **Your team is 1–0 up with ten minutes left. What changes in the way you play?**
+
+3. **Before your first touch arrives under pressure, what are you already checking or knowing?**
+
+4. **If a teammate keeps getting a positional detail wrong in a game, how do you handle it?**
+   *(select + optional follow-up: “What would you actually say?”)*
+
+5. **When you are not at your best personally, how do you still help the team?**
+
+Why this is better:
+
+* more natural wording
+* still reveals football IQ
+* less exam-like
+* more usable for story scenes and coach realism
+
+---
+
+## Stage 3 — The Work Nobody Sees
+
+1. **Tell me about a time you were disappointed in football — maybe not being picked, not starting, or feeling overlooked. What happened?**
+
+2. **What do you do for your game that most people do not see?**
+
+3. **When you feel overlooked or undervalued, what do you usually do next?**
+   *(select + short follow-up)*
+
+4. **What is one quality in your game that people often miss?**
+
+5. **Who at this club really understands you — not just your football, but you?**
+
+Why this is better:
+
+* keeps the unseen-work angle
+* removes some emotional heaviness
+* still gives authors disappointment, response pattern, hidden quality, and key relationship
+
+---
+
+## Stage 4 — Tough Periods
+
+1. **Tell me about a difficult period in football that really tested you. What made it hard?**
+
+2. **During that period, what were you thinking or feeling most often?**
+
+3. **What does pressure usually look like in you during games — in your body, your thoughts, or your behaviour?**
+
+4. **What helped you keep going during that period?**
+   *(multiselect)*
+
+5. **Was there anyone who helped you through it, even in a small way? What did they do?**
+
+Why this is better:
+
+* safer
+* less likely to invite sensitive disclosures
+* still gives emotional truth, support, pressure response, and adversity
+
+---
+
+## Stage 5 — The Turn
+
+1. **Was there a moment, conversation, or decision that started to change things for you? Tell me about it.**
+
+2. **What actually shifted that helped you move forward?**
+   *(multiselect)*
+
+3. **Describe the first session or match where you felt more like yourself again. What was different?**
+
+4. **Looking back now, what do you understand that you could not see at the time?**
+
+Why this is better:
+
+* keeps the comeback structure
+* less repetitive than your current set
+* easier for players to answer honestly
+
+---
+
+## Stage 6 — Who You Are
+
+1. **What are your strongest qualities as a player and as a person?**
+   *(multiselect)*
+
+2. **What is something true about you that people do not always see straight away?**
+
+3. **What would your closest teammates say about you away from the pitch?**
+
+4. **What keeps you going in football when things are hard?**
+
+5. **What do you know about yourself now that you would not want to lose?**
+
+Why this is better:
+
+* identity-rich
+* strong for authors
+* gives inner truth without becoming too heavy
+
+---
+
+## Stage 7 — The Chapter Ahead
+
+1. **What do you want to achieve this season, on and off the pitch?**
+   *(multiselect + optional text)*
+
+2. **Where do you dream of playing one day?**
+   *(multiselect)*
+
+3. **What kind of player and person do you want to become over the next few years?**
+
+4. **What do you hope people say about you that has nothing to do with stats or trophies?**
+
+5. **If this chapter of your football life had a title, what would it be?**
+
+Why this is better:
+
+* still aspirational
+* more grounded
+* cleaner story ending setup
+
+---
+
+# Older Player Summary
+
+This version gives you:
+
+* **29 max including position branch**
+* better rhythm
+* less duplication
+* safer phrasing
+* stronger conversion into story beats
+
+---
+
+## 2) PLAYER JOURNEY — U9s
+
+Target: **12–14 questions total**, lighter, more playful, easier with parent support.
+
+## Stage 1 — All About Me
+
+1. **Let’s add your photos for the book!**
+   *(photo upload)*
+
+2. **What is your favourite thing about being you?**
+
+3. **Pick the words that describe you best.**
+   *(multiselect)*
+
+4. **What do you love doing when you are not playing football?**
+
+---
+
+## Stage 2 — My People
+
+5. **Who are the people at home who cheer you on?**
+
+6. **How do the people who love you make you feel?**
+   *(multiselect)*
+
+7. **Who comes to watch you play, and what do they usually shout when you do well?**
+
+8. **Tell me about a friend who matters to you. What do you like most about them?**
+
+---
+
+## Stage 3 — Me and Football
+
+9. **Tell me about a football moment that made you feel really proud.**
+
+10. **What do you love most about football?**
+    *(multiselect)*
+
+11. **Which parts of training do you enjoy most?**
+    *(multiselect)*
+
+12. **Who is your favourite footballer, and what do you like about the way they play?**
+
+---
+
+## Stage 4 — The Kind of Player I Am
+
+13. **What are your strongest qualities as a player?**
+    *(multiselect)*
+
+14. **When training gets tough, what do you usually do?**
+    *(select)*
+
+15. **After you make a mistake in a game, what do you usually do next?**
+    *(select)*
+
+---
+
+## Stage 5 — My Big Dream
+
+16. **What kind of footballer do you want to become one day?**
+
+17. **Where would you love to play one day?**
+    *(multiselect)*
+
+18. **Who would you love to say a big thank you to for helping you?**
+
+19. **What would you say to the future you before a big match?**
+
+You could trim this to 14 by making 17 and 18 optional.
+
+Best lean version:
+
+* keep 1–16 as core
+* make 17–19 optional expansion
+
+---
+
+# U9 Summary
+
+This version is:
+
+* simpler
+* warmer
+* easier to complete
+* less abstract
+* still full of story material
+
+---
+
+## 3) COACH INPUT
+
+Target: **5 core questions**, 1 optional story question.
+
+Use the same structure for older players and U9s, with only slight wording adjustments if needed.
+
+### Coach Input — Core
+
+1. **Which club values does this player already show consistently?**
+   *(multiselect)*
+
+2. **What are the most important development areas for this player this season?**
+   *(multiselect)*
+
+3. **What makes this player genuinely special in a way that would never appear in a stats report?**
+
+4. **Describe one specific moment when this player showed real character in training or a match.**
+
+5. **What is the main lesson or message you would love this player to take from their story?**
+
+### Optional
+
+6. **What would success look like for this player by the end of this season?**
+
+Why this is better:
+
+* cuts repetition
+* keeps story gold
+* keeps values, growth, uniqueness, and message
+
+---
+
+## 4) STAFF PORTAL — Four Role Observations
+
+Target: **4 required + 1 optional** per role.
+
+## Football Development Lead
+
+1. **How does this player respond to coaching feedback? Give a recent example.**
+
+2. **How would you describe this player’s decision-making in football situations?**
+
+3. **What strengths do they currently show most consistently in their game?**
+
+4. **What are the most important football development areas for the next 3–6 months?**
+
+Optional:
+5. **How do they tend to perform when the level or pressure rises?**
+
+---
+
+## Psychology Lead
+
+1. **How does this player usually respond under pressure?**
+
+2. **How do they typically react after mistakes or setbacks?**
+
+3. **What psychological strengths do they currently show?**
+
+4. **What area of mindset or emotional development would help them most next?**
+
+Optional:
+5. **Have you noticed any meaningful change in their confidence, behaviour, or mindset over time?**
+
+---
+
+## Education Lead
+
+1. **How does this player approach challenge or difficulty in learning?**
+
+2. **What do you notice about how they carry themselves in school or group settings?**
+
+3. **What consistent behaviours do you see in the way they approach learning?**
+
+4. **How do they respond to feedback and improvement?**
+
+Optional:
+5. **Tell me about one moment when this player showed real character in your setting.**
+
+---
+
+## Player Care & Welfare Lead
+
+1. **How does this player usually present around the club day to day?**
+
+2. **What helps this player feel comfortable, included, and able to engage well?**
+
+3. **What kinds of support or routines seem to help them most?**
+
+4. **Is there anything important about how this player is best supported to feel at their best?**
+
+Optional:
+5. **Have you noticed any positive change in this player over time?**
+
+Why this is better:
+
+* cleaner role boundaries
+* less duplication
+* easier completion
+* safer
+* more useful for authors later
+
+---
+
+## 5) STAKEHOLDERS — Invited Contributors
+
+These should be **optional layers**, not always-on.
+
+## Parent
+
+1. **Describe a moment when you felt genuinely proud of your child in their football journey.**
+
+2. **When football is not going their way, what do you tend to notice at home?**
+
+3. **Tell me about a football conversation with your child that has stayed with you.**
+
+4. **What has this football journey asked of your family?**
+
+5. **What would you want someone writing their story to truly understand about them?**
+
+---
+
+## Friend
+
+1. **Tell me about a football moment you shared with them that meant more than most people would realise.**
+
+2. **What are they really like around the team — in the changing room, on the bus, or at training?**
+
+3. **Have you seen them go through a difficult football period? What stood out about how they handled it?**
+
+4. **What do they say about football when no adults are around?**
+
+5. **What quality or habit do you think will shape where they end up?**
+
+---
+
+## External Football Coach
+
+1. **Describe the first moment you saw something in this player that stood out.**
+
+2. **What on-pitch behaviour do they show consistently that statistics would miss?**
+
+3. **Describe a moment when their response or attitude surprised you in a positive way.**
+
+4. **What key area of development do you most want their story to reflect?**
+
+5. **What message, lesson, or theme would you want woven into their story?**
+
+---
+
+## External Education
+
+1. **How do they approach something they genuinely find difficult?**
+
+2. **Tell me about a moment when they showed real character in your setting.**
+
+3. **What do you notice about how they carry themselves in school or group life?**
+
+4. **What behaviours or tendencies do you observe consistently in learning?**
+
+5. **What would you want a writer to understand about this side of them?**
+
+---
+
+## External Psychology
+
+1. **How do they usually behave under pressure or after mistakes?**
+
+2. **What emotional or behavioural pattern do you notice most consistently?**
+
+3. **How do they tend to communicate or carry themselves in difficult moments?**
+
+4. **What psychological strength stands out most?**
+
+5. **What is the single most important developmental focus for them next?**
+
+---
+
+## External Player Care / Welfare
+
+1. **What do you notice about this player’s day-to-day energy and demeanour?**
+
+2. **What seems to help them feel safe, settled, or supported?**
+
+3. **Who or what seems to strengthen them most around football?**
+
+4. **What general signs tell you they may be carrying pressure? Please keep your answer non-confidential.**
+
+5. **What everyday human detail about them would help make their story feel real?**
+
+Why this is better:
+
+* still rich
+* much safer
+* more focused on usable narrative truth
+* less likely to generate inappropriate detail
+
+---
+
+# Completion Structure I Recommend
+
+## Core journeys
+
+* Older player
+* U9 player
+* Coach input
+
+## Internal club layer
+
+* 1 to 4 staff roles depending on academy package
+
+## Optional story layer
+
+* Parent
+* Friend
+* External contributor(s)
+
+That means you stop treating every contributor as mandatory.
+
+---
+
+# What this gives you strategically
+
+This new version captures the exact ingredients authors need:
+
+* identity
+* football voice
+* adversity
+* support
+* hidden quality
+* turning point
+* values
+* ambition
+* relational detail
+* one or two strong symbolic details
+
+That is enough to write a deep story.
+
+You do **not** need 130+ distinct questions for that.
+
+You need the right 60–75 across the whole ecosystem, with each user only seeing the subset that matters.
+
+---
+
+# My recommendation for build logic
+
+Use this rule:
+
+## Required
+
+* player journey
+* coach input
+
+## Package-dependent
+
+* staff portal roles
+
+## Optional invite-only
+
+* parent
+* friend
+* external voices
+
+And inside the player journey:
+
+* use adaptive logic for second position
+* use adaptive logic for emotionally heavier follow-ups
+* keep only one position scenario
+* limit long free-text questions per stage
+
+---
+
+# Best next step
+
+The next thing I’d do is turn this into a **clean implementation document** with four columns:
+
+* **Question**
+* **Response type**
+* **Required or optional**
+* **Why this question exists for the story**
+
+That would give you something you can hand straight to Replit, designers, and later to authors when you build the matrix.

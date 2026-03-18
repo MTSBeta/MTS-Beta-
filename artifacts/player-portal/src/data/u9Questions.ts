@@ -11,9 +11,7 @@ export interface U9Question {
   hint: string;
   emoji: string;
   type: U9QuestionType;
-  /** Options for select / multiselect / staff-multiselect questions */
   options?: string[];
-  /** Character profile keys — used to generate summation */
   profileKey?: "traits" | "strengths" | "workEthic" | "mindset" | "goals" | "dreams" | "clubValues" | "storyThemes" | "developmentAreas";
 }
 
@@ -45,13 +43,13 @@ export const U9_STAGES: U9Stage[] = [
       {
         type: "voice-text",
         emoji: "😄",
-        text: "What is your favourite thing about being you? Tell me something that makes you special!",
+        text: "What is your favourite thing about being you?",
         hint: "Maybe you're really fast, or super kind, or always make people laugh…",
       },
       {
         type: "multiselect",
         emoji: "✨",
-        text: "Pick the words that best describe you!",
+        text: "Pick the words that describe you best.",
         hint: "Choose as many as you like — these will go in your book.",
         profileKey: "traits",
         options: [
@@ -63,7 +61,7 @@ export const U9_STAGES: U9Stage[] = [
       {
         type: "voice-text",
         emoji: "🎮",
-        text: "What do you love doing when you're NOT playing football?",
+        text: "What do you love doing when you are not playing football?",
         hint: "A game, a TV show, something you do with your friends or family…",
       },
     ],
@@ -80,8 +78,8 @@ export const U9_STAGES: U9Stage[] = [
       {
         type: "voice-text",
         emoji: "👨‍👩‍👧‍👦",
-        text: "Tell me about your family — who lives at home with you?",
-        hint: "Mum, dad, brothers, sisters, grandparents, pets — tell me everything!",
+        text: "Who are the people at home who cheer you on?",
+        hint: "Mum, dad, brothers, sisters, grandparents, anyone who believes in you!",
       },
       {
         type: "multiselect",
@@ -98,22 +96,22 @@ export const U9_STAGES: U9Stage[] = [
       {
         type: "voice-text",
         emoji: "📣",
-        text: "Who comes to watch your matches? What do they shout when you play well?",
+        text: "Who comes to watch you play, and what do they usually shout when you do well?",
         hint: "Do they get really excited? Do they have a favourite chant?",
       },
       {
         type: "voice-text",
         emoji: "👯",
-        text: "Tell me about your best friend. What do you love about them?",
+        text: "Tell me about a friend who matters to you. What do you like most about them?",
         hint: "What do you get up to together? What makes them so special?",
       },
     ],
   },
 
-  // ── STAGE 3: I Love Football! ─────────────────────────────────────
+  // ── STAGE 3: Me and Football ──────────────────────────────────────
   {
-    id: "I Love Football",
-    title: "I Love Football!",
+    id: "Me and Football",
+    title: "Me and Football",
     emoji: "⚽",
     intro: "Now let's talk about the best thing ever — football!",
     colour: "#10b981",
@@ -121,13 +119,13 @@ export const U9_STAGES: U9Stage[] = [
       {
         type: "voice-text",
         emoji: "💥",
-        text: "Tell me about your best ever football moment — a goal, a save, anything you felt really proud of!",
-        hint: "Close your eyes and picture it. Where were you? What happened? How did it feel?",
+        text: "Tell me about a football moment that made you feel really proud.",
+        hint: "A goal, a save, a tackle — anything that made you smile.",
       },
       {
         type: "multiselect",
         emoji: "🔥",
-        text: "What do you love MOST about football?",
+        text: "What do you love most about football?",
         hint: "Tap everything that gets you excited!",
         options: [
           "Scoring goals", "Making saves", "Skill moves", "Teamwork",
@@ -150,7 +148,7 @@ export const U9_STAGES: U9Stage[] = [
       {
         type: "voice-text",
         emoji: "⭐",
-        text: "Who is your favourite footballer, and what do you love about the way they play?",
+        text: "Who is your favourite footballer, and what do you like about the way they play?",
         hint: "Is it their pace? Their skill? How they celebrate? Their attitude?",
       },
     ],
@@ -180,7 +178,7 @@ export const U9_STAGES: U9Stage[] = [
       {
         type: "select",
         emoji: "⚡",
-        text: "When training gets really tough and tiring, you…",
+        text: "When training gets tough, what do you usually do?",
         hint: "There's no wrong answer — just be honest with yourself!",
         profileKey: "workEthic",
         options: [
@@ -194,7 +192,7 @@ export const U9_STAGES: U9Stage[] = [
       {
         type: "select",
         emoji: "🤔",
-        text: "After you make a mistake in a game, you…",
+        text: "After you make a mistake in a game, what do you usually do next?",
         hint: "Everyone makes mistakes — great players know what to do next!",
         profileKey: "mindset",
         options: [
@@ -203,19 +201,6 @@ export const U9_STAGES: U9Stage[] = [
           "Stay calm, refocus, and get back to work 🧘",
           "Talk to my coach and get advice 💬",
           "Use it as fuel to try even harder 🔥",
-        ],
-      },
-      {
-        type: "multiselect",
-        emoji: "🎯",
-        text: "What are your goals for this season?",
-        hint: "Dream big — what do you most want to achieve?",
-        profileKey: "goals",
-        options: [
-          "Score more goals", "Keep more clean sheets", "Get in the first team",
-          "Improve my weak foot", "Get stronger", "Get faster",
-          "Be a better teammate", "Learn a new skill move",
-          "Play every minute", "Win a trophy", "Get more assists", "Make the bench",
         ],
       },
     ],
@@ -232,13 +217,13 @@ export const U9_STAGES: U9Stage[] = [
       {
         type: "voice-text",
         emoji: "🏟️",
-        text: "What kind of footballer do you want to be when you grow up? Tell me your biggest dream!",
+        text: "What kind of footballer do you want to become one day?",
         hint: "Imagine it's a cup final and you're playing. What happens?",
       },
       {
         type: "multiselect",
         emoji: "🌍",
-        text: "Where do you dream of playing one day?",
+        text: "Where would you love to play one day?",
         hint: "Pick all the stages you want to play on!",
         profileKey: "dreams",
         options: [
@@ -251,19 +236,19 @@ export const U9_STAGES: U9Stage[] = [
       {
         type: "voice-text",
         emoji: "❤️",
-        text: "Who do you most want to say a BIG THANK YOU to for helping you get to this academy?",
+        text: "Who would you love to say a big thank you to for helping you?",
         hint: "A mum, dad, coach, friend — who believed in you first?",
       },
       {
         type: "voice-text",
         emoji: "✉️",
-        text: "If you could send one message to yourself as a future professional footballer, what would you say?",
+        text: "What would you say to the future you before a big match?",
         hint: "What do you want your future self to remember about right now?",
       },
     ],
   },
 
-  // ── STAGE 6: Coaching Notes (COACH ONLY) ──────────────────────────
+  // ── STAGE 6: Coach Input (COACH ONLY) ─────────────────────────────
   {
     id: "Coaching Notes",
     title: "Coach Notes",
@@ -275,7 +260,7 @@ export const U9_STAGES: U9Stage[] = [
       {
         type: "staff-multiselect",
         emoji: "🏛️",
-        text: "Which club values does this player already demonstrate — on the pitch and in their everyday behaviour?",
+        text: "Which club values does this player already show consistently?",
         hint: "Select all that apply. These values will be woven into the story's core themes.",
         profileKey: "clubValues",
         options: [
@@ -287,29 +272,8 @@ export const U9_STAGES: U9Stage[] = [
       },
       {
         type: "staff-multiselect",
-        emoji: "📚",
-        text: "What story themes and life lessons do you want woven through this player's personalised book?",
-        hint: "Choose the messages you most want them to carry — these guide the narrative arc.",
-        profileKey: "storyThemes",
-        options: [
-          "Resilience and bouncing back",
-          "The power of hard work over talent",
-          "Family and support systems",
-          "Knowing who you are beyond football",
-          "Leadership and responsibility",
-          "Learning from failure",
-          "The team over the individual",
-          "Mental strength and emotional control",
-          "Staying grounded and humble",
-          "Trusting the process",
-          "Community and giving back",
-          "Courage to be yourself",
-        ],
-      },
-      {
-        type: "staff-multiselect",
         emoji: "📈",
-        text: "What are the priority development areas you're working on with this player this season?",
+        text: "What are the most important development areas for this player this season?",
         hint: "Select all that are in your programme — technical, tactical, physical and psychological.",
         profileKey: "developmentAreas",
         options: [
@@ -332,25 +296,25 @@ export const U9_STAGES: U9Stage[] = [
       {
         type: "staff-text",
         emoji: "🌟",
-        text: "What makes this player genuinely special? Describe the quality that would never appear in a stats report or assessment document.",
+        text: "What makes this player genuinely special in a way that would never appear in a stats report?",
         hint: "This is the heart of their story — what you see that most people miss.",
       },
       {
         type: "staff-text",
-        emoji: "💡",
-        text: "What is the one key lesson or message you most want this player to take from their book — something that will help shape who they become?",
-        hint: "The single most important thing. The thing you'd say if you only had one sentence.",
-      },
-      {
-        type: "staff-text",
         emoji: "🎭",
-        text: "Describe a specific moment — in training or a match — where this player showed real character. Paint the scene.",
+        text: "Describe one specific moment when this player showed real character in training or a match.",
         hint: "The more specific, the more powerful. A real story beats a general observation every time.",
       },
       {
         type: "staff-text",
+        emoji: "💡",
+        text: "What is the main lesson or message you would love this player to take from their story?",
+        hint: "The single most important thing. The thing you'd say if you only had one sentence.",
+      },
+      {
+        type: "staff-text",
         emoji: "🏁",
-        text: "What does success look like for this player by the end of this season — on the pitch, off it, and as a growing person?",
+        text: "What would success look like for this player by the end of this season?",
         hint: "Paint the picture of where you want them to be. This becomes the story's closing chapter.",
       },
     ],
@@ -359,7 +323,6 @@ export const U9_STAGES: U9Stage[] = [
 
 export const U9_PLAYER_STAGES = U9_STAGES.filter(s => !s.isCoaching);
 
-/** Compute a character profile summary from select/multiselect answers */
 export function computeCharacterProfile(
   answers: { text: string }[],
   allQuestions: { stage: U9Stage; question: U9Question; idx: number }[]
@@ -374,10 +337,8 @@ export function computeCharacterProfile(
   const strengths = get("strengths");
   const workEthic = get("workEthic");
   const mindset = get("mindset");
-  const goals = get("goals");
   const dreams = get("dreams");
   const clubValues = get("clubValues");
-  const storyThemes = get("storyThemes");
   const developmentAreas = get("developmentAreas");
 
   const lines: string[] = ["=== CHARACTER & COACHING PROFILE SUMMATION ==="];
@@ -385,10 +346,8 @@ export function computeCharacterProfile(
   if (strengths) lines.push(`Player strengths: ${strengths}`);
   if (workEthic) lines.push(`Work ethic: ${workEthic}`);
   if (mindset) lines.push(`Mindset under pressure: ${mindset}`);
-  if (goals) lines.push(`Season goals: ${goals}`);
   if (dreams) lines.push(`Dream stages: ${dreams}`);
   if (clubValues) lines.push(`Club values demonstrated: ${clubValues}`);
-  if (storyThemes) lines.push(`Story themes (coach-selected): ${storyThemes}`);
   if (developmentAreas) lines.push(`Development priorities (coach-selected): ${developmentAreas}`);
   lines.push("==============================================");
   return lines.join("\n");

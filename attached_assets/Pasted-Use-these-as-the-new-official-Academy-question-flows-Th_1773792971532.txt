@@ -1,0 +1,489 @@
+Use these as the new official Academy question flows.
+They are replacing the previous longer set.
+
+The goal of this new version is to:
+
+reduce completion fatigue
+
+improve answer quality
+
+reduce duplication across roles
+
+make outputs easier to turn into story blueprints
+
+keep strong emotional and football-specific depth without inviting overly sensitive disclosures
+
+Important build rules:
+
+Keep the wording of the questions very close to what is written below.
+
+Use adaptive logic where noted.
+
+Keep free-text boxes generous but not intimidating.
+
+Use multiselect and select fields where marked.
+
+Keep the UI clean, premium, and easy to complete.
+
+Show progress clearly.
+
+Save answers as structured data so they can later feed a story matrix and author workflow.
+
+Player journey and coach input are core.
+
+Staff roles are package-dependent.
+
+Parent, friend, and external contributors are optional invite-only layers.
+
+NEW OFFICIAL QUESTION SET
+1) PLAYER JOURNEY — Older Players
+
+Target: 24 core questions max, plus one position branch and a small number of adaptive follow-ups.
+
+Stage 1 — Your World
+
+Pick the words that describe you best as a person.
+Response type: multiselect
+
+Tell me about one football moment you always go back to when you remember why you love the game.
+Response type: long text
+
+Describe the way you play in your own words — not your position, your game.
+Response type: long text
+
+Who do you usually tell first when something good happens in football, and what do they normally say?
+Response type: short text
+
+Is there anything at home that means something to you about football — a shirt, boots, notebook, photo, anything like that? Why does it matter?
+Response type: long text
+
+Adaptive only if second position is selected:
+
+When you switch positions, what changes most in the way you think or play?
+Response type: long text
+
+Stage 2 — Your Football Mind
+
+Show one position-specific scenario only, based on the player's main position.
+
+GK:
+A striker is through on goal and your defender is recovering. What are you reading, and what is your decision?
+
+CB:
+The striker drops deep to receive. What tells you whether to step in or hold your line?
+
+FB (LB/RB):
+Your winger has the ball ahead of you in attack. What tells you whether to overlap, underlap, or hold your position?
+
+CDM:
+The opposition break through the middle and you are the last midfielder back. What are you looking at first, and how do you deal with it?
+
+CM:
+Your holding midfielder is under pressure in build-up. Where do you move, and what are you trying to give the team?
+
+CAM:
+You are about to receive between the lines. What are you checking before the ball arrives, and what are you hoping to create?
+
+Winger:
+You are 1v1 out wide. What tells you whether to go outside, come inside, or wait for support?
+
+ST/CF:
+Your team wins the ball and breaks quickly. What is your first movement, and what are you trying to open up?
+
+Position scenario response type: long text
+
+Then ask all players:
+
+Your team is 1–0 up with ten minutes left. What changes in the way you play?
+Response type: long text
+
+Before your first touch arrives under pressure, what are you already checking or knowing?
+Response type: long text
+
+If a teammate keeps getting a positional detail wrong in a game, how do you handle it?
+Response type: select plus optional short follow-up text: “What would you actually say?”
+
+When you are not at your best personally, how do you still help the team?
+Response type: long text
+
+Stage 3 — The Work Nobody Sees
+
+Tell me about a time you were disappointed in football — maybe not being picked, not starting, or feeling overlooked. What happened?
+Response type: long text
+
+What do you do for your game that most people do not see?
+Response type: long text
+
+When you feel overlooked or undervalued, what do you usually do next?
+Response type: select plus short follow-up
+
+What is one quality in your game that people often miss?
+Response type: short text
+
+Who at this club really understands you — not just your football, but you?
+Response type: short text
+
+Stage 4 — Tough Periods
+
+Tell me about a difficult period in football that really tested you. What made it hard?
+Response type: long text
+
+During that period, what were you thinking or feeling most often?
+Response type: long text
+
+What does pressure usually look like in you during games — in your body, your thoughts, or your behaviour?
+Response type: long text
+
+What helped you keep going during that period?
+Response type: multiselect
+
+Was there anyone who helped you through it, even in a small way? What did they do?
+Response type: long text
+
+Stage 5 — The Turn
+
+Was there a moment, conversation, or decision that started to change things for you? Tell me about it.
+Response type: long text
+
+What actually shifted that helped you move forward?
+Response type: multiselect
+
+Describe the first session or match where you felt more like yourself again. What was different?
+Response type: long text
+
+Looking back now, what do you understand that you could not see at the time?
+Response type: long text
+
+Stage 6 — Who You Are
+
+What are your strongest qualities as a player and as a person?
+Response type: multiselect
+
+What is something true about you that people do not always see straight away?
+Response type: long text
+
+What would your closest teammates say about you away from the pitch?
+Response type: long text
+
+What keeps you going in football when things are hard?
+Response type: long text
+
+What do you know about yourself now that you would not want to lose?
+Response type: long text
+
+Stage 7 — The Chapter Ahead
+
+What do you want to achieve this season, on and off the pitch?
+Response type: multiselect plus optional text
+
+Where do you dream of playing one day?
+Response type: multiselect
+
+What kind of player and person do you want to become over the next few years?
+Response type: long text
+
+What do you hope people say about you that has nothing to do with stats or trophies?
+Response type: long text
+
+If this chapter of your football life had a title, what would it be?
+Response type: short text
+
+2) PLAYER JOURNEY — U9s
+
+Target: 12–16 questions total, lighter and easier to complete, with parent help where needed.
+
+Stage 1 — All About Me
+
+Let’s add your photos for the book!
+Response type: photo upload
+
+What is your favourite thing about being you?
+Response type: short text
+
+Pick the words that describe you best.
+Response type: multiselect
+
+What do you love doing when you are not playing football?
+Response type: short text
+
+Stage 2 — My People
+
+Who are the people at home who cheer you on?
+Response type: short text
+
+How do the people who love you make you feel?
+Response type: multiselect
+
+Who comes to watch you play, and what do they usually shout when you do well?
+Response type: short text
+
+Tell me about a friend who matters to you. What do you like most about them?
+Response type: short text
+
+Stage 3 — Me and Football
+
+Tell me about a football moment that made you feel really proud.
+Response type: short text
+
+What do you love most about football?
+Response type: multiselect
+
+Which parts of training do you enjoy most?
+Response type: multiselect
+
+Who is your favourite footballer, and what do you like about the way they play?
+Response type: short text
+
+Stage 4 — The Kind of Player I Am
+
+What are your strongest qualities as a player?
+Response type: multiselect
+
+When training gets tough, what do you usually do?
+Response type: select
+
+After you make a mistake in a game, what do you usually do next?
+Response type: select
+
+Stage 5 — My Big Dream
+
+What kind of footballer do you want to become one day?
+Response type: short text
+
+Optional expansion:
+17. Where would you love to play one day?
+Response type: multiselect
+
+Who would you love to say a big thank you to for helping you?
+Response type: short text
+
+What would you say to the future you before a big match?
+Response type: short text
+
+3) COACH INPUT
+
+This is required for both older players and U9s.
+
+Coach Input — Core
+
+Which club values does this player already show consistently?
+Response type: multiselect
+
+What are the most important development areas for this player this season?
+Response type: multiselect
+
+What makes this player genuinely special in a way that would never appear in a stats report?
+Response type: long text
+
+Describe one specific moment when this player showed real character in training or a match.
+Response type: long text
+
+What is the main lesson or message you would love this player to take from their story?
+Response type: long text
+
+Optional:
+6. What would success look like for this player by the end of this season?
+Response type: long text
+
+4) STAFF PORTAL — Role Observations
+
+Use package logic so these are only shown where relevant.
+
+Football Development Lead
+
+How does this player respond to coaching feedback? Give a recent example.
+Response type: long text
+
+How would you describe this player’s decision-making in football situations?
+Response type: long text
+
+What strengths do they currently show most consistently in their game?
+Response type: long text
+
+What are the most important football development areas for the next 3–6 months?
+Response type: long text
+
+Optional:
+5. How do they tend to perform when the level or pressure rises?
+Response type: long text
+
+Psychology Lead
+
+How does this player usually respond under pressure?
+Response type: long text
+
+How do they typically react after mistakes or setbacks?
+Response type: long text
+
+What psychological strengths do they currently show?
+Response type: long text
+
+What area of mindset or emotional development would help them most next?
+Response type: long text
+
+Optional:
+5. Have you noticed any meaningful change in their confidence, behaviour, or mindset over time?
+Response type: long text
+
+Education Lead
+
+How does this player approach challenge or difficulty in learning?
+Response type: long text
+
+What do you notice about how they carry themselves in school or group settings?
+Response type: long text
+
+What consistent behaviours do you see in the way they approach learning?
+Response type: long text
+
+How do they respond to feedback and improvement?
+Response type: long text
+
+Optional:
+5. Tell me about one moment when this player showed real character in your setting.
+Response type: long text
+
+Player Care & Welfare Lead
+
+How does this player usually present around the club day to day?
+Response type: long text
+
+What helps this player feel comfortable, included, and able to engage well?
+Response type: long text
+
+What kinds of support or routines seem to help them most?
+Response type: long text
+
+Is there anything important about how this player is best supported to feel at their best?
+Response type: long text
+
+Optional:
+5. Have you noticed any positive change in this player over time?
+Response type: long text
+
+5) STAKEHOLDERS — Optional Invite-Only
+
+These are not mandatory.
+
+Parent
+
+Describe a moment when you felt genuinely proud of your child in their football journey.
+Response type: long text
+
+When football is not going their way, what do you tend to notice at home?
+Response type: long text
+
+Tell me about a football conversation with your child that has stayed with you.
+Response type: long text
+
+What has this football journey asked of your family?
+Response type: long text
+
+What would you want someone writing their story to truly understand about them?
+Response type: long text
+
+Friend
+
+Tell me about a football moment you shared with them that meant more than most people would realise.
+Response type: long text
+
+What are they really like around the team — in the changing room, on the bus, or at training?
+Response type: long text
+
+Have you seen them go through a difficult football period? What stood out about how they handled it?
+Response type: long text
+
+What do they say about football when no adults are around?
+Response type: long text
+
+What quality or habit do you think will shape where they end up?
+Response type: long text
+
+External Football Coach
+
+Describe the first moment you saw something in this player that stood out.
+Response type: long text
+
+What on-pitch behaviour do they show consistently that statistics would miss?
+Response type: long text
+
+Describe a moment when their response or attitude surprised you in a positive way.
+Response type: long text
+
+What key area of development do you most want their story to reflect?
+Response type: long text
+
+What message, lesson, or theme would you want woven into their story?
+Response type: long text
+
+External Education
+
+How do they approach something they genuinely find difficult?
+Response type: long text
+
+Tell me about a moment when they showed real character in your setting.
+Response type: long text
+
+What do you notice about how they carry themselves in school or group life?
+Response type: long text
+
+What behaviours or tendencies do you observe consistently in learning?
+Response type: long text
+
+What would you want a writer to understand about this side of them?
+Response type: long text
+
+External Psychology
+
+How do they usually behave under pressure or after mistakes?
+Response type: long text
+
+What emotional or behavioural pattern do you notice most consistently?
+Response type: long text
+
+How do they tend to communicate or carry themselves in difficult moments?
+Response type: long text
+
+What psychological strength stands out most?
+Response type: long text
+
+What is the single most important developmental focus for them next?
+Response type: long text
+
+External Player Care / Welfare
+
+What do you notice about this player’s day-to-day energy and demeanour?
+Response type: long text
+
+What seems to help them feel safe, settled, or supported?
+Response type: long text
+
+Who or what seems to strengthen them most around football?
+Response type: long text
+
+What general signs tell you they may be carrying pressure? Please keep your answer non-confidential.
+Response type: long text
+
+What everyday human detail about them would help make their story feel real?
+Response type: long text
+
+Data and product rules
+
+Save every answer with metadata: question ID, stage, role, age group, timestamp, and player ID.
+
+Structure the data so it can later feed a story blueprint generator and author matrix.
+
+Support draft save and return later.
+
+Show progress by stage, not just by total percentage.
+
+Allow admin users to toggle which optional stakeholder forms are enabled.
+
+Use gentle helper text before sensitive-adjacent sections:
+“Please keep answers focused on football, learning, character, and general observations. Do not include medical details, safeguarding disclosures, or confidential family information.”
+
+Keep the UI premium, simple, and emotionally warm.
+
+Avoid making the form feel clinical or like an assessment test.
+
+This is now the new source of truth for the Academy intake flows.
