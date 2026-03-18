@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "wouter";
+import { useLocation } from "wouter";
 import { PublicLayout } from "@/layouts/PublicLayout";
 
 type Pronoun = "she/her" | "he/him" | "they/them";
@@ -34,24 +34,15 @@ const THEMES = [
   { emoji: "🌍", label: "Diversity" },
 ];
 
-const STORIES = [
-  { title: "The Ocean Guardian", desc: "Discover magical powers to communicate with sea creatures and embark on an underwater adventure to save the ocean.", tags: ["Adventure", "Nature", "Bravery"] },
-  { title: "Dreamland Lullaby", desc: "When sleep won't come, discover the secret of the stars' bedtime song in a peaceful adventure through dreamland.", tags: ["Bedtime Calm", "Imagination"] },
-  { title: "The Smart Solution", desc: "When forest animals lose their way home, use clever thinking and a kind heart to create a solution that helps everyone.", tags: ["Friendship", "Problem-Solving"] },
-  { title: "The Confidence Mountain", desc: "Feel nervous about a big challenge? Climb the Confidence Mountain and discover your inner strength with a trusted friend.", tags: ["Confidence", "Resilience"] },
-  { title: "The Kickabout Kid", desc: "When the team needs a hero, step up to the pitch and show what you're really made of — on and off the ball.", tags: ["Sport", "Teamwork"] },
-  { title: "The Kindness Circle", desc: "When small creatures need help, your gentle nature and smart ideas create a chain of kindness that spreads everywhere.", tags: ["Kindness", "Community"] },
-];
-
-const AVATARS = ["🦁", "🐯", "🐼", "🦊", "🦄", "🐲", "🐬", "🦅", "🐘", "🦋"];
+const STEP_LABELS = ["Your Hero", "Personality", "Begin the Story"];
 
 export default function CharacterCreator() {
+  const [, navigate] = useLocation();
   const [step, setStep] = useState(1);
-  const [avatar, setAvatar] = useState("🦁");
   const [data, setData] = useState<CharacterData>({
-    name: "", age: "", pronouns: "", favAnimal: "", biggestDream: "", traits: [], themes: [], parentNotes: "",
+    name: "", age: "", pronouns: "", favAnimal: "", biggestDream: "",
+    traits: [], themes: [], parentNotes: "",
   });
-  const [submitted, setSubmitted] = useState(false);
 
   const toggleTrait = (trait: string) => {
     setData((d) => ({
@@ -76,34 +67,50 @@ export default function CharacterCreator() {
   const canGoStep2 = data.name.trim() && data.age && data.pronouns;
   const canGoStep3 = data.traits.length === 3;
 
+  const launchStory = () => {
+    const params = new URLSearchParams({
+      name: data.name.trim(),
+      pronoun: data.pronouns,
+      traits: data.traits.join(","),
+      ...(data.favAnimal && { favAnimal: data.favAnimal }),
+      ...(data.biggestDream && { dream: data.biggestDream }),
+      ...(data.themes.length && { themes: data.themes.join(",") }),
+    });
+    navigate(`/stories/time-travelling-tractor?${params.toString()}`);
+  };
+
   return (
     <PublicLayout>
-      {/* Progress header */}
+      {/* Header with progress */}
       <section
         className="py-10 text-white"
-        style={{ background: "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)" }}
+        style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4f46e5 100%)" }}
       >
-        <div className="max-w-2xl mx-auto px-4 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Create Your Story Character</h1>
-          <p className="text-indigo-200 mb-6">3 steps to your child's personalised adventure</p>
+        <div className="max-w-xl mx-auto px-4 text-center">
+          <div className="text-4xl mb-3">🚜</div>
+          <h1 className="text-2xl md:text-3xl font-bold mb-1">Build Your Character</h1>
+          <p className="text-indigo-300 text-sm mb-7">
+            Your personalised version of <strong className="text-white">The Time-Travelling Tractor</strong> awaits
+          </p>
+
           {/* Step indicator */}
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-2 mb-2">
             {[1, 2, 3].map((s) => (
               <div key={s} className="flex items-center gap-2">
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-                    step === s ? "bg-white text-indigo-600" : step > s ? "bg-green-400 text-white" : "bg-white/20 text-white"
+                    step === s ? "bg-white text-indigo-600 shadow-lg" : step > s ? "bg-green-400 text-white" : "bg-white/15 text-white/60"
                   }`}
                 >
-                  {step > s ? <i className="ri-check-line"></i> : s}
+                  {step > s ? "✓" : s}
                 </div>
-                {s < 3 && <div className={`w-12 h-0.5 ${step > s ? "bg-green-400" : "bg-white/20"}`} />}
+                {s < 3 && <div className={`w-10 md:w-16 h-0.5 rounded-full transition-all ${step > s ? "bg-green-400" : "bg-white/20"}`} />}
               </div>
             ))}
           </div>
-          <div className="flex justify-center gap-12 mt-2">
-            {["Character Builder", "Personality & Themes", "Your Story Library"].map((label, i) => (
-              <span key={label} className={`text-xs ${step === i + 1 ? "text-white font-medium" : "text-white/50"}`}>
+          <div className="flex justify-center gap-6 md:gap-14">
+            {STEP_LABELS.map((label, i) => (
+              <span key={label} className={`text-[11px] transition-colors ${step === i + 1 ? "text-white font-semibold" : "text-white/35"}`}>
                 {label}
               </span>
             ))}
@@ -111,118 +118,98 @@ export default function CharacterCreator() {
         </div>
       </section>
 
-      <div className="max-w-2xl mx-auto px-4 py-12">
+      <div className="max-w-xl mx-auto px-4 py-10">
 
-        {/* ── STEP 1: Character Builder ── */}
+        {/* ── STEP 1: Your Hero ── */}
         {step === 1 && (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900">Step 1: Character Builder</h2>
+          <div className="space-y-5">
+            <h2 className="text-xl font-bold text-gray-900">Step 1 — Tell us about your hero</h2>
 
-            {/* Avatar picker */}
-            <div className="bg-gray-50 rounded-2xl p-6">
-              <p className="text-sm font-semibold text-gray-700 mb-4">Choose an avatar for your hero</p>
-              <div className="flex flex-wrap gap-3 justify-center mb-4">
-                {AVATARS.map((em) => (
-                  <button
-                    key={em}
-                    onClick={() => setAvatar(em)}
-                    className={`w-14 h-14 rounded-2xl text-3xl flex items-center justify-center transition-all ${
-                      avatar === em ? "ring-4 ring-indigo-500 scale-110 bg-indigo-50" : "bg-white hover:bg-gray-100"
-                    }`}
-                  >
-                    {em}
-                  </button>
-                ))}
-              </div>
-              {/* Avatar preview */}
-              <div className="w-24 h-24 mx-auto rounded-2xl flex items-center justify-center text-5xl shadow-inner bg-gradient-to-br from-indigo-100 to-purple-100">
-                {avatar}
-              </div>
+            <div>
+              <label className="text-sm font-semibold text-gray-700 mb-1.5 block">Hero's Name <span className="text-red-400">*</span></label>
+              <input
+                value={data.name}
+                onChange={(e) => setData({ ...data, name: e.target.value })}
+                className="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                placeholder="e.g. Mia, Oliver, Alex..."
+              />
+              {data.name.trim() && (
+                <p className="text-xs text-indigo-600 mt-1.5 font-medium">
+                  ✨ Every page of The Time-Travelling Tractor will say <strong>{data.name}</strong>
+                </p>
+              )}
             </div>
 
-            {/* Name & Age */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="col-span-2">
-                <label className="text-sm font-medium text-gray-700 mb-1 block">Hero's Name</label>
-                <input
-                  value={data.name}
-                  onChange={(e) => setData({ ...data, name: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  placeholder="Enter your hero's name"
-                />
-                {data.name && (
-                  <p className="text-xs text-indigo-600 mt-1.5">✨ Every page of the story will say <strong>{data.name}</strong></p>
-                )}
-              </div>
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">Age</label>
+                <label className="text-sm font-semibold text-gray-700 mb-1.5 block">Age <span className="text-red-400">*</span></label>
                 <input
                   type="number"
-                  min={3}
-                  max={12}
+                  min={3} max={16}
                   value={data.age}
                   onChange={(e) => setData({ ...data, age: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
                   placeholder="e.g. 7"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">Pronouns</label>
+                <label className="text-sm font-semibold text-gray-700 mb-1.5 block">Pronouns <span className="text-red-400">*</span></label>
                 <select
                   value={data.pronouns}
                   onChange={(e) => setData({ ...data, pronouns: e.target.value as Pronoun })}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                  className="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white transition"
                 >
                   <option value="">Select...</option>
-                  <option value="she/her">She/Her</option>
-                  <option value="he/him">He/Him</option>
-                  <option value="they/them">They/Them</option>
+                  <option value="she/her">She / Her</option>
+                  <option value="he/him">He / Him</option>
+                  <option value="they/them">They / Them</option>
                 </select>
               </div>
             </div>
 
-            {/* Favourite things */}
             <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">Favourite Animal</label>
+              <label className="text-sm font-semibold text-gray-700 mb-1.5 block">Favourite Animal</label>
               <input
                 value={data.favAnimal}
                 onChange={(e) => setData({ ...data, favAnimal: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Lion, Cat, Dragon..."
+                className="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                placeholder="Lion, Cat, Dragon, Fox..."
               />
+              <p className="text-xs text-gray-400 mt-1">This creature will appear in the story 🐾</p>
             </div>
+
             <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">Biggest Dream</label>
+              <label className="text-sm font-semibold text-gray-700 mb-1.5 block">Biggest Dream</label>
               <input
                 value={data.biggestDream}
                 onChange={(e) => setData({ ...data, biggestDream: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="To become an astronaut, help animals..."
+                className="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+                placeholder="To be a footballer, astronaut, help animals..."
               />
+              <p className="text-xs text-gray-400 mt-1">The story's ending will reflect this dream 🌟</p>
             </div>
 
             <button
               disabled={!canGoStep2}
               onClick={() => setStep(2)}
-              className="w-full py-4 text-white font-semibold text-lg rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{ backgroundColor: "#6366f1" }}
+              className="w-full py-4 text-white font-bold text-lg rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.01] shadow-md"
+              style={{ backgroundColor: "#4f46e5" }}
             >
-              Continue to Personality & Themes →
+              Continue to Personality →
             </button>
           </div>
         )}
 
-        {/* ── STEP 2: Personality & Themes ── */}
+        {/* ── STEP 2: Personality ── */}
         {step === 2 && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900">Step 2: Personality & Themes</h2>
+            <h2 className="text-xl font-bold text-gray-900">
+              Step 2 — What makes <span className="text-indigo-600">{data.name || "your hero"}</span> unique?
+            </h2>
 
-            {/* Traits */}
             <div>
-              <p className="text-sm font-medium text-gray-700 mb-3">
-                Select exactly 3 personality traits for{" "}
-                <strong className="text-indigo-600">{data.name || "your hero"}</strong>
-              </p>
+              <p className="text-sm font-semibold text-gray-700 mb-1">Choose exactly 3 personality traits</p>
+              <p className="text-xs text-gray-400 mb-3">These will shape how the story is written — {data.name || "your hero"}'s decisions will reflect these traits.</p>
               <div className="flex flex-wrap gap-2">
                 {TRAITS.map((trait) => {
                   const selected = data.traits.includes(trait);
@@ -234,12 +221,12 @@ export default function CharacterCreator() {
                       disabled={disabled}
                       className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
                         selected
-                          ? "text-white border-transparent"
+                          ? "text-white border-transparent shadow-sm"
                           : disabled
                             ? "text-gray-300 border-gray-100 cursor-not-allowed"
                             : "text-gray-600 border-gray-200 hover:border-indigo-400 hover:text-indigo-600"
                       }`}
-                      style={selected ? { backgroundColor: "#6366f1", borderColor: "#6366f1" } : undefined}
+                      style={selected ? { backgroundColor: "#4f46e5", borderColor: "#4f46e5" } : undefined}
                     >
                       {trait}
                     </button>
@@ -247,14 +234,12 @@ export default function CharacterCreator() {
                 })}
               </div>
               <p className="text-xs text-gray-500 mt-2">
-                {data.traits.length}/3 traits selected
-                {data.traits.length === 3 && " ✅"}
+                {data.traits.length}/3 selected{data.traits.length === 3 && " — perfect! ✅"}
               </p>
             </div>
 
-            {/* Themes */}
             <div>
-              <p className="text-sm font-medium text-gray-700 mb-3">What story themes matter most? (choose any)</p>
+              <p className="text-sm font-semibold text-gray-700 mb-3">Story themes (optional — choose any)</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {THEMES.map(({ emoji, label }) => (
                   <button
@@ -263,24 +248,22 @@ export default function CharacterCreator() {
                     className={`flex items-center gap-2 p-3 rounded-xl border text-sm font-medium transition-all ${
                       data.themes.includes(label)
                         ? "border-indigo-400 bg-indigo-50 text-indigo-700"
-                        : "border-gray-200 text-gray-600 hover:border-indigo-200"
+                        : "border-gray-200 text-gray-600 hover:border-indigo-200 hover:bg-indigo-50/50"
                     }`}
                   >
-                    <span>{emoji}</span>
-                    {label}
+                    <span>{emoji}</span> {label}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Parent notes */}
             <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">Parent Notes (optional)</label>
+              <label className="text-sm font-semibold text-gray-700 mb-1.5 block">Parent note (optional)</label>
               <textarea
-                rows={3}
+                rows={2}
                 value={data.parentNotes}
                 onChange={(e) => setData({ ...data, parentNotes: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none"
                 placeholder="e.g. 'Starting a new school soon, loves dinosaurs, needs a confidence boost...'"
               />
             </div>
@@ -288,90 +271,91 @@ export default function CharacterCreator() {
             <div className="flex gap-3">
               <button
                 onClick={() => setStep(1)}
-                className="flex-1 py-4 border-2 border-gray-200 text-gray-600 font-semibold text-lg rounded-xl hover:bg-gray-50 transition-colors"
+                className="flex-1 py-4 border-2 border-gray-200 text-gray-600 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
               >
                 ← Back
               </button>
               <button
                 disabled={!canGoStep3}
                 onClick={() => setStep(3)}
-                className="flex-[3] py-4 text-white font-semibold text-lg rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                style={{ backgroundColor: "#6366f1" }}
+                className="flex-[3] py-4 text-white font-bold text-lg rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.01] shadow-md"
+                style={{ backgroundColor: "#4f46e5" }}
               >
-                See Your Story Library →
+                Build My Story →
               </button>
             </div>
           </div>
         )}
 
-        {/* ── STEP 3: Story Library ── */}
+        {/* ── STEP 3: Story ready ── */}
         {step === 3 && (
           <div className="space-y-6">
-            <div className="text-center mb-6">
-              <div className="text-5xl mb-3">{avatar}</div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-1">
-                {data.name ? `${data.name}'s Personalised Library` : "Your Personalised Library"}
-              </h2>
-              <p className="text-gray-500 text-sm">
-                Each story features {data.name || "your hero"} as the main character — with{" "}
-                {data.traits.slice(0, 2).join(", ") || "unique traits"} woven into every adventure.
-              </p>
-            </div>
-
-            <div className="grid sm:grid-cols-2 gap-4">
-              {STORIES.map(({ title, desc, tags }) => (
-                <div key={title} className="border border-gray-100 rounded-2xl p-4 hover:border-indigo-200 hover:shadow-sm transition-all">
-                  <div className="w-full h-24 rounded-xl mb-3 flex items-center justify-center text-3xl"
-                    style={{ background: "linear-gradient(135deg, #ede9fe 0%, #fce7f3 100%)" }}>
-                    📖
+            {/* Character card */}
+            <div className="rounded-2xl overflow-hidden border border-indigo-100 shadow-lg">
+              <div
+                className="px-6 py-5 text-white"
+                style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #4f46e5 100%)" }}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-white/15 rounded-2xl flex items-center justify-center text-3xl">
+                    {data.favAnimal ? "🐾" : "⭐"}
                   </div>
-                  <h4 className="font-bold text-gray-900 mb-1 text-sm">{title}</h4>
-                  <p className="text-xs text-gray-500 mb-2 leading-relaxed">
-                    {desc.replace(/you/gi, data.name || "your hero")}
-                  </p>
-                  <div className="flex flex-wrap gap-1">
-                    {tags.map((t) => (
-                      <span key={t} className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">
-                        {t}
-                      </span>
+                  <div>
+                    <div className="text-xs text-indigo-300 uppercase tracking-widest font-bold mb-0.5">Your Hero</div>
+                    <div className="text-xl font-bold">{data.name}</div>
+                    <div className="text-indigo-300 text-sm">Age {data.age} · {data.pronouns}</div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white px-6 py-5 space-y-3">
+                <div>
+                  <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Personality Traits</div>
+                  <div className="flex flex-wrap gap-2">
+                    {data.traits.map(t => (
+                      <span key={t} className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-sm font-semibold">{t}</span>
                     ))}
                   </div>
                 </div>
-              ))}
+                {data.favAnimal && (
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <span className="text-lg">🐾</span>
+                    <span>Favourite animal: <strong>{data.favAnimal}</strong> — will appear in the story</span>
+                  </div>
+                )}
+                {data.biggestDream && (
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <span className="text-lg">🌟</span>
+                    <span>Biggest dream: <strong>{data.biggestDream}</strong> — woven into the ending</span>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {submitted ? (
-              <div className="bg-green-50 border border-green-200 rounded-2xl p-6 text-center">
-                <div className="text-3xl mb-2">🎉</div>
-                <h3 className="font-bold text-green-900 mb-1">Character saved!</h3>
-                <p className="text-green-700 text-sm">We'll be in touch with {data.name || "your child"}'s first story.</p>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-3">
-                <button
-                  onClick={() => setSubmitted(true)}
-                  className="w-full py-4 text-white font-semibold text-lg rounded-xl shadow-lg"
-                  style={{ background: "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)" }}
-                >
-                  Start Reading — Get {data.name || "Your"}'s First Story
-                </button>
-                <button
-                  onClick={() => setStep(1)}
-                  className="w-full py-4 border-2 border-gray-200 text-gray-600 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
-                >
-                  Edit Character
-                </button>
-                <Link
-                  href="/stories/time-travelling-tractor"
-                  className="block w-full py-4 text-center border-2 border-indigo-200 text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-colors"
-                >
-                  Try Our Story Engine First
-                </Link>
-              </div>
-            )}
+            {/* Story preview */}
+            <div
+              className="rounded-2xl p-5 border border-indigo-100"
+              style={{ background: "linear-gradient(135deg, #ede9fe 0%, #e0f2fe 100%)" }}
+            >
+              <div className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-3">🚜 Story Preview — Chapter 1</div>
+              <p className="text-gray-700 text-sm leading-relaxed italic" style={{ fontFamily: "Georgia, serif" }}>
+                "The morning mist lay low over the fields when <strong>{data.name}</strong> found it — half-hidden beneath an old oak tree, covered in rust and wonder: the Time-Travelling Tractor. Something <strong>{data.traits[0]?.toLowerCase() || "brave"}</strong> stirred inside {data.pronouns === "she/her" ? "her" : data.pronouns === "he/him" ? "his" : "their"} chest…"
+              </p>
+            </div>
 
-            <button onClick={() => setStep(2)} className="w-full text-gray-400 text-sm hover:text-gray-600 transition-colors">
-              ← Back to Personality
+            <button
+              onClick={launchStory}
+              className="w-full py-5 text-white font-black text-xl rounded-2xl shadow-xl transition-all hover:scale-[1.02]"
+              style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a1a1a" }}
+            >
+              🚜 Read {data.name}'s Story Now!
+            </button>
+
+            <p className="text-center text-xs text-gray-400">
+              Your character profile is embedded in the story — every chapter is written just for {data.name}.
+            </p>
+
+            <button onClick={() => setStep(2)} className="w-full text-gray-400 text-sm hover:text-gray-600 transition-colors py-2">
+              ← Edit personality
             </button>
           </div>
         )}

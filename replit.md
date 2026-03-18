@@ -50,7 +50,7 @@ lib/
 
 ### Frontend Routes — Public Marketing Site
 All wrapped in `PublicLayout` (shared header/nav/footer). No MetyButton on these routes.
-- `/` — Marketing home (hero, features, stories, academy proof, CTA)
+- `/` — Marketing home (image-led hero with family photos, story preview card, academy banner, family testimonials, illustrators section, CTA)
 - `/about` — About Me Time Stories (mission, team, values)
 - `/for-academies` — Football Academy programme (pitch, ecosystem, benefits, enquiry modal)
 - `/csr` — Corporate Social Responsibility / partnerships (3 tiers, enquiry form)

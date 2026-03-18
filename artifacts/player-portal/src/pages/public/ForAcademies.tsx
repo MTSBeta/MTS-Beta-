@@ -145,38 +145,45 @@ export default function ForAcademies() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              How Me Time Stories Works for Academies
+              How the Academy Programme Works
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              A complete personalised story programme that fits within your existing pastoral care and wellbeing frameworks.
+              From signing your academy to a personalised story in every player's home — a complete end-to-end programme.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
               {
                 step: "01",
-                icon: "ri-file-user-line",
-                title: "Player Profile & Onboarding",
-                desc: "Players complete a short profile — their position, personality traits, favourite parts of football, and personal goals. Parents add family context.",
+                icon: "ri-handshake-line",
+                title: "Academy Onboarding",
+                desc: "We set up your dedicated staff portal, branded to your club. Your coaching and welfare team get secure logins and access to the player management dashboard.",
                 color: "#1e3a8a",
               },
               {
                 step: "02",
-                icon: "ri-book-2-line",
-                title: "Personalised Story Delivery",
-                desc: "We craft individual stories where each player is the hero navigating real footballing situations — selection, setbacks, teamwork, performance anxiety.",
+                icon: "ri-smartphone-line",
+                title: "Players Complete Their Journey",
+                desc: "Each player receives a unique access code. They complete an immersive digital questionnaire — sharing their football story, personality, positions, dreams, and what the game means to them.",
                 color: "#2563eb",
               },
               {
                 step: "03",
-                icon: "ri-bar-chart-line",
-                title: "Wellbeing Tracking",
-                desc: "Academy staff see engagement reports and wellbeing indicators. Stories reinforce your coaching values and club culture from within the home.",
+                icon: "ri-quill-pen-line",
+                title: "We Write & Illustrate Their Story",
+                desc: "Our editorial team uses each player's collected profile to craft a bespoke story — where they are the hero facing real footballing challenges. Reviewed by your welfare team before delivery.",
                 color: "#0ea5e9",
+              },
+              {
+                step: "04",
+                icon: "ri-home-heart-line",
+                title: "Story Delivered to the Family",
+                desc: "The finished story is delivered as a premium printed book — and digitally via the parent portal. Families read it together. The club's values live in the home.",
+                color: "#10b981",
               },
             ].map(({ step, icon, title, desc, color }) => (
               <div key={step} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <div className="text-3xl font-black mb-3" style={{ color: `${color}40` }}>{step}</div>
+                <div className="text-3xl font-black mb-3" style={{ color: `${color}25` }}>{step}</div>
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl mb-4"
                   style={{ backgroundColor: color }}
@@ -187,6 +194,27 @@ export default function ForAcademies() {
                 <p className="text-gray-600 text-sm leading-relaxed">{desc}</p>
               </div>
             ))}
+          </div>
+
+          {/* Portal callout */}
+          <div className="mt-10 bg-blue-900 rounded-2xl p-6 md:p-8 text-white flex flex-col md:flex-row items-center gap-6">
+            <div className="w-14 h-14 bg-white/15 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0">
+              <i className="ri-dashboard-3-line"></i>
+            </div>
+            <div className="flex-1">
+              <h3 className="font-bold text-xl mb-1">The Staff Portal is where it all begins</h3>
+              <p className="text-blue-200 text-sm leading-relaxed">
+                Once your academy is signed, you receive a secure, branded staff portal. Coaches can register players, monitor their journey progress, and review stories before delivery — all in one place. There's nothing for players to download or sign up for; they receive a unique access code from their coach.
+              </p>
+            </div>
+            <div className="flex-shrink-0">
+              <button
+                onClick={() => document.querySelector<HTMLElement>('[data-enquiry]')?.click()}
+                className="px-6 py-3 bg-white text-blue-900 font-semibold rounded-xl hover:bg-blue-50 transition-colors whitespace-nowrap"
+              >
+                Request Access →
+              </button>
+            </div>
           </div>
         </div>
       </section>
