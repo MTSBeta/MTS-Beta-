@@ -1,0 +1,164 @@
+I want you to connect my app to this Google Sheet as the new Academy Intake Hub data source:
+
+Google Sheet:
+https://docs.google.com/spreadsheets/d/14qvEC3w_5_CbBy4yDNXBHkkCJi2cCvv33NOl9UWIC54/edit?gid=1014211774#gid=1014211774
+
+Goal:
+Use this sheet as the central storage layer for academy intake data coming from the website, so all player, parent, coach, staff, and stakeholder responses are stored in one place for Me Time Stories.
+
+Important:
+Do not break the current demo UX.
+Keep the current portal and forms working, but change the persistence layer so submissions can be written into this Google Sheet.
+If needed, keep the current local/database layer as fallback, but Google Sheets should become the main synced destination.
+
+What I need built
+
+1. Google Sheets connection
+- Connect the app securely to the Google Sheet using a Google service account.
+- Use environment variables / secrets for credentials.
+- Do not hardcode any private keys in source code.
+- Add clear setup instructions for where I need to place:
+  - GOOGLE_SERVICE_ACCOUNT_EMAIL
+  - GOOGLE_PRIVATE_KEY
+  - GOOGLE_SHEET_ID
+- Extract the sheet ID from the URL above.
+
+2. Use the workbook tabs as structured tables
+Please inspect the workbook and map the app to the relevant tabs.
+At minimum, I want the app to read from and write to the following logical areas if they exist:
+- Players
+- Contributors
+- Question_Bank
+- Response_Log
+- Image_Asset_Register
+- Workflow_Status
+- Player_360_Summary
+- Story_Blueprint
+- Lists
+- README
+
+If the exact tab names differ, detect the real names and map them cleanly.
+
+3. Data flow to implement
+When a player submits a journey response:
+- write a row to Response_Log
+- include:
+  - player_id
+  - player_name if available
+  - academy_id / academy_name if available
+  - contributor_role = player
+  - contributor_name if available
+  - question_id
+  - stage
+  - question_text
+  - response_value
+  - response_type
+  - submitted_at timestamp
+  - source = portal
+  - completion_status if relevant
+
+When a parent, coach, psychology lead, education lead, football development lead, or welfare lead submits:
+- also write to Response_Log
+- set the correct contributor_role
+- include contributor name and relationship where available
+
+When images are uploaded:
+- store file metadata in Image_Asset_Register
+- include:
+  - player_id
+  - contributor_role
+  - file name
+  - file type
+  - uploaded_at
+  - storage path or URL
+  - approved status default false/pending
+  - notes if available
+
+When player records are created or updated:
+- sync with Players tab
+
+When stakeholder invite links or codes are generated:
+- sync with Contributors or a suitable sheet tab if one exists
+
+When completion changes:
+- sync with Workflow_Status
+
+4. Read + write requirements
+- Build helper functions/services for:
+  - getPlayerByCode(player_code)
+  - getParentByCode(parent_code)
+  - getPlayerResponses(player_id)
+  - saveResponse(payload)
+  - saveBatchResponses(payload[])
+  - updateWorkflowStatus(player_id, section, status)
+  - registerImageAsset(payload)
+  - getContributorsForPlayer(player_id)
+- Use append-row logic for logs like Response_Log
+- Use update-row logic for master records like Players and Workflow_Status
+- Avoid duplicate records where possible
+- Add basic validation and error handling
+
+5. Matching the current demo players
+Please import or sync the current demo players from the app/database into the sheet if they are not already there.
+Use the existing demo players and preserve codes like:
+- player code
+- parent code
+- academy
+- age group
+- position
+- shirt number
+- contributor assignments
+
+Do not invent fake players unless needed for testing.
+Try to preserve Finley Grant / PLY-DEMU13 and current demo data if present.
+
+6. Keep the UI intact
+Do not redesign everything.
+Just make the current dashboard and forms pull from / save to Google Sheets.
+Keep:
+- Staff portal flow
+- Completion tracker
+- Player journey responses
+- Role-based submissions
+- Codes and player lookups
+
+7. Add an admin sync/debug view
+Add a simple admin-only utility page or debug panel that lets me:
+- test Google Sheets connection
+- see if a row was written successfully
+- manually trigger a sync of demo players
+- inspect sheet tab mappings
+- view recent write errors
+
+8. Technical expectations
+- Use the best approach for this stack in Replit
+- If this is a Node app, use the Google Sheets API or a suitable library
+- If this is Python, use gspread or Google Sheets API
+- Keep the code modular
+- Add comments
+- Do not expose credentials client-side
+- Server-side only for sheet writes
+
+9. Important structure rule
+I want this sheet to become the singular source of truth for academy input flowing into Me Time Stories.
+So please structure the integration in a way that will later support:
+- story blueprint generation
+- author briefs
+- LLM prompt packs
+- QA workflow
+
+Do not build those outputs yet.
+Just make sure the schema and saved data are clean enough to support them later.
+
+10. Deliverables
+Please do all of the following:
+- inspect the current codebase and understand how the current data is stored
+- connect the app to the Google Sheet
+- map the relevant tabs
+- implement read/write sync
+- preserve current UX
+- add setup instructions for secrets
+- tell me exactly what I need to do in Google Cloud / Google Sheets permissions to make it work
+- list any assumptions you made
+
+If the current sheet structure needs slight adjustment for reliable syncing, propose the minimum necessary changes before making them.
