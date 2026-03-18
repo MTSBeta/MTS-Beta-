@@ -36,10 +36,25 @@ function buildUser(staff: typeof academyStaffTable.$inferSelect, academy: typeof
   };
 }
 
-router.post("/staff/register", async (req, res) => {
-  const { fullName, email, password, academyKey, accessCode } = req.body;
+// Look up which academy a coach access code belongs to
+router.get("/staff/lookup-academy", async (req, res) => {
+  const code = String(req.query["code"] ?? "").trim();
+  if (!code) { res.status(400).json({ error: "code required" }); return; }
 
-  if (!fullName || !email || !password || !academyKey || !accessCode) {
+  const result = await db.execute(
+    sql`SELECT key, name FROM academies WHERE UPPER(REPLACE(access_code,' ','')) = UPPER(REPLACE(${code},' ','')) LIMIT 1`
+  );
+  if (!result.rows || result.rows.length === 0) {
+    res.status(404).json({ error: "No academy found for this code" });
+    return;
+  }
+  res.json({ key: result.rows[0].key, name: result.rows[0].name });
+});
+
+router.post("/staff/register", async (req, res) => {
+  const { fullName, email, password, academyKey: rawAcademyKey, accessCode } = req.body;
+
+  if (!fullName || !email || !password || !accessCode) {
     res.status(400).json({ error: "All fields are required" });
     return;
   }
@@ -48,22 +63,21 @@ router.post("/staff/register", async (req, res) => {
     return;
   }
 
+  // Look up academy by access code (academyKey is now optional — code is enough)
   const academyResult = await db.execute(
     sql`SELECT id, key, name, logo_text, primary_color, secondary_color, welcome_message, access_code
-        FROM academies WHERE key = ${academyKey.trim().toLowerCase()} LIMIT 1`
+        FROM academies
+        WHERE UPPER(REPLACE(access_code,' ','')) = UPPER(REPLACE(${accessCode.trim()},' ',''))
+        ${rawAcademyKey ? sql`AND key = ${rawAcademyKey.trim().toLowerCase()}` : sql``}
+        LIMIT 1`
   );
 
   if (!academyResult.rows || academyResult.rows.length === 0) {
-    res.status(400).json({ error: "Academy not found" });
+    res.status(401).json({ error: "Invalid access code. Please check your code and try again." });
     return;
   }
 
   const academyRow = academyResult.rows[0];
-
-  if (!academyRow.access_code || normalizeCode(String(academyRow.access_code)) !== normalizeCode(accessCode)) {
-    res.status(401).json({ error: "Invalid access code for this academy" });
-    return;
-  }
 
   const [existing] = await db
     .select({ id: academyStaffTable.id })

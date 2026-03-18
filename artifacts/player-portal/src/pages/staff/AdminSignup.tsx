@@ -1,66 +1,76 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
-import { Loader2, ShieldCheck, ArrowLeft, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import { Loader2, ShieldCheck, ArrowLeft, CheckCircle2, Eye, EyeOff, CheckCircle } from "lucide-react";
 import { useStaffAuth } from "@/hooks/useStaffAuth";
 
 const API_BASE = `${import.meta.env.BASE_URL}api`.replace(/\/api$/, "/api");
 
-const POSITIONS = [
-  "Goalkeeper",
-  "Right Back",
-  "Centre Back",
-  "Left Back",
-  "Defensive Midfielder",
-  "Central Midfielder",
-  "Attacking Midfielder",
-  "Right Winger",
-  "Left Winger",
-  "Striker",
-];
-
-interface Academy {
-  id: number;
-  key: string;
-  name: string;
-}
-
 export default function AdminSignup() {
   const [, navigate] = useLocation();
   const { login, staffUser } = useStaffAuth();
-
-  const [academies, setAcademies] = useState<Academy[]>([]);
-  const [academiesLoading, setAcademiesLoading] = useState(true);
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [academyKey, setAcademyKey] = useState("");
   const [accessCode, setAccessCode] = useState("");
+  const [detectedAcademy, setDetectedAcademy] = useState<{ key: string; name: string } | null>(null);
+  const [codeChecking, setCodeChecking] = useState(false);
+  const [codeError, setCodeError] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  const lookupTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (staffUser) navigate("/staff-dashboard");
   }, [staffUser]);
 
+  // Auto-detect academy from access code
   useEffect(() => {
-    fetch(`${API_BASE}/academies`)
-      .then((r) => r.json())
-      .then((data) => setAcademies(Array.isArray(data) ? data : []))
-      .catch(() => setAcademies([]))
-      .finally(() => setAcademiesLoading(false));
-  }, []);
+    const code = accessCode.trim();
+    setDetectedAcademy(null);
+    setCodeError("");
+
+    if (lookupTimer.current) clearTimeout(lookupTimer.current);
+
+    if (code.length < 8) return;
+
+    lookupTimer.current = setTimeout(async () => {
+      setCodeChecking(true);
+      try {
+        const res = await fetch(`${API_BASE}/staff/lookup-academy?code=${encodeURIComponent(code)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setDetectedAcademy(data);
+          setCodeError("");
+        } else {
+          setDetectedAcademy(null);
+          setCodeError("Code not recognised. Please check and try again.");
+        }
+      } catch {
+        setCodeError("");
+      } finally {
+        setCodeChecking(false);
+      }
+    }, 500);
+
+    return () => { if (lookupTimer.current) clearTimeout(lookupTimer.current); };
+  }, [accessCode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (!fullName.trim() || !email.trim() || !password || !academyKey || !accessCode.trim()) {
+    if (!fullName.trim() || !email.trim() || !password || !accessCode.trim()) {
       setError("Please fill in all fields.");
+      return;
+    }
+    if (!detectedAcademy) {
+      setError("Please enter a valid academy access code.");
       return;
     }
     if (password.length < 8) {
@@ -77,7 +87,13 @@ export default function AdminSignup() {
       const res = await fetch(`${API_BASE}/staff/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName: fullName.trim(), email: email.trim(), password, academyKey, accessCode: accessCode.trim() }),
+        body: JSON.stringify({
+          fullName: fullName.trim(),
+          email: email.trim(),
+          password,
+          academyKey: detectedAcademy.key,
+          accessCode: accessCode.trim(),
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Registration failed");
@@ -146,11 +162,63 @@ export default function AdminSignup() {
               Academy Admin Signup
             </h1>
             <p className="text-white/50 text-sm">
-              Create your admin account. You'll need your academy's access code.
+              Create your admin account using your academy's access code.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+
+            {/* Access Code — first, so academy auto-fills */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-white/60 uppercase tracking-wider ml-1 font-display">
+                Academy Access Code
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={accessCode}
+                  onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
+                  placeholder="e.g. COACH-MAN-005"
+                  autoComplete="off"
+                  spellCheck={false}
+                  className="w-full h-12 rounded-xl glass-input px-4 pr-10 text-base font-medium uppercase tracking-wider"
+                />
+                {codeChecking && (
+                  <Loader2 size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/30 animate-spin" />
+                )}
+                {detectedAcademy && !codeChecking && (
+                  <CheckCircle size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-green-400" />
+                )}
+              </div>
+
+              {/* Academy auto-detection feedback */}
+              <AnimatePresence mode="wait">
+                {detectedAcademy && (
+                  <motion.div
+                    key="detected"
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="flex items-center gap-2 ml-1 mt-1"
+                  >
+                    <span className="text-green-400 text-xs font-bold">✓</span>
+                    <span className="text-green-400 text-xs font-semibold">{detectedAcademy.name}</span>
+                  </motion.div>
+                )}
+                {codeError && !codeChecking && (
+                  <motion.p
+                    key="code-error"
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="text-red-400 text-xs ml-1 mt-1"
+                  >
+                    {codeError}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
+
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-white/60 uppercase tracking-wider ml-1 font-display">
                 Full Name
@@ -216,44 +284,6 @@ export default function AdminSignup() {
               />
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-white/60 uppercase tracking-wider ml-1 font-display">
-                Academy
-              </label>
-              <select
-                value={academyKey}
-                onChange={(e) => setAcademyKey(e.target.value)}
-                disabled={academiesLoading}
-                className="w-full h-12 rounded-xl glass-input px-4 text-base font-medium appearance-none cursor-pointer bg-white/5 border border-white/10 text-white focus:outline-none focus:border-white/30 transition-colors disabled:opacity-50"
-              >
-                <option value="">
-                  {academiesLoading ? "Loading academies…" : "Select your academy"}
-                </option>
-                {academies.map((a) => (
-                  <option key={a.key} value={a.key}>
-                    {a.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-white/60 uppercase tracking-wider ml-1 font-display">
-                Academy Access Code
-              </label>
-              <input
-                type="text"
-                value={accessCode}
-                onChange={(e) => setAccessCode(e.target.value)}
-                placeholder="Provided by MeTime Stories"
-                autoComplete="off"
-                className="w-full h-12 rounded-xl glass-input px-4 text-base font-medium uppercase tracking-wider"
-              />
-              <p className="text-white/30 text-xs ml-1">
-                This is the unique code assigned to your academy.
-              </p>
-            </div>
-
             <AnimatePresence>
               {error && (
                 <motion.p
@@ -270,7 +300,7 @@ export default function AdminSignup() {
 
             <button
               type="submit"
-              disabled={loading || academiesLoading}
+              disabled={loading || !detectedAcademy}
               className="w-full h-12 rounded-xl bg-white text-black font-display font-black text-sm uppercase tracking-widest hover:bg-white/90 transition-all disabled:opacity-50 flex items-center justify-center gap-2 mt-2"
             >
               {loading ? (
