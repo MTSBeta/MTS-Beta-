@@ -283,6 +283,7 @@ A separate internal tool for MeTime Stories staff (authors, illustrators, editor
 - **Video hero**: `public/images/girl-reading-book.mp4` — looping autoplay, covers hero section
 - **Parallax**: scroll listener on MarketingHome; video moves at `scrollY * 0.38`, content at `scrollY * -0.10`
 - **Glassmorphic sections**: TTT section uses `family-fireplace.png` blurred behind a `rgba(6,4,2,0.82)` dark glass overlay; story preview panel uses `backdrop-filter: blur(20px)`
+- **Partial-image background (preferred accent pattern)**: Absolutely position an image covering one side of a section (e.g. right 40–45%) using `object-fit: contain` + `object-position: right center` so the full image shows without cropping. Layer a directional gradient overlay (same colour as the section background) that fades from opaque on the content side to transparent toward the image, blending them together. Mark image `pointer-events-none select-none` and `aria-hidden`. Hide on mobile with `hidden md:block`. Used on: MarketingHome testimonials section (nursery photo, right side). Apply this pattern wherever a real photo can add warmth without overwhelming content.
 - **Icons**: Remix Icons (`ri-*`) throughout; emojis only in story content, theme selectors, companion animals
 
 ### Page Backgrounds
