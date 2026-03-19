@@ -196,6 +196,88 @@ export default function About() {
         </div>
       </section>
 
+      {/* ── Meet the Founders ────────────────────────────────────────── */}
+      <section className="py-16 md:py-20" style={{ background: "#0d0a08" }}>
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="text-center mb-10">
+            <span className="inline-block bg-amber-400/15 border border-amber-400/25 text-amber-300 text-sm font-medium px-4 py-1.5 rounded-full mb-4">
+              The Team
+            </span>
+            <h2 className="text-3xl font-bold mb-3" style={{ color: "#fef3e2" }}>Meet the Founders</h2>
+            <p className="text-base max-w-lg mx-auto" style={{ color: "rgba(254,243,226,0.48)" }}>
+              We share our journey in real time on LinkedIn — follow us for the latest news, partnerships, and behind-the-scenes updates.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            {[
+              {
+                name: "Taku Chiweshe",
+                role: "Co-Founder & CEO",
+                bio: "Passionate about using storytelling and technology to put every child at the centre of their own world. Driving academy partnerships and the vision behind the personalisation framework.",
+                email: "taku@metimestories.co.uk",
+                linkedin: "https://www.linkedin.com/in/taku-chiweshe-a342a1324/",
+                initials: "TC",
+                color: "#f97316",
+              },
+              {
+                name: "Michael McDermott",
+                role: "Co-Founder & CCO",
+                bio: "Creating the stories that make children point at the page and say 'That's me!' — building the narrative frameworks, author partnerships, and creative direction behind Me Time Stories.",
+                email: "michael@metimestories.co.uk",
+                linkedin: "https://www.linkedin.com/in/michael-mcdermott-477a83230/",
+                initials: "MM",
+                color: "#fbbf24",
+              },
+            ].map(({ name, role, bio, email, linkedin, initials, color }) => (
+              <div key={name} className="rounded-3xl p-7 flex flex-col gap-5" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-black flex-shrink-0"
+                    style={{ background: `linear-gradient(135deg, ${color}25, ${color}10)`, border: `1.5px solid ${color}40`, color }}>
+                    {initials}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold" style={{ color: "#fef3e2" }}>{name}</h3>
+                    <p className="text-sm font-semibold" style={{ color }}>{role}</p>
+                  </div>
+                </div>
+                <p className="text-sm leading-relaxed flex-1" style={{ color: "rgba(254,243,226,0.52)" }}>{bio}</p>
+                <div className="flex flex-col gap-2 pt-2 border-t" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
+                  <a href={`mailto:${email}`} className="flex items-center gap-2 text-sm transition-colors hover:text-amber-300" style={{ color: "rgba(254,243,226,0.45)" }}>
+                    <i className="ri-mail-line" style={{ color }}></i> {email}
+                  </a>
+                  <a href={linkedin} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all hover:scale-[1.02] self-start"
+                    style={{ background: "rgba(10,102,194,0.20)", border: "1px solid rgba(10,102,194,0.35)", color: "#60a5fa" }}>
+                    <i className="ri-linkedin-fill"></i> Follow on LinkedIn
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Contact strip */}
+          <div className="rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-5" style={{ background: "rgba(249,115,22,0.07)", border: "1px solid rgba(249,115,22,0.18)" }}>
+            <div>
+              <p className="font-bold text-white mb-1">Get in touch directly</p>
+              <p className="text-sm" style={{ color: "rgba(254,243,226,0.45)" }}>We reply within 2 business days and love hearing from families, academies, and partners.</p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+              <a href="tel:+447402256217"
+                className="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition-all hover:scale-[1.02]"
+                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "#fef3e2" }}>
+                <i className="ri-phone-line text-amber-400"></i> 07402 256 217
+              </a>
+              <a href="mailto:taku@metimestories.co.uk"
+                className="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold transition-all hover:scale-[1.02]"
+                style={{ background: "linear-gradient(135deg,#f97316,#fbbf24)", color: "#1a0800" }}>
+                <i className="ri-mail-send-line"></i> Email Us
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Diversity section ─────────────────────────────────────────── */}
       <section className="py-14 md:py-20" style={{ background: "white" }}>
         <div className="max-w-7xl mx-auto px-4">

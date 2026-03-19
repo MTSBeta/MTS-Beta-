@@ -160,25 +160,62 @@ export default function MarketingHome() {
             </div>
           </div>
 
-          {/* Floating preview card — desktop only */}
-          <div className="hidden md:block">
-            <div className="bg-black/40 backdrop-blur-xl border border-amber-400/20 rounded-3xl p-6 max-w-sm ml-auto shadow-2xl">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-amber-400 rounded-xl flex items-center justify-center text-amber-900 text-lg font-bold">M</div>
-                <div>
-                  <div className="font-semibold text-sm" style={{ color: "#fef3e2" }}>Mia's story is ready! ✨</div>
-                  <div className="text-xs" style={{ color: "rgba(254,243,226,0.45)" }}>The Time-Travelling Tractor</div>
+          {/* Story preview card — desktop only */}
+          <div className="hidden md:flex flex-col gap-4 ml-auto max-w-sm w-full">
+            {/* Book cover card */}
+            <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ border: "1px solid rgba(251,191,36,0.18)", backdropFilter: "blur(24px)", background: "rgba(10,6,2,0.60)" }}>
+              <div className="relative overflow-hidden" style={{ height: 180 }}>
+                <img
+                  src={publicAssetUrl("images/family-reading-1.png")}
+                  alt="Family reading a Me Time Stories book"
+                  className="w-full h-full object-cover"
+                  style={{ objectPosition: "center 20%", filter: "saturate(0.7) brightness(0.65)" }}
+                />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 30%, rgba(10,6,2,0.95) 100%)" }} />
+                <div className="absolute bottom-0 left-0 right-0 px-5 py-4">
+                  <div className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "#f97316" }}>
+                    Our Flagship Story
+                  </div>
+                  <p className="text-base font-black leading-tight" style={{ color: "#fef3e2" }}>
+                    Ty & the Time<br/>Travelling Tractor
+                  </p>
                 </div>
               </div>
-              <p className="text-sm italic leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif", color: "rgba(254,243,226,0.80)" }}>
-                "The morning mist lay low when <strong style={{ color: "#fbbf24" }}>Mia</strong> found it — brave as ever, she touched the golden wheel… A fox watched from the hedgerow with knowing eyes."
-              </p>
-              <div className="flex gap-2 flex-wrap">
-                {["Brave", "Creative", "Kind"].map((t) => (
-                  <span key={t} className="text-xs bg-amber-400/15 text-amber-300 border border-amber-400/25 px-2.5 py-0.5 rounded-full">{t}</span>
-                ))}
+              <div className="px-5 py-4">
+                <p className="text-sm leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif", fontStyle: "italic", color: "rgba(254,243,226,0.75)" }}>
+                  "The morning mist lay low when <span style={{ color: "#fbbf24", fontStyle: "normal", fontWeight: 700 }}>your child</span> found it — the golden wheel gleaming in the field…"
+                </p>
+                <div className="flex gap-2 flex-wrap mb-4">
+                  {["Their name", "Their personality", "Their favourite animal"].map((t) => (
+                    <span key={t} className="text-[10px] font-semibold text-amber-300 border border-amber-400/22 px-2.5 py-1 rounded-full" style={{ background: "rgba(251,191,36,0.10)" }}>{t}</span>
+                  ))}
+                </div>
+                <Link
+                  href="/stories/ty-tractor"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold transition-all hover:scale-[1.01]"
+                  style={{ background: "linear-gradient(135deg,#f97316,#fbbf24)", color: "#1a0800" }}
+                >
+                  <i className="ri-play-circle-fill"></i> Read a Preview Free
+                </Link>
               </div>
-              <div className="mt-3 text-xs" style={{ color: "rgba(254,243,226,0.30)" }}>Traits, dream & favourite animal woven in</div>
+            </div>
+
+            {/* Trust strip */}
+            <div className="flex items-center justify-between px-5 py-3 rounded-2xl" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(254,243,226,0.10)", backdropFilter: "blur(12px)" }}>
+              <div className="text-center">
+                <div className="text-lg font-black" style={{ color: "#fbbf24" }}>1,200+</div>
+                <div className="text-[10px]" style={{ color: "rgba(254,243,226,0.38)" }}>Families reading</div>
+              </div>
+              <div className="w-px h-8" style={{ background: "rgba(255,255,255,0.10)" }} />
+              <div className="text-center">
+                <div className="text-lg font-black" style={{ color: "#fbbf24" }}>42+</div>
+                <div className="text-[10px]" style={{ color: "rgba(254,243,226,0.38)" }}>Academies</div>
+              </div>
+              <div className="w-px h-8" style={{ background: "rgba(255,255,255,0.10)" }} />
+              <div className="text-center">
+                <div className="text-lg font-black" style={{ color: "#fbbf24" }}>14</div>
+                <div className="text-[10px]" style={{ color: "rgba(254,243,226,0.38)" }}>Pages, personal</div>
+              </div>
             </div>
           </div>
         </div>

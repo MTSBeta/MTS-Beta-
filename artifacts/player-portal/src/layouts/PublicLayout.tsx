@@ -247,7 +247,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
       <footer style={{ background: "#0d0a08", color: "rgba(254,243,226,0.80)" }}>
         <div className="max-w-7xl mx-auto px-4 py-14">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
-            {/* Brand */}
+            {/* Brand + Contact */}
             <div className="col-span-1 md:col-span-2">
               <Link href="/" className="inline-block mb-4">
                 <img
@@ -259,17 +259,56 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               <p className="text-sm leading-relaxed max-w-xs mb-5" style={{ color: "rgba(254,243,226,0.45)" }}>
                 Fully personalised children's books where your child's name, personality, favourite animal, and biggest dreams live on every page — not just the cover.
               </p>
-              <div className="flex gap-3">
-                {["ri-instagram-line", "ri-twitter-x-line", "ri-facebook-line", "ri-linkedin-line"].map((icon) => (
-                  <a
-                    key={icon}
-                    href="#"
-                    className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-amber-400/20 transition-colors"
-                    style={{ background: "rgba(254,243,226,0.08)" }}
-                  >
-                    <i className={`${icon} text-sm`}></i>
-                  </a>
-                ))}
+
+              {/* Social icons */}
+              <div className="flex gap-3 mb-6">
+                <a href="#" aria-label="Instagram"
+                  className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-amber-400/20 transition-colors"
+                  style={{ background: "rgba(254,243,226,0.08)" }}>
+                  <i className="ri-instagram-line text-sm"></i>
+                </a>
+                <a href="#" aria-label="TikTok"
+                  className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-amber-400/20 transition-colors"
+                  style={{ background: "rgba(254,243,226,0.08)" }}>
+                  <i className="ri-tiktok-line text-sm"></i>
+                </a>
+                <a href="#" aria-label="Facebook"
+                  className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-amber-400/20 transition-colors"
+                  style={{ background: "rgba(254,243,226,0.08)" }}>
+                  <i className="ri-facebook-fill text-sm"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/taku-chiweshe-a342a1324/" target="_blank" rel="noopener noreferrer" aria-label="Taku on LinkedIn"
+                  className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-blue-400/20 transition-colors"
+                  style={{ background: "rgba(254,243,226,0.08)" }}>
+                  <i className="ri-linkedin-fill text-sm"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/michael-mcdermott-477a83230/" target="_blank" rel="noopener noreferrer" aria-label="Michael on LinkedIn"
+                  className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-blue-400/20 transition-colors"
+                  style={{ background: "rgba(254,243,226,0.08)" }}>
+                  <i className="ri-linkedin-fill text-sm"></i>
+                </a>
+              </div>
+
+              {/* Contact info */}
+              <div className="space-y-2.5">
+                <a href="tel:+447402256217"
+                  className="flex items-center gap-2.5 text-sm group transition-colors hover:text-amber-300"
+                  style={{ color: "rgba(254,243,226,0.50)" }}>
+                  <i className="ri-phone-line" style={{ color: "#fbbf24" }}></i>
+                  07402 256 217
+                </a>
+                <a href="mailto:taku@metimestories.co.uk"
+                  className="flex items-center gap-2.5 text-sm group transition-colors hover:text-amber-300"
+                  style={{ color: "rgba(254,243,226,0.50)" }}>
+                  <i className="ri-mail-line" style={{ color: "#fbbf24" }}></i>
+                  taku@metimestories.co.uk
+                </a>
+                <a href="mailto:michael@metimestories.co.uk"
+                  className="flex items-center gap-2.5 text-sm group transition-colors hover:text-amber-300"
+                  style={{ color: "rgba(254,243,226,0.50)" }}>
+                  <i className="ri-mail-line" style={{ color: "#fbbf24" }}></i>
+                  michael@metimestories.co.uk
+                </a>
               </div>
             </div>
 
@@ -295,7 +334,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             {/* Solutions */}
             <div>
               <h4 className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(254,243,226,0.35)" }}>Solutions</h4>
-              <ul className="space-y-2.5">
+              <ul className="space-y-2.5 mb-8">
                 {[
                   { href: "/for-academies", label: "Football Academies" },
                   { href: "/csr", label: "Corporate CSR" },
@@ -309,6 +348,12 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   </li>
                 ))}
               </ul>
+              <h4 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(254,243,226,0.35)" }}>Get in Touch</h4>
+              <a href="mailto:taku@metimestories.co.uk"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-[1.02]"
+                style={{ background: "linear-gradient(135deg,#f97316,#fbbf24)", color: "#1a0800" }}>
+                <i className="ri-mail-send-line"></i> Email Us
+              </a>
             </div>
           </div>
 
