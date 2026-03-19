@@ -631,7 +631,23 @@ export default function MarketingHome() {
 
       {/* ══ 8. TESTIMONIALS SLIDER ═══════════════════════════════════════ */}
       <section className="py-16 md:py-24 relative overflow-hidden" style={{ background: "#fef9f0" }}>
-        <div className="max-w-4xl mx-auto px-4">
+
+        {/* Full nursery photo — right side, full image, no cuts */}
+        <div className="absolute inset-y-0 right-0 pointer-events-none select-none hidden md:block"
+          style={{ width: "42%" }}>
+          <img
+            src={publicAssetUrl("images/lily-pad-nursery.png")}
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full"
+            style={{ objectFit: "contain", objectPosition: "right center" }}
+          />
+        </div>
+        {/* Left-to-right gradient so the photo fades into the background */}
+        <div className="absolute inset-y-0 right-0 pointer-events-none hidden md:block"
+          style={{ width: "42%", background: "linear-gradient(to right, #fef9f0 0%, rgba(254,249,240,0.35) 40%, transparent 100%)" }} />
+
+        <div className="max-w-4xl mx-auto px-4 relative">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">What families say</h2>
             <p className="text-gray-500">Real reactions. Real bedtimes. Real magic.</p>
