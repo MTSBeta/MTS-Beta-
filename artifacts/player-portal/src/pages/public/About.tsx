@@ -220,6 +220,7 @@ export default function About() {
                 email: "taku@metimestories.co.uk",
                 linkedin: "https://www.linkedin.com/in/taku-chiweshe-a342a1324/",
                 initials: "TC",
+                photo: "images/team-taku.jpg",
                 color: "#f97316",
               },
               {
