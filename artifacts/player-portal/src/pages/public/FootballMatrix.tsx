@@ -839,31 +839,199 @@ export default function FootballMatrix() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4 mb-6">
-              {[
-                { icon: "ri-football-line",       title: "Players",               desc: "Each player receives a story personalised to their position, personality, and current developmental challenge — making them the hero of their specific role.", color: "#fbbf24", img: "academy-1.jpg" },
-                { icon: "ri-home-heart-line",      title: "Parents",               desc: "Stories are read at home together. They reinforce academy values in the family environment and deepen parent-club engagement in a structured, meaningful way.", color: "#3b82f6", img: "academy-3.jpg" },
-                { icon: "ri-whistle-line",         title: "Coaches",               desc: "Coach insight drives the story. We capture what the coach sees in each player and weave it into the narrative — then provide a conversation guide to support the debrief.", color: "#10b981", img: "academy-5.jpg" },
-                { icon: "ri-mental-health-line",   title: "Sports Psychologists",  desc: "Our stories complement existing mental performance work. Position-specific psychological themes are aligned to each club's current wellbeing framework and referral structures.", color: "#8b5cf6", img: "academy-7.jpg" },
-              ].map(({ icon, title, desc, color, img }) => (
-                <div key={title} className="rounded-2xl overflow-hidden relative transition-all"
-                  style={{ border: "1px solid rgba(255,255,255,0.09)", boxShadow: `0 0 24px ${color}08`, minHeight: 220 }}>
-                  {/* Academy image background */}
-                  <img src={publicAssetUrl(`images/academy/${img}`)} alt="" aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-cover"
-                    style={{ filter: "saturate(0.3) brightness(0.28)" }} />
-                  <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, rgba(4,6,13,0.85) 0%, rgba(4,6,13,0.65) 100%)` }} />
-                  {/* Content */}
-                  <div className="relative p-6">
-                    <div className="w-11 h-11 rounded-xl flex items-center justify-center text-lg mb-4"
-                      style={{ background: `${color}20`, border: `1px solid ${color}40`, color }}>
-                      <i className={icon}></i>
+            {/* Hub-and-spoke layout: left cards → portal hub ← right cards */}
+            <div className="mb-6">
+              {/* Desktop hub layout */}
+              <div className="hidden md:grid gap-4 items-stretch" style={{ gridTemplateColumns: "1fr 220px 1fr" }}>
+
+                {/* LEFT column: Players + Coaches */}
+                <div className="flex flex-col gap-4">
+                  {[
+                    { icon: "ri-football-line", title: "Players", desc: "Each player receives a story personalised to their position, personality, and current developmental challenge — making them the hero of their specific role.", color: "#fbbf24", img: "academy-1.jpg", input: "Position · Dreams · Personality" },
+                    { icon: "ri-whistle-line",   title: "Coaches", desc: "Coach insight drives the story. We capture what the coach sees in each player and weave it into the narrative — then provide a conversation guide to support the debrief.", color: "#10b981", img: "academy-5.jpg", input: "Coaching Insight · Debrief Guide" },
+                  ].map(({ icon, title, desc, color, img, input }) => (
+                    <div key={title} className="rounded-2xl overflow-hidden relative flex-1"
+                      style={{ border: `1px solid ${color}22`, boxShadow: `0 0 24px ${color}08`, minHeight: 200 }}>
+                      <img src={publicAssetUrl(`images/academy/${img}`)} alt="" aria-hidden="true"
+                        className="absolute inset-0 w-full h-full object-cover"
+                        style={{ filter: "saturate(0.3) brightness(0.28)" }} />
+                      <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, rgba(4,6,13,0.88) 0%, rgba(4,6,13,0.68) 100%)` }} />
+                      <div className="relative p-5 h-full flex flex-col justify-between">
+                        <div>
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-base mb-3"
+                            style={{ background: `${color}20`, border: `1px solid ${color}40`, color }}>
+                            <i className={icon}></i>
+                          </div>
+                          <h3 className="font-bold text-white text-sm mb-1.5">{title}</h3>
+                          <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.48)" }}>{desc}</p>
+                        </div>
+                        {/* Contribution tag */}
+                        <div className="mt-3 flex items-center gap-1.5">
+                          <div className="h-px flex-1" style={{ background: `linear-gradient(to right, transparent, ${color}50)` }} />
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                            style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>
+                            {input}
+                          </span>
+                          <i className="ri-arrow-right-line text-xs" style={{ color: `${color}80` }}></i>
+                        </div>
+                      </div>
                     </div>
-                    <h3 className="font-bold text-white mb-2">{title}</h3>
-                    <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.52)" }}>{desc}</p>
+                  ))}
+                </div>
+
+                {/* CENTER hub: Player Portal */}
+                <div className="flex flex-col items-center justify-center relative py-4">
+                  {/* Vertical connector line */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-px h-full" style={{ background: "linear-gradient(to bottom, transparent 5%, rgba(249,115,22,0.20) 30%, rgba(249,115,22,0.20) 70%, transparent 95%)" }} />
+                  </div>
+
+                  {/* Central portal node */}
+                  <div className="relative z-10 flex flex-col items-center text-center">
+                    {/* Top arrow from left */}
+                    <div className="flex items-center gap-1 mb-4">
+                      <div className="w-8 h-px" style={{ background: "rgba(249,115,22,0.30)" }} />
+                      <i className="ri-arrow-down-line text-[10px]" style={{ color: "rgba(249,115,22,0.40)" }}></i>
+                    </div>
+
+                    {/* Portal card */}
+                    <div className="rounded-3xl flex flex-col items-center px-4 py-5 w-full"
+                      style={{
+                        background: "linear-gradient(160deg, rgba(249,115,22,0.12) 0%, rgba(251,191,36,0.08) 100%)",
+                        border: "1.5px solid rgba(249,115,22,0.30)",
+                        boxShadow: "0 0 40px rgba(249,115,22,0.15), 0 0 80px rgba(249,115,22,0.06)",
+                        backdropFilter: "blur(20px)",
+                      }}
+                    >
+                      {/* Logo */}
+                      <img
+                        src={publicAssetUrl("images/metime-logo-animated.gif")}
+                        alt="Me Time Stories"
+                        className="h-8 w-auto object-contain mb-3"
+                        style={{ filter: "drop-shadow(0 2px 8px rgba(249,115,22,0.40))" }}
+                      />
+
+                      {/* Portal screen mockup */}
+                      <div className="w-full rounded-xl overflow-hidden mb-3"
+                        style={{ background: "rgba(0,0,0,0.50)", border: "1px solid rgba(255,255,255,0.08)", aspectRatio: "4/3" }}>
+                        {/* Fake portal UI */}
+                        <div className="p-2 h-full flex flex-col gap-1.5">
+                          <div className="flex items-center gap-1 mb-1">
+                            <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#f97316" }} />
+                            <div className="h-1 rounded flex-1" style={{ background: "rgba(255,255,255,0.10)" }} />
+                          </div>
+                          {/* Player row */}
+                          {["#fbbf24", "#10b981", "#3b82f6"].map((c, i) => (
+                            <div key={i} className="flex items-center gap-1.5 px-1.5 py-1 rounded-lg" style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${c}22` }}>
+                              <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: `${c}40` }} />
+                              <div className="flex-1 flex flex-col gap-0.5">
+                                <div className="h-1 rounded" style={{ background: `${c}50`, width: ["70%","55%","80%"][i] }} />
+                                <div className="h-0.5 rounded" style={{ background: "rgba(255,255,255,0.10)", width: ["50%","65%","45%"][i] }} />
+                              </div>
+                              <div className="h-3 w-5 rounded flex-shrink-0" style={{ background: `${c}30` }} />
+                            </div>
+                          ))}
+                          {/* Story icon */}
+                          <div className="mt-auto flex items-center justify-center gap-1.5 py-1 rounded-lg"
+                            style={{ background: "linear-gradient(135deg, rgba(249,115,22,0.20), rgba(251,191,36,0.15))", border: "1px solid rgba(249,115,22,0.25)" }}>
+                            <i className="ri-book-2-line text-[8px]" style={{ color: "#fbbf24" }}></i>
+                            <span className="text-[7px] font-bold" style={{ color: "#fbbf24" }}>Story Created</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="text-[10px] font-bold uppercase tracking-[0.14em] mb-1" style={{ color: "#f97316" }}>Player Portal</p>
+                      <p className="text-[9px] text-center leading-relaxed" style={{ color: "rgba(255,255,255,0.35)" }}>
+                        All inputs collected.<br />One story built.
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-1 mt-4">
+                      <i className="ri-arrow-down-line text-[10px]" style={{ color: "rgba(249,115,22,0.40)" }}></i>
+                      <div className="w-8 h-px" style={{ background: "rgba(249,115,22,0.30)" }} />
+                    </div>
+
+                    {/* Book output */}
+                    <div className="mt-3 flex flex-col items-center gap-1.5 px-3 py-3 rounded-2xl w-full"
+                      style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.22)" }}>
+                      <i className="ri-book-open-fill text-lg" style={{ color: "#fbbf24" }}></i>
+                      <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "#fbbf24" }}>The Story</p>
+                      <p className="text-[8px] text-center" style={{ color: "rgba(255,255,255,0.30)" }}>Personalised. Printed. Delivered.</p>
+                    </div>
                   </div>
                 </div>
-              ))}
+
+                {/* RIGHT column: Parents + Sports Psychologists */}
+                <div className="flex flex-col gap-4">
+                  {[
+                    { icon: "ri-home-heart-line",  title: "Parents", desc: "Stories are read at home together. They reinforce academy values in the family environment and deepen parent-club engagement in a structured, meaningful way.", color: "#3b82f6", img: "academy-3.jpg", input: "Family Context · Home Values" },
+                    { icon: "ri-mental-health-line", title: "Sports Psychologists", desc: "Our stories complement existing mental performance work. Position-specific psychological themes are aligned to each club's current wellbeing framework and referral structures.", color: "#8b5cf6", img: "academy-7.jpg", input: "Mental Themes · Wellbeing Framework" },
+                  ].map(({ icon, title, desc, color, img, input }) => (
+                    <div key={title} className="rounded-2xl overflow-hidden relative flex-1"
+                      style={{ border: `1px solid ${color}22`, boxShadow: `0 0 24px ${color}08`, minHeight: 200 }}>
+                      <img src={publicAssetUrl(`images/academy/${img}`)} alt="" aria-hidden="true"
+                        className="absolute inset-0 w-full h-full object-cover"
+                        style={{ filter: "saturate(0.3) brightness(0.28)" }} />
+                      <div className="absolute inset-0" style={{ background: `linear-gradient(225deg, rgba(4,6,13,0.88) 0%, rgba(4,6,13,0.68) 100%)` }} />
+                      <div className="relative p-5 h-full flex flex-col justify-between">
+                        <div>
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-base mb-3"
+                            style={{ background: `${color}20`, border: `1px solid ${color}40`, color }}>
+                            <i className={icon}></i>
+                          </div>
+                          <h3 className="font-bold text-white text-sm mb-1.5">{title}</h3>
+                          <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.48)" }}>{desc}</p>
+                        </div>
+                        <div className="mt-3 flex items-center gap-1.5">
+                          <i className="ri-arrow-left-line text-xs" style={{ color: `${color}80` }}></i>
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                            style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>
+                            {input}
+                          </span>
+                          <div className="h-px flex-1" style={{ background: `linear-gradient(to left, transparent, ${color}50)` }} />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mobile: simple 2x2 grid fallback */}
+              <div className="grid grid-cols-2 gap-3 md:hidden">
+                {[
+                  { icon: "ri-football-line",       title: "Players",               desc: "Personalised to their position and personality — making them the hero.", color: "#fbbf24", img: "academy-1.jpg" },
+                  { icon: "ri-home-heart-line",      title: "Parents",               desc: "Stories read at home reinforce academy values and deepen family-club bonds.", color: "#3b82f6", img: "academy-3.jpg" },
+                  { icon: "ri-whistle-line",         title: "Coaches",               desc: "Coach insight weaves into the narrative with a debrief guide included.", color: "#10b981", img: "academy-5.jpg" },
+                  { icon: "ri-mental-health-line",   title: "Sports Psychologists",  desc: "Position-specific mental themes aligned to your club's wellbeing framework.", color: "#8b5cf6", img: "academy-7.jpg" },
+                ].map(({ icon, title, desc, color, img }) => (
+                  <div key={title} className="rounded-2xl overflow-hidden relative"
+                    style={{ border: `1px solid ${color}22`, minHeight: 160 }}>
+                    <img src={publicAssetUrl(`images/academy/${img}`)} alt="" aria-hidden="true"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      style={{ filter: "saturate(0.3) brightness(0.28)" }} />
+                    <div className="absolute inset-0" style={{ background: "rgba(4,6,13,0.85)" }} />
+                    <div className="relative p-4">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm mb-2"
+                        style={{ background: `${color}20`, border: `1px solid ${color}40`, color }}>
+                        <i className={icon}></i>
+                      </div>
+                      <h3 className="font-bold text-white text-xs mb-1">{title}</h3>
+                      <p className="text-[10px] leading-relaxed" style={{ color: "rgba(255,255,255,0.48)" }}>{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Mobile: portal hub strip */}
+              <div className="md:hidden mt-4 flex items-center gap-4 p-4 rounded-2xl"
+                style={{ background: "rgba(249,115,22,0.08)", border: "1.5px solid rgba(249,115,22,0.22)" }}>
+                <img src={publicAssetUrl("images/metime-logo-animated.gif")} alt="Me Time Stories" className="h-7 w-auto object-contain flex-shrink-0" />
+                <div>
+                  <p className="text-xs font-bold" style={{ color: "#f97316" }}>Player Portal</p>
+                  <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.38)" }}>All stakeholder inputs → one personalised story</p>
+                </div>
+                <i className="ri-book-2-fill ml-auto text-lg" style={{ color: "#fbbf24" }}></i>
+              </div>
             </div>
 
             {/* What academies get */}
