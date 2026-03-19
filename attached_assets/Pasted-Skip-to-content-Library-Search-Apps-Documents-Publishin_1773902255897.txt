@@ -1,0 +1,141 @@
+Skip to content
+Library
+Search
+Apps
+Documents
+
+Publishing
+Started 4 minutes ago by Taku
+Provision
+Security Scan
+Build
+Bundle
+Promote
+Promotion failed
+Your deployment attempt had the following errors:
+Application failed to open port 8080 in time during startup
+The api-server artifact process exited with status code 1 immediately after starting
+Syntax or runtime error in artifacts/api-server/dist/index.cjs preventing the server from starting
+Agent suggestions
+The api-server crashed immediately on startup. Check if there's a build or code error in your API server. Try rebuilding your API server to ensure the compiled code in dist/index.cjs is valid. The logs show malformed JavaScript in the compiled output.
+Verify all required environment secrets are properly set. Your API server likely needs these secrets to start successfully. Check that DATABASE_URL, PGHOST, PGDATABASE, PGUSER, PGPASSWORD are correctly configured in your deployment secrets.
+Add a build command to properly compile your API server before deployment. In the Deployments Configuration tab, add a build command that compiles your api-server (e.g., 'npm run build' or similar).
+app.listen(process.env.PORT || 3000)
+app.listen(8080)
+Production
+Status
+Taku published 1 day ago
+Visibility
+Public
+Type
+Autoscale
+(2 vCPU / 4 GiB RAM / 3 Max)
+See all usage
+Database
+Production database connected
+Your production database is ready! Your app can now save and manage live user data securely.
+MeTime Stories — Football Academy Player Portal
+me-time-stories-portal.replit.app 
+ff48a904
+TC
+TakuMeTime
+Taku
+failed to publish about 1 hour ago
+ad68d988
+TC
+TakuMeTime
+Taku
+published 2 days ago
+e3db6902
+TC
+TakuMeTime
+Taku
+published 2 days ago
+f145a950
+TC
+TakuMeTime
+Taku
+failed to publish 2 days ago
+bb42dc0f
+TC
+TakuMeTime
+Taku
+failed to publish 2 days ago
+d674776c
+TC
+TakuMeTime
+Taku
+failed to publish 2 days ago
+7eead1f4
+TC
+TakuMeTime
+Taku
+failed to publish 2 days ago
+097ed891
+TC
+TakuMeTime
+Taku
+failed to publish 2 days ago
+Update the CSR page with a new design and content
+Ryan is now under 9's at Nottingham Forrest hes moved, helps to mention both wolves as past and the current
+
+dr hussain
+
+Try alternative colours, black is dark and we are a friendly happy child friendly team. tHE IMAGE IS TAKU AND MICHAEL AT Lilly Pad Nursery doing areading as we partnered with them and go often for testing snd to speak with clients and stuff. make sure a fair bit of our feedback loops to Lilly Pad, a few comments from the parents in the platform etc, nursery teachers etc.
+
+This image would go great in the background on here behind the couresel on what families say. full image please no cuts just to the Right of the page.
+
+section
+Amazing job lets remember this type of design of an image behind things part of the screen,it looks wonderful.
+
+The deployment failed with the following error:
+
+The api-server artifact exited with status 1 before opening port 8080
+The application failed to open the required port within the timeout period
+The Node.js server in artifacts/api-server/dist/index.cjs crashed on startup
+Suggested fixes include:
+
+The server is crashing immediately on startup. Check that all required environment variables are properly configured in your deployment secrets. Based on your setup, verify these secrets are set: DATABASE_URL, PGDATABASE, PGHOST, PGPORT, PGUSER, PGPASSWORD
+Ensure your server is listening on port 8080 as expected by the deployment configuration
+Add error handling to your server startup to identify the crash reason. The logs show the server is exiting but don't show why
+Verify all required secrets are present in your Deployment configuration, especially API keys and service credentials
+Can you apply the suggested fixes?
+
+Let me read the current CSR page first:
+
+Now I have a thorough picture of what's there and what's needed. Let me write the full redesign from scratch — premium, story-led, emotionally intelligent, with the Rose Goes to Mo's BBQ campaign as a real featured section:
+
+Let me check for any errors and take a screenshot:
+
+Clean compile, no errors. Let me see it:
+
+That's looking exactly right — premium, warm, story-led. Here's the full breakdown of what was built:
+
+Hero — Dark warm background with the family diversity image bleeding in from the right (using our partial-image pattern). Headline: "Story is how a child first understands who they are in the world." Bold, honest, not a single word of generic CSR language.
+
+The Human Truth — Two-column section with the book-likeness photo. Direct, specific, no inflated numbers — just an honest statement about the gap this partnership closes.
+
+What Makes This Different — Three focused cards: Their name. Their story. / Culturally rooted. / Measurably delivered. Short, sharp, credible.
+
+Why Partner With Us — Five genuinely distinctive reasons, not generic ESG bullets:
+
+A named child, not an anonymous impression
+Belonging through story
+Culturally relevant and community-rooted
+Built for measurable delivery
+A partner story worth telling
+Rose Goes to Mo's BBQ — Full featured campaign section with a deep warm dark background, story excerpt card with pull-quote, Eid campaign badge, and two CTAs (read the story / sponsor this campaign). Properly celebrated as a flagship cultural partnership, not a sidebar mention.
+
+What You Enable — Six outcome cards: Belonging, Confidence, Literacy, Inclusion, Family Engagement, Culturally meaningful storytelling — each with a short, specific explanation. No placeholder figures.
+
+Partnership Tiers — Rewritten as Community Spark / Partnership Reach / Strategic Alliance — outcome-oriented language, not a feature table. Each includes who it's suited for.
+
+Proof Moment — Priya's parent quote from Lily Pad, with the nursery photo using the partial-image pattern.
+
+Enquiry Form — Headed "Let's begin a conversation." Includes org type selector, community/area field, and a message that closes with "No sales pressure, no unsolicited follow-up."
+
+
+Scroll to latest
+
+Make, test, iterate…
+Me Time Stories Portal - Replit
