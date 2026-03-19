@@ -52,7 +52,8 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             <img
               src={publicAssetUrl("images/metime-logo-animated.gif")}
               alt="Me Time Stories"
-              className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              className="h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              style={{ mixBlendMode: "multiply", opacity: 0.85 }}
             />
           </Link>
 
@@ -150,7 +151,8 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             <img
               src={publicAssetUrl("images/metime-logo-animated.gif")}
               alt="Me Time Stories"
-              className="h-10 w-auto object-contain"
+              className="h-9 w-auto object-contain"
+              style={{ mixBlendMode: "multiply", opacity: 0.85 }}
             />
           </Link>
           <button
@@ -253,7 +255,8 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 <img
                   src={publicAssetUrl("images/metime-logo-animated.gif")}
                   alt="Me Time Stories"
-                  className="h-14 w-auto object-contain"
+                  className="h-12 w-auto object-contain"
+                  style={{ opacity: 0.45, mixBlendMode: "screen" }}
                 />
               </Link>
               <p className="text-sm leading-relaxed max-w-xs mb-5" style={{ color: "rgba(254,243,226,0.45)" }}>

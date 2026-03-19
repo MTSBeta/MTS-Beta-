@@ -104,16 +104,6 @@ export default function MarketingHome() {
           style={{ transform: `translateY(${scrollY * -0.10}px)`, willChange: "transform" }}
         >
           <div>
-            {/* Animated brand logo */}
-            <div className="mb-8">
-              <img
-                src={publicAssetUrl("images/metime-logo-animated.gif")}
-                alt="Me Time Stories"
-                className="h-20 md:h-24 w-auto object-contain"
-                style={{ filter: "drop-shadow(0 4px 24px rgba(251,191,36,0.30))" }}
-              />
-            </div>
-
             {/* Eyebrow */}
             <span className="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-400/30 text-amber-300 text-sm font-medium px-4 py-2 rounded-full mb-8">
               <i className="ri-moon-line"></i> The Time-Travelling Tractor — free to try tonight
