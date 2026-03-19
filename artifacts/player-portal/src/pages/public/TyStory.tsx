@@ -226,35 +226,21 @@ export default function TyStory() {
           {screen === "cover" && (
             <div className="w-full">
               <GlassPanel style={{ boxShadow: "0 0 80px rgba(249,115,22,0.20), 0 24px 64px rgba(0,0,0,0.70)" }}>
-                {/* Video cover */}
-                <div className="relative overflow-hidden" style={{ aspectRatio: "4/3" }}>
-                  <video
-                    autoPlay muted loop playsInline
+                {/* Book cover */}
+                <div className="relative overflow-hidden" style={{ aspectRatio: "3/4" }}>
+                  <img
+                    src={publicAssetUrl("images/ty-tractor-cover.png")}
+                    alt="Ty and the Time Travelling Tractor"
                     className="w-full h-full object-cover"
-                    style={{ objectPosition: "center center" }}
-                  >
-                    <source src={publicAssetUrl("images/ty-tractor-cover.mp4")} type="video/mp4" />
-                  </video>
-                  {/* Title overlay at bottom */}
-                  <div className="absolute inset-x-0 bottom-0 px-6 py-8" style={{
-                    background: "linear-gradient(to top, rgba(6,4,2,0.95) 0%, rgba(6,4,2,0.60) 60%, transparent 100%)"
-                  }}>
-                    <img
-                      src={publicAssetUrl("images/metime-logo-animated.gif")}
-                      alt="Me Time Stories"
-                      className="h-8 w-auto object-contain mb-2"
-                      style={{ filter: "drop-shadow(0 2px 12px rgba(249,115,22,0.35))" }}
-                    />
-                    <h1 className="text-2xl md:text-3xl font-black leading-tight" style={{ color: "#fef3e2" }}>
-                      Ty & the Time<br />Travelling Tractor
-                    </h1>
-                    <p className="text-sm mt-1.5" style={{ color: "rgba(254,243,226,0.55)" }}>
-                      A personalised adventure for your little one
-                    </p>
-                  </div>
+                    style={{ objectPosition: "center top" }}
+                  />
+                  {/* Subtle bottom gradient for CTA readability */}
+                  <div className="absolute inset-x-0 bottom-0 h-20" style={{
+                    background: "linear-gradient(to top, rgba(6,4,2,0.70) 0%, transparent 100%)"
+                  }} />
                   {/* Age badge */}
                   <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold"
-                    style={{ background: "rgba(249,115,22,0.85)", color: "#fff", backdropFilter: "blur(8px)" }}>
+                    style={{ background: "rgba(249,115,22,0.90)", color: "#fff", backdropFilter: "blur(8px)" }}>
                     Ages 2–7
                   </div>
                 </div>

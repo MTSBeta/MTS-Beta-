@@ -156,10 +156,10 @@ export default function MarketingHome() {
             <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ border: "1px solid rgba(251,191,36,0.18)", backdropFilter: "blur(24px)", background: "rgba(10,6,2,0.60)" }}>
               <div className="relative overflow-hidden" style={{ height: 180 }}>
                 <img
-                  src={publicAssetUrl("images/family-reading-1.png")}
-                  alt="Family reading a Me Time Stories book"
+                  src={publicAssetUrl("images/ty-tractor-cover.png")}
+                  alt="Ty and the Time Travelling Tractor book cover"
                   className="w-full h-full object-cover"
-                  style={{ objectPosition: "center 20%", filter: "saturate(0.7) brightness(0.65)" }}
+                  style={{ objectPosition: "center top" }}
                 />
                 <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 30%, rgba(10,6,2,0.95) 100%)" }} />
                 <div className="absolute bottom-0 left-0 right-0 px-5 py-4">
