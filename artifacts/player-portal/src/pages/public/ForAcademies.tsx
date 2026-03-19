@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "wouter";
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { publicAssetUrl } from "@/lib/publicAssetUrl";
@@ -59,6 +59,98 @@ export default function ForAcademies() {
   const [formData, setFormData] = useState({ name: "", email: "", org: "", role: "", type: "", info: "" });
   const [submitted, setSubmitted] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const playerRef = useRef<HTMLDivElement>(null);
+  const [playing, setPlaying] = useState(true);
+  const [muted, setMuted] = useState(true);
+  const [volume, setVolume] = useState(0.8);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [showControls, setShowControls] = useState(false);
+  const [showShare, setShowShare] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const formatTime = (s: number) => {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return `${m}:${sec.toString().padStart(2, "0")}`;
+  };
+
+  const revealControls = useCallback(() => {
+    setShowControls(true);
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    hideTimer.current = setTimeout(() => setShowControls(false), 3000);
+  }, []);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const onTime = () => setCurrentTime(v.currentTime);
+    const onMeta = () => setDuration(v.duration);
+    v.addEventListener("timeupdate", onTime);
+    v.addEventListener("loadedmetadata", onMeta);
+    return () => {
+      v.removeEventListener("timeupdate", onTime);
+      v.removeEventListener("loadedmetadata", onMeta);
+    };
+  }, []);
+
+  const togglePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) { v.play(); setPlaying(true); }
+    else { v.pause(); setPlaying(false); }
+    revealControls();
+  };
+
+  const toggleMute = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    const next = !muted;
+    v.muted = next;
+    setMuted(next);
+    revealControls();
+  };
+
+  const changeVolume = (val: number) => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.volume = val;
+    v.muted = val === 0;
+    setVolume(val);
+    setMuted(val === 0);
+    revealControls();
+  };
+
+  const seek = (val: number) => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.currentTime = val;
+    setCurrentTime(val);
+    revealControls();
+  };
+
+  const shareVideo = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      await navigator.share({ title: "MeTime Stories Football Academy Promo", url });
+    } else {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+    setShowShare(false);
+  };
+
+  const toggleFullscreen = () => {
+    const el = playerRef.current;
+    if (!el) return;
+    if (!document.fullscreenElement) el.requestFullscreen();
+    else document.exitFullscreen();
+    revealControls();
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,9 +222,18 @@ export default function ForAcademies() {
                 </div>
                 <span className="text-xs font-medium mx-auto" style={{ color: "rgba(255,255,255,0.45)" }}>MTS Football Story Matrix by Awwa Stories</span>
               </div>
-              {/* Mockup content — promo video */}
-              <div className="relative" style={{ height: 220, background: "#000", overflow: "hidden" }}>
+              {/* Mockup content — custom video player */}
+              <div
+                ref={playerRef}
+                className="relative"
+                style={{ height: 260, background: "#000", overflow: "hidden", cursor: "pointer" }}
+                onMouseMove={revealControls}
+                onMouseEnter={revealControls}
+                onTouchStart={revealControls}
+                onClick={togglePlay}
+              >
                 <video
+                  ref={videoRef}
                   autoPlay
                   muted
                   loop
@@ -141,25 +242,109 @@ export default function ForAcademies() {
                   poster={publicAssetUrl("images/book-likeness.png")}>
                   <source src={publicAssetUrl("images/academy-promo.mp4")} type="video/mp4" />
                 </video>
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(0,0,0,0.15) 0%, transparent 50%, rgba(0,0,0,0.10) 100%)" }} />
-                {/* Badges overlay */}
-                <div className="absolute bottom-3 left-4 flex items-center gap-3">
-                  <span className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full"
-                    style={{ background: "rgba(239,68,68,0.90)", color: "#fff" }}>
-                    <span className="w-2 h-2 rounded-full bg-white inline-block" style={{ animation: "pulse 1.5s infinite" }}></span>
-                    LIVE PREVIEW
-                  </span>
-                  <span className="text-xs font-semibold px-3 py-1.5 rounded-full"
-                    style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.80)" }}>
-                    HD QUALITY
-                  </span>
+
+                {/* Gradient overlay at bottom for readability */}
+                <div className="absolute inset-x-0 bottom-0 pointer-events-none"
+                  style={{ height: 100, background: "linear-gradient(to top, rgba(0,0,0,0.80) 0%, transparent 100%)" }} />
+
+                {/* Big play/pause flash icon in centre */}
+                {!playing && (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="flex items-center justify-center rounded-full"
+                      style={{ width: 56, height: 56, background: "rgba(255,255,255,0.18)", backdropFilter: "blur(6px)" }}>
+                      <i className="ri-play-fill text-white text-3xl ml-1"></i>
+                    </div>
+                  </div>
+                )}
+
+                {/* Controls bar — visible on hover / touch */}
+                <div
+                  className="absolute inset-x-0 bottom-0 px-3 pb-2 pt-3 transition-opacity duration-300"
+                  style={{ opacity: showControls ? 1 : 0, pointerEvents: showControls ? "auto" : "none" }}
+                  onClick={e => e.stopPropagation()}
+                >
+                  {/* Progress scrubber */}
+                  <input
+                    type="range"
+                    min={0}
+                    max={duration || 100}
+                    step={0.1}
+                    value={currentTime}
+                    onChange={e => seek(Number(e.target.value))}
+                    className="w-full mb-2"
+                    style={{ accentColor: "#2563eb", height: 3, cursor: "pointer" }}
+                  />
+
+                  {/* Controls row */}
+                  <div className="flex items-center gap-2">
+                    {/* Play/Pause */}
+                    <button onClick={togglePlay}
+                      className="flex items-center justify-center rounded-full transition-colors"
+                      style={{ width: 30, height: 30, background: "rgba(255,255,255,0.15)", color: "#fff", border: "none", cursor: "pointer", flexShrink: 0 }}>
+                      <i className={playing ? "ri-pause-fill text-sm" : "ri-play-fill text-sm ml-0.5"}></i>
+                    </button>
+
+                    {/* Time */}
+                    <span className="text-xs font-mono" style={{ color: "rgba(255,255,255,0.75)", flexShrink: 0 }}>
+                      {formatTime(currentTime)} / {formatTime(duration)}
+                    </span>
+
+                    {/* Spacer */}
+                    <div style={{ flex: 1 }} />
+
+                    {/* Volume / Mute */}
+                    <button onClick={toggleMute}
+                      className="flex items-center justify-center rounded-full transition-colors"
+                      style={{ width: 28, height: 28, background: "rgba(255,255,255,0.12)", color: "#fff", border: "none", cursor: "pointer", flexShrink: 0 }}>
+                      <i className={muted || volume === 0 ? "ri-volume-mute-fill text-sm" : "ri-volume-up-fill text-sm"}></i>
+                    </button>
+                    <input
+                      type="range"
+                      min={0}
+                      max={1}
+                      step={0.05}
+                      value={muted ? 0 : volume}
+                      onChange={e => changeVolume(Number(e.target.value))}
+                      style={{ width: 56, accentColor: "#2563eb", height: 3, cursor: "pointer", flexShrink: 0 }}
+                    />
+
+                    {/* Share */}
+                    <div className="relative" style={{ flexShrink: 0 }}>
+                      <button onClick={() => { setShowShare(s => !s); revealControls(); }}
+                        className="flex items-center justify-center rounded-full transition-colors"
+                        style={{ width: 28, height: 28, background: "rgba(255,255,255,0.12)", color: "#fff", border: "none", cursor: "pointer" }}>
+                        <i className="ri-share-forward-fill text-sm"></i>
+                      </button>
+                      {showShare && (
+                        <div className="absolute bottom-9 right-0 rounded-lg px-3 py-2 text-xs font-semibold whitespace-nowrap"
+                          style={{ background: "rgba(15,23,42,0.95)", color: "#fff", border: "1px solid rgba(255,255,255,0.12)", boxShadow: "0 8px 24px rgba(0,0,0,0.5)" }}>
+                          <button onClick={shareVideo} style={{ background: "none", border: "none", color: "#93c5fd", cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
+                            <i className="ri-links-line"></i>
+                            {copied ? "Link copied!" : "Copy page link"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Fullscreen */}
+                    <button onClick={toggleFullscreen}
+                      className="flex items-center justify-center rounded-full transition-colors"
+                      style={{ width: 28, height: 28, background: "rgba(255,255,255,0.12)", color: "#fff", border: "none", cursor: "pointer", flexShrink: 0 }}>
+                      <i className="ri-fullscreen-line text-sm"></i>
+                    </button>
+                  </div>
                 </div>
-                <div className="absolute bottom-3 right-4">
-                  <span className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full"
-                    style={{ background: "rgba(0,0,0,0.60)", color: "rgba(255,255,255,0.75)" }}>
-                    <i className="ri-movie-2-line"></i>
-                    Academy Mental Training Demo
-                    <span style={{ color: "rgba(255,255,255,0.45)" }}>0:58</span>
+
+                {/* Top-left badge — always visible */}
+                <div className="absolute top-3 left-3 flex items-center gap-2">
+                  <span className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full"
+                    style={{ background: "rgba(239,68,68,0.90)", color: "#fff" }}>
+                    <span className="w-1.5 h-1.5 rounded-full bg-white inline-block" style={{ animation: "pulse 1.5s infinite" }}></span>
+                    LIVE
+                  </span>
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                    style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.80)" }}>
+                    HD
                   </span>
                 </div>
               </div>
