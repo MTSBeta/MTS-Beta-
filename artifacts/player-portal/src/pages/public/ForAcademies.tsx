@@ -71,7 +71,7 @@ export default function ForAcademies() {
     <PublicLayout>
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden" style={{ background: "linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 40%, #e8eef8 100%)", minHeight: "88vh", display: "flex", alignItems: "center" }}>
+      <section className="relative overflow-hidden" style={{ background: "linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 40%, #e8eef8 100%)" }}>
 
         {/* Subtle pitch lines in background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ opacity: 0.04 }}>
@@ -82,7 +82,7 @@ export default function ForAcademies() {
         {/* Snowflake/glare orbs (top right) */}
         <div className="absolute top-0 right-0 pointer-events-none" style={{ width: 420, height: 420, background: "radial-gradient(ellipse, rgba(255,255,255,0.70) 0%, transparent 70%)", opacity: 0.6 }} />
 
-        <div className="relative max-w-6xl mx-auto px-4 py-16 md:py-24 w-full">
+        <div className="relative max-w-6xl mx-auto px-4 pt-20 pb-16 md:pt-28 md:pb-24 w-full">
           <div className="max-w-2xl mx-auto text-center mb-12">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-6"
               style={{ background: "rgba(30,58,138,0.08)", border: "1px solid rgba(30,58,138,0.18)", color: "#1e3a8a" }}>
