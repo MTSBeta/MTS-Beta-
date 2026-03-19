@@ -1,0 +1,137 @@
+We are doing an Eid push for the family-facing side of Me Time Stories this week, and I want to use our story “Rose Goes to Mo’s BBQ” as the centre of the campaign.
+
+Please implement a tasteful, premium, family-friendly Eid campaign flow on the family-facing side only.
+
+Important:
+- keep football untouched
+- do not over-theme the whole platform
+- the Eid campaign should be a focused seasonal entry point, not a full redesign of every page
+- keep the modern library / premium storybook / warm glassmorphism direction we’ve already discussed
+
+Main campaign idea:
+Add a homepage Eid promo entry point that leads users into a dedicated Eid story landing page for:
+Rose Goes to Mo’s BBQ
+
+Homepage change:
+Add a tasteful promo button, banner, or feature card on the family-facing homepage that says:
+
+Happy Eid 🌙 Explore Our Eid Story
+
+Alternative supporting copy can include:
+- Celebrate Eid with a Story Made for Families
+- A Special Eid Story for This Week
+- Discover a warm story of friendship, family, and celebration
+
+When clicked, route the user to a dedicated Eid story landing page.
+
+Eid landing page requirements:
+
+1. Hero section
+Feature the story:
+Rose Goes to Mo’s BBQ
+
+Use warm premium copy along these lines:
+Celebrate Eid with a Story Full of Warmth, Friendship, and Family
+
+Subheading:
+Discover Rose Goes to Mo’s BBQ — a gentle story about curiosity, kindness, sharing food, and experiencing a special family celebration.
+
+Primary CTA:
+Join the Eid Beta
+
+Secondary CTA:
+Preview the Story
+
+2. Soft child-name capture
+Add a warm optional name capture section or card on the Eid page.
+
+Copy:
+Let’s make the magic feel more personal
+What should we call your little hero?
+
+Field:
+Child’s first name
+
+Buttons:
+- Show me their story
+- Skip for now
+
+If a child’s name is already known from previous site personalisation, use it lightly on this page.
+Examples:
+- Happy Eid, Ty 🌙
+- See how stories like this could feel for Ty
+- Start Ty’s story
+
+Important:
+- use the child’s name tastefully
+- do not overuse it in every paragraph
+- use it mainly in headings, CTAs, preview labels, and story examples
+
+3. Featured story section
+Create a rich featured section for Rose Goes to Mo’s BBQ.
+
+Use a short summary like:
+Rose is invited to a neighbour’s Eid barbecue and steps into a world of warm food, new traditions, generous hospitality, and gentle understanding. What begins as uncertainty becomes a beautiful memory of friendship, welcome, and togetherness.
+
+4. Why families will love it
+Add a section explaining why this is a strong seasonal story for families:
+- celebrates family and community
+- introduces children to a special occasion with warmth
+- encourages curiosity, kindness, and understanding
+- feels timely and meaningful for Eid
+
+5. Story preview section
+Use Rose Goes to Mo’s BBQ as the featured preview story.
+If possible, show the cover and 2 to 4 preview spreads or sample page moments.
+The strongest moments to feature are:
+- the invitation
+- arriving across the road
+- what’s on the grill
+- stories by the firelight
+
+6. Beta conversion section
+Add a dedicated Eid beta conversion block.
+
+Headline:
+Join the Eid Beta
+
+Body:
+We’re inviting families to explore personalised story experiences with us. Enter your child’s details, try sample story journeys, and help shape Me Time Stories as we grow.
+
+Primary CTA:
+Join the Eid Beta
+
+Secondary CTA:
+Start Your Child’s Story
+
+7. Visual direction
+Keep everything:
+- warm
+- elegant
+- premium
+- family-friendly
+- respectful
+- celebratory
+- aligned with the modern library / premium storybook feel
+
+Use:
+- cream
+- amber
+- soft gold
+- parchment
+- subtle moonlight / lantern / crescent cues if appropriate
+- warm glassmorphism where useful
+
+Do not use:
+- tacky festive graphics
+- overly loud colours
+- clutter
+- hard sales language
+
+8. Strategy
+This Eid page should act as:
+- a seasonal campaign landing page
+- a warm story-led entry point into Me Time Stories
+- a bridge into beta signups and personalised story engagement
+
+Please implement this as a clean, high-converting family-facing campaign.
