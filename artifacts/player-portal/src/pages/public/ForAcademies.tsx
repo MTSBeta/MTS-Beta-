@@ -130,15 +130,18 @@ export default function ForAcademies() {
                 </div>
                 <span className="text-xs font-medium mx-auto" style={{ color: "rgba(255,255,255,0.45)" }}>MTS Football Story Matrix by Awwa Stories</span>
               </div>
-              {/* Mockup content — book pages */}
-              <div className="relative" style={{ height: 220, background: "linear-gradient(135deg, #1e2a4a 0%, #2a1a3e 100%)", overflow: "hidden" }}>
-                <img
-                  src={publicAssetUrl("images/book-likeness.png")}
-                  alt="MTS Football Story Matrix preview"
+              {/* Mockup content — promo video */}
+              <div className="relative" style={{ height: 220, background: "#000", overflow: "hidden" }}>
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
                   className="absolute inset-0 w-full h-full object-cover"
-                  style={{ opacity: 0.75 }}
-                />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(30,42,74,0.4) 0%, transparent 60%, rgba(30,42,74,0.2) 100%)" }} />
+                  poster={publicAssetUrl("images/book-likeness.png")}>
+                  <source src={publicAssetUrl("images/academy-promo.mp4")} type="video/mp4" />
+                </video>
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(0,0,0,0.15) 0%, transparent 50%, rgba(0,0,0,0.10) 100%)" }} />
                 {/* Badges overlay */}
                 <div className="absolute bottom-3 left-4 flex items-center gap-3">
                   <span className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full"
