@@ -244,6 +244,52 @@ export default function MarketingHome() {
         </div>
       </section>
 
+      {/* ══ EID SEASONAL PROMO ══════════════════════════════════════════ */}
+      <section className="py-0" style={{ background: "#0c0804" }}>
+        <div className="max-w-5xl mx-auto px-4 py-8">
+          <Link href="/eid-story" className="group block rounded-2xl overflow-hidden relative transition-all hover:scale-[1.005]"
+            style={{ background: "linear-gradient(135deg, rgba(251,191,36,0.07) 0%, rgba(167,139,250,0.05) 50%, rgba(249,115,22,0.07) 100%)", border: "1px solid rgba(251,191,36,0.22)" }}>
+            {/* Stars */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              {[{t:"20%",l:"5%",s:3},{t:"10%",l:"82%",s:2},{t:"60%",l:"90%",s:1.5},{t:"70%",l:"8%",s:2}].map((s,i)=>(
+                <div key={i} className="absolute rounded-full" style={{ top:s.t, left:s.l, width:s.s*3, height:s.s*3, background:"rgba(251,191,36,0.55)", boxShadow:`0 0 ${s.s*5}px rgba(251,191,36,0.35)` }} />
+              ))}
+            </div>
+            {/* Crescent watermark */}
+            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none select-none opacity-10">
+              <svg width="72" height="72" viewBox="0 0 90 90" fill="none">
+                <path d="M60 10 A35 35 0 1 0 60 80 A25 25 0 1 1 60 10Z" fill="#fbbf24" />
+              </svg>
+            </div>
+            <div className="relative flex flex-col sm:flex-row items-center sm:items-center gap-4 px-6 py-5">
+              {/* Moon icon */}
+              <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+                style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.28)" }}>
+                <i className="ri-moon-clear-line text-xl" style={{ color: "#fbbf24" }}></i>
+              </div>
+              {/* Text */}
+              <div className="flex-1 text-center sm:text-left">
+                <p className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: "rgba(251,191,36,0.60)" }}>
+                  Eid 2025 · Featured Story
+                </p>
+                <p className="font-bold text-base" style={{ color: "#fef3e2" }}>
+                  Happy Eid 🌙 — <em>Rose Goes to Mo's BBQ</em>
+                </p>
+                <p className="text-xs mt-0.5" style={{ color: "rgba(254,243,226,0.48)" }}>
+                  A warm story of friendship, family, and celebration — personalised for your child
+                </p>
+              </div>
+              {/* CTA */}
+              <div className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl font-bold text-xs flex-shrink-0 transition-all group-hover:scale-[1.03]"
+                style={{ background: "linear-gradient(135deg,#fbbf24,#f97316)", color: "#1a0800" }}>
+                Explore the story
+                <i className="ri-arrow-right-line"></i>
+              </div>
+            </div>
+          </Link>
+        </div>
+      </section>
+
       {/* ══ 2. TRUST BAR ═════════════════════════════════════════════════ */}
       <section className="py-4 border-b" style={{ background: "#1a0c04", borderColor: "rgba(251,191,36,0.12)" }}>
         <div className="max-w-5xl mx-auto px-4">

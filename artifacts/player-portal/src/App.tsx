@@ -52,6 +52,7 @@ import CSR from "@/pages/public/CSR";
 import Families from "@/pages/public/Families";
 import ForAuthors from "@/pages/public/ForAuthors";
 import RoseStory from "@/pages/public/RoseStory";
+import EidStory from "@/pages/public/EidStory";
 import FootballMatrix from "@/pages/public/FootballMatrix";
 import CharacterCreator from "@/pages/public/CharacterCreator";
 import StoryEngine from "@/pages/public/StoryEngine";
@@ -69,7 +70,7 @@ const queryClient = new QueryClient({
 function MetyButtonConditional() {
   const [location] = useLocation();
   const publicPaths = ["/", "/about", "/for-academies", "/csr", "/families", "/for-authors",
-    "/stories/rose-goes-to-mos", "/football-matrix", "/characters/create",
+    "/stories/rose-goes-to-mos", "/eid-story", "/football-matrix", "/characters/create",
     "/stories/time-travelling-tractor", "/stories/ty-tractor"];
   const isPublic = publicPaths.some((p) => location === p || location.startsWith(p));
   if (isPublic) return null;
@@ -87,6 +88,7 @@ function Router() {
       <Route path="/families" component={Families} />
       <Route path="/for-authors" component={ForAuthors} />
       <Route path="/stories/rose-goes-to-mos" component={RoseStory} />
+      <Route path="/eid-story" component={EidStory} />
       <Route path="/football-matrix" component={FootballMatrix} />
       <Route path="/characters/create" component={CharacterCreator} />
       <Route path="/stories/time-travelling-tractor" component={StoryEngine} />
