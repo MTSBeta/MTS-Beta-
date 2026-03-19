@@ -43,7 +43,15 @@ const READING_PHOTOS = [
 export default function MarketingHome() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [activePhoto, setActivePhoto] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Parallax scroll tracker
+  useEffect(() => {
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Auto-advance testimonials
   useEffect(() => {
@@ -65,22 +73,36 @@ export default function MarketingHome() {
 
       {/* ══ 1. HERO ══════════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden" style={{ minHeight: "95vh", display: "flex", alignItems: "center" }}>
-        <img
-          src={publicAssetUrl("images/family-reading-2.png")}
-          alt="Family reading a Me Time Stories book at bedtime"
+        {/* Looping video background with parallax — girl reading, characters coming to life */}
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ objectPosition: "center top" }}
-        />
-        {/* Warm amber-dark overlay — cozy bedtime feel */}
+          style={{
+            objectPosition: "center center",
+            transform: `translateY(${scrollY * 0.38}px)`,
+            willChange: "transform",
+          }}
+        >
+          <source src={publicAssetUrl("images/girl-reading-book.mp4")} type="video/mp4" />
+        </video>
+        {/* Glassmorphic overlay — left dark, right lets video breathe */}
         <div className="absolute inset-0" style={{
-          background: "linear-gradient(110deg, rgba(12,8,4,0.93) 0%, rgba(20,10,4,0.85) 45%, rgba(30,14,4,0.40) 100%)"
+          background: "linear-gradient(110deg, rgba(12,8,4,0.92) 0%, rgba(12,8,4,0.78) 40%, rgba(12,8,4,0.28) 100%)"
         }} />
-        {/* Soft amber glow at bottom */}
-        <div className="absolute inset-x-0 bottom-0 h-40" style={{
-          background: "linear-gradient(to top, rgba(251,146,60,0.12) 0%, transparent 100%)"
+        {/* Subtle warm vignette at bottom */}
+        <div className="absolute inset-x-0 bottom-0 h-56" style={{
+          background: "linear-gradient(to top, rgba(12,8,4,0.95) 0%, transparent 100%)"
         }} />
 
-        <div className="relative max-w-7xl mx-auto px-4 py-16 md:py-24 w-full grid md:grid-cols-2 items-center gap-12">
+        {/* Hero content moves at a gentle parallax offset */}
+        <div
+          className="relative max-w-7xl mx-auto px-4 py-16 md:py-24 w-full grid md:grid-cols-2 items-center gap-12"
+          style={{ transform: `translateY(${scrollY * -0.10}px)`, willChange: "transform" }}
+        >
           <div>
             {/* Eyebrow */}
             <span className="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-400/30 text-amber-300 text-sm font-medium px-4 py-2 rounded-full mb-8">
@@ -346,25 +368,21 @@ export default function MarketingHome() {
       {/* ══ 6. THE STORY — TTT ═══════════════════════════════════════════ */}
       <section
         className="py-16 md:py-20 relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #0d0802 0%, #1a0c04 50%, #0d0802 100%)" }}
+        style={{ background: "#060402" }}
       >
-        {/* Warm ambient glow */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[320px] opacity-[0.08]"
-            style={{ background: "radial-gradient(ellipse, #f97316 0%, transparent 70%)", filter: "blur(60px)" }} />
-          {[
-            "top-8 left-[8%]", "top-16 right-[12%]", "top-32 left-[40%]",
-            "bottom-12 right-[18%]", "bottom-28 left-[55%]", "top-48 right-[35%]",
-          ].map((pos, i) => (
-            <div
-              key={i}
-              className={`absolute ${pos} text-amber-400 opacity-25 text-xl`}
-              style={{ animation: `bounce ${2 + i * 0.35}s ease-in-out infinite alternate` }}
-            >
-              {i % 2 === 0 ? "✦" : "✧"}
-            </div>
-          ))}
-        </div>
+        {/* Real background image — blurred, darkened */}
+        <img
+          src={publicAssetUrl("images/family-fireplace.png")}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ objectPosition: "center 30%", filter: "blur(3px) saturate(0.7)", transform: "scale(1.05)" }}
+        />
+        {/* Dark glass overlay */}
+        <div className="absolute inset-0" style={{ background: "rgba(6,4,2,0.82)" }} />
+        {/* Warm amber glow from top */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[250px] pointer-events-none"
+          style={{ background: "radial-gradient(ellipse, rgba(249,115,22,0.12) 0%, transparent 70%)", filter: "blur(30px)" }} />
 
         <div className="max-w-4xl mx-auto px-4 text-center relative">
           <div className="text-6xl mb-5">🚜</div>
@@ -378,10 +396,15 @@ export default function MarketingHome() {
             A 6-chapter adventure where your child's name, personality, and biggest dream are woven through every page. Build their character in 2 minutes — then watch the magic begin.
           </p>
 
-          {/* Story page preview */}
+          {/* Story page preview — glassmorphic panel */}
           <div
-            className="rounded-3xl p-6 md:p-8 mb-8 text-left max-w-xl mx-auto border"
-            style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(251,191,36,0.15)" }}
+            className="rounded-3xl p-6 md:p-8 mb-8 text-left max-w-xl mx-auto"
+            style={{
+              backdropFilter: "blur(20px)",
+              background: "rgba(255,248,225,0.06)",
+              border: "1px solid rgba(251,191,36,0.22)",
+              boxShadow: "0 8px 40px rgba(0,0,0,0.40), inset 0 1px 0 rgba(251,191,36,0.08)",
+            }}
           >
             <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(254,243,226,0.35)" }}>
               📖 Chapter 1: The Discovery

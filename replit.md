@@ -271,6 +271,26 @@ A separate internal tool for MeTime Stories staff (authors, illustrators, editor
 - `internalApi.ts` — reads `metime_internal_token`, redirects to `/internal/login` on 401
 - Backend routes: `/api/internal/*` all protected by `internalAuth` middleware
 
+## Public-Facing Design System (Phase 3 Redesign)
+
+### Palette
+- **Darks**: `#060402`, `#0d0802`, `#1a0c04` (warm dark amber, not cold black)
+- **Accents**: `#f97316` (amber), `#fbbf24` (gold), `#2d1260` (plum)
+- **Light**: `#fef9f0`, `#fef3e2` (warm cream parchment)
+- **Glass panels**: `backdrop-filter: blur(20-24px)`, `rgba(255,248,235,0.05-0.06)` bg, warm amber border
+
+### Key Visual Techniques
+- **Video hero**: `public/images/girl-reading-book.mp4` — looping autoplay, covers hero section
+- **Parallax**: scroll listener on MarketingHome; video moves at `scrollY * 0.38`, content at `scrollY * -0.10`
+- **Glassmorphic sections**: TTT section uses `family-fireplace.png` blurred behind a `rgba(6,4,2,0.82)` dark glass overlay; story preview panel uses `backdrop-filter: blur(20px)`
+- **Icons**: Remix Icons (`ri-*`) throughout; emojis only in story content, theme selectors, companion animals
+
+### Page Backgrounds
+- MarketingHome hero: looping video + directional gradient overlay
+- MarketingHome TTT section (#6): blurred real image + dark glass + amber glow
+- CharacterCreator: `radial-gradient(ellipse at 50% 0%, #2d1260 0%, #1a0c04 45%, #0d0a08 100%)`
+- StoryEngine: `radial-gradient(ellipse at 50% 0%, #1a0c04 0%, #0d0802 55%, #060402 100%)`
+
 ## Common Commands
 
 ```bash
