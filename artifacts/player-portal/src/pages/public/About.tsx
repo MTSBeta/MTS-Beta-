@@ -230,15 +230,22 @@ export default function About() {
                 email: "michael@metimestories.co.uk",
                 linkedin: "https://www.linkedin.com/in/michael-mcdermott-477a83230/",
                 initials: "MM",
+                photo: "images/team-michael.jpeg",
                 color: "#fbbf24",
               },
-            ].map(({ name, role, bio, email, linkedin, initials, color, tags }) => (
+            ].map(({ name, role, bio, email, linkedin, initials, color, tags, photo }) => (
               <div key={name} className="rounded-3xl p-7 flex flex-col gap-5" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
                 <div className="flex items-center gap-4">
+                  {photo ? (
+                    <img src={publicAssetUrl(photo)} alt={name}
+                      className="w-16 h-16 rounded-2xl object-cover flex-shrink-0"
+                      style={{ border: `1.5px solid ${color}40` }} />
+                  ) : (
                   <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-black flex-shrink-0"
                     style={{ background: `linear-gradient(135deg, ${color}25, ${color}10)`, border: `1.5px solid ${color}40`, color }}>
                     {initials}
                   </div>
+                  )}
                   <div>
                     <h3 className="text-lg font-bold" style={{ color: "#fef3e2" }}>{name}</h3>
                     <p className="text-sm font-semibold" style={{ color }}>{role}</p>
