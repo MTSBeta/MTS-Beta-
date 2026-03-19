@@ -2,12 +2,9 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { publicAssetUrl } from "@/lib/publicAssetUrl";
-import { useChildName } from "@/contexts/ChildNameContext";
 
 export default function CSR() {
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const { childName } = useChildName();
-  const childLabel = childName || "Rose";
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
@@ -223,86 +220,73 @@ export default function CSR() {
       </section>
 
       {/* ══ ROSE GOES TO MO'S BBQ — FEATURED CAMPAIGN ═══════════════════════ */}
-      <section className="py-20 md:py-32 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #1c0800 0%, #2d1000 50%, #1a0600 100%)" }}>
-
-        {/* ── Cover image — right side, full bleed, partial-image pattern ─── */}
-        <img
-          src={publicAssetUrl("images/rose-goes-cover.png")}
-          alt="Families gathering and celebrating — the spirit of Rose Goes to Mo's BBQ"
-          aria-hidden="true"
-          className="hidden md:block absolute top-0 right-0 h-full pointer-events-none select-none"
-          style={{ width: "50%", objectFit: "cover", objectPosition: "left center" }}
-        />
-        {/* Gradient fade: dark background fades right over the image */}
-        <div className="hidden md:block absolute top-0 right-0 h-full pointer-events-none"
-          style={{ width: "55%", background: "linear-gradient(to right, #1c0800 0%, #1c0800 18%, rgba(28,8,0,0.88) 40%, rgba(28,8,0,0.30) 72%, transparent 100%)" }} />
-
-        {/* Warm ambient glows */}
-        <div className="absolute top-0 left-0 w-[400px] h-[400px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(ellipse, rgba(249,115,22,0.07) 0%, transparent 70%)" }} />
-        <div className="absolute bottom-0 left-1/4 w-[300px] h-[300px] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(ellipse, rgba(251,191,36,0.05) 0%, transparent 70%)" }} />
+      <section className="py-20 md:py-28 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #1c0800 0%, #2d1000 50%, #1a0600 100%)" }}>
+        {/* Warm ambient glow */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(ellipse, rgba(251,191,36,0.07) 0%, transparent 70%)" }} />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(ellipse, rgba(249,115,22,0.06) 0%, transparent 70%)" }} />
 
         <div className="max-w-6xl mx-auto px-4 relative">
-          <div className="md:max-w-[52%]">
-            <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-8"
-              style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.25)", color: "#fbbf24" }}>
-              <i className="ri-star-smile-line"></i> Featured Campaign
-            </span>
-            <h2 className="text-3xl md:text-5xl font-black mb-6 leading-tight" style={{ color: "#fef3e2" }}>
-              Rose Goes to<br />
-              <span style={{ color: "#fbbf24" }}>Mo's BBQ</span>
-            </h2>
-            <p className="text-lg leading-relaxed mb-5" style={{ color: "rgba(254,243,226,0.85)" }}>
-              Our Eid community campaign — a story about family gathering, cultural pride, generosity, and the joy of celebration, told through a child who shares a name and a heritage with the reader.
-            </p>
-            <p className="leading-relaxed mb-5" style={{ color: "rgba(254,243,226,0.60)" }}>
-              When {childLabel} arrives at Mo's BBQ, the courtyard is full of cousins, the smell of spiced lamb fills the air, and the whole community has gathered to celebrate. The story captures what Eid really feels like from a child's perspective — not a description of a holiday, but a memory waiting to be made.
-            </p>
-            <p className="leading-relaxed mb-8" style={{ color: "rgba(254,243,226,0.60)" }}>
-              Councils, housing associations, schools, and community organisations have partnered with us to bring this campaign to Muslim families who rarely see their celebrations reflected in children's literature. The child's own name replaces "Rose" — making the story truly theirs.
-            </p>
-
-            {/* Story excerpt pull-quote */}
-            <div className="mb-8 p-5 rounded-2xl" style={{ background: "rgba(0,0,0,0.35)", borderLeft: "3px solid #fbbf24" }}>
-              <p className="text-sm italic leading-relaxed mb-2" style={{ color: "rgba(254,243,226,0.85)", fontFamily: "Georgia, serif" }}>
-                "The smell of cumin and charcoal drifted across the yard.{" "}
-                <span style={{ color: "#fbbf24" }}>{childLabel}</span>{" "}
-                squeezed through the gate and felt the warmth before she even reached the fire…"
-              </p>
-              <p className="text-xs font-semibold" style={{ color: "rgba(254,243,226,0.35)" }}>
-                From Rose Goes to Mo's BBQ — replace "Rose" with any child's name
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2 mb-8">
-              {["Eid celebration", "Family & belonging", "Cultural representation", "Community delivery", "Named-child personalisation"].map(t => (
-                <span key={t} className="text-xs font-medium px-3 py-1 rounded-full"
-                  style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.22)", color: "#fbbf24" }}>{t}</span>
-              ))}
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/eid-story"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 font-bold rounded-xl text-sm hover:scale-[1.02] transition-all"
-                style={{ background: "linear-gradient(135deg,#f97316,#fbbf24)", color: "#1a0800" }}>
-                <i className="ri-book-open-line"></i> Read the story
-              </Link>
-              <a href="#enquire"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border font-semibold rounded-xl text-sm transition-colors"
-                style={{ borderColor: "rgba(254,243,226,0.25)", color: "#fef3e2" }}>
-                Sponsor this campaign
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Eid Campaign badge — mobile, shown below content */}
-        <div className="md:hidden flex justify-center mt-10">
-          <div className="w-20 h-20 rounded-full flex items-center justify-center text-center shadow-xl"
-            style={{ background: "linear-gradient(135deg,#f97316,#fbbf24)" }}>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="text-xs font-black text-amber-900 leading-tight">Eid</div>
-              <div className="text-[10px] font-bold text-amber-900 leading-tight">Campaign</div>
+              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-8"
+                style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.25)", color: "#fbbf24" }}>
+                <i className="ri-star-smile-line"></i> Featured Campaign
+              </span>
+              <h2 className="text-3xl md:text-4xl font-black mb-6 leading-tight" style={{ color: "#fef3e2" }}>
+                Rose Goes to<br />
+                <span style={{ color: "#fbbf24" }}>Mo's BBQ</span>
+              </h2>
+              <p className="text-lg leading-relaxed mb-5" style={{ color: "rgba(254,243,226,0.80)" }}>
+                Our Eid community campaign — a story about family gathering, cultural pride, generosity, and the joy of celebration, told through a child who shares a name and a heritage with the reader.
+              </p>
+              <p className="leading-relaxed mb-5" style={{ color: "rgba(254,243,226,0.55)" }}>
+                When Rose arrives at Mo's BBQ, the courtyard is full of cousins, the smell of spiced lamb fills the air, and the whole community has gathered to celebrate. The story captures what Eid really feels like from a child's perspective — not a description of a holiday, but a memory waiting to be made.
+              </p>
+              <p className="leading-relaxed mb-8" style={{ color: "rgba(254,243,226,0.55)" }}>
+                Councils, housing associations, schools, and community organisations have partnered with us to bring this campaign to Muslim families who rarely see their celebrations reflected in children's literature. The child's own name replaces "Rose" — making the story truly theirs.
+              </p>
+              <div className="flex flex-wrap gap-2 mb-8">
+                {["Eid celebration", "Family & belonging", "Cultural representation", "Community delivery", "Named-child personalisation"].map(t => (
+                  <span key={t} className="text-xs font-medium px-3 py-1 rounded-full"
+                    style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.22)", color: "#fbbf24" }}>{t}</span>
+                ))}
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link href="/eid-story"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 font-bold rounded-xl text-sm hover:scale-[1.02] transition-all"
+                  style={{ background: "linear-gradient(135deg,#f97316,#fbbf24)", color: "#1a0800" }}>
+                  <i className="ri-book-open-line"></i> Read the story
+                </Link>
+                <a href="#enquire"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 border font-semibold rounded-xl text-sm transition-colors"
+                  style={{ borderColor: "rgba(254,243,226,0.20)", color: "#fef3e2" }}>
+                  Sponsor this campaign
+                </a>
+              </div>
+            </div>
+            <div className="relative">
+              {/* Story illustration card */}
+              <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ border: "1px solid rgba(251,191,36,0.15)" }}>
+                <img src={publicAssetUrl("images/rose-goes-cover.png")}
+                  alt="Families gathering and celebrating — the spirit of Rose Goes to Mo's BBQ"
+                  className="w-full object-cover" style={{ maxHeight: 420 }} />
+                <div className="p-6" style={{ background: "rgba(10,4,0,0.85)", borderTop: "1px solid rgba(251,191,36,0.10)" }}>
+                  <p className="text-sm italic leading-relaxed mb-3" style={{ color: "rgba(254,243,226,0.75)", fontFamily: "Georgia, serif" }}>
+                    "The smell of cumin and charcoal drifted across the yard. <span style={{ color: "#fbbf24" }}>Rose</span> squeezed through the gate and felt the warmth before she even reached the fire…"
+                  </p>
+                  <p className="text-xs font-semibold" style={{ color: "rgba(254,243,226,0.35)" }}>From Rose Goes to Mo's BBQ — replace "Rose" with any child's name</p>
+                </div>
+              </div>
+              {/* Campaign badge */}
+              <div className="absolute -top-4 -right-4 w-20 h-20 rounded-full flex items-center justify-center text-center shadow-xl"
+                style={{ background: "linear-gradient(135deg,#f97316,#fbbf24)" }}>
+                <div>
+                  <div className="text-xs font-black text-amber-900 leading-tight">Eid</div>
+                  <div className="text-[10px] font-bold text-amber-900 leading-tight">Campaign</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
