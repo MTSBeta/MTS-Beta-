@@ -75,14 +75,17 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 <i className={`ri-arrow-down-s-line transition-transform ${solutionsOpen ? "rotate-180" : ""}`}></i>
               </button>
               {solutionsOpen && (
-                <div className="absolute left-0 mt-2 w-52 bg-white rounded-xl shadow-xl py-2 border border-gray-100 z-50">
-                  <Link href="/for-academies" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">
+                <div
+                  className="absolute left-0 mt-2 w-52 bg-white rounded-xl shadow-xl py-2 border border-gray-100 z-50"
+                  onMouseDown={(e) => e.preventDefault()}
+                >
+                  <Link href="/for-academies" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700" onClick={() => setSolutionsOpen(false)}>
                     <i className="ri-school-line text-blue-600"></i> Football Academies
                   </Link>
-                  <Link href="/csr" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700">
+                  <Link href="/csr" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700" onClick={() => setSolutionsOpen(false)}>
                     <i className="ri-building-line text-green-600"></i> Corporate CSR
                   </Link>
-                  <Link href="/football-matrix" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">
+                  <Link href="/football-matrix" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700" onClick={() => setSolutionsOpen(false)}>
                     <i className="ri-football-line text-orange-500"></i> Football Matrix
                   </Link>
                 </div>
