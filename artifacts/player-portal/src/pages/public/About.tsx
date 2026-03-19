@@ -287,10 +287,9 @@ export default function About() {
             {/* Academic Lead */}
             <div className="rounded-2xl p-6 mb-4" style={{ background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.15)" }}>
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-base font-black flex-shrink-0"
-                  style={{ background: "rgba(139,92,246,0.20)", border: "1px solid rgba(139,92,246,0.35)", color: "#a78bfa" }}>
-                  AH
-                </div>
+                <img src={publicAssetUrl("images/team-hussain.png")} alt="Dr Ambreen Hussain"
+                  className="w-12 h-12 rounded-xl object-cover flex-shrink-0"
+                  style={{ border: "1px solid rgba(139,92,246,0.35)" }} />
                 <div className="flex-1">
                   <div className="flex flex-wrap items-baseline gap-2 mb-1">
                     <h4 className="font-bold" style={{ color: "#fef3e2" }}>Dr Ambreen Hussain</h4>
