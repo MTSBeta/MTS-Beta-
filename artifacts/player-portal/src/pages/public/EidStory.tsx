@@ -134,59 +134,37 @@ export default function EidStory() {
             </div>
           </div>
 
-          {/* Right: book cover */}
+          {/* Right: real book cover + animation */}
           <div className="flex justify-center">
-            <div style={{ perspective: "900px" }}>
-              <div className="flex items-stretch gap-0 rounded-r-xl overflow-hidden"
-                style={{ transform: "rotateY(-6deg) rotateX(2deg)", filter: "drop-shadow(0 28px 48px rgba(0,0,0,0.65))", transformStyle: "preserve-3d" }}>
+            <div style={{ perspective: "1000px" }}>
+              <div className="flex items-stretch gap-0 rounded-r-2xl overflow-hidden"
+                style={{
+                  transform: "rotateY(-8deg) rotateX(2deg)",
+                  filter: "drop-shadow(0 32px 56px rgba(0,0,0,0.72)) drop-shadow(0 8px 20px rgba(251,191,36,0.12))",
+                  transformStyle: "preserve-3d",
+                }}>
                 {/* Spine */}
                 <div className="w-7 flex flex-col items-center justify-center py-6 flex-shrink-0"
-                  style={{ background: "linear-gradient(to right, #2a1505, #3d1f08)", borderLeft: "1px solid rgba(251,191,36,0.35)" }}>
-                  <span className="text-[7px] font-black uppercase tracking-[0.20em] whitespace-nowrap"
-                    style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", color: "rgba(251,191,36,0.55)" }}>
+                  style={{ background: "linear-gradient(to right, #2a1505, #3d1f08)", borderLeft: "2px solid rgba(251,191,36,0.30)" }}>
+                  <span className="text-[7px] font-black uppercase tracking-[0.22em] whitespace-nowrap"
+                    style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", color: "rgba(251,191,36,0.50)" }}>
                     Me Time Stories
                   </span>
                 </div>
-                {/* Cover face */}
-                <div className="relative overflow-hidden" style={{ width: 220, minHeight: 300 }}>
-                  {/* Sky */}
-                  <div className="absolute inset-0"
-                    style={{ background: "linear-gradient(180deg, #0c1e3a 0%, #1a2e50 45%, #2a1a0a 75%, #1a0a05 100%)" }} />
-                  {/* Stars on cover */}
-                  {[{t:"12%",l:"20%",s:3},{t:"8%",l:"65%",s:2},{t:"22%",l:"80%",s:2},{t:"5%",l:"44%",s:1.5}].map((st,i) => (
-                    <div key={i} className="absolute rounded-full"
-                      style={{ top:st.t, left:st.l, width:st.s*3, height:st.s*3, background:"rgba(251,191,36,0.70)", boxShadow:`0 0 ${st.s*4}px rgba(251,191,36,0.45)` }} />
-                  ))}
-                  {/* Lantern glow */}
-                  <div className="absolute" style={{ bottom:"28%", left:"50%", transform:"translateX(-50%)", width:80, height:80, borderRadius:"50%", background:"radial-gradient(ellipse, rgba(251,191,36,0.25) 0%, transparent 70%)" }} />
-                  {/* Decorative lantern icon area */}
-                  <div className="absolute flex flex-col items-center"
-                    style={{ bottom:"28%", left:"50%", transform:"translateX(-50%)" }}>
-                    <i className="ri-goblet-line text-3xl" style={{ color:"rgba(251,191,36,0.70)" }}></i>
-                  </div>
-                  {/* Ground / grass */}
-                  <div className="absolute bottom-0 inset-x-0 h-20"
-                    style={{ background:"linear-gradient(to top, rgba(20,50,20,0.85) 0%, transparent 100%)" }} />
-                  {/* MeTime badge */}
-                  <div className="absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center"
-                    style={{ background:"linear-gradient(135deg,#fbbf24,#f97316)", boxShadow:"0 2px 12px rgba(251,191,36,0.45)" }}>
-                    <span className="text-[6px] font-black uppercase leading-tight text-center" style={{ color:"#1a0800" }}>MeTime<br/>Stories</span>
-                  </div>
-                  {/* Title */}
-                  <div className="absolute inset-x-0 top-12 px-4">
-                    <p className="text-[8px] font-bold uppercase tracking-[0.18em] mb-1.5" style={{ color:"rgba(251,191,36,0.65)" }}>A story for your family</p>
-                    <h3 className="font-black leading-tight mb-1" style={{ fontSize:"1.05rem", color:"#ffffff", textShadow:"0 2px 10px rgba(0,0,0,0.80)" }}>
-                      Rose Goes to<br />
-                      <span style={{ color:"#fbbf24" }}>Mo's BBQ</span>
-                    </h3>
-                  </div>
-                  {/* Bottom bar */}
-                  <div className="absolute bottom-0 inset-x-0 px-3 py-2"
-                    style={{ background:"linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)" }}>
-                    <p className="text-[7.5px] font-semibold uppercase tracking-widest" style={{ color:"rgba(251,191,36,0.55)" }}>
-                      Personalised · Warm · Joyful
-                    </p>
-                  </div>
+                {/* Cover face — video with image poster */}
+                <div className="relative overflow-hidden" style={{ width: 240 }}>
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    poster={`${import.meta.env.BASE_URL}images/rose-bbq-cover.png`}
+                    style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}>
+                    <source src={`${import.meta.env.BASE_URL}images/rose-bbq-animation.mp4`} type="video/mp4" />
+                  </video>
+                  {/* Subtle vignette overlay */}
+                  <div className="absolute inset-0 pointer-events-none"
+                    style={{ background: "linear-gradient(to top, rgba(10,5,0,0.28) 0%, transparent 40%)" }} />
                 </div>
               </div>
             </div>
@@ -251,8 +229,19 @@ export default function EidStory() {
             </div>
 
             {/* Story details card */}
-            <div className="rounded-2xl p-6"
+            <div className="rounded-2xl overflow-hidden"
               style={{ background: "rgba(251,191,36,0.04)", border: "1px solid rgba(251,191,36,0.14)" }}>
+              {/* Cover image strip */}
+              <div className="relative overflow-hidden" style={{ height: 220 }}>
+                <img
+                  src={`${import.meta.env.BASE_URL}images/rose-bbq-cover.png`}
+                  alt="Rose Goes to Mo's BBQ book cover"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+                />
+                <div className="absolute inset-0 pointer-events-none"
+                  style={{ background: "linear-gradient(to top, rgba(10,15,30,0.80) 0%, transparent 55%)" }} />
+              </div>
+              <div className="p-6">
               <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(254,243,226,0.30)" }}>Story details</p>
               <div className="space-y-3.5">
                 {[
@@ -273,6 +262,7 @@ export default function EidStory() {
                     </div>
                   </div>
                 ))}
+              </div>
               </div>
             </div>
           </div>
