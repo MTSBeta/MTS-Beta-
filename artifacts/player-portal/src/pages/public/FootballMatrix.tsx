@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PublicLayout } from "@/layouts/PublicLayout";
+import { publicAssetUrl } from "@/lib/publicAssetUrl";
 
 type Section = "pitch" | "training" | "academy";
 
@@ -249,26 +250,34 @@ export default function FootballMatrix() {
     <PublicLayout>
       <div className="min-h-screen" style={{ background: "radial-gradient(ellipse at 50% 0%, #0f1f3a 0%, #090d1a 45%, #04060d 100%)" }}>
 
-        {/* Ambient floodlights */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-1/3 left-1/3 w-[500px] h-[500px] opacity-[0.035]"
-            style={{ background: "radial-gradient(circle, #fbbf24 0%, transparent 65%)", filter: "blur(60px)" }} />
-          <div className="absolute -top-1/3 right-1/3 w-[500px] h-[500px] opacity-[0.035]"
-            style={{ background: "radial-gradient(circle, #fbbf24 0%, transparent 65%)", filter: "blur(60px)" }} />
+        {/* Scan-line texture */}
+        <div className="fixed inset-0 pointer-events-none z-0"
+          style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.022) 3px, rgba(0,0,0,0.022) 4px)" }} />
+
+        {/* Floodlight beams — top corners */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+          <div className="absolute -top-20 -left-20 w-[600px] h-[700px] opacity-[0.06]"
+            style={{ background: "linear-gradient(155deg, #e0f0ff 0%, transparent 55%)", filter: "blur(50px)", transform: "rotate(-10deg)" }} />
+          <div className="absolute -top-20 -right-20 w-[600px] h-[700px] opacity-[0.06]"
+            style={{ background: "linear-gradient(205deg, #e0f0ff 0%, transparent 55%)", filter: "blur(50px)", transform: "rotate(10deg)" }} />
+          <div className="absolute top-1/2 left-0 right-0 h-px opacity-[0.04]"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent)" }} />
         </div>
 
         {/* ── Sticky header ── */}
         <div className="sticky top-[60px] z-40" style={{ backdropFilter: "blur(24px)", background: "rgba(4,6,13,0.90)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-                style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.28)" }}>
-                <i className="ri-football-line text-amber-400 text-base"></i>
-              </div>
-              <div>
-                <p className="text-xs font-bold text-white leading-none">Me Time Stories</p>
-                <p className="text-[10px] leading-none mt-0.5" style={{ color: "#f97316" }}>Football Academy Matrix</p>
-              </div>
+              <img
+                src={publicAssetUrl("images/metime-logo.png")}
+                alt="Me Time Stories"
+                className="h-9 w-auto"
+                style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 8px rgba(251,191,36,0.40))" }}
+              />
+              <div className="h-5 w-px" style={{ background: "rgba(255,255,255,0.12)" }} />
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#f97316" }}>
+                Football Academy Matrix
+              </span>
             </div>
 
             <div className="flex items-center gap-1 p-1 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
@@ -293,37 +302,72 @@ export default function FootballMatrix() {
           </div>
         </div>
 
-        {/* ── PAGE HERO ── */}
-        {activeSection === "pitch" && !selected && (
-          <div className="max-w-5xl mx-auto px-4 pt-12 pb-6 text-center">
-            <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] px-4 py-1.5 rounded-full mb-5"
-              style={{ background: "rgba(249,115,22,0.12)", border: "1px solid rgba(249,115,22,0.25)", color: "#f97316" }}>
-              <i className="ri-football-line"></i> Position-Aware Story Framework
-            </span>
-            <h1 className="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">
-              Every Player. Every Position.<br />
-              <span style={{ background: "linear-gradient(90deg, #f97316, #fbbf24)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                Made the Hero of Their Role.
-              </span>
-            </h1>
-            <p className="text-base max-w-2xl mx-auto leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
-              Select any position on the pitch to explore the psychological identity, hero arc, and personalised story programme we build for that specific role.
-            </p>
+        {/* ── CINEMATIC STADIUM HERO ── */}
+        {activeSection === "pitch" && (
+          <div className="relative w-full overflow-hidden" style={{ height: selected ? 100 : 340, transition: "height 0.5s ease" }}>
+            {/* Stadium photo */}
+            <img
+              src={publicAssetUrl("images/stadiums/manchester-city.jpg")}
+              alt=""
+              aria-hidden="true"
+              className="w-full h-full object-cover"
+              style={{ objectPosition: "center 35%", filter: "saturate(0.5) brightness(0.45)" }}
+            />
+            {/* Scan-line overlay on the image */}
+            <div className="absolute inset-0"
+              style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px)" }} />
+            {/* Gradient fade top → bottom */}
+            <div className="absolute inset-0" style={{
+              background: "linear-gradient(to bottom, rgba(4,6,13,0.55) 0%, rgba(4,6,13,0.05) 35%, rgba(4,6,13,0.75) 75%, rgba(4,6,13,1) 100%)"
+            }} />
+            {/* Floodlight glow */}
+            <div className="absolute top-0 left-0 right-0 h-1/2 pointer-events-none"
+              style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(200,230,255,0.06) 0%, transparent 65%)" }} />
+
+            {/* Content: full hero when no position selected */}
+            {!selected && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+                <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.20em] px-4 py-1.5 rounded-full mb-4"
+                  style={{ background: "rgba(249,115,22,0.15)", border: "1px solid rgba(249,115,22,0.30)", color: "#f97316", backdropFilter: "blur(8px)" }}>
+                  <i className="ri-football-line"></i> Position-Aware Story Framework
+                </span>
+                <h1 className="text-3xl md:text-5xl font-black text-white mb-4 leading-tight" style={{ textShadow: "0 2px 20px rgba(0,0,0,0.80)" }}>
+                  Every Player. Every Position.
+                  <br />
+                  <span style={{ background: "linear-gradient(90deg, #f97316, #fbbf24)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                    Made the Hero of Their Role.
+                  </span>
+                </h1>
+                <p className="text-sm max-w-xl mx-auto" style={{ color: "rgba(255,255,255,0.50)" }}>
+                  Select any position on the pitch below to explore its personalised story programme.
+                </p>
+              </div>
+            )}
+
+            {/* Slim position strip when selected */}
+            {selected && (
+              <div className="absolute inset-0 flex items-center px-6">
+                <button onClick={() => setSelected(null)}
+                  className="flex items-center gap-2 text-xs font-semibold mr-6 transition-all hover:text-white"
+                  style={{ color: "rgba(255,255,255,0.40)" }}>
+                  <i className="ri-arrow-left-line"></i> All Positions
+                </button>
+                <div className="h-5 w-px mr-4" style={{ background: "rgba(255,255,255,0.15)" }} />
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black mr-3"
+                  style={{ background: `${selected.color}25`, border: `1px solid ${selected.color}50`, color: selected.color }}>
+                  {selected.abbr}
+                </div>
+                <span className="text-sm font-black text-white mr-2">{selected.label}</span>
+                <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>— Story Programme</span>
+              </div>
+            )}
           </div>
         )}
 
         {/* ── PITCH SECTION ── */}
         {activeSection === "pitch" && (
           <div className="max-w-7xl mx-auto px-4 pb-16">
-            {selected && (
-              <div className="pt-8 mb-6">
-                <button onClick={() => setSelected(null)}
-                  className="flex items-center gap-2 text-xs font-semibold transition-colors hover:text-white"
-                  style={{ color: "rgba(255,255,255,0.35)" }}>
-                  <i className="ri-arrow-left-line"></i> All Positions
-                </button>
-              </div>
-            )}
+            {selected && <div className="pt-6" />}
 
             <div className={`grid gap-8 items-start ${selected ? "lg:grid-cols-[340px_1fr]" : "lg:grid-cols-[380px_1fr]"}`}>
 
@@ -674,14 +718,30 @@ export default function FootballMatrix() {
 
         {/* ── STORY PATHS SECTION ── */}
         {activeSection === "training" && (
-          <div className="max-w-5xl mx-auto px-4 py-12">
-            <div className="mb-10">
-              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4"
-                style={{ background: "rgba(249,115,22,0.10)", border: "1px solid rgba(249,115,22,0.22)", color: "#f97316" }}>
+          <>
+          {/* Stadium banner */}
+          <div className="relative w-full overflow-hidden" style={{ height: 220 }}>
+            <img src={publicAssetUrl("images/stadiums/liverpool.jpg")} alt="" aria-hidden="true"
+              className="w-full h-full object-cover"
+              style={{ objectPosition: "center 40%", filter: "saturate(0.4) brightness(0.40)" }} />
+            <div className="absolute inset-0"
+              style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px)" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(4,6,13,0.50) 0%, rgba(4,6,13,0.10) 40%, rgba(4,6,13,0.85) 80%, rgba(4,6,13,1) 100%)" }} />
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+              <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.20em] px-4 py-1.5 rounded-full mb-3"
+                style={{ background: "rgba(249,115,22,0.15)", border: "1px solid rgba(249,115,22,0.30)", color: "#f97316", backdropFilter: "blur(8px)" }}>
                 <i className="ri-git-branch-line"></i> Developmental Story Paths
               </span>
-              <h2 className="text-3xl font-black text-white mb-3">Position-Grouped<br />Story Programmes</h2>
-              <p className="text-sm max-w-xl" style={{ color: "rgba(255,255,255,0.40)" }}>
+              <h2 className="text-3xl md:text-4xl font-black text-white mb-2" style={{ textShadow: "0 2px 20px rgba(0,0,0,0.80)" }}>
+                Position-Grouped Story Programmes
+              </h2>
+              <p className="text-sm max-w-xl" style={{ color: "rgba(255,255,255,0.45)" }}>31 story titles. 7 position groups. Every player made the hero of their role.</p>
+            </div>
+          </div>
+
+          <div className="max-w-5xl mx-auto px-4 py-10">
+            <div className="mb-8">
+              <p className="text-sm max-w-xl" style={{ color: "rgba(255,255,255,0.38)" }}>
                 Each position group has its own psychological theme cluster — ensuring every player receives a story built around the specific developmental demands of their role.
               </p>
             </div>
@@ -741,36 +801,67 @@ export default function FootballMatrix() {
               </button>
             </div>
           </div>
+          </>
         )}
 
         {/* ── ACADEMY FIT SECTION ── */}
         {activeSection === "academy" && (
-          <div className="max-w-5xl mx-auto px-4 py-12">
-            <div className="mb-10">
-              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4"
-                style={{ background: "rgba(139,92,246,0.10)", border: "1px solid rgba(139,92,246,0.25)", color: "#a78bfa" }}>
+          <>
+          {/* Stadium banner */}
+          <div className="relative w-full overflow-hidden" style={{ height: 240 }}>
+            <img src={publicAssetUrl("images/stadiums/arsenal.jpg")} alt="" aria-hidden="true"
+              className="w-full h-full object-cover"
+              style={{ objectPosition: "center 30%", filter: "saturate(0.4) brightness(0.38)" }} />
+            <div className="absolute inset-0"
+              style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px)" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(4,6,13,0.50) 0%, rgba(4,6,13,0.10) 40%, rgba(4,6,13,0.85) 80%, rgba(4,6,13,1) 100%)" }} />
+            {/* Premier League + EFL logos as trust marks */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4">
+              <img src={publicAssetUrl("logos/premier-league-logo.png")} alt="Premier League" className="h-8 w-auto opacity-40" style={{ filter: "brightness(0) invert(1)" }} />
+              <div className="h-5 w-px opacity-20" style={{ background: "white" }} />
+              <img src={publicAssetUrl("logos/efl-championship-logo.png")} alt="EFL Championship" className="h-8 w-auto opacity-40" style={{ filter: "brightness(0) invert(1)" }} />
+            </div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 pb-12">
+              <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.20em] px-4 py-1.5 rounded-full mb-3"
+                style={{ background: "rgba(139,92,246,0.15)", border: "1px solid rgba(139,92,246,0.30)", color: "#a78bfa", backdropFilter: "blur(8px)" }}>
                 <i className="ri-building-4-line"></i> Academy Integration Framework
               </span>
-              <h2 className="text-3xl font-black text-white mb-3">How Me Time Stories Fits<br />Into Your Academy Structure</h2>
-              <p className="text-sm max-w-xl" style={{ color: "rgba(255,255,255,0.40)" }}>
+              <h2 className="text-3xl md:text-4xl font-black text-white mb-2" style={{ textShadow: "0 2px 20px rgba(0,0,0,0.80)" }}>
+                How Me Time Stories Fits<br />Into Your Academy
+              </h2>
+            </div>
+          </div>
+
+          <div className="max-w-5xl mx-auto px-4 py-10">
+            <div className="mb-8">
+              <p className="text-sm max-w-xl" style={{ color: "rgba(255,255,255,0.38)" }}>
                 Our story programme is not a bolt-on. It is a position-aware, player-aware development layer that works alongside your coaching, pastoral, and wellbeing infrastructure.
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4 mb-6">
               {[
-                { icon: "ri-football-line",       title: "Players",               desc: "Each player receives a story personalised to their position, personality, and current developmental challenge — making them the hero of their specific role.", color: "#fbbf24" },
-                { icon: "ri-home-heart-line",      title: "Parents",               desc: "Stories are read at home together. They reinforce academy values in the family environment and deepen parent-club engagement in a structured, meaningful way.", color: "#3b82f6" },
-                { icon: "ri-whistle-line",         title: "Coaches",               desc: "Coach insight drives the story. We capture what the coach sees in each player and weave it into the narrative — then provide a conversation guide to support the debrief.", color: "#10b981" },
-                { icon: "ri-mental-health-line",   title: "Sports Psychologists",  desc: "Our stories complement existing mental performance work. Position-specific psychological themes are aligned to each club's current wellbeing framework and referral structures.", color: "#8b5cf6" },
-              ].map(({ icon, title, desc, color }) => (
-                <div key={title} className="rounded-2xl p-6 transition-all" style={{ ...GLASS, boxShadow: `0 0 24px ${color}08` }}>
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center text-lg mb-4"
-                    style={{ background: `${color}15`, border: `1px solid ${color}35`, color }}>
-                    <i className={icon}></i>
+                { icon: "ri-football-line",       title: "Players",               desc: "Each player receives a story personalised to their position, personality, and current developmental challenge — making them the hero of their specific role.", color: "#fbbf24", img: "academy-1.jpg" },
+                { icon: "ri-home-heart-line",      title: "Parents",               desc: "Stories are read at home together. They reinforce academy values in the family environment and deepen parent-club engagement in a structured, meaningful way.", color: "#3b82f6", img: "academy-3.jpg" },
+                { icon: "ri-whistle-line",         title: "Coaches",               desc: "Coach insight drives the story. We capture what the coach sees in each player and weave it into the narrative — then provide a conversation guide to support the debrief.", color: "#10b981", img: "academy-5.jpg" },
+                { icon: "ri-mental-health-line",   title: "Sports Psychologists",  desc: "Our stories complement existing mental performance work. Position-specific psychological themes are aligned to each club's current wellbeing framework and referral structures.", color: "#8b5cf6", img: "academy-7.jpg" },
+              ].map(({ icon, title, desc, color, img }) => (
+                <div key={title} className="rounded-2xl overflow-hidden relative transition-all"
+                  style={{ border: "1px solid rgba(255,255,255,0.09)", boxShadow: `0 0 24px ${color}08`, minHeight: 220 }}>
+                  {/* Academy image background */}
+                  <img src={publicAssetUrl(`images/academy/${img}`)} alt="" aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ filter: "saturate(0.3) brightness(0.28)" }} />
+                  <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, rgba(4,6,13,0.85) 0%, rgba(4,6,13,0.65) 100%)` }} />
+                  {/* Content */}
+                  <div className="relative p-6">
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center text-lg mb-4"
+                      style={{ background: `${color}20`, border: `1px solid ${color}40`, color }}>
+                      <i className={icon}></i>
+                    </div>
+                    <h3 className="font-bold text-white mb-2">{title}</h3>
+                    <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.52)" }}>{desc}</p>
                   </div>
-                  <h3 className="font-bold text-white mb-2">{title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.48)" }}>{desc}</p>
                 </div>
               ))}
             </div>
@@ -810,6 +901,7 @@ export default function FootballMatrix() {
               <p className="text-xs mt-3" style={{ color: "rgba(255,255,255,0.20)" }}>We respond within 2 business days.</p>
             </div>
           </div>
+          </>
         )}
       </div>
 
