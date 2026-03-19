@@ -1,0 +1,148 @@
+
+
+luminous-adventure
+
+production
+
+
+
+30 days or $5.00 left
+
+
+Agent
+
+
+
+
+
+
+@workspace/api-server
+Deployments
+Variables
+Metrics
+Settings
+Unexposed service
+us-west2
+1 Replica
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+History
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@workspace/api-server
+/
+ca09fd38
+Failed
+
+Mar 19, 2026, 12:59 AM GMT
+Get Help
+Details
+Build Logs
+Deploy Logs
+Network Flow Logs
+Filter and search logs
+
+You reached the start of the range
+Mar 19, 2026, 12:59 AM
+    at w0.queryWithCache (/app/artifacts/api-server/dist/index.cjs:70:32401)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async /app/artifacts/api-server/dist/index.cjs:70:35642
+    at async kU (/app/artifacts/api-server/dist/index.cjs:164:33892)
+    at async Server.<anonymous> (/app/artifacts/api-server/dist/index.cjs:165:523) {
+  query: 'select "id" from "academies" where "academies"."key" = $1 limit $2',
+Server listening on port 8080
+(node:1) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
+To prepare for this change:
+- If you want the current behavior, explicitly use 'sslmode=verify-full'
+- If you want libpq compatibility now, use 'uselibpqcompat=true&sslmode=require'
+See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode definitions.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[seed] Failed to seed academies: t [Error]: Failed query: select "id" from "academies" where "academies"."key" = $1 limit $2
+params: arsenal,1
+[seed] Failed to seed admin accounts: t [Error]: Failed query: SELECT id, key, name, access_code FROM academies WHERE access_code IS NOT NULL ORDER BY name
+params: 
+    at w0.queryWithCache (/app/artifacts/api-server/dist/index.cjs:70:32401)
+  params: [ 'arsenal', 1 ],
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+  cause: Error: getaddrinfo ENOTFOUND base
+    at async AU (/app/artifacts/api-server/dist/index.cjs:164:34478)
+      at /app/artifacts/api-server/dist/index.cjs:59:15231
+    syscall: 'getaddrinfo',
+    at async Server.<anonymous> (/app/artifacts/api-server/dist/index.cjs:165:534) {
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async /app/artifacts/api-server/dist/index.cjs:70:35851
+    hostname: 'base'
+      at async w0.queryWithCache (/app/artifacts/api-server/dist/index.cjs:70:32376)
+  }
+      at async /app/artifacts/api-server/dist/index.cjs:70:35642
+      at async kU (/app/artifacts/api-server/dist/index.cjs:164:33892)
+}
+      at async Server.<anonymous> (/app/artifacts/api-server/dist/index.cjs:165:523) {
+    errno: -3008,
+    code: 'ENOTFOUND',
+  query: 'SELECT id, key, name, access_code FROM academies WHERE access_code IS NOT NULL ORDER BY name',
+  params: [],
+  cause: Error: getaddrinfo ENOTFOUND base
+      at /app/artifacts/api-server/dist/index.cjs:59:15231
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async /app/artifacts/api-server/dist/index.cjs:70:35614
+      at async w0.queryWithCache (/app/artifacts/api-server/dist/index.cjs:70:32376)
+      at async AU (/app/artifacts/api-server/dist/index.cjs:164:34478)
+      at async Server.<anonymous> (/app/artifacts/api-server/dist/index.cjs:165:534) {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'base'
+  }
+}
+Starting Container
+You reached the end of the range
+Mar 19, 2026, 1:06 AM
+
+
+@workspace/api-server
