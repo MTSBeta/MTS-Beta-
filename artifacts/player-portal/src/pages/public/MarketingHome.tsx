@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
+import { useChildName } from "@/contexts/ChildNameContext";
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { publicAssetUrl } from "@/lib/publicAssetUrl";
 
@@ -45,6 +46,8 @@ export default function MarketingHome() {
   const [activePhoto, setActivePhoto] = useState(0);
   const [scrollY, setScrollY] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { childName } = useChildName();
+  const child = childName || "your child";
 
   // Parallax scroll tracker
   useEffect(() => {
@@ -123,7 +126,7 @@ export default function MarketingHome() {
             </h1>
 
             <p className="text-lg md:text-xl mb-10 leading-relaxed max-w-lg" style={{ color: "rgba(254,243,226,0.70)" }}>
-              Me Time Stories creates fully personalised children's books where your child's name, face, personality, and biggest dreams live on every single page — not just stamped on the cover.
+              Me Time Stories creates fully personalised children's books where {child}'s name, face, personality, and biggest dreams live on every single page — not just stamped on the cover.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -132,14 +135,16 @@ export default function MarketingHome() {
                 className="flex items-center justify-center gap-2 px-8 py-4 font-bold text-lg rounded-xl shadow-xl transition-all hover:scale-[1.02] hover:shadow-2xl"
                 style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
               >
-                <i className="ri-user-smile-line"></i> Build Your Character
+                <i className="ri-user-smile-line"></i>
+                {childName ? `Build ${childName}'s Story` : "Build Your Character"}
               </Link>
               <Link
                 href="/stories/time-travelling-tractor"
                 className="flex items-center justify-center gap-2 px-8 py-4 font-semibold text-lg rounded-xl transition-all hover:bg-white/15"
                 style={{ borderColor: "rgba(254,243,226,0.55)", color: "#fef3e2", backdropFilter: "blur(8px)", background: "rgba(255,255,255,0.10)", border: "1.5px solid rgba(254,243,226,0.55)" }}
               >
-                <i className="ri-play-circle-fill"></i> Try the Free Story
+                <i className="ri-play-circle-fill"></i>
+                {childName ? `${childName}'s Free Story` : "Try the Free Story"}
               </Link>
             </div>
 
@@ -173,7 +178,7 @@ export default function MarketingHome() {
               </div>
               <div className="px-5 py-4">
                 <p className="text-sm leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif", fontStyle: "italic", color: "rgba(254,243,226,0.75)" }}>
-                  "The morning mist lay low when <span style={{ color: "#fbbf24", fontStyle: "normal", fontWeight: 700 }}>your child</span> found it — the golden wheel gleaming in the field…"
+                  "The morning mist lay low when <span style={{ color: "#fbbf24", fontStyle: "normal", fontWeight: 700 }}>{child}</span> found it — the golden wheel gleaming in the field…"
                 </p>
                 <div className="flex gap-2 flex-wrap mb-4">
                   {["Their name", "Their personality", "Their favourite animal"].map((t) => (
@@ -185,7 +190,8 @@ export default function MarketingHome() {
                   className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold transition-all hover:scale-[1.01]"
                   style={{ background: "linear-gradient(135deg,#f97316,#fbbf24)", color: "#1a0800" }}
                 >
-                  <i className="ri-play-circle-fill"></i> Read a Preview Free
+                  <i className="ri-play-circle-fill"></i>
+                  {childName ? `Read ${childName}'s Preview Free` : "Read a Preview Free"}
                 </Link>
               </div>
             </div>

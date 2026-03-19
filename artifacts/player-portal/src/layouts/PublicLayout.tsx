@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { publicAssetUrl } from "@/lib/publicAssetUrl";
+import { useChildName } from "@/contexts/ChildNameContext";
 
 interface PublicLayoutProps {
   children: React.ReactNode;
@@ -12,6 +13,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   const [scrolled, setScrolled] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [location] = useLocation();
+  const { childName, openPrompt } = useChildName();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,8 +54,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             <img
               src={publicAssetUrl("images/metime-logo-animated.gif")}
               alt="Me Time Stories"
-              className="h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-              style={{ mixBlendMode: "multiply", opacity: 0.85 }}
+              className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
 
@@ -95,12 +96,25 @@ export function PublicLayout({ children }: PublicLayoutProps) {
 
           {/* Desktop CTA buttons */}
           <div className="hidden md:flex items-center gap-2.5">
+            {childName && (
+              <button
+                onClick={openPrompt}
+                className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all hover:scale-[1.02]"
+                style={{ background: "rgba(249,115,22,0.10)", border: "1px solid rgba(249,115,22,0.22)", color: "#f97316" }}
+                title="Edit child name"
+              >
+                <i className="ri-user-smile-line text-[11px]"></i>
+                For {childName}
+                <i className="ri-pencil-line text-[10px] opacity-60"></i>
+              </button>
+            )}
             <Link
               href="/stories/time-travelling-tractor"
               className="flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-lg transition-all hover:bg-orange-50"
               style={{ color: "#f97316" }}
             >
-              <i className="ri-play-circle-fill"></i> Try Free Story
+              <i className="ri-play-circle-fill"></i>
+              {childName ? `${childName}'s Free Story` : "Try Free Story"}
             </Link>
             <Link
               href="/portal"
@@ -114,7 +128,8 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold rounded-lg transition-all hover:scale-[1.03] hover:shadow-md shadow-sm"
               style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
             >
-              <i className="ri-user-smile-line"></i> Build Character
+              <i className="ri-user-smile-line"></i>
+              {childName ? `Build ${childName}'s Story` : "Build Character"}
             </Link>
           </div>
 
@@ -154,8 +169,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             <img
               src={publicAssetUrl("images/metime-logo-animated.gif")}
               alt="Me Time Stories"
-              className="h-9 w-auto object-contain"
-              style={{ mixBlendMode: "multiply", opacity: 0.85 }}
+              className="h-10 w-auto object-contain"
             />
           </Link>
           <button

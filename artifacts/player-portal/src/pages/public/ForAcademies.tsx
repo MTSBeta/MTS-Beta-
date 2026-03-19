@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { PublicLayout } from "@/layouts/PublicLayout";
+import { publicAssetUrl } from "@/lib/publicAssetUrl";
 
 export default function ForAcademies() {
   const [enquiryOpen, setEnquiryOpen] = useState(false);
@@ -16,26 +17,29 @@ export default function ForAcademies() {
     <PublicLayout>
 
       {/* ── HERO ─────────────────────────────────────────────────────── */}
-      <section
-        className="relative overflow-hidden"
-        style={{
-          minHeight: "90vh",
-          display: "flex",
-          alignItems: "center",
-          background: "radial-gradient(ellipse at 60% 0%, #0d1f3a 0%, #0a1018 50%, #060810 100%)",
-        }}
-      >
-        {/* Floodlight atmosphere */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-1/4 left-1/3 w-[600px] h-[80vh] opacity-[0.06]"
-            style={{ background: "linear-gradient(180deg, #fbbf24 0%, transparent 100%)", transform: "rotate(-10deg)", filter: "blur(60px)" }} />
-          <div className="absolute -top-1/4 right-1/4 w-[400px] h-[60vh] opacity-[0.04]"
-            style={{ background: "linear-gradient(180deg, #60a5fa 0%, transparent 100%)", transform: "rotate(12deg)", filter: "blur(60px)" }} />
+      <section className="relative overflow-hidden" style={{ minHeight: "90vh", display: "flex", alignItems: "center", background: "#060810" }}>
+        {/* Stadium photo background */}
+        <img
+          src={publicAssetUrl("images/stadiums/manchester-city.jpg")}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          style={{ filter: "saturate(0.35) brightness(0.32)", objectPosition: "center 30%" }}
+        />
+        {/* Dark gradient vignette */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(to right, rgba(6,8,16,0.92) 45%, rgba(6,8,16,0.40) 100%)" }} />
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(to top, rgba(6,8,16,1) 0%, transparent 40%)" }} />
+        {/* Floodlight beams */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -top-1/4 left-1/3 w-[500px] h-[90vh] opacity-[0.07]"
+            style={{ background: "linear-gradient(180deg, #fbbf24 0%, transparent 100%)", transform: "rotate(-8deg)", filter: "blur(50px)" }} />
+          <div className="absolute -top-1/4 right-1/4 w-[400px] h-[70vh] opacity-[0.05]"
+            style={{ background: "linear-gradient(180deg, #60a5fa 0%, transparent 100%)", transform: "rotate(12deg)", filter: "blur(50px)" }} />
         </div>
-
-        {/* Faint dot grid */}
-        <div className="absolute inset-0 opacity-[0.04]"
-          style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+        {/* Scan-line texture */}
+        <div className="absolute inset-0 opacity-[0.025] pointer-events-none"
+          style={{ backgroundImage: "repeating-linear-gradient(0deg, rgba(255,255,255,0.5) 0px, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 3px)" }} />
 
         <div className="relative max-w-7xl mx-auto px-4 py-20 md:py-28 w-full grid md:grid-cols-2 gap-12 items-center">
           <div>
@@ -80,7 +84,7 @@ export default function ForAcademies() {
                 className="flex items-center gap-2 px-7 py-4 font-semibold text-base rounded-xl transition-all hover:bg-white/10"
                 style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.15)", color: "#fef3e2" }}
               >
-                ⚽ View Football Matrix
+                <i className="ri-football-line"></i> View Football Matrix
               </Link>
             </div>
 
@@ -150,48 +154,51 @@ export default function ForAcademies() {
       </section>
 
       {/* ── THE MENTAL PERFORMANCE WALL ──────────────────────────────── */}
-      <section className="py-20" style={{ background: "#fef9f0" }}>
-        <div className="max-w-7xl mx-auto px-4">
+      <section className="relative py-20 overflow-hidden" style={{ background: "#08090f" }}>
+        {/* Faint stadium background */}
+        <img src={publicAssetUrl("images/stadiums/tottenham.jpg")} alt="" aria-hidden
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          style={{ filter: "saturate(0.2) brightness(0.18)", objectPosition: "center 40%" }} />
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(to right, rgba(8,9,15,0.97) 50%, rgba(8,9,15,0.75) 100%)" }} />
+        <div className="relative max-w-7xl mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <span className="inline-block text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5"
-                style={{ background: "rgba(249,115,22,0.10)", color: "#f97316", border: "1px solid rgba(249,115,22,0.20)" }}>
+                style={{ background: "rgba(249,115,22,0.12)", color: "#f97316", border: "1px solid rgba(249,115,22,0.22)" }}>
                 The Challenge
               </span>
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-5 leading-tight">
+              <h2 className="text-3xl md:text-4xl font-black mb-5 leading-tight" style={{ color: "#fef3e2" }}>
                 The Mental Performance Wall
               </h2>
-              <p className="text-gray-600 text-base leading-relaxed mb-4">
+              <p className="text-base leading-relaxed mb-4" style={{ color: "rgba(254,243,226,0.60)" }}>
                 Only 0.5% of academy players reach professional football. The difference between those who make it and those who don't is increasingly mental — identity, resilience, emotional regulation, and belonging.
               </p>
-              <p className="text-gray-500 text-sm leading-relaxed mb-6">
+              <p className="text-sm leading-relaxed mb-6" style={{ color: "rgba(254,243,226,0.40)" }}>
                 Me Time Stories delivers this mental training in a format that young players actually want to engage with: their own story, where they are the hero navigating real footballing challenges.
               </p>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { emoji: "🧠", label: "Emotional Resilience" },
-                  { emoji: "🙋", label: "Identity & Belonging" },
-                  { emoji: "🤝", label: "Team & Culture Fit" },
-                  { emoji: "🎯", label: "Focus & Concentration" },
-                ].map(({ emoji, label }) => (
+                  { icon: "ri-brain-line",          label: "Emotional Resilience", color: "#fbbf24" },
+                  { icon: "ri-user-star-line",       label: "Identity & Belonging", color: "#60a5fa" },
+                  { icon: "ri-team-line",            label: "Team & Culture Fit",   color: "#34d399" },
+                  { icon: "ri-focus-3-line",         label: "Focus & Concentration",color: "#a78bfa" },
+                ].map(({ icon, label, color }) => (
                   <div key={label} className="flex items-center gap-3 p-3 rounded-xl"
-                    style={{ background: "rgba(249,115,22,0.06)", border: "1px solid rgba(249,115,22,0.12)" }}>
-                    <span className="text-lg">{emoji}</span>
-                    <span className="text-sm font-medium text-gray-700">{label}</span>
+                    style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${color}22` }}>
+                    <i className={`${icon} text-lg`} style={{ color }}></i>
+                    <span className="text-sm font-medium" style={{ color: "rgba(254,243,226,0.75)" }}>{label}</span>
                   </div>
                 ))}
               </div>
             </div>
             <div>
-              {/* Mobile stats panel */}
-              <div
-                className="rounded-3xl p-8"
-                style={{ background: "linear-gradient(135deg, #0d1825, #111827)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 20px 60px rgba(0,0,0,0.25)" }}
-              >
+              <div className="rounded-3xl p-8"
+                style={{ backdropFilter: "blur(24px)", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", boxShadow: "0 20px 60px rgba(0,0,0,0.50)" }}>
                 <div className="text-[10px] font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(255,255,255,0.28)" }}>
                   Academy data snapshot
                 </div>
-                <div className="text-6xl font-black mb-2" style={{ color: "#fbbf24" }}>0.5%</div>
+                <div className="text-6xl font-black mb-2" style={{ color: "#fbbf24", textShadow: "0 0 30px rgba(251,191,36,0.4)" }}>0.5%</div>
                 <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.40)" }}>reach professional football</p>
                 <div className="space-y-4">
                   {[
@@ -205,7 +212,7 @@ export default function ForAcademies() {
                         <span className="font-bold" style={{ color }}>{pct}%</span>
                       </div>
                       <div className="h-2 rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
-                        <div className="h-2 rounded-full" style={{ width: `${pct}%`, background: color, boxShadow: label === "Mental Performance" ? `0 0 8px ${color}` : "none" }} />
+                        <div className="h-2 rounded-full" style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${color}, ${color}99)`, boxShadow: label === "Mental Performance" ? `0 0 8px ${color}` : "none" }} />
                       </div>
                     </div>
                   ))}
@@ -276,30 +283,34 @@ export default function ForAcademies() {
       </section>
 
       {/* ── ECOSYSTEM ────────────────────────────────────────────────── */}
-      <section className="py-20" style={{ background: "#fef9f0" }}>
+      <section className="py-20" style={{ background: "#050608" }}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-black text-gray-900 mb-3">The Academy Ecosystem Approach</h2>
-            <p className="text-gray-500 max-w-xl mx-auto text-sm leading-relaxed">
+            <span className="inline-block text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4"
+              style={{ background: "rgba(251,191,36,0.10)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.20)" }}>
+              The Ecosystem
+            </span>
+            <h2 className="text-3xl font-black mb-3" style={{ color: "#fef3e2" }}>The Academy Ecosystem Approach</h2>
+            <p className="text-sm max-w-xl mx-auto" style={{ color: "rgba(254,243,226,0.40)" }}>
               Me Time Stories integrates with all key stakeholders in a player's development journey.
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
-              { icon: "ri-football-line",      label: "The Player",           color: "#f97316" },
-              { icon: "ri-home-heart-line",    label: "Family & Parents",    color: "#fbbf24" },
-              { icon: "ri-whistle-line",        label: "Academy Coaches",      color: "#60a5fa" },
-              { icon: "ri-shield-check-line",   label: "Welfare Officers",     color: "#34d399" },
-              { icon: "ri-mental-health-line",  label: "Sports Psychologists", color: "#a78bfa" },
-              { icon: "ri-building-4-line",     label: "Club Management",      color: "#f87171" },
+              { icon: "ri-football-line",       label: "The Player",           color: "#f97316" },
+              { icon: "ri-home-heart-line",      label: "Family & Parents",     color: "#fbbf24" },
+              { icon: "ri-whistle-line",         label: "Academy Coaches",      color: "#60a5fa" },
+              { icon: "ri-shield-check-line",    label: "Welfare Officers",     color: "#34d399" },
+              { icon: "ri-mental-health-line",   label: "Sports Psychologists", color: "#a78bfa" },
+              { icon: "ri-building-4-line",      label: "Club Management",      color: "#f87171" },
             ].map(({ icon, label, color }) => (
-              <div key={label} className="text-center p-5 rounded-2xl transition-all hover:-translate-y-0.5"
-                style={{ background: "white", border: "1px solid rgba(0,0,0,0.06)", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}>
+              <div key={label} className="text-center p-5 rounded-2xl transition-all hover:-translate-y-1 hover:scale-[1.03] cursor-default"
+                style={{ backdropFilter: "blur(16px)", background: "rgba(255,255,255,0.04)", border: `1px solid ${color}22`, boxShadow: `0 0 20px ${color}0a` }}>
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl mx-auto mb-3"
-                  style={{ background: `${color}18`, border: `1px solid ${color}30`, color }}>
+                  style={{ background: `${color}15`, border: `1px solid ${color}35`, color }}>
                   <i className={icon}></i>
                 </div>
-                <p className="text-xs font-semibold text-gray-700">{label}</p>
+                <p className="text-xs font-semibold" style={{ color: "rgba(254,243,226,0.70)" }}>{label}</p>
               </div>
             ))}
           </div>
@@ -340,11 +351,19 @@ export default function ForAcademies() {
       </section>
 
       {/* ── CTA ─────────────────────────────────────────────────────── */}
-      <section className="py-24 text-center" style={{ background: "linear-gradient(180deg, #fef9f0 0%, #fef3e2 100%)" }}>
-        <div className="max-w-2xl mx-auto px-4">
-          <div className="text-4xl mb-5 text-amber-500"><i className="ri-building-4-line"></i></div>
-          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">Ready to Talk?</h2>
-          <p className="text-gray-500 text-base mb-8 leading-relaxed">
+      <section className="relative py-24 text-center overflow-hidden" style={{ background: "#06070c" }}>
+        <img src={publicAssetUrl("images/stadiums/newcastle.jpg")} alt="" aria-hidden
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          style={{ filter: "saturate(0.25) brightness(0.22)", objectPosition: "center 60%" }} />
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at center, rgba(249,115,22,0.07) 0%, transparent 60%), linear-gradient(to top, rgba(6,7,12,0.98) 0%, rgba(6,7,12,0.70) 100%)" }} />
+        <div className="relative max-w-2xl mx-auto px-4">
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-6"
+            style={{ background: "rgba(249,115,22,0.14)", border: "1px solid rgba(249,115,22,0.28)", color: "#f97316" }}>
+            <i className="ri-building-4-line"></i>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-black mb-4" style={{ color: "#fef3e2" }}>Ready to Talk?</h2>
+          <p className="text-base mb-8 leading-relaxed" style={{ color: "rgba(254,243,226,0.50)" }}>
             Book a 20-minute call with our academy partnerships team and see a live demo with your club's branding.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -357,10 +376,10 @@ export default function ForAcademies() {
             </button>
             <Link
               href="/football-matrix"
-              className="flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base rounded-xl transition-all hover:bg-amber-50"
-              style={{ background: "white", border: "2px solid #f97316", color: "#f97316" }}
+              className="flex items-center justify-center gap-2 px-8 py-4 font-semibold text-base rounded-xl transition-all hover:bg-white/10"
+              style={{ background: "rgba(255,255,255,0.06)", border: "1.5px solid rgba(249,115,22,0.35)", color: "#f97316" }}
             >
-              ⚽ Explore Football Matrix
+              <i className="ri-football-line"></i> Explore Football Matrix
             </Link>
           </div>
         </div>

@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { PlayerProvider } from "@/context/PlayerContext";
+import { ChildNameProvider } from "@/contexts/ChildNameContext";
+import { WelcomePrompt } from "@/components/WelcomePrompt";
 import { StaffAuthProvider } from "@/context/StaffAuthContext";
 import { InternalAuthProvider } from "@/context/InternalAuthContext";
 import { SoundProvider } from "@/context/SoundContext";
@@ -204,6 +206,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AssistantProvider>
+      <ChildNameProvider>
       <PlayerProvider>
         <StaffAuthProvider>
           <InternalAuthProvider>
@@ -212,6 +215,7 @@ function App() {
                 <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
                   <Router />
                   <MetyButtonConditional />
+                  <WelcomePrompt />
                 </WouterRouter>
                 <Toaster />
               </TooltipProvider>
@@ -219,6 +223,7 @@ function App() {
           </InternalAuthProvider>
         </StaffAuthProvider>
       </PlayerProvider>
+      </ChildNameProvider>
       </AssistantProvider>
     </QueryClientProvider>
   );

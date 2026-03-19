@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { publicAssetUrl } from "@/lib/publicAssetUrl";
+import { useChildName } from "@/contexts/ChildNameContext";
 
 type Screen = "cover" | "step1" | "step2" | "step3" | "story" | "end";
 type Pronoun = "he/him" | "she/her" | "they/them";
@@ -185,9 +186,10 @@ const inputStyle: React.CSSProperties = {
 };
 
 export default function TyStory() {
+  const { childName } = useChildName();
   const [screen, setScreen] = useState<Screen>("cover");
   const [vars, setVars] = useState<TyVars>(DEFAULT_VARS);
-  const [nameInput, setNameInput] = useState("");
+  const [nameInput, setNameInput] = useState(childName || "");
   const [currentPage, setCurrentPage] = useState(0);
 
   const BG = "radial-gradient(ellipse at 50% 0%, #1a0c04 0%, #0d0802 55%, #060402 100%)";
@@ -249,7 +251,9 @@ export default function TyStory() {
                       Ty & the Time<br />Travelling Tractor
                     </h1>
                     <p className="text-sm mt-1.5" style={{ color: "rgba(254,243,226,0.55)" }}>
-                      A personalised adventure for your little one
+                      {childName
+                        ? `A personalised adventure for ${childName}`
+                        : "A personalised adventure for your little one"}
                     </p>
                   </div>
                   {/* Age badge */}
@@ -306,7 +310,9 @@ export default function TyStory() {
                 <div className="text-center mb-6">
                   <div className="text-4xl mb-2">🌟</div>
                   <h2 className="text-lg font-bold mb-0.5" style={{ color: "#fef3e2" }}>Your Adventurer</h2>
-                  <p className="text-xs" style={{ color: "rgba(254,243,226,0.40)" }}>Tell us a little about your little one.</p>
+                  <p className="text-xs" style={{ color: "rgba(254,243,226,0.40)" }}>
+                    {childName ? `Let's make the story perfect for ${childName}.` : "Tell us a little about your little one."}
+                  </p>
                 </div>
 
                 <div className="space-y-4">
