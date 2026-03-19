@@ -1,6 +1,7 @@
 import app from "./app";
 import { seedAcademies } from "./lib/seedAcademies.js";
 import { seedAdminAccounts } from "./lib/seedAdminAccounts.js";
+import { seedDemoData } from "./lib/seedDemoData.js";
 const rawPort = process.env["PORT"];
 if (!rawPort) {
   throw new Error(
@@ -15,5 +16,6 @@ app.listen(port, "0.0.0.0", () => {
   console.log(`Server listening on port ${port}`);
   seedAcademies()
     .then(() => seedAdminAccounts())
+    .then(() => seedDemoData())
     .catch((err) => console.error("[seed] Seeding failed:", err));
 });
