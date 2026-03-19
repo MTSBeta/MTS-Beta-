@@ -209,12 +209,14 @@ export default function About() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
+          {/* Founders */}
+          <div className="grid md:grid-cols-2 gap-6 mb-10">
             {[
               {
                 name: "Taku Chiweshe",
-                role: "Co-Founder & CEO",
-                bio: "Passionate about using storytelling and technology to put every child at the centre of their own world. Driving academy partnerships and the vision behind the personalisation framework.",
+                role: "CEO & Co-Founder",
+                tags: ["Innovation", "Product Vision", "Strategic Management", "Partnerships", "Business Development", "Platform Direction"],
+                bio: "Passionate about using storytelling and technology to put every child at the centre of their own world. Leads academy partnerships, platform direction, and the overall vision behind Me Time Stories.",
                 email: "taku@metimestories.co.uk",
                 linkedin: "https://www.linkedin.com/in/taku-chiweshe-a342a1324/",
                 initials: "TC",
@@ -222,14 +224,15 @@ export default function About() {
               },
               {
                 name: "Michael McDermott",
-                role: "Co-Founder & CCO",
-                bio: "Creating the stories that make children point at the page and say 'That's me!' — building the narrative frameworks, author partnerships, and creative direction behind Me Time Stories.",
+                role: "Creative Director, Author & Co-Founder",
+                tags: ["Creative Development", "Story Library", "Content Management", "Story Architecture", "Editorial Direction"],
+                bio: "Creates the stories that make children point at the page and say 'That's me!' — building the narrative frameworks, story architecture, and editorial direction behind every Me Time Story.",
                 email: "michael@metimestories.co.uk",
                 linkedin: "https://www.linkedin.com/in/michael-mcdermott-477a83230/",
                 initials: "MM",
                 color: "#fbbf24",
               },
-            ].map(({ name, role, bio, email, linkedin, initials, color }) => (
+            ].map(({ name, role, bio, email, linkedin, initials, color, tags }) => (
               <div key={name} className="rounded-3xl p-7 flex flex-col gap-5" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-black flex-shrink-0"
@@ -240,6 +243,12 @@ export default function About() {
                     <h3 className="text-lg font-bold" style={{ color: "#fef3e2" }}>{name}</h3>
                     <p className="text-sm font-semibold" style={{ color }}>{role}</p>
                   </div>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {tags.map(t => (
+                    <span key={t} className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                      style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>{t}</span>
+                  ))}
                 </div>
                 <p className="text-sm leading-relaxed flex-1" style={{ color: "rgba(254,243,226,0.52)" }}>{bio}</p>
                 <div className="flex flex-col gap-2 pt-2 border-t" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
@@ -254,6 +263,120 @@ export default function About() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Technical / Development Support */}
+          <div className="mb-10">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
+              <span className="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full"
+                style={{ background: "rgba(139,92,246,0.15)", border: "1px solid rgba(139,92,246,0.25)", color: "#a78bfa" }}>
+                Technical &amp; Development Support
+              </span>
+              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
+            </div>
+
+            {/* Academic Lead */}
+            <div className="rounded-2xl p-6 mb-4" style={{ background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.15)" }}>
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-base font-black flex-shrink-0"
+                  style={{ background: "rgba(139,92,246,0.20)", border: "1px solid rgba(139,92,246,0.35)", color: "#a78bfa" }}>
+                  AH
+                </div>
+                <div className="flex-1">
+                  <div className="flex flex-wrap items-baseline gap-2 mb-1">
+                    <h4 className="font-bold" style={{ color: "#fef3e2" }}>Dr Ambreen Hussain</h4>
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                      style={{ background: "rgba(139,92,246,0.18)", color: "#c4b5fd" }}>Academic Lead</span>
+                  </div>
+                  <p className="text-xs mb-2" style={{ color: "rgba(254,243,226,0.40)" }}>Lecturer in Computing, Birmingham City University</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {["Technical Advisor", "Academic Lead", "Overseeing Development Team"].map(t => (
+                      <span key={t} className="text-[10px] font-medium px-2 py-0.5 rounded-full"
+                        style={{ background: "rgba(255,255,255,0.05)", color: "rgba(254,243,226,0.45)", border: "1px solid rgba(255,255,255,0.09)" }}>{t}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Dev students */}
+            <div className="grid sm:grid-cols-2 gap-4">
+              {[
+                { initials: "HA", name: "Hafeez Abdul", focus: "Cyber Security" },
+                { initials: "MM", name: "Mohsin Mirza",  focus: "Database" },
+              ].map(({ initials, name, focus }) => (
+                <div key={name} className="rounded-2xl p-5 flex items-center gap-4"
+                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black flex-shrink-0"
+                    style={{ background: "rgba(99,102,241,0.18)", border: "1px solid rgba(99,102,241,0.30)", color: "#818cf8" }}>
+                    {initials}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm" style={{ color: "#fef3e2" }}>{name}</p>
+                    <p className="text-xs" style={{ color: "rgba(254,243,226,0.38)" }}>Platform Development · {focus}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Advisors */}
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
+              <span className="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full"
+                style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.22)", color: "#fbbf24" }}>
+                Advisors
+              </span>
+              <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
+            </div>
+
+            <div className="grid sm:grid-cols-3 gap-4">
+              {[
+                {
+                  initials: "LC",
+                  name: "Louise Campton",
+                  org: "CEO, Primary Goal",
+                  tags: ["Business Advisory", "Leadership Support"],
+                  color: "#34d399",
+                },
+                {
+                  initials: "RH",
+                  name: "Ryan Howard",
+                  org: "U14 Lead Coach, Wolverhampton Wanderers FC",
+                  tags: ["Football Academy Insight", "Player Development", "Academy Relevance"],
+                  color: "#fbbf24",
+                },
+                {
+                  initials: "SZ",
+                  name: "Syneus Zidner",
+                  org: "CEO, Solute Tech Ltd",
+                  tags: ["Technology Advisory", "Business Advisory"],
+                  color: "#60a5fa",
+                },
+              ].map(({ initials, name, org, tags, color }) => (
+                <div key={name} className="rounded-2xl p-5 flex flex-col gap-3"
+                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black flex-shrink-0"
+                      style={{ background: `${color}18`, border: `1px solid ${color}35`, color }}>
+                      {initials}
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm" style={{ color: "#fef3e2" }}>{name}</p>
+                      <p className="text-[11px] leading-tight" style={{ color: "rgba(254,243,226,0.38)" }}>{org}</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {tags.map(t => (
+                      <span key={t} className="text-[10px] font-medium px-2 py-0.5 rounded-full"
+                        style={{ background: `${color}12`, color, border: `1px solid ${color}25` }}>{t}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Contact strip */}
