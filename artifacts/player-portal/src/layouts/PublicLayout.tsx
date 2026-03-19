@@ -48,17 +48,12 @@ export function PublicLayout({ children }: PublicLayoutProps) {
       >
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0 shadow-sm"
-              style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)" }}
-            >
-              <i className="ri-book-heart-fill text-white" style={{ fontSize: 15 }}></i>
-            </div>
-            <span className="font-bold text-gray-900 text-sm leading-tight">
-              Me Time<br />
-              <span className="text-amber-500 text-[11px] font-semibold tracking-wide">Stories</span>
-            </span>
+          <Link href="/" className="flex items-center flex-shrink-0 group">
+            <img
+              src={publicAssetUrl("images/metime-logo-animated.gif")}
+              alt="Me Time Stories"
+              className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            />
           </Link>
 
           {/* Desktop Nav */}
@@ -151,9 +146,13 @@ export function PublicLayout({ children }: PublicLayoutProps) {
         }}
       >
         <div className="flex justify-between items-center px-6 py-4 border-b" style={{ borderColor: "#fde68a" }}>
-          <span className="font-bold text-gray-900" style={{ fontFamily: "Pacifico, cursive", fontSize: 18 }}>
-            🌙 Me Time Stories
-          </span>
+          <Link href="/" onClick={() => setMobileOpen(false)}>
+            <img
+              src={publicAssetUrl("images/metime-logo-animated.gif")}
+              alt="Me Time Stories"
+              className="h-10 w-auto object-contain"
+            />
+          </Link>
           <button
             onClick={() => setMobileOpen(false)}
             className="w-9 h-9 flex items-center justify-center text-gray-500 hover:text-gray-900 rounded-lg hover:bg-amber-100 transition-colors"
@@ -250,9 +249,13 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
             {/* Brand */}
             <div className="col-span-1 md:col-span-2">
-              <span className="text-2xl mb-3 block" style={{ fontFamily: "Pacifico, cursive", color: "#fbbf24" }}>
-                Me Time Stories
-              </span>
+              <Link href="/" className="inline-block mb-4">
+                <img
+                  src={publicAssetUrl("images/metime-logo-animated.gif")}
+                  alt="Me Time Stories"
+                  className="h-14 w-auto object-contain"
+                />
+              </Link>
               <p className="text-sm leading-relaxed max-w-xs mb-5" style={{ color: "rgba(254,243,226,0.45)" }}>
                 Fully personalised children's books where your child's name, personality, favourite animal, and biggest dreams live on every page — not just the cover.
               </p>

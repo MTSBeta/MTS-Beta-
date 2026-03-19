@@ -269,10 +269,10 @@ export default function FootballMatrix() {
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
             <div className="flex items-center gap-3">
               <img
-                src={publicAssetUrl("images/metime-logo.png")}
+                src={publicAssetUrl("images/metime-logo-animated.gif")}
                 alt="Me Time Stories"
-                className="h-9 w-auto"
-                style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 8px rgba(251,191,36,0.40))" }}
+                className="h-9 w-auto object-contain"
+                style={{ filter: "drop-shadow(0 0 8px rgba(251,191,36,0.35))" }}
               />
               <div className="h-5 w-px" style={{ background: "rgba(255,255,255,0.12)" }} />
               <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#f97316" }}>

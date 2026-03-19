@@ -239,9 +239,12 @@ export default function TyStory() {
                   <div className="absolute inset-x-0 bottom-0 px-6 py-8" style={{
                     background: "linear-gradient(to top, rgba(6,4,2,0.95) 0%, rgba(6,4,2,0.60) 60%, transparent 100%)"
                   }}>
-                    <p className="text-xs font-bold uppercase tracking-[0.20em] mb-1" style={{ color: "#f97316" }}>
-                      Me Time Stories
-                    </p>
+                    <img
+                      src={publicAssetUrl("images/metime-logo-animated.gif")}
+                      alt="Me Time Stories"
+                      className="h-8 w-auto object-contain mb-2"
+                      style={{ filter: "drop-shadow(0 2px 12px rgba(249,115,22,0.35))" }}
+                    />
                     <h1 className="text-2xl md:text-3xl font-black leading-tight" style={{ color: "#fef3e2" }}>
                       Ty & the Time<br />Travelling Tractor
                     </h1>

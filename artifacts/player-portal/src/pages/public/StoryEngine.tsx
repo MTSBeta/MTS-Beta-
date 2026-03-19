@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useSearch } from "wouter";
 import { PublicLayout } from "@/layouts/PublicLayout";
+import { publicAssetUrl } from "@/lib/publicAssetUrl";
 
 type Screen = "welcome" | "name" | "pronouns" | "companion" | "story" | "summary";
 type Pronoun = "she/her" | "he/him" | "they/them";
@@ -554,9 +555,8 @@ export default function StoryEngine() {
                   >
                     <i className="ri-refresh-line"></i> Play Again
                   </button>
-                  <Link href="/" className="flex items-center justify-center gap-1.5 w-full py-2.5 text-xs transition-colors"
-                    style={{ color: "rgba(254,243,226,0.28)" }}>
-                    <i className="ri-arrow-left-line"></i> Back to home
+                  <Link href="/" className="flex items-center justify-center py-3 transition-opacity opacity-50 hover:opacity-80">
+                    <img src={publicAssetUrl("images/metime-logo-animated.gif")} alt="Me Time Stories — Home" className="h-8 w-auto object-contain" />
                   </Link>
                 </div>
               </div>
