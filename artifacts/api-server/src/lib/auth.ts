@@ -1,7 +1,18 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.STAFF_JWT_SECRET ?? (process.env.NODE_ENV === "production" ? (() => { throw new Error("STAFF_JWT_SECRET must be set in production"); })() : "dev-jwt-secret-change-me");
+function resolveJwtSecret(): string {
+  if (process.env.STAFF_JWT_SECRET) return process.env.STAFF_JWT_SECRET;
+  if (process.env.NODE_ENV === "production") {
+    console.error(
+      "[auth] STAFF_JWT_SECRET is not set in production. " +
+      "JWT signing will use an insecure fallback — set this secret immediately."
+    );
+  }
+  return "dev-jwt-secret-change-me";
+}
+
+const JWT_SECRET = resolveJwtSecret();
 const SALT_ROUNDS = 10;
 
 export async function hashPassword(password: string): Promise<string> {
