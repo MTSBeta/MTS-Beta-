@@ -11,22 +11,37 @@ import {
 
 const REPLIT_SIDECAR_ENDPOINT = "http://127.0.0.1:1106";
 
-export const objectStorageClient = new Storage({
-  credentials: {
-    audience: "replit",
-    subject_token_type: "access_token",
-    token_url: `${REPLIT_SIDECAR_ENDPOINT}/token`,
-    type: "external_account",
-    credential_source: {
-      url: `${REPLIT_SIDECAR_ENDPOINT}/credential`,
-      format: {
-        type: "json",
-        subject_token_field_name: "access_token",
+// Lazy singleton — created only on first use, not at module load time.
+// This avoids crashing on import if the Replit sidecar is not yet available.
+let _storageClient: Storage | null = null;
+function getStorageClient(): Storage {
+  if (!_storageClient) {
+    _storageClient = new Storage({
+      credentials: {
+        audience: "replit",
+        subject_token_type: "access_token",
+        token_url: `${REPLIT_SIDECAR_ENDPOINT}/token`,
+        type: "external_account",
+        credential_source: {
+          url: `${REPLIT_SIDECAR_ENDPOINT}/credential`,
+          format: {
+            type: "json",
+            subject_token_field_name: "access_token",
+          },
+        },
+        universe_domain: "googleapis.com",
       },
-    },
-    universe_domain: "googleapis.com",
+      projectId: "",
+    });
+  }
+  return _storageClient;
+}
+
+// Keep the named export for any code that references it directly
+export const objectStorageClient = new Proxy({} as Storage, {
+  get(_target, prop) {
+    return (getStorageClient() as any)[prop];
   },
-  projectId: "",
 });
 
 export class ObjectNotFoundError extends Error {
