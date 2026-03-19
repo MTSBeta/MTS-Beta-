@@ -193,7 +193,7 @@ export default function MarketingHome() {
                     Our Flagship Story
                   </div>
                   <p className="text-base font-black leading-tight" style={{ color: "#fef3e2" }}>
-                    Ty & the Time<br/>Travelling Tractor
+                    {childName || "Ty"} & the Time<br/>Travelling Tractor
                   </p>
                 </div>
               </div>
@@ -500,7 +500,7 @@ export default function MarketingHome() {
             Our Flagship Story — Free Tonight
           </span>
           <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: "#fef3e2" }}>
-            The Time-Travelling Tractor
+            {childName ? <>{childName} & the Time-Travelling Tractor</> : "The Time-Travelling Tractor"}
           </h2>
           <p className="text-lg mb-10 max-w-2xl mx-auto leading-relaxed" style={{ color: "rgba(254,243,226,0.60)" }}>
             A 6-chapter adventure where {child}'s name, personality, and biggest dream are woven through every page.
