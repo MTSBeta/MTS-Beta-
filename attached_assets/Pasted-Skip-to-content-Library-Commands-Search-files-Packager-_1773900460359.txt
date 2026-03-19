@@ -1,0 +1,80 @@
+Skip to content
+Library
+Commands
+Search files
+Packager files
+Config files
+
+metimestories.co.uk
+Verified
+Provider
+GoDaddy.com, LLC. [Tag = GODADDY]
+Age
+10 months ago
+DNS Records
+Add the following records to your domain's DNS settings. Learn more
+Type	Hostname	Record
+A	
+@
+34.111.179.208
+TXT	
+@
+replit-verify=ce7d7103-38f1-47fb-8a83-860e8a05a85b
+Published your App
+i liked my old academies better, look at this :
+
+heres the prmo video
+
+and on website? it is also not showingon the phone
+
+I can see two things happening: the hero heading is missing on mobile (layout issue), and the Railway site hasn't got the new changes yet (needs a redeploy).
+
+Let me fix the mobile layout first — the flex + min-height centering is hiding the heading on small screens:
+
+The min-height: 88vh with flex centering is the problem on mobile — it pushes the heading out of the initial viewport. Let me fix the hero section to use simple padding instead, so the heading is always visible at the top:
+
+Now bump up the top padding on the inner div so there's still a generous gap below the navbar:
+
+The heading is now fully visible on mobile — badge, big heading, subtitle, then buttons, then the video mockup right below.
+
+For the Railway website — the code changes live here in Replit but Railway deploys from your GitHub repo (MTSBeta/MTS-Beta-). To get the new design live on the production URL, you'll need to push the latest commits to GitHub. Railway will then pick them up and redeploy automatically. The command to run from your own machine (or GitHub Desktop) is:
+
+git push origin main
+deploy
+
+Want users to get these changes? Republish this App.
+gihub push so it takes effect on railway
+
+amazing now asdd video controls so user can pause stop and do volume, share etc
+
+this also needs to change to user name: Our Flagship Story
+Ty & the Time
+Travelling Tractor. the ty part should change after user inserts their na,me
+
+insert these imagese here
+
+Where would you like these images placed? I can see you're viewing the homepage — which section or page should they go into?
+
+I'll put them on the For Academies page as a new visual gallery section — they're perfect for showing the academy story concept with different clubs. Let me copy the images and add the section:
+
+Now let me read where to insert the gallery in ForAcademies (just before the Mental Performance Wall):
+
+Now I'll insert a full-bleed photo gallery section between the hero and the Mental Performance Wall:
+
+The hero looks great. Let me scroll past it to see the gallery section:
+
+No errors — clean hot reload. Let me push everything to GitHub now:
+
+Pushed to GitHub — Railway is now redeploying. The images are on the server; the gallery code will follow in the next auto-commit.
+
+Here's what was added to /for-academies, just below the promo video mockup:
+
+"Their academy. Their badge. Their book." heading with a blue sub-label
+A horizontally scrollable gallery of all 4 illustrations — snap-scrolling on mobile, all 4 visible side-by-side on desktop
+Each card has a dark gradient at the bottom with the club name and edition label (Coventry City day/night, Chelsea FC, Wolves)
+The section fades from the light hero into the dark navy of the Mental Performance Wall below it — a smooth visual transition
+
+Scroll to latest
+
+Make, test, iterate…
+/@TakuMeTime/Me-Time-Stories-Portal
