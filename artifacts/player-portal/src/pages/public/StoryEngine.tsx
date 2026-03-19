@@ -18,9 +18,9 @@ const COMPANION_OPTIONS: { id: Companion; emoji: string; label: string; desc: st
 const CHAPTER_MOODS = [
   { bg: "linear-gradient(160deg, #3d1a00 0%, #7c3a00 50%, #f97316 100%)", accent: "#f97316", icon: "ri-seedling-line" },
   { bg: "linear-gradient(160deg, #064e3b 0%, #065f46 50%, #10b981 100%)", accent: "#10b981", icon: "ri-star-smile-line" },
-  { bg: "linear-gradient(160deg, #1e1b4b 0%, #4c1d95 50%, #7c3aed 100%)", accent: "#a78bfa", icon: "ri-flashlight-line" },
-  { bg: "linear-gradient(160deg, #0c1a3d 0%, #1e3a8a 50%, #3b82f6 100%)", accent: "#60a5fa", icon: "ri-door-lock-line" },
-  { bg: "linear-gradient(160deg, #1a0533 0%, #4a1272 50%, #9333ea 100%)", accent: "#c084fc", icon: "ri-key-2-line" },
+  { bg: "linear-gradient(160deg, #2d1260 0%, #5b1f8a 50%, #9333ea 100%)", accent: "#c084fc", icon: "ri-flashlight-line" },
+  { bg: "linear-gradient(160deg, #1a0c04 0%, #7c3a00 50%, #d97706 100%)", accent: "#fbbf24", icon: "ri-door-lock-line" },
+  { bg: "linear-gradient(160deg, #3d0a0a 0%, #7c1d1d 50%, #dc2626 100%)", accent: "#fca5a5", icon: "ri-key-2-line" },
   { bg: "linear-gradient(160deg, #7c1d1d 0%, #b45309 50%, #fbbf24 100%)", accent: "#fbbf24", icon: "ri-home-heart-line" },
 ];
 
@@ -80,7 +80,7 @@ function getStoryPages(s: StoryState) {
   ];
 }
 
-const DARK_BG = "radial-gradient(ellipse at 50% 0%, #0f0a1e 0%, #080510 55%, #030205 100%)";
+const DARK_BG = "radial-gradient(ellipse at 50% 0%, #1a0c04 0%, #0d0802 55%, #060402 100%)";
 
 const GlassPanel = ({ children, className = "", style = {} }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) => (
   <div
@@ -151,8 +151,8 @@ export default function StoryEngine() {
             />
           ))}
           {/* Ambient glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] opacity-[0.06]"
-            style={{ background: "radial-gradient(ellipse, #7c3aed 0%, transparent 70%)", filter: "blur(40px)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] opacity-[0.08]"
+            style={{ background: "radial-gradient(ellipse, #f97316 0%, transparent 70%)", filter: "blur(40px)" }} />
         </div>
 
         {/* Points badge */}
@@ -183,12 +183,12 @@ export default function StoryEngine() {
           {screen === "welcome" && (
             <div className="text-center w-full">
               {/* Book cover */}
-              <GlassPanel className="mb-8 overflow-hidden" style={{ boxShadow: "0 0 60px rgba(124,58,237,0.15), 0 24px 64px rgba(0,0,0,0.60)" }}>
+              <GlassPanel className="mb-8 overflow-hidden" style={{ boxShadow: "0 0 60px rgba(249,115,22,0.18), 0 24px 64px rgba(0,0,0,0.60)" }}>
                 {/* Atmospheric top */}
                 <div className="relative py-14 px-6 text-center overflow-hidden"
-                  style={{ background: "linear-gradient(160deg, #1a0533 0%, #2d1260 40%, #0f2a4a 100%)" }}>
+                  style={{ background: "linear-gradient(160deg, #1a0c04 0%, #3d1a00 40%, #7c3a00 100%)" }}>
                   <div className="absolute inset-0 opacity-30"
-                    style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(124,58,237,0.5) 0%, transparent 70%)" }} />
+                    style={{ background: "radial-gradient(ellipse at 50% 30%, rgba(249,115,22,0.5) 0%, transparent 70%)" }} />
                   <div className="relative">
                     <div className="text-6xl mb-4">🚜</div>
                     <h1 className="text-2xl md:text-3xl font-black mb-2 leading-tight" style={{ color: "#fef3e2" }}>
@@ -423,9 +423,8 @@ export default function StoryEngine() {
                   <div
                     className="px-7 py-7"
                     style={{
-                      backdropFilter: "blur(24px)",
-                      background: "rgba(255,248,235,0.04)",
-                      borderTop: `1px solid ${mood.accent}18`,
+                      background: "rgba(15,8,2,0.92)",
+                      borderTop: `2px solid ${mood.accent}30`,
                     }}
                   >
                     <p

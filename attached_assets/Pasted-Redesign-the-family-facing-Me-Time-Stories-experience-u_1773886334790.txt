@@ -1,0 +1,195 @@
+Redesign the family-facing Me Time Stories experience using the competitor inspiration we discussed, while also shifting the homepage from subscription-first to beta-first.
+
+Important:
+Keep the football side as it is.
+Only improve the children’s stories / D2C / family-facing side and the relevant CSR-friendly family presentation where needed.
+Do not apply this warmer design language to the football B2B experience.
+
+Core design direction:
+We are taking inspiration from the warmth, clarity, softness, and giftability of brands like Wonderbly and Wonder Wraps.
+However, we do NOT want to become a copy of them.
+We want to feel like a more elevated, more modern, more premium version of that category.
+
+Our design should feel like:
+- a modern story library
+- a premium digital book experience
+- a beautiful contemporary reading platform
+- a magical but polished family-facing product
+- an upgraded, more sophisticated version of what competitors are doing
+
+Important visual note:
+We still love glassmorphism.
+Do NOT remove glassmorphism.
+Instead, refine it so it feels:
+- warmer
+- softer
+- brighter
+- more premium
+- more readable
+- less dark
+- less nightclub / sci-fi
+- more like elegant layered glass in a modern library or luxury book platform
+
+The family-facing experience should feel:
+- warm
+- magical
+- premium
+- safe
+- family-friendly
+- emotionally clear
+- easier to navigate on mobile
+- like a modern book world, not a generic SaaS tool
+
+Main goal right now:
+We are still in beta.
+So the primary goal is not to push subscriptions yet.
+The main goal is to get parents to:
+- sign up as beta users
+- create a child profile
+- upload child images
+- submit simple details
+- receive sample personalised story previews
+- help shape the platform
+
+So redesign both the UI and the CTA structure accordingly.
+
+Please make the following changes:
+
+1. MarketingHome — lighten and warm up
+The family-facing homepage should move away from the current dark atmospheric backdrop and instead use:
+- warm cream / parchment / soft white / soft lavender / muted gold tones
+- amber as the accent colour
+- brighter overall presentation
+- generous whitespace
+- softer premium shadows
+- refined rounded cards
+- warm layered glassmorphism panels
+
+Very important:
+Do not strip away the layered premium feel.
+Keep a sense of depth and richness through modern glassmorphism, but make it feel like elegant editorial design and premium book-tech, not a dark fantasy dashboard.
+
+Homepage changes:
+- redesign the hero section with a warm cream or soft neutral background
+- keep the brand premium, magical, and polished
+- add a proper trust bar under the hero with star rating, family count, or review count placeholders
+- restructure the how-it-works section into a simple 3-step flow using badge/icon styling:
+  1. Tell us about your child
+  2. We personalise the story
+  3. Receive a magical sample / story preview
+- make the homepage feel more like a premium personalised children’s book brand and modern library than a dramatic app landing page
+
+Very important:
+Change the homepage CTA strategy from subscription-first to beta-first.
+
+Primary hero CTAs should become:
+- Apply for Beta Access
+- See Sample Stories
+
+Add a main beta section with copy along the lines of:
+Join the Me Time Stories Beta
+We’re inviting a small group of families to help shape the future of personalised storytelling for children.
+
+This section should explain that parents can:
+- sign up for free beta access
+- create a child profile
+- upload photos and a few details
+- receive sample personalised story previews
+- help shape the platform before launch
+- get priority access to future memberships
+
+2. CharacterCreator — warmer, lighter, premium glass
+The current experience feels too dark and dramatic.
+Redesign the character creator so it keeps a premium glassmorphic feel, but becomes magical, warm, elegant, and storybook-like.
+
+Please:
+- replace near-black backgrounds with a deep warm plum / amber / soft twilight gradient
+- keep richness and layered depth, but make it much more readable and family-friendly
+- keep glassmorphism, but refine it so the glass panels feel warm, editorial, premium, and soft
+- make the forms feel like a beautiful storybook creation experience rather than a sci-fi dashboard
+- improve spacing, readability, and emotional warmth
+- use softer borders, warm glow accents, and cleaner card layouts
+
+The feeling should be:
+modern luxury children’s library meets premium interactive story builder
+
+If there is a form flow, make it feel less technical and more emotional.
+Use language and presentation that feels like:
+- Meet your little hero
+- Tell us what they love
+- Help us shape their story
+
+3. StoryEngine — make it feel like a real storybook in a modern library
+The reading / story experience should feel more like opening a treasured premium book inside a modern digital library and less like looking into a dramatic space scene.
+
+Please:
+- reduce the deep star-field / spaceship feeling
+- introduce warm parchment, paper, ink, and storybook-inspired tones
+- use elegant readable serif typography for story text where appropriate
+- make page layouts feel calmer, warmer, and more immersive for parents and children reading together
+- add a subtle page-turn or book-like visual feeling if appropriate
+- keep the interface premium and modern
+- use refined glass and layered panels only where they support the experience, not where they distract from reading
+
+The emotional reference should be:
+a beautiful personalised modern story library and treasured bedtime storybook, not a sci-fi interface
+
+4. Mobile nav — simplify
+Improve the mobile navigation for the family-facing side.
+
+Please:
+- simplify the mobile menu
+- use clearer hierarchy
+- make touch targets larger
+- use rounded cards or softer grouped menu sections
+- reduce clutter and awkward stacking
+- keep the mobile nav visually premium and warm
+- make it feel like a polished modern consumer product
+
+5. Pricing section — beta-first, not subscription-first
+Keep future subscriptions visible, but do not make them the main CTA.
+
+Please:
+- replace the current pricing-first section with a beta-first section
+- move subscription plans lower down the page
+- relabel them as:
+  Planned Memberships After Beta
+
+Use these plans:
+- Digital Unlimited — £9.99/month
+- One Book Monthly — £14.99/month
+- Family Favorite — £19.99/month
+
+These should be secondary, not primary.
+
+Main CTA should be beta sign-up.
+
+Add a section showing what parents will submit:
+- parent name/email
+- child name
+- child age
+- interests / favourite things
+- optional images
+- short personality details
+- preferred story themes
+
+Add a founding family / early access section explaining benefits like:
+- free beta access
+- sample personalised stories
+- helping shape the platform
+- priority access at launch
+- possible early offers for founding families
+
+6. Overall implementation rules
+- keep football pages and football UX untouched
+- only apply this redesign language to the family-facing experience
+- preserve current functionality unless a UI/UX improvement is clearly better
+- do not remove subscriptions entirely
+- do not make the product look fully commercially launched if it is still beta
+- focus on emotional clarity, trust, warmth, and ease of use
+- make the family-facing side feel like a premium personalised story brand and modern library platform
+- use glassmorphism thoughtfully as a signature strength, but in a softer, warmer, more elegant way than it is now
+- aim to feel like an upgraded, more modern, more premium category leader
+
+Please implement the UI changes and copy changes directly where appropriate.
+If any existing sections are too dark, too cluttered, too technical, or too harsh, redesign them to match this warmer premium family-facing direction.

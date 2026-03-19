@@ -159,7 +159,7 @@ export default function MarketingHome() {
       </section>
 
       {/* ══ 2. TRUST BAR ═════════════════════════════════════════════════ */}
-      <section className="py-4 border-b" style={{ background: "#0d0a08", borderColor: "rgba(251,191,36,0.12)" }}>
+      <section className="py-4 border-b" style={{ background: "#1a0c04", borderColor: "rgba(251,191,36,0.12)" }}>
         <div className="max-w-5xl mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-x-10 gap-y-3 text-sm" style={{ color: "rgba(254,243,226,0.40)" }}>
             <span><i className="ri-shield-star-line"></i> Premier League & Championship academies</span>
@@ -346,17 +346,19 @@ export default function MarketingHome() {
       {/* ══ 6. THE STORY — TTT ═══════════════════════════════════════════ */}
       <section
         className="py-16 md:py-20 relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #0f0a1e 0%, #1a0f2e 50%, #0a0d1e 100%)" }}
+        style={{ background: "linear-gradient(135deg, #0d0802 0%, #1a0c04 50%, #0d0802 100%)" }}
       >
-        {/* Stars */}
+        {/* Warm ambient glow */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[320px] opacity-[0.08]"
+            style={{ background: "radial-gradient(ellipse, #f97316 0%, transparent 70%)", filter: "blur(60px)" }} />
           {[
             "top-8 left-[8%]", "top-16 right-[12%]", "top-32 left-[40%]",
             "bottom-12 right-[18%]", "bottom-28 left-[55%]", "top-48 right-[35%]",
           ].map((pos, i) => (
             <div
               key={i}
-              className={`absolute ${pos} text-amber-300 opacity-20 text-xl`}
+              className={`absolute ${pos} text-amber-400 opacity-25 text-xl`}
               style={{ animation: `bounce ${2 + i * 0.35}s ease-in-out infinite alternate` }}
             >
               {i % 2 === 0 ? "✦" : "✧"}
@@ -417,7 +419,7 @@ export default function MarketingHome() {
       </section>
 
       {/* ══ 7. PHOTO SLIDER ══════════════════════════════════════════════ */}
-      <section className="py-14 md:py-20 relative overflow-hidden" style={{ background: "#0d0a08" }}>
+      <section className="py-14 md:py-20 relative overflow-hidden" style={{ background: "#1a0c04" }}>
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: "#fef3e2" }}>
@@ -465,7 +467,7 @@ export default function MarketingHome() {
             </div>
 
             {/* Dot indicators */}
-            <div className="flex justify-center gap-2 py-4" style={{ background: "#0d0a08" }}>
+            <div className="flex justify-center gap-2 py-4" style={{ background: "#1a0c04" }}>
               {READING_PHOTOS.map((_, i) => (
                 <button
                   key={i}

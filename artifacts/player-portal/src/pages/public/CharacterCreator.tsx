@@ -91,7 +91,7 @@ export default function CharacterCreator() {
     <PublicLayout>
       <div
         className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden py-10 px-4"
-        style={{ background: "radial-gradient(ellipse at 50% 0%, #1a0c04 0%, #0d0a08 55%, #060402 100%)" }}
+        style={{ background: "radial-gradient(ellipse at 50% 0%, #2d1260 0%, #1a0c04 45%, #0d0a08 100%)" }}
       >
         {/* Ambient glow orbs */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -108,9 +108,9 @@ export default function CharacterCreator() {
           className="relative w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl"
           style={{
             backdropFilter: "blur(24px)",
-            background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.10)",
-            boxShadow: "0 0 60px rgba(249,115,22,0.08), 0 24px 64px rgba(0,0,0,0.50)",
+            background: "rgba(255,248,235,0.05)",
+            border: "1px solid rgba(255,220,150,0.12)",
+            boxShadow: "0 0 80px rgba(249,115,22,0.12), 0 24px 64px rgba(0,0,0,0.55)",
           }}
         >
           {/* Panel top bar */}
