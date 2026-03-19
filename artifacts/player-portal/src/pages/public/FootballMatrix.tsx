@@ -1,243 +1,394 @@
 import { useState } from "react";
-import { Link } from "wouter";
 import { PublicLayout } from "@/layouts/PublicLayout";
 
-type Section = "pitch" | "dashboard" | "training" | "academy";
+type Section = "pitch" | "training" | "academy";
 
 interface Position {
   id: string;
   label: string;
+  abbr: string;
   x: number;
   y: number;
-  challenges: string;
-  lessons: string[];
-  advice: string;
+  color: string;
+  identity: string;
+  tension: string;
+  arc: [string, string][];
+  themes: string[];
+  storyTitle: string;
+  storyAngle: string;
+  inputs: { icon: string; source: string; desc: string }[];
   deliverables: string[];
 }
 
 const positions: Position[] = [
-  { id: "gk",  label: "Goalkeeper",   x: 50, y: 90,
-    challenges: "Isolation, last line of defence pressure, decision-making under extreme stress.",
-    lessons: ["Trust your instincts and your training", "Leadership from the back — your voice matters", "Mistakes are data, not defeats"],
-    advice: "The best goalkeepers have the shortest memory. Let it go, reset, and be ready for the next moment.",
-    deliverables: ["Isolation & courage story", "Decision-making under pressure", "Leadership voice narrative"] },
-  { id: "cb",  label: "Centre Back",  x: 35, y: 76,
-    challenges: "Leadership responsibility, communication under pressure, managing physical confrontation.",
-    lessons: ["Command your area with confidence", "Calmness is a superpower at the back", "Read the game before it happens"],
-    advice: "A great defender wins the battle before the ball arrives — in their head.",
-    deliverables: ["Leadership under pressure", "Defensive composure story", "Team communication narrative"] },
-  { id: "cb2", label: "Centre Back",  x: 65, y: 76,
-    challenges: "Leadership responsibility, communication under pressure, managing physical confrontation.",
-    lessons: ["Command your area with confidence", "Calmness is a superpower at the back", "Read the game before it happens"],
-    advice: "A great defender wins the battle before the ball arrives — in their head.",
-    deliverables: ["Leadership under pressure", "Defensive composure story", "Team communication narrative"] },
-  { id: "lb",  label: "Left Back",    x: 15, y: 72,
-    challenges: "Balancing attack and defence, positional discipline, dealing with wide play pressure.",
-    lessons: ["Discipline creates freedom — know your role", "Recovery runs build mental toughness", "Your position is a foundation, not a limitation"],
-    advice: "The most underrated players shape the game from the side. Own your lane.",
-    deliverables: ["Positional confidence story", "Resilience after mistakes", "Wide play mental strength"] },
-  { id: "rb",  label: "Right Back",   x: 85, y: 72,
-    challenges: "Balancing attack and defence, positional discipline, dealing with wide play pressure.",
-    lessons: ["Discipline creates freedom — know your role", "Recovery runs build mental toughness", "Your position is a foundation, not a limitation"],
-    advice: "The most underrated players shape the game from the side. Own your lane.",
-    deliverables: ["Positional confidence story", "Resilience after mistakes", "Wide play mental strength"] },
-  { id: "cm1", label: "Central Mid",  x: 30, y: 54,
-    challenges: "Managing the tempo, constant decision-making, box-to-box physical demand.",
-    lessons: ["You set the rhythm — own it", "Decisions under fatigue define character", "Protect and create — both with equal pride"],
-    advice: "The engine room players rarely get the headlines. The team can't function without them.",
-    deliverables: ["Engine room identity story", "Tempo management narrative", "Tireless effort story"] },
-  { id: "cm2", label: "Central Mid",  x: 70, y: 54,
-    challenges: "Managing the tempo, constant decision-making, box-to-box physical demand.",
-    lessons: ["You set the rhythm — own it", "Decisions under fatigue define character", "Protect and create — both with equal pride"],
-    advice: "The engine room players rarely get the headlines. The team can't function without them.",
-    deliverables: ["Engine room identity story", "Tempo management narrative", "Tireless effort story"] },
-  { id: "cam", label: "Attacking Mid", x: 50, y: 42,
-    challenges: "Creative pressure, inconsistency expectations, failing in front of goal.",
-    lessons: ["Creativity requires permission to fail", "Your vision is a weapon — trust it", "Moments of magic come from moments of courage"],
-    advice: "The most creative players have the thickest skin. Let your imagination run free.",
-    deliverables: ["Creative courage story", "Bouncing back narrative", "Vision & playmaking identity"] },
-  { id: "lw",  label: "Left Winger",  x: 12, y: 35,
-    challenges: "1v1 pressure, confidence after misplaced dribbles, speed and agility expectations.",
-    lessons: ["Take the dribble — the cross won't take itself", "Confidence is a decision, not a feeling", "Your pace and skill create moments of magic"],
-    advice: "Wingers live on the edge of disaster and brilliance. Embrace both.",
-    deliverables: ["1v1 courage story", "Confidence decision narrative", "Pace & skill identity"] },
-  { id: "rw",  label: "Right Winger", x: 88, y: 35,
-    challenges: "1v1 pressure, confidence after misplaced dribbles, speed and agility expectations.",
-    lessons: ["Take the dribble — the cross won't take itself", "Confidence is a decision, not a feeling", "Your pace and skill create moments of magic"],
-    advice: "Wingers live on the edge of disaster and brilliance. Embrace both.",
-    deliverables: ["1v1 courage story", "Confidence decision narrative", "Pace & skill identity"] },
-  { id: "st",  label: "Striker",      x: 50, y: 18,
-    challenges: "Goal drought mental health, pressure to score, isolation at the top of the press.",
-    lessons: ["Your job is to want the ball — even when it hurts", "Strikers are defined by how they respond to misses", "Goals are the result of relentless work"],
-    advice: "Every great striker has missed hundreds. The ones who make it kept asking for the ball.",
-    deliverables: ["Goal drought resilience story", "Striker identity narrative", "Pressure & belief story"] },
+  {
+    id: "gk", label: "Goalkeeper", abbr: "GK", x: 50, y: 90, color: "#f59e0b",
+    identity: "The last line of defence. The only player who sees the entire pitch and carries every goal against personally.",
+    tension: "Isolation is constant — the goalkeeper stands alone while play unfolds ahead. Every mistake is visible, irreversible, and remembered. The pressure of one error undoing eleven players' work creates a psychological weight unlike any other position.",
+    arc: [["Carrying the blame", "Owning the moment"], ["Fear of mistakes", "Shortest memory on the pitch"], ["Invisible leader", "The voice that holds the team"]],
+    themes: ["Isolation", "Courage", "Resilience", "Leadership from behind", "Decision-making under pressure"],
+    storyTitle: "The Last Save",
+    storyAngle: "[Child's name] is the goalkeeper in the biggest match of the season. In the 89th minute, the ball comes to them alone. The story follows not the save itself — but the 45 minutes of self-belief that made it possible.",
+    inputs: [
+      { icon: "ri-user-voice-line", source: "Player Voice", desc: "How they feel before and after a mistake" },
+      { icon: "ri-whistle-line", source: "Coach Insight", desc: "Their shot-stopping strengths and positioning instincts" },
+      { icon: "ri-home-heart-line", source: "Parent Contribution", desc: "What resilience looks like at home" },
+      { icon: "ri-building-4-line", source: "Academy Values", desc: "Club identity and goalkeeper culture" },
+    ],
+    deliverables: ["Personalised 24-page illustrated story", "Goalkeeper identity journal insert", "Coach conversation guide", "Parent read-aloud version", "Digital + print edition"],
+  },
+  {
+    id: "cb", label: "Centre Back", abbr: "CB", x: 35, y: 76, color: "#8b5cf6",
+    identity: "The team's backbone. Defenders who command the line are part general, part psychologist — managing space, people, and pressure simultaneously.",
+    tension: "Centre-backs are judged on what doesn't happen. Their excellence is invisible until it fails. The burden of leadership — organising teammates, making split-second decisions, absorbing the blame for goals — demands a composure beyond their years.",
+    arc: [["Reactive under pressure", "Composed before the ball arrives"], ["Shouting at teammates", "Leading with calm authority"], ["Defined by one mistake", "Defined by consistent standards"]],
+    themes: ["Composure", "Communication", "Leadership", "Defending as identity", "Team responsibility"],
+    storyTitle: "Holding the Line",
+    storyAngle: "[Child's name]'s team is under constant pressure in the second half. The striker they're marking is bigger, faster, and louder. The story follows how [Child's name] finds the quiet in the chaos — and discovers that true defenders don't react. They prepare.",
+    inputs: [
+      { icon: "ri-user-voice-line", source: "Player Voice", desc: "How they communicate under pressure" },
+      { icon: "ri-whistle-line", source: "Coach Insight", desc: "Their reading of the game and leadership style" },
+      { icon: "ri-home-heart-line", source: "Parent Contribution", desc: "How they handle setbacks off the pitch" },
+      { icon: "ri-building-4-line", source: "Academy Values", desc: "Defensive culture and team-first identity" },
+    ],
+    deliverables: ["Personalised 24-page illustrated story", "Defender's leadership card", "Coach conversation guide", "Parent read-aloud version", "Digital + print edition"],
+  },
+  {
+    id: "cb2", label: "Centre Back", abbr: "CB", x: 65, y: 76, color: "#8b5cf6",
+    identity: "The team's backbone. Defenders who command the line are part general, part psychologist — managing space, people, and pressure simultaneously.",
+    tension: "Centre-backs are judged on what doesn't happen. Their excellence is invisible until it fails. The burden of leadership — organising teammates, making split-second decisions, absorbing the blame for goals — demands a composure beyond their years.",
+    arc: [["Reactive under pressure", "Composed before the ball arrives"], ["Shouting at teammates", "Leading with calm authority"], ["Defined by one mistake", "Defined by consistent standards"]],
+    themes: ["Composure", "Communication", "Leadership", "Defending as identity", "Team responsibility"],
+    storyTitle: "Holding the Line",
+    storyAngle: "[Child's name]'s team is under constant pressure in the second half. The striker they're marking is bigger, faster, and louder. The story follows how [Child's name] finds the quiet in the chaos — and discovers that true defenders don't react. They prepare.",
+    inputs: [
+      { icon: "ri-user-voice-line", source: "Player Voice", desc: "How they communicate under pressure" },
+      { icon: "ri-whistle-line", source: "Coach Insight", desc: "Their reading of the game and leadership style" },
+      { icon: "ri-home-heart-line", source: "Parent Contribution", desc: "How they handle setbacks off the pitch" },
+      { icon: "ri-building-4-line", source: "Academy Values", desc: "Defensive culture and team-first identity" },
+    ],
+    deliverables: ["Personalised 24-page illustrated story", "Defender's leadership card", "Coach conversation guide", "Parent read-aloud version", "Digital + print edition"],
+  },
+  {
+    id: "lb", label: "Left Back", abbr: "LB", x: 14, y: 72, color: "#06b6d4",
+    identity: "The disciplined runner. Full-backs are the most athletically demanding role on the pitch — required to defend, recover, attack, and repeat without recognition.",
+    tension: "Full-backs rarely receive credit. They make the runs that aren't on the highlights reel, cover the spaces no-one watches, and must immediately reset after going forward. The psychological challenge is finding pride in work that's largely invisible.",
+    arc: [["Running unseen", "Owning the overlap"], ["Frustrated by limited recognition", "Driven by the team's need"], ["Disciplined by obligation", "Disciplined by identity"]],
+    themes: ["Discipline", "Unseen effort", "Athletic identity", "Positional pride", "Resilience after transition"],
+    storyTitle: "The Longest Run",
+    storyAngle: "[Child's name] makes a 70-metre run down the flank in the 72nd minute. Nobody notices. The team wins because of it. The story is about the kind of player who does the right thing when no-one is watching — and why that makes them extraordinary.",
+    inputs: [
+      { icon: "ri-user-voice-line", source: "Player Voice", desc: "What motivates them when they go unrecognised" },
+      { icon: "ri-whistle-line", source: "Coach Insight", desc: "Their work rate, stamina, and positional awareness" },
+      { icon: "ri-home-heart-line", source: "Parent Contribution", desc: "How they show up consistently off-pitch" },
+      { icon: "ri-building-4-line", source: "Academy Values", desc: "Team-first culture and work ethic standards" },
+    ],
+    deliverables: ["Personalised 24-page illustrated story", "Full-back identity card", "Coach conversation guide", "Parent read-aloud version", "Digital + print edition"],
+  },
+  {
+    id: "rb", label: "Right Back", abbr: "RB", x: 86, y: 72, color: "#06b6d4",
+    identity: "The disciplined runner. Full-backs are the most athletically demanding role on the pitch — required to defend, recover, attack, and repeat without recognition.",
+    tension: "Full-backs rarely receive credit. They make the runs that aren't on the highlights reel, cover the spaces no-one watches, and must immediately reset after going forward. The psychological challenge is finding pride in work that's largely invisible.",
+    arc: [["Running unseen", "Owning the overlap"], ["Frustrated by limited recognition", "Driven by the team's need"], ["Disciplined by obligation", "Disciplined by identity"]],
+    themes: ["Discipline", "Unseen effort", "Athletic identity", "Positional pride", "Resilience after transition"],
+    storyTitle: "The Longest Run",
+    storyAngle: "[Child's name] makes a 70-metre run down the flank in the 72nd minute. Nobody notices. The team wins because of it. The story is about the kind of player who does the right thing when no-one is watching — and why that makes them extraordinary.",
+    inputs: [
+      { icon: "ri-user-voice-line", source: "Player Voice", desc: "What motivates them when they go unrecognised" },
+      { icon: "ri-whistle-line", source: "Coach Insight", desc: "Their work rate, stamina, and positional awareness" },
+      { icon: "ri-home-heart-line", source: "Parent Contribution", desc: "How they show up consistently off-pitch" },
+      { icon: "ri-building-4-line", source: "Academy Values", desc: "Team-first culture and work ethic standards" },
+    ],
+    deliverables: ["Personalised 24-page illustrated story", "Full-back identity card", "Coach conversation guide", "Parent read-aloud version", "Digital + print edition"],
+  },
+  {
+    id: "dm", label: "Defensive Mid", abbr: "DM", x: 50, y: 63, color: "#10b981",
+    identity: "The shield in front of the defence. The player who does the work that allows others to shine — intercepting, covering, recycling, protecting.",
+    tension: "The defensive midfielder is rarely celebrated. They break up play that never becomes a threat and recycle possession that never becomes a highlight. The identity question — 'am I a destroyer or a creator?' — sits at the heart of their developmental challenge.",
+    arc: [["Defined by what they stop", "Valued for what they enable"], ["Playing in others' shadows", "Being the foundation everyone stands on"], ["Self-doubt about creative limitation", "Confidence in specialist identity"]],
+    themes: ["Identity", "Specialist pride", "Unseen value", "Protecting teammates", "Emotional regulation"],
+    storyTitle: "The Foundation",
+    storyAngle: "[Child's name] makes 11 interceptions in a 0-0 draw. No-one mentions them at the final whistle. But in the dressing room, the captain walks over. The story explores what it means to be the reason your team stays in the game — when the scoreboard shows nothing.",
+    inputs: [
+      { icon: "ri-user-voice-line", source: "Player Voice", desc: "How they define their own footballing identity" },
+      { icon: "ri-whistle-line", source: "Coach Insight", desc: "Their positional intelligence and defensive reads" },
+      { icon: "ri-home-heart-line", source: "Parent Contribution", desc: "How they handle being unsung at home" },
+      { icon: "ri-building-4-line", source: "Academy Values", desc: "The academy's approach to specialist roles" },
+    ],
+    deliverables: ["Personalised 24-page illustrated story", "Midfielder identity profile card", "Coach conversation guide", "Parent read-aloud version", "Digital + print edition"],
+  },
+  {
+    id: "cm1", label: "Central Mid", abbr: "CM", x: 30, y: 52, color: "#10b981",
+    identity: "The engine room. Central midfielders are the most complete players on the pitch — they are expected to defend, create, press, and lead, often simultaneously.",
+    tension: "Box-to-box midfielders carry an enormous cognitive and emotional load. They must make more decisions per game than any other outfield position. Fatigue, indecision, and inconsistency are constant threats — and there's no hiding place.",
+    arc: [["Overwhelmed by responsibility", "Energised by complexity"], ["Decision fatigue mid-game", "Composure built through routine"], ["Playing for approval", "Playing to their own standard"]],
+    themes: ["Mental endurance", "Decision-making", "Box-to-box identity", "Leading by example", "Recovery and reset"],
+    storyTitle: "90 Minutes",
+    storyAngle: "[Child's name] is running on empty in the second half. Their legs say stop. Their team needs one more run. The story follows what happens in the mind of a central midfielder when the body says no — and how the decision they make defines their season.",
+    inputs: [
+      { icon: "ri-user-voice-line", source: "Player Voice", desc: "How they feel during high-intensity periods" },
+      { icon: "ri-whistle-line", source: "Coach Insight", desc: "Their decision-making patterns and tempo" },
+      { icon: "ri-home-heart-line", source: "Parent Contribution", desc: "How they rest and recover mentally" },
+      { icon: "ri-building-4-line", source: "Academy Values", desc: "Academy culture around effort and workload" },
+    ],
+    deliverables: ["Personalised 24-page illustrated story", "Midfield engine identity card", "Coach conversation guide", "Parent read-aloud version", "Digital + print edition"],
+  },
+  {
+    id: "cm2", label: "Central Mid", abbr: "CM", x: 70, y: 52, color: "#10b981",
+    identity: "The engine room. Central midfielders are the most complete players on the pitch — they are expected to defend, create, press, and lead, often simultaneously.",
+    tension: "Box-to-box midfielders carry an enormous cognitive and emotional load. They must make more decisions per game than any other outfield position. Fatigue, indecision, and inconsistency are constant threats — and there's no hiding place.",
+    arc: [["Overwhelmed by responsibility", "Energised by complexity"], ["Decision fatigue mid-game", "Composure built through routine"], ["Playing for approval", "Playing to their own standard"]],
+    themes: ["Mental endurance", "Decision-making", "Box-to-box identity", "Leading by example", "Recovery and reset"],
+    storyTitle: "90 Minutes",
+    storyAngle: "[Child's name] is running on empty in the second half. Their legs say stop. Their team needs one more run. The story follows what happens in the mind of a central midfielder when the body says no — and how the decision they make defines their season.",
+    inputs: [
+      { icon: "ri-user-voice-line", source: "Player Voice", desc: "How they feel during high-intensity periods" },
+      { icon: "ri-whistle-line", source: "Coach Insight", desc: "Their decision-making patterns and tempo" },
+      { icon: "ri-home-heart-line", source: "Parent Contribution", desc: "How they rest and recover mentally" },
+      { icon: "ri-building-4-line", source: "Academy Values", desc: "Academy culture around effort and workload" },
+    ],
+    deliverables: ["Personalised 24-page illustrated story", "Midfield engine identity card", "Coach conversation guide", "Parent read-aloud version", "Digital + print edition"],
+  },
+  {
+    id: "cam", label: "Attacking Mid", abbr: "AM", x: 50, y: 40, color: "#f97316",
+    identity: "The creative heartbeat. The number 10 sees the game one step ahead — and carries the responsibility of making something out of nothing when the team needs it most.",
+    tension: "Creative players face a uniquely cruel pressure: their best qualities require permission to fail. Taking the ambitious pass, attempting the unexpected run, backing their vision — all of these invite public failure. Without psychological safety, creativity dies.",
+    arc: [["Shrinking under expectation", "Backing their own vision"], ["Trying to be consistent", "Embracing their beautiful inconsistency"], ["Playing what's safe", "Playing what's possible"]],
+    themes: ["Creative identity", "Permission to fail", "Imagination as strength", "Pressure from expectation", "Self-expression in sport"],
+    storyTitle: "The Pass Nobody Else Saw",
+    storyAngle: "[Child's name] sees a pass in training that nobody else thinks is on. The coach shakes their head. They try it anyway — and it works. The story explores what it means to trust your own vision in a sport that sometimes punishes the extraordinary.",
+    inputs: [
+      { icon: "ri-user-voice-line", source: "Player Voice", desc: "What they see on the pitch that others don't" },
+      { icon: "ri-whistle-line", source: "Coach Insight", desc: "Their creative patterns and decision timing" },
+      { icon: "ri-home-heart-line", source: "Parent Contribution", desc: "How they express creativity beyond football" },
+      { icon: "ri-building-4-line", source: "Academy Values", desc: "The academy's philosophy on risk-taking" },
+    ],
+    deliverables: ["Personalised 24-page illustrated story", "Creative player identity card", "Coach conversation guide", "Parent read-aloud version", "Digital + print edition"],
+  },
+  {
+    id: "lw", label: "Left Winger", abbr: "LW", x: 11, y: 33, color: "#ef4444",
+    identity: "The duellist. Wingers live by the 1v1 — they are the players who take on opponents in the most exposed, high-visibility area of the pitch and accept the risk every time.",
+    tension: "Losing a dribble in front of the crowd, the coach, and your teammates is one of the most demoralising moments in youth football. Wingers must develop a psychological immunity to public failure — taking on the next man even after the last one won.",
+    arc: [["Afraid to take on the defender", "Addicted to the duel"], ["Confidence as a feeling", "Confidence as a decision"], ["Avoiding the risky moment", "Seeking it out"]],
+    themes: ["Confidence", "1v1 identity", "Recovering from a bad touch", "Speed and skill", "Courage under spotlight"],
+    storyTitle: "One More Time",
+    storyAngle: "[Child's name] loses three dribbles in a row in the first half. Their coach tells them to keep going. In the 78th minute, they take on their marker one more time. The story is about what it takes to try again — and what that courage looks like to everyone watching.",
+    inputs: [
+      { icon: "ri-user-voice-line", source: "Player Voice", desc: "How they rebuild after a mistake in a duel" },
+      { icon: "ri-whistle-line", source: "Coach Insight", desc: "Their technical strengths and dribbling patterns" },
+      { icon: "ri-home-heart-line", source: "Parent Contribution", desc: "How they respond to embarrassment at home" },
+      { icon: "ri-building-4-line", source: "Academy Values", desc: "Academy stance on risk-taking in the final third" },
+    ],
+    deliverables: ["Personalised 24-page illustrated story", "Winger confidence card", "Coach conversation guide", "Parent read-aloud version", "Digital + print edition"],
+  },
+  {
+    id: "rw", label: "Right Winger", abbr: "RW", x: 89, y: 33, color: "#ef4444",
+    identity: "The duellist. Wingers live by the 1v1 — they are the players who take on opponents in the most exposed, high-visibility area of the pitch and accept the risk every time.",
+    tension: "Losing a dribble in front of the crowd, the coach, and your teammates is one of the most demoralising moments in youth football. Wingers must develop a psychological immunity to public failure — taking on the next man even after the last one won.",
+    arc: [["Afraid to take on the defender", "Addicted to the duel"], ["Confidence as a feeling", "Confidence as a decision"], ["Avoiding the risky moment", "Seeking it out"]],
+    themes: ["Confidence", "1v1 identity", "Recovering from a bad touch", "Speed and skill", "Courage under spotlight"],
+    storyTitle: "One More Time",
+    storyAngle: "[Child's name] loses three dribbles in a row in the first half. Their coach tells them to keep going. In the 78th minute, they take on their marker one more time. The story is about what it takes to try again — and what that courage looks like to everyone watching.",
+    inputs: [
+      { icon: "ri-user-voice-line", source: "Player Voice", desc: "How they rebuild after a mistake in a duel" },
+      { icon: "ri-whistle-line", source: "Coach Insight", desc: "Their technical strengths and dribbling patterns" },
+      { icon: "ri-home-heart-line", source: "Parent Contribution", desc: "How they respond to embarrassment at home" },
+      { icon: "ri-building-4-line", source: "Academy Values", desc: "Academy stance on risk-taking in the final third" },
+    ],
+    deliverables: ["Personalised 24-page illustrated story", "Winger confidence card", "Coach conversation guide", "Parent read-aloud version", "Digital + print edition"],
+  },
+  {
+    id: "st", label: "Striker", abbr: "ST", x: 50, y: 16, color: "#ec4899",
+    identity: "The hero the team points to — and the player who carries the weight of every missed chance alone. Strikers are defined not by their goals, but by how they respond to the drought.",
+    tension: "A goal drought in youth football can shatter a child's confidence with frightening speed. The striker's psychology is uniquely exposed: the team relies on them to score, but the game withholds the outcome despite maximum effort. Managing that gap between effort and result is the central challenge.",
+    arc: [["Defined by the last miss", "Defined by the next attempt"], ["Waiting for confidence to return", "Choosing to believe now"], ["Isolated by expectation", "Energised by responsibility"]],
+    themes: ["Belief under drought", "Striker identity", "Resilience after failure", "Hunger and mentality", "Pressure from visibility"],
+    storyTitle: "The Striker Who Kept Asking",
+    storyAngle: "[Child's name] hasn't scored in seven games. Their teammates are watching. Their parents are watching. The coaches are reassigning the penalty. The story follows what happens in the week before the match — and what [Child's name] does in training that nobody sees.",
+    inputs: [
+      { icon: "ri-user-voice-line", source: "Player Voice", desc: "How they feel during a goal drought" },
+      { icon: "ri-whistle-line", source: "Coach Insight", desc: "Their movement patterns and finishing mentality" },
+      { icon: "ri-home-heart-line", source: "Parent Contribution", desc: "How they process the pressure of expectation" },
+      { icon: "ri-building-4-line", source: "Academy Values", desc: "Academy culture around individual scoring metrics" },
+    ],
+    deliverables: ["Personalised 24-page illustrated story", "Striker belief journal", "Coach conversation guide", "Parent read-aloud version", "Digital + print edition"],
+  },
 ];
 
-const trainingPaths = [
-  { position: "Goalkeepers", focus: "Courage & Decision-Making",   stories: 4, color: "#3b82f6", icon: "ri-shield-user-line" },
-  { position: "Defenders",   focus: "Leadership & Communication",  stories: 6, color: "#8b5cf6", icon: "ri-shield-star-line" },
-  { position: "Midfielders", focus: "Resilience & Tempo Control",  stories: 5, color: "#10b981", icon: "ri-flashlight-line" },
-  { position: "Wingers",     focus: "Confidence & 1v1 Duels",      stories: 4, color: "#f97316", icon: "ri-speed-up-line" },
-  { position: "Strikers",    focus: "Belief & Mental Bounce-Back", stories: 5, color: "#ef4444", icon: "ri-focus-3-line" },
-];
+const GLASS = {
+  backdropFilter: "blur(20px)",
+  background: "rgba(255,255,255,0.04)",
+  border: "1px solid rgba(255,255,255,0.09)",
+};
 
-const GLASS = "backdrop-blur-xl bg-white/[0.06] border border-white/[0.10]";
-const GLASS_HOVER = "hover:bg-white/[0.10] hover:border-white/[0.18]";
+const GLASS_STRONG = {
+  backdropFilter: "blur(24px)",
+  background: "rgba(255,255,255,0.06)",
+  border: "1px solid rgba(255,255,255,0.12)",
+};
 
 export default function FootballMatrix() {
-  const [activeSection, setActiveSection]     = useState<Section>("pitch");
-  const [selectedPosition, setSelectedPosition] = useState<Position | null>(null);
-  const [enquiryOpen, setEnquiryOpen]         = useState(false);
-  const [formSubmitted, setFormSubmitted]     = useState(false);
+  const [activeSection, setActiveSection] = useState<Section>("pitch");
+  const [selected, setSelected] = useState<Position | null>(null);
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
-    setTimeout(() => { setEnquiryOpen(false); setFormSubmitted(false); }, 2500);
+    setTimeout(() => { setEnquiryOpen(false); setFormSubmitted(false); }, 2800);
   };
 
-  const SECTION_LABELS: Record<Section, { label: string; icon: string }> = {
-    pitch:     { label: "Pitch",     icon: "ri-football-line" },
-    dashboard: { label: "Stats",     icon: "ri-bar-chart-2-line" },
-    training:  { label: "Training",  icon: "ri-run-line" },
-    academy:   { label: "Academy",   icon: "ri-building-4-line" },
-  };
+  const TABS: { id: Section; label: string; icon: string }[] = [
+    { id: "pitch",    label: "Position Matrix", icon: "ri-football-line" },
+    { id: "training", label: "Story Paths",     icon: "ri-git-branch-line" },
+    { id: "academy",  label: "Academy Fit",     icon: "ri-building-4-line" },
+  ];
 
   return (
     <PublicLayout>
-      {/* Background — dark stadium atmosphere */}
-      <div
-        className="min-h-screen relative"
-        style={{ background: "radial-gradient(ellipse at 50% 0%, #0f2a4a 0%, #0b1220 45%, #060810 100%)" }}
-      >
-        {/* Subtle floodlight rays */}
+      <div className="min-h-screen" style={{ background: "radial-gradient(ellipse at 50% 0%, #0f1f3a 0%, #090d1a 45%, #04060d 100%)" }}>
+
+        {/* Ambient floodlights */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-1/4 left-1/4 w-96 h-[60vh] opacity-[0.04]"
-            style={{ background: "linear-gradient(180deg, #fbbf24 0%, transparent 100%)", transform: "rotate(-15deg)", filter: "blur(40px)" }} />
-          <div className="absolute -top-1/4 right-1/4 w-96 h-[60vh] opacity-[0.04]"
-            style={{ background: "linear-gradient(180deg, #fbbf24 0%, transparent 100%)", transform: "rotate(15deg)", filter: "blur(40px)" }} />
+          <div className="absolute -top-1/3 left-1/3 w-[500px] h-[500px] opacity-[0.035]"
+            style={{ background: "radial-gradient(circle, #fbbf24 0%, transparent 65%)", filter: "blur(60px)" }} />
+          <div className="absolute -top-1/3 right-1/3 w-[500px] h-[500px] opacity-[0.035]"
+            style={{ background: "radial-gradient(circle, #fbbf24 0%, transparent 65%)", filter: "blur(60px)" }} />
         </div>
 
-        {/* ── Sticky header / tab bar ─────────────────────────────────── */}
-        <div
-          className="sticky top-[60px] z-40 border-b border-white/[0.08]"
-          style={{ backdropFilter: "blur(24px)", background: "rgba(6, 8, 16, 0.85)" }}
-        >
-          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
-            {/* Brand lockup */}
+        {/* ── Sticky header ── */}
+        <div className="sticky top-[60px] z-40" style={{ backdropFilter: "blur(24px)", background: "rgba(4,6,13,0.90)", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+          <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg"
-                style={{ background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.30)", boxShadow: "0 0 12px rgba(251,191,36,0.20)" }}>
-                <i className="ri-football-line text-amber-400"></i>
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+                style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.28)" }}>
+                <i className="ri-football-line text-amber-400 text-base"></i>
               </div>
               <div>
                 <p className="text-xs font-bold text-white leading-none">Me Time Stories</p>
-                <p className="text-[10px] text-amber-400/70 leading-none mt-0.5">Football Academy Matrix</p>
+                <p className="text-[10px] leading-none mt-0.5" style={{ color: "#f97316" }}>Football Academy Matrix</p>
               </div>
             </div>
 
-            {/* Section tabs */}
-            <div className="flex items-center gap-1 p-1 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-              {(Object.entries(SECTION_LABELS) as [Section, { label: string; icon: string }][]).map(([s, { label, icon }]) => (
-                <button
-                  key={s}
-                  onClick={() => setActiveSection(s)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200"
-                  style={activeSection === s ? {
-                    background: "rgba(251,191,36,0.18)",
-                    color: "#fbbf24",
-                    border: "1px solid rgba(251,191,36,0.35)",
-                    boxShadow: "0 0 12px rgba(251,191,36,0.20)",
-                  } : {
-                    color: "rgba(255,255,255,0.40)",
-                    border: "1px solid transparent",
-                  }}
+            <div className="flex items-center gap-1 p-1 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+              {TABS.map(({ id, label, icon }) => (
+                <button key={id} onClick={() => setActiveSection(id)}
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all duration-200"
+                  style={activeSection === id
+                    ? { background: "rgba(251,191,36,0.15)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.30)" }
+                    : { color: "rgba(255,255,255,0.35)", border: "1px solid transparent" }}
                 >
-                  <i className={icon}></i> {label}
+                  <i className={icon}></i>
+                  <span className="hidden sm:inline">{label}</span>
                 </button>
               ))}
             </div>
 
-            {/* CTA */}
-            <button
-              onClick={() => setEnquiryOpen(true)}
+            <button onClick={() => setEnquiryOpen(true)}
               className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:scale-[1.02]"
-              style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
-            >
-              <i className="ri-mail-line"></i> Enquire
+              style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800", boxShadow: "0 0 16px rgba(249,115,22,0.30)" }}>
+              <i className="ri-mail-send-line"></i> Request Programme
             </button>
           </div>
         </div>
 
-        {/* ── PITCH ──────────────────────────────────────────────────── */}
-        {activeSection === "pitch" && (
-          <div className="max-w-6xl mx-auto px-4 py-10">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Interactive Position Matrix</h2>
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.40)" }}>
-                Select any position to explore its personalised story programme.
-              </p>
-            </div>
+        {/* ── PAGE HERO ── */}
+        {activeSection === "pitch" && !selected && (
+          <div className="max-w-5xl mx-auto px-4 pt-12 pb-6 text-center">
+            <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] px-4 py-1.5 rounded-full mb-5"
+              style={{ background: "rgba(249,115,22,0.12)", border: "1px solid rgba(249,115,22,0.25)", color: "#f97316" }}>
+              <i className="ri-football-line"></i> Position-Aware Story Framework
+            </span>
+            <h1 className="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">
+              Every Player. Every Position.<br />
+              <span style={{ background: "linear-gradient(90deg, #f97316, #fbbf24)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                Made the Hero of Their Role.
+              </span>
+            </h1>
+            <p className="text-base max-w-2xl mx-auto leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
+              Select any position on the pitch to explore the psychological identity, hero arc, and personalised story programme we build for that specific role.
+            </p>
+          </div>
+        )}
 
-            <div className="grid lg:grid-cols-[1fr_1.1fr] gap-8 items-start">
-              {/* Pitch */}
-              <div>
-                <div
-                  className="relative rounded-3xl overflow-hidden shadow-2xl"
-                  style={{ border: "1px solid rgba(255,255,255,0.10)", boxShadow: "0 0 60px rgba(22,101,52,0.30)" }}
-                >
-                  <svg viewBox="0 0 100 115" className="w-full" style={{ background: "linear-gradient(180deg, #14532d 0%, #166534 30%, #15803d 50%, #166534 70%, #14532d 100%)" }}>
+        {/* ── PITCH SECTION ── */}
+        {activeSection === "pitch" && (
+          <div className="max-w-7xl mx-auto px-4 pb-16">
+            {selected && (
+              <div className="pt-8 mb-6">
+                <button onClick={() => setSelected(null)}
+                  className="flex items-center gap-2 text-xs font-semibold transition-colors hover:text-white"
+                  style={{ color: "rgba(255,255,255,0.35)" }}>
+                  <i className="ri-arrow-left-line"></i> All Positions
+                </button>
+              </div>
+            )}
+
+            <div className={`grid gap-8 items-start ${selected ? "lg:grid-cols-[340px_1fr]" : "lg:grid-cols-[380px_1fr]"}`}>
+
+              {/* ── PITCH SVG ── */}
+              <div className="sticky top-[120px]">
+                <div className="rounded-3xl overflow-hidden"
+                  style={{ boxShadow: "0 0 80px rgba(22,101,52,0.25), 0 32px 64px rgba(0,0,0,0.60)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  <svg viewBox="0 0 100 115" className="w-full block"
+                    style={{ background: "linear-gradient(180deg, #14532d 0%, #166534 25%, #16a34a 50%, #166534 75%, #14532d 100%)" }}>
                     {/* Turf stripes */}
                     {[0,1,2,3,4,5,6].map(i => (
-                      <rect key={i} x="5" y={5 + i * 15} width="90" height="15" fill={i%2===0 ? "rgba(0,0,0,0.06)" : "transparent"} />
+                      <rect key={i} x="5" y={5 + i * 15} width="90" height="15"
+                        fill={i % 2 === 0 ? "rgba(0,0,0,0.07)" : "transparent"} />
                     ))}
-
                     {/* Pitch outline */}
-                    <rect x="5" y="5" width="90" height="105" rx="1.5" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
-                    {/* Halfway line */}
+                    <rect x="5" y="5" width="90" height="105" rx="1.5" fill="none" stroke="rgba(255,255,255,0.60)" strokeWidth="0.7" />
+                    {/* Halfway */}
                     <line x1="5" y1="57.5" x2="95" y2="57.5" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
                     {/* Centre circle */}
                     <circle cx="50" cy="57.5" r="10" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="0.6" />
-                    <circle cx="50" cy="57.5" r="0.8" fill="rgba(255,255,255,0.70)" />
+                    <circle cx="50" cy="57.5" r="0.9" fill="rgba(255,255,255,0.80)" />
                     {/* Penalty areas */}
-                    <rect x="28" y="5" width="44" height="17" fill="none" stroke="rgba(255,255,255,0.50)" strokeWidth="0.5" />
-                    <rect x="28" y="93" width="44" height="17" fill="none" stroke="rgba(255,255,255,0.50)" strokeWidth="0.5" />
+                    <rect x="28" y="5" width="44" height="17" fill="none" stroke="rgba(255,255,255,0.50)" strokeWidth="0.55" />
+                    <rect x="28" y="93" width="44" height="17" fill="none" stroke="rgba(255,255,255,0.50)" strokeWidth="0.55" />
                     {/* 6-yard boxes */}
-                    <rect x="38" y="5" width="24" height="8" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="0.5" />
-                    <rect x="38" y="102" width="24" height="8" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="0.5" />
+                    <rect x="38" y="5" width="24" height="8" fill="none" stroke="rgba(255,255,255,0.40)" strokeWidth="0.5" />
+                    <rect x="38" y="102" width="24" height="8" fill="none" stroke="rgba(255,255,255,0.40)" strokeWidth="0.5" />
                     {/* Penalty spots */}
-                    <circle cx="50" cy="17" r="0.8" fill="rgba(255,255,255,0.60)" />
-                    <circle cx="50" cy="98" r="0.8" fill="rgba(255,255,255,0.60)" />
-                    {/* Penalty arcs */}
+                    <circle cx="50" cy="17" r="0.9" fill="rgba(255,255,255,0.65)" />
+                    <circle cx="50" cy="98" r="0.9" fill="rgba(255,255,255,0.65)" />
+                    {/* Arcs */}
                     <path d="M 37 22 A 10 10 0 0 0 63 22" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="0.5" />
                     <path d="M 37 93 A 10 10 0 0 1 63 93" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="0.5" />
                     {/* Corner arcs */}
-                    <path d="M 5 8 A 3 3 0 0 0 8 5" fill="none" stroke="rgba(255,255,255,0.40)" strokeWidth="0.5" />
-                    <path d="M 92 5 A 3 3 0 0 0 95 8" fill="none" stroke="rgba(255,255,255,0.40)" strokeWidth="0.5" />
-                    <path d="M 5 107 A 3 3 0 0 1 8 110" fill="none" stroke="rgba(255,255,255,0.40)" strokeWidth="0.5" />
-                    <path d="M 92 110 A 3 3 0 0 1 95 107" fill="none" stroke="rgba(255,255,255,0.40)" strokeWidth="0.5" />
+                    <path d="M 5 8 A 3 3 0 0 0 8 5"   fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="0.5" />
+                    <path d="M 92 5 A 3 3 0 0 0 95 8"  fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="0.5" />
+                    <path d="M 5 107 A 3 3 0 0 1 8 110"  fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="0.5" />
+                    <path d="M 92 110 A 3 3 0 0 1 95 107" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="0.5" />
 
-                    {/* Position dots */}
+                    {/* Position nodes */}
                     {positions.map((pos) => {
-                      const isSelected = selectedPosition?.id === pos.id;
+                      const isActive = selected?.id === pos.id;
                       return (
-                        <g key={pos.id} onClick={() => setSelectedPosition(isSelected ? null : pos)} className="cursor-pointer">
-                          {/* Glow ring — selected */}
-                          {isSelected && (
-                            <circle cx={pos.x} cy={pos.y} r="7" fill="rgba(251,191,36,0.20)" stroke="rgba(251,191,36,0.60)" strokeWidth="0.8" />
+                        <g key={pos.id} onClick={() => setSelected(isActive ? null : pos)}
+                          className="cursor-pointer" style={{ transition: "all 0.2s" }}>
+                          {/* Outer glow when active */}
+                          {isActive && (
+                            <circle cx={pos.x} cy={pos.y} r="9"
+                              fill="none" stroke={pos.color} strokeWidth="0.8" opacity="0.40"
+                              style={{ filter: `drop-shadow(0 0 4px ${pos.color})` }} />
                           )}
-                          {/* Hover ring */}
-                          <circle cx={pos.x} cy={pos.y} r="5.5" fill="transparent" className="cursor-pointer" />
-                          {/* Main dot */}
-                          <circle
-                            cx={pos.x} cy={pos.y} r="3.5"
-                            fill={isSelected ? "#fbbf24" : "rgba(255,255,255,0.92)"}
-                            stroke={isSelected ? "#f97316" : "rgba(255,255,255,0.30)"}
-                            strokeWidth="0.5"
+                          {/* Hit area */}
+                          <circle cx={pos.x} cy={pos.y} r="7" fill="transparent" />
+                          {/* Badge background */}
+                          <circle cx={pos.x} cy={pos.y} r={isActive ? 5 : 4}
+                            fill={isActive ? pos.color : "rgba(255,255,255,0.15)"}
+                            stroke={isActive ? pos.color : "rgba(255,255,255,0.50)"}
+                            strokeWidth="0.6"
+                            style={{ filter: isActive ? `drop-shadow(0 0 6px ${pos.color})` : "none", transition: "all 0.25s" }}
                           />
-                          {/* Label */}
-                          <text x={pos.x} y={pos.y + 7} textAnchor="middle" fontSize="3" fill="rgba(255,255,255,0.80)">
-                            {pos.label.split(" ")[0]}
+                          {/* Abbr label */}
+                          <text x={pos.x} y={pos.y + 0.9} textAnchor="middle" fontSize="2.6"
+                            fill={isActive ? "#0a0500" : "rgba(255,255,255,0.90)"}
+                            fontWeight="700" style={{ fontFamily: "system-ui, sans-serif" }}>
+                            {pos.abbr}
                           </text>
                         </g>
                       );
@@ -245,100 +396,275 @@ export default function FootballMatrix() {
                   </svg>
                 </div>
 
-                <p className="text-center mt-3 text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>
-                  {selectedPosition ? `Showing: ${selectedPosition.label} programme` : "Tap any position dot"}
+                {/* Hint text */}
+                <p className="text-center mt-3 text-[11px]" style={{ color: "rgba(255,255,255,0.22)" }}>
+                  {selected ? `Viewing: ${selected.label} Programme` : "Select any position to explore its story programme"}
                 </p>
-              </div>
 
-              {/* Position detail panel */}
-              <div>
-                {selectedPosition ? (
-                  <div className={`rounded-3xl p-6 shadow-2xl ${GLASS}`} style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.40)" }}>
-                    <div className="flex justify-between items-start mb-5">
-                      <div>
-                        <div className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.35)" }}>
-                          Position Programme
-                        </div>
-                        <h3 className="text-2xl font-bold" style={{ color: "#fbbf24" }}>{selectedPosition.label}</h3>
-                      </div>
-                      <button
-                        onClick={() => setSelectedPosition(null)}
-                        className="w-8 h-8 rounded-xl flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"
-                      >
-                        <i className="ri-close-line"></i>
-                      </button>
-                    </div>
-
-                    <div className="space-y-5">
-                      {/* Challenges */}
-                      <div className="p-4 rounded-2xl" style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.20)" }}>
-                        <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: "#f87171" }}>Key Challenges</p>
-                        <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.75)" }}>{selectedPosition.challenges}</p>
-                      </div>
-
-                      {/* Lessons */}
-                      <div>
-                        <p className="text-xs font-bold uppercase tracking-wider mb-2.5" style={{ color: "rgba(255,255,255,0.35)" }}>Story Lessons</p>
-                        <div className="space-y-2">
-                          {selectedPosition.lessons.map((l) => (
-                            <div key={l} className="flex items-start gap-3 text-sm" style={{ color: "rgba(255,255,255,0.75)" }}>
-                              <span className="text-amber-400 mt-0.5 flex-shrink-0">→</span>
-                              {l}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Advice */}
-                      <blockquote
-                        className="px-4 py-3 rounded-xl text-sm italic leading-relaxed"
-                        style={{ borderLeft: "3px solid #fbbf24", background: "rgba(251,191,36,0.06)", color: "rgba(255,255,255,0.80)" }}
-                      >
-                        "{selectedPosition.advice}"
-                      </blockquote>
-
-                      {/* Deliverables */}
-                      <div>
-                        <p className="text-xs font-bold uppercase tracking-wider mb-2.5" style={{ color: "rgba(255,255,255,0.35)" }}>Story Deliverables</p>
-                        <div className="space-y-2">
-                          {selectedPosition.deliverables.map((d) => (
-                            <div key={d} className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm" style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.75)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                              <span className="text-amber-400 text-base">📖</span>
-                              {d}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={() => setEnquiryOpen(true)}
-                        className="w-full py-3 rounded-xl font-bold text-sm transition-all hover:scale-[1.02]"
-                        style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
-                      >
-                        Request {selectedPosition.label} Programme
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  /* Placeholder when no position selected */
-                  <div className={`rounded-3xl p-8 text-center ${GLASS}`} style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.30)" }}>
-                    <div className="text-5xl mb-4">⚽</div>
-                    <h3 className="text-lg font-bold text-white mb-2">Select a Position</h3>
-                    <p className="text-sm leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.40)" }}>
-                      Click any dot on the pitch to explore that position's tailored mental performance story programme.
-                    </p>
-                    <div className="grid grid-cols-3 gap-2">
+                {/* Position colour legend */}
+                {!selected && (
+                  <div className="mt-4 rounded-2xl p-4" style={GLASS}>
+                    <p className="text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.25)" }}>Position Groups</p>
+                    <div className="space-y-2">
                       {[
-                        { num: "11", label: "Positions" },
-                        { num: "24", label: "Story titles" },
-                        { num: "42+", label: "Academies" },
-                      ].map(({ num, label }) => (
-                        <div key={label} className="rounded-xl p-3 text-center" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                          <div className="text-xl font-black text-amber-400">{num}</div>
-                          <div className="text-[10px] text-white/30 mt-0.5">{label}</div>
+                        { label: "Goalkeeper", color: "#f59e0b" },
+                        { label: "Defenders", color: "#8b5cf6" },
+                        { label: "Full Backs", color: "#06b6d4" },
+                        { label: "Midfielders", color: "#10b981" },
+                        { label: "Wingers", color: "#ef4444" },
+                        { label: "Attacking Mid", color: "#f97316" },
+                        { label: "Striker", color: "#ec4899" },
+                      ].map(({ label, color }) => (
+                        <div key={label} className="flex items-center gap-2.5">
+                          <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: color, boxShadow: `0 0 6px ${color}` }} />
+                          <span className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>{label}</span>
                         </div>
                       ))}
                     </div>
+                  </div>
+                )}
+              </div>
+
+              {/* ── POSITION DETAIL PANEL ── */}
+              <div>
+                {!selected ? (
+                  /* ── Empty state: Proof points ── */
+                  <div className="space-y-4 pt-2">
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        { num: "11", label: "Positions", sub: "Every role on the pitch" },
+                        { num: "8", label: "Framework Sections", sub: "Per position programme" },
+                        { num: "4", label: "Stakeholders", sub: "Player, coach, parent, academy" },
+                      ].map(({ num, label, sub }) => (
+                        <div key={label} className="rounded-2xl p-5 text-center" style={GLASS}>
+                          <div className="text-2xl font-black mb-0.5" style={{ color: "#fbbf24" }}>{num}</div>
+                          <div className="text-xs font-bold text-white mb-1">{label}</div>
+                          <div className="text-[10px]" style={{ color: "rgba(255,255,255,0.30)" }}>{sub}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="rounded-2xl p-6" style={GLASS}>
+                      <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(255,255,255,0.30)" }}>What Each Position Programme Includes</p>
+                      <div className="space-y-3">
+                        {[
+                          { icon: "ri-user-star-line", label: "Position Identity", desc: "Who this player is and what their role demands" },
+                          { icon: "ri-thunder-line",   label: "Hero Tension",      desc: "The emotional pressure unique to that position" },
+                          { icon: "ri-arrow-up-circle-line", label: "Hero Arc", desc: "The psychological journey from struggle to growth" },
+                          { icon: "ri-book-marked-line", label: "Story Themes",    desc: "The developmental themes explored in narrative" },
+                          { icon: "ri-movie-2-line",    label: "Story Angle",      desc: "A vivid, specific story built around that child's role" },
+                          { icon: "ri-team-line",       label: "Multi-Stakeholder Inputs", desc: "Player voice, coach insight, parent contribution, academy values" },
+                          { icon: "ri-gift-line",       label: "Programme Deliverables", desc: "Exactly what the academy and player receive" },
+                        ].map(({ icon, label, desc }) => (
+                          <div key={label} className="flex items-start gap-3">
+                            <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 text-xs"
+                              style={{ background: "rgba(249,115,22,0.12)", border: "1px solid rgba(249,115,22,0.20)", color: "#f97316" }}>
+                              <i className={icon}></i>
+                            </div>
+                            <div>
+                              <p className="text-xs font-semibold text-white">{label}</p>
+                              <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.35)" }}>{desc}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="rounded-2xl p-5 flex items-center justify-between gap-4" style={{ ...GLASS, borderColor: "rgba(249,115,22,0.20)" }}>
+                      <div>
+                        <p className="text-sm font-bold text-white">Ready to see a position in depth?</p>
+                        <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>Select any player position on the pitch.</p>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-amber-400 flex-shrink-0">
+                        <i className="ri-arrow-left-line text-sm"></i>
+                        <span className="text-xs font-semibold">Tap a dot</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* ── Rich Position Programme View ── */
+                  <div className="space-y-4">
+
+                    {/* Position header */}
+                    <div className="rounded-2xl p-6" style={{ ...GLASS_STRONG, borderColor: `${selected.color}30`, boxShadow: `0 0 40px ${selected.color}10` }}>
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-black"
+                            style={{ background: `${selected.color}20`, border: `1px solid ${selected.color}40`, color: selected.color }}>
+                            {selected.abbr}
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: "rgba(255,255,255,0.30)" }}>Position Programme</p>
+                            <h2 className="text-xl font-black" style={{ color: selected.color }}>{selected.label}</h2>
+                          </div>
+                        </div>
+                        <button onClick={() => setSelected(null)}
+                          className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-white/10"
+                          style={{ color: "rgba(255,255,255,0.30)" }}>
+                          <i className="ri-close-line"></i>
+                        </button>
+                      </div>
+                      <div className="flex items-center gap-2 text-[10px] font-semibold" style={{ color: "rgba(255,255,255,0.25)" }}>
+                        <span className="px-2 py-0.5 rounded-full" style={{ background: `${selected.color}15`, border: `1px solid ${selected.color}30`, color: selected.color }}>
+                          Story Programme
+                        </span>
+                        <span>•</span>
+                        <span>24 personalised pages</span>
+                        <span>•</span>
+                        <span>4 stakeholder inputs</span>
+                      </div>
+                    </div>
+
+                    {/* 1 — Position Identity */}
+                    <div className="rounded-2xl p-5" style={GLASS}>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs"
+                          style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.40)" }}>
+                          <span className="font-black text-[10px]">01</span>
+                        </div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.30)" }}>Position Identity</p>
+                      </div>
+                      <p className="text-sm leading-relaxed font-medium" style={{ color: "rgba(255,255,255,0.82)" }}>
+                        {selected.identity}
+                      </p>
+                    </div>
+
+                    {/* 2 — Hero Tension */}
+                    <div className="rounded-2xl p-5" style={{ ...GLASS, borderColor: "rgba(239,68,68,0.18)", background: "rgba(239,68,68,0.04)" }}>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs"
+                          style={{ background: "rgba(239,68,68,0.12)", color: "#f87171" }}>
+                          <span className="font-black text-[10px]">02</span>
+                        </div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#f87171" }}>Hero Tension</p>
+                      </div>
+                      <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.72)" }}>
+                        {selected.tension}
+                      </p>
+                    </div>
+
+                    {/* 3 — Hero Arc */}
+                    <div className="rounded-2xl p-5" style={{ ...GLASS, borderColor: "rgba(16,185,129,0.18)", background: "rgba(16,185,129,0.03)" }}>
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center"
+                          style={{ background: "rgba(16,185,129,0.12)", color: "#34d399" }}>
+                          <span className="font-black text-[10px]">03</span>
+                        </div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#34d399" }}>Hero Arc</p>
+                      </div>
+                      <div className="space-y-2.5">
+                        {selected.arc.map(([from, to], i) => (
+                          <div key={i} className="flex items-center gap-3">
+                            <div className="flex-1 px-3 py-2 rounded-xl text-xs text-center font-semibold"
+                              style={{ background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.18)", color: "#fca5a5" }}>
+                              {from}
+                            </div>
+                            <i className="ri-arrow-right-line flex-shrink-0 text-sm" style={{ color: "#34d399" }}></i>
+                            <div className="flex-1 px-3 py-2 rounded-xl text-xs text-center font-semibold"
+                              style={{ background: "rgba(16,185,129,0.10)", border: "1px solid rgba(16,185,129,0.18)", color: "#6ee7b7" }}>
+                              {to}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* 4 — Story Themes */}
+                    <div className="rounded-2xl p-5" style={GLASS}>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center"
+                          style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.40)" }}>
+                          <span className="font-black text-[10px]">04</span>
+                        </div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.30)" }}>Story Themes</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {selected.themes.map((t) => (
+                          <span key={t} className="px-3 py-1.5 rounded-full text-xs font-semibold"
+                            style={{ background: `${selected.color}15`, border: `1px solid ${selected.color}30`, color: selected.color }}>
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* 5 — Story Angle */}
+                    <div className="rounded-2xl p-5" style={{ ...GLASS, borderColor: "rgba(251,191,36,0.20)", background: "rgba(251,191,36,0.04)" }}>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center"
+                          style={{ background: "rgba(251,191,36,0.12)", color: "#fbbf24" }}>
+                          <span className="font-black text-[10px]">05</span>
+                        </div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#fbbf24" }}>Example Story</p>
+                      </div>
+                      <div className="mb-3">
+                        <p className="text-base font-black mb-1" style={{ color: "#fef3c7" }}>"{selected.storyTitle}"</p>
+                      </div>
+                      <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.65)", fontStyle: "italic" }}>
+                        {selected.storyAngle}
+                      </p>
+                    </div>
+
+                    {/* 6 — Inputs We Use */}
+                    <div className="rounded-2xl p-5" style={GLASS}>
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center"
+                          style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.40)" }}>
+                          <span className="font-black text-[10px]">06</span>
+                        </div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.30)" }}>How We Build This Story</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2.5">
+                        {selected.inputs.map(({ icon, source, desc }) => (
+                          <div key={source} className="rounded-xl p-3" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                            <div className="flex items-center gap-2 mb-1.5">
+                              <i className={`${icon} text-sm`} style={{ color: selected.color }}></i>
+                              <p className="text-[11px] font-bold text-white">{source}</p>
+                            </div>
+                            <p className="text-[10px] leading-relaxed" style={{ color: "rgba(255,255,255,0.38)" }}>{desc}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* 7 — Programme Deliverables */}
+                    <div className="rounded-2xl p-5" style={GLASS}>
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center"
+                          style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.40)" }}>
+                          <span className="font-black text-[10px]">07</span>
+                        </div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.30)" }}>Programme Deliverables</p>
+                      </div>
+                      <div className="space-y-2">
+                        {selected.deliverables.map((d) => (
+                          <div key={d} className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
+                            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                            <i className="ri-checkbox-circle-line flex-shrink-0 text-sm" style={{ color: selected.color }}></i>
+                            <span className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.70)" }}>{d}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* 8 — CTAs */}
+                    <div className="rounded-2xl p-5 space-y-3" style={{ ...GLASS, borderColor: `${selected.color}25` }}>
+                      <div className="mb-1">
+                        <p className="text-sm font-bold text-white mb-0.5">Ready to make {selected.label} players the heroes of their position?</p>
+                        <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>Speak to our team about piloting this programme at your academy.</p>
+                      </div>
+                      <button onClick={() => setEnquiryOpen(true)}
+                        className="w-full py-3.5 rounded-xl font-bold text-sm transition-all hover:scale-[1.01]"
+                        style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800", boxShadow: "0 4px 20px rgba(249,115,22,0.30)" }}>
+                        <i className="ri-send-plane-line"></i> Request {selected.label} Programme
+                      </button>
+                      <button onClick={() => setEnquiryOpen(true)}
+                        className="w-full py-2.5 rounded-xl font-semibold text-xs transition-all"
+                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.50)" }}>
+                        <i className="ri-file-text-line"></i> View Sample Story Pathway
+                      </button>
+                    </div>
+
                   </div>
                 )}
               </div>
@@ -346,274 +672,202 @@ export default function FootballMatrix() {
           </div>
         )}
 
-        {/* ── DASHBOARD ──────────────────────────────────────────────── */}
-        {activeSection === "dashboard" && (
-          <div className="max-w-5xl mx-auto px-4 py-10">
-            <div className="mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">Academy Dashboard</h2>
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.40)" }}>
-                A live overview of your academy's story engagement and player wellbeing.
-              </p>
-            </div>
-
-            {/* Stat cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              {[
-                { num: "42", label: "Active Players",   icon: "ri-team-line",     color: "#3b82f6", glow: "rgba(59,130,246,0.20)" },
-                { num: "28", label: "Stories Delivered", icon: "ri-book-2-line",   color: "#10b981", glow: "rgba(16,185,129,0.20)" },
-                { num: "94%", label: "Read Rate",        icon: "ri-eye-line",      color: "#f97316", glow: "rgba(249,115,22,0.20)" },
-                { num: "4.8", label: "Parent Rating",    icon: "ri-star-line",     color: "#fbbf24", glow: "rgba(251,191,36,0.20)" },
-              ].map(({ num, label, icon, color, glow }) => (
-                <div
-                  key={label}
-                  className={`rounded-2xl p-5 text-center ${GLASS}`}
-                  style={{ boxShadow: `0 0 24px ${glow}, 0 8px 24px rgba(0,0,0,0.30)` }}
-                >
-                  <div className="text-2xl mb-2" style={{ color }}><i className={icon}></i></div>
-                  <div
-                    className="text-3xl font-black mb-1"
-                    style={{ color, textShadow: `0 0 16px ${color}` }}
-                  >
-                    {num}
-                  </div>
-                  <p className="text-xs" style={{ color: "rgba(255,255,255,0.40)" }}>{label}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Recent deliveries */}
-            <div className={`rounded-3xl p-6 ${GLASS}`} style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.30)" }}>
-              <h3 className="text-base font-bold text-white mb-5">Recent Story Deliveries</h3>
-              <div className="space-y-2.5">
-                {[
-                  { name: "Marcus R.", pos: "Striker",     story: "The Goal Drought",      status: "Read",      color: "#10b981" },
-                  { name: "Jamie T.", pos: "Goalkeeper",   story: "Courage in the Box",    status: "Delivered", color: "#3b82f6" },
-                  { name: "Kofi A.",  pos: "Centre Back",  story: "Holding the Line",      status: "Read",      color: "#10b981" },
-                  { name: "Luca M.", pos: "Left Winger",   story: "Take the Dribble",      status: "Read",      color: "#10b981" },
-                  { name: "Ethan P.", pos: "Central Mid",  story: "Engine Room",           status: "Delivered", color: "#3b82f6" },
-                ].map(({ name, pos, story, status, color }) => (
-                  <div
-                    key={name}
-                    className={`flex items-center justify-between p-3.5 rounded-xl transition-colors ${GLASS_HOVER}`}
-                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0"
-                        style={{ background: "rgba(59,130,246,0.20)", color: "#93c5fd" }}
-                      >
-                        {name[0]}
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-white">{name} · <span className="font-normal text-white/50">{pos}</span></p>
-                        <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>"{story}"</p>
-                      </div>
-                    </div>
-                    <span
-                      className="text-xs px-2.5 py-1 rounded-full font-semibold"
-                      style={{ background: `${color}20`, color, border: `1px solid ${color}40` }}
-                    >
-                      {status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── TRAINING ───────────────────────────────────────────────── */}
+        {/* ── STORY PATHS SECTION ── */}
         {activeSection === "training" && (
-          <div className="max-w-5xl mx-auto px-4 py-10">
-            <div className="mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">Position-Based Training Paths</h2>
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.40)" }}>
-                Tailored story programmes aligned to key mental performance themes.
+          <div className="max-w-5xl mx-auto px-4 py-12">
+            <div className="mb-10">
+              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4"
+                style={{ background: "rgba(249,115,22,0.10)", border: "1px solid rgba(249,115,22,0.22)", color: "#f97316" }}>
+                <i className="ri-git-branch-line"></i> Developmental Story Paths
+              </span>
+              <h2 className="text-3xl font-black text-white mb-3">Position-Grouped<br />Story Programmes</h2>
+              <p className="text-sm max-w-xl" style={{ color: "rgba(255,255,255,0.40)" }}>
+                Each position group has its own psychological theme cluster — ensuring every player receives a story built around the specific developmental demands of their role.
               </p>
             </div>
-            <div className="space-y-3">
-              {trainingPaths.map(({ position, focus, stories, color, icon }) => (
-                <div
-                  key={position}
-                  className={`rounded-2xl p-5 flex items-center justify-between transition-all duration-200 ${GLASS} ${GLASS_HOVER}`}
-                  style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.25)" }}
-                >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-                      style={{ background: `${color}18`, border: `1px solid ${color}40`, boxShadow: `0 0 16px ${color}25`, color }}
-                    >
+
+            <div className="space-y-3 mb-8">
+              {[
+                { group: "Goalkeepers",     theme: "Courage & Decision-Making",         tension: "Isolation, last-line pressure, visible mistakes",   arc: "From absorbed blame → shortest memory on the pitch",  stories: 4, color: "#f59e0b", icon: "ri-shield-user-line" },
+                { group: "Defenders",       theme: "Leadership & Composure",            tension: "Team responsibility, communication, physical demands", arc: "From reactive panic → composure before the ball arrives", stories: 5, color: "#8b5cf6", icon: "ri-shield-star-line" },
+                { group: "Full Backs",      theme: "Discipline & Unseen Effort",        tension: "Lack of recognition, dual role demands",              arc: "From running unseen → owning the overlap",             stories: 4, color: "#06b6d4", icon: "ri-run-line" },
+                { group: "Midfielders",     theme: "Mental Endurance & Decision-Making", tension: "Cognitive overload, box-to-box fatigue",             arc: "From decision fatigue → composure built through routine", stories: 6, color: "#10b981", icon: "ri-flashlight-line" },
+                { group: "Wingers",         theme: "Confidence & 1v1 Identity",         tension: "Public failure after dribbles, spotlight pressure",   arc: "From afraid of the duel → addicted to the duel",        stories: 4, color: "#ef4444", icon: "ri-speed-up-line" },
+                { group: "Attacking Mids",  theme: "Creative Courage",                  tension: "Permission to fail, expectation vs expression",       arc: "From playing safe → backing their vision",              stories: 3, color: "#f97316", icon: "ri-lightbulb-line" },
+                { group: "Strikers",        theme: "Belief Under Drought",              tension: "Goal drought, isolated expectation, public scrutiny",  arc: "From defined by the last miss → defined by the next attempt", stories: 5, color: "#ec4899", icon: "ri-focus-3-line" },
+              ].map(({ group, theme, tension, arc, stories, color, icon }) => (
+                <div key={group} className="rounded-2xl p-5" style={GLASS}>
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                      style={{ background: `${color}15`, border: `1px solid ${color}35`, color }}>
                       <i className={icon}></i>
                     </div>
-                    <div>
-                      <h3 className="font-bold text-white text-sm">{position}</h3>
-                      <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.45)" }}>{focus}</p>
-                      {/* Progress bar */}
-                      <div className="mt-2 w-40 h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
-                        <div
-                          className="h-1.5 rounded-full"
-                          style={{ width: `${(stories / 6) * 100}%`, background: `linear-gradient(90deg, ${color}, ${color}aa)` }}
-                        />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-4 mb-2">
+                        <div>
+                          <h3 className="font-bold text-white text-sm">{group}</h3>
+                          <p className="text-xs font-semibold mt-0.5" style={{ color }}>{theme}</p>
+                        </div>
+                        <div className="flex-shrink-0 text-right">
+                          <span className="text-2xl font-black" style={{ color }}>{stories}</span>
+                          <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.25)" }}>stories</p>
+                        </div>
+                      </div>
+                      <p className="text-[11px] mb-2" style={{ color: "rgba(255,255,255,0.38)" }}>
+                        <strong style={{ color: "rgba(255,255,255,0.45)" }}>Tension:</strong> {tension}
+                      </p>
+                      <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.38)" }}>
+                        <strong style={{ color: "rgba(255,255,255,0.45)" }}>Arc:</strong> {arc}
+                      </p>
+                      <div className="mt-3 h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.07)" }}>
+                        <div className="h-1 rounded-full" style={{ width: `${(stories / 6) * 100}%`, background: `linear-gradient(90deg, ${color}, ${color}80)` }} />
                       </div>
                     </div>
-                  </div>
-                  <div className="text-right flex-shrink-0">
-                    <div className="text-2xl font-black" style={{ color, textShadow: `0 0 12px ${color}` }}>{stories}</div>
-                    <p className="text-[10px] mt-0.5" style={{ color: "rgba(255,255,255,0.30)" }}>stories</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className={`mt-6 rounded-2xl p-5 ${GLASS}`}>
-              <div className="flex flex-wrap gap-3 items-center justify-between">
-                <div>
-                  <p className="text-sm font-bold text-white">Ready to start your academy's programme?</p>
-                  <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.40)" }}>Get all 24 stories across every position group.</p>
-                </div>
-                <button
-                  onClick={() => setEnquiryOpen(true)}
-                  className="px-5 py-2.5 rounded-xl font-bold text-sm transition-all hover:scale-[1.02]"
-                  style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
-                >
-                  Enquire Now →
-                </button>
+            <div className="rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4"
+              style={{ ...GLASS, borderColor: "rgba(249,115,22,0.18)" }}>
+              <div>
+                <p className="font-bold text-white mb-0.5">See the complete story pathway for your squad</p>
+                <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>31 story titles across 7 position groups — available as pilot or full programme.</p>
               </div>
+              <button onClick={() => setEnquiryOpen(true)}
+                className="flex-shrink-0 px-6 py-3 rounded-xl font-bold text-sm transition-all hover:scale-[1.02]"
+                style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800", boxShadow: "0 4px 16px rgba(249,115,22,0.28)" }}>
+                Discuss Your Programme →
+              </button>
             </div>
           </div>
         )}
 
-        {/* ── ACADEMY ────────────────────────────────────────────────── */}
+        {/* ── ACADEMY FIT SECTION ── */}
         {activeSection === "academy" && (
-          <div className="max-w-5xl mx-auto px-4 py-10">
-            <div className="mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">Academy Ecosystem</h2>
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.40)" }}>
-                How Me Time Stories integrates across your entire academy structure.
+          <div className="max-w-5xl mx-auto px-4 py-12">
+            <div className="mb-10">
+              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4"
+                style={{ background: "rgba(139,92,246,0.10)", border: "1px solid rgba(139,92,246,0.25)", color: "#a78bfa" }}>
+                <i className="ri-building-4-line"></i> Academy Integration Framework
+              </span>
+              <h2 className="text-3xl font-black text-white mb-3">How Me Time Stories Fits<br />Into Your Academy Structure</h2>
+              <p className="text-sm max-w-xl" style={{ color: "rgba(255,255,255,0.40)" }}>
+                Our story programme is not a bolt-on. It is a position-aware, player-aware development layer that works alongside your coaching, pastoral, and wellbeing infrastructure.
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4 mb-6">
               {[
-                { icon: "ri-football-line",     title: "Players",              desc: "Receive stories personalised to their position, personality, and current developmental challenges.",  color: "#fbbf24" },
-                { icon: "ri-home-heart-line",   title: "Parents",              desc: "Read alongside their children at home, deepening family-club bonds and pastoral engagement.",          color: "#3b82f6" },
-                { icon: "ri-whistle-line",       title: "Coaches",              desc: "Stories reinforce coaching values and culture. Wellbeing data surfaces in the staff dashboard.",        color: "#10b981" },
-                { icon: "ri-mental-health-line", title: "Sports Psychologists", desc: "Complement existing mental performance programmes with narrative-based therapeutic content.",           color: "#8b5cf6" },
+                { icon: "ri-football-line",       title: "Players",               desc: "Each player receives a story personalised to their position, personality, and current developmental challenge — making them the hero of their specific role.", color: "#fbbf24" },
+                { icon: "ri-home-heart-line",      title: "Parents",               desc: "Stories are read at home together. They reinforce academy values in the family environment and deepen parent-club engagement in a structured, meaningful way.", color: "#3b82f6" },
+                { icon: "ri-whistle-line",         title: "Coaches",               desc: "Coach insight drives the story. We capture what the coach sees in each player and weave it into the narrative — then provide a conversation guide to support the debrief.", color: "#10b981" },
+                { icon: "ri-mental-health-line",   title: "Sports Psychologists",  desc: "Our stories complement existing mental performance work. Position-specific psychological themes are aligned to each club's current wellbeing framework and referral structures.", color: "#8b5cf6" },
               ].map(({ icon, title, desc, color }) => (
-                <div
-                  key={title}
-                  className={`rounded-2xl p-6 transition-all duration-200 ${GLASS} ${GLASS_HOVER}`}
-                  style={{ boxShadow: `0 0 20px ${color}12, 0 8px 24px rgba(0,0,0,0.25)` }}
-                >
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-4"
-                    style={{ background: `${color}18`, border: `1px solid ${color}40`, color }}
-                  >
+                <div key={title} className="rounded-2xl p-6 transition-all" style={{ ...GLASS, boxShadow: `0 0 24px ${color}08` }}>
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center text-lg mb-4"
+                    style={{ background: `${color}15`, border: `1px solid ${color}35`, color }}>
                     <i className={icon}></i>
                   </div>
-                  <h3 className="text-base font-bold text-white mb-2">{title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.50)" }}>{desc}</p>
+                  <h3 className="font-bold text-white mb-2">{title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.48)" }}>{desc}</p>
                 </div>
               ))}
             </div>
 
-            {/* Partner academies strip */}
-            <div className={`rounded-2xl p-5 mb-5 ${GLASS}`}>
-              <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(255,255,255,0.30)" }}>
-                42+ Partner Academies
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {["Arsenal", "Chelsea", "Liverpool", "Man City", "Man United", "Spurs", "Everton", "Brighton", "Leicester", "Aston Villa"].map((club) => (
-                  <span
-                    key={club}
-                    className="text-xs px-3 py-1.5 rounded-full font-medium"
-                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.60)" }}
-                  >
-                    {club}
-                  </span>
+            {/* What academies get */}
+            <div className="rounded-2xl p-6 mb-5" style={GLASS}>
+              <p className="text-xs font-bold uppercase tracking-widest mb-5" style={{ color: "rgba(255,255,255,0.25)" }}>What the Academy Receives</p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {[
+                  { icon: "ri-book-2-line",         label: "Personalised story per player",               desc: "24 illustrated pages, built from player, coach, and parent input" },
+                  { icon: "ri-dashboard-line",       label: "Academy story dashboard",                    desc: "Track delivery, read rates, and engagement across your squad" },
+                  { icon: "ri-chat-1-line",          label: "Coach conversation guides",                  desc: "Post-story discussion prompts aligned to each position's development themes" },
+                  { icon: "ri-parent-line",          label: "Parent companion version",                   desc: "A read-aloud adapted edition for home engagement and family conversation" },
+                  { icon: "ri-bar-chart-2-line",     label: "Wellbeing insight reports",                  desc: "Aggregated (anonymised) player sentiment from story engagement patterns" },
+                  { icon: "ri-award-line",           label: "Academy branding and co-creation",           desc: "Stories carry your club's identity — crest, values, and coaching culture embedded" },
+                ].map(({ icon, label, desc }) => (
+                  <div key={label} className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                      style={{ background: "rgba(249,115,22,0.10)", border: "1px solid rgba(249,115,22,0.18)", color: "#f97316" }}>
+                      <i className={`${icon} text-sm`}></i>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-white mb-0.5">{label}</p>
+                      <p className="text-[10px] leading-relaxed" style={{ color: "rgba(255,255,255,0.32)" }}>{desc}</p>
+                    </div>
+                  </div>
                 ))}
-                <span
-                  className="text-xs px-3 py-1.5 rounded-full font-medium"
-                  style={{ background: "rgba(251,191,36,0.10)", border: "1px solid rgba(251,191,36,0.25)", color: "#fbbf24" }}
-                >
-                  + 32 more
-                </span>
               </div>
             </div>
 
-            <div className="text-center">
-              <button
-                onClick={() => setEnquiryOpen(true)}
-                className="px-8 py-4 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] shadow-2xl"
-                style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800", boxShadow: "0 0 32px rgba(249,115,22,0.30)" }}
-              >
+            <div className="text-center pt-4">
+              <button onClick={() => setEnquiryOpen(true)}
+                className="px-10 py-4 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] shadow-2xl"
+                style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800", boxShadow: "0 0 40px rgba(249,115,22,0.28)" }}>
                 Enquire About the Academy Programme
               </button>
-              <p className="text-xs mt-3" style={{ color: "rgba(255,255,255,0.25)" }}>We respond within 2 business days.</p>
+              <p className="text-xs mt-3" style={{ color: "rgba(255,255,255,0.20)" }}>We respond within 2 business days.</p>
             </div>
           </div>
         )}
       </div>
 
-      {/* ── Enquiry modal ──────────────────────────────────────────────── */}
+      {/* ── Enquiry modal ── */}
       {enquiryOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backdropFilter: "blur(12px)", background: "rgba(0,0,0,0.70)" }}>
-          <div
-            className="w-full max-w-md rounded-3xl p-8 shadow-2xl relative"
-            style={{ backdropFilter: "blur(24px)", background: "rgba(15,20,35,0.95)", border: "1px solid rgba(255,255,255,0.12)" }}
-          >
-            <button
-              onClick={() => { setEnquiryOpen(false); setFormSubmitted(false); }}
-              className="absolute top-4 right-4 w-8 h-8 rounded-xl flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-colors"
-            >
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backdropFilter: "blur(16px)", background: "rgba(0,0,0,0.75)" }}>
+          <div className="w-full max-w-md rounded-3xl p-8 shadow-2xl relative"
+            style={{ backdropFilter: "blur(24px)", background: "rgba(10,15,30,0.97)", border: "1px solid rgba(255,255,255,0.12)" }}>
+            <button onClick={() => { setEnquiryOpen(false); setFormSubmitted(false); }}
+              className="absolute top-4 right-4 w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-white/10"
+              style={{ color: "rgba(255,255,255,0.35)" }}>
               <i className="ri-close-line"></i>
             </button>
             {formSubmitted ? (
               <div className="text-center py-8">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4"
-                  style={{ background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.30)" }}>
-                  ✓
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4"
+                  style={{ background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.28)", color: "#34d399" }}>
+                  <i className="ri-check-line"></i>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Enquiry Sent!</h3>
-                <p className="text-white/50 text-sm">We'll be in touch within 2 business days.</p>
+                <h3 className="text-xl font-bold text-white mb-2">Enquiry Received</h3>
+                <p className="text-sm" style={{ color: "rgba(255,255,255,0.40)" }}>We'll be in touch within 2 business days to discuss your programme.</p>
               </div>
             ) : (
               <>
-                <h3 className="text-xl font-bold text-white mb-1">Academy Programme Enquiry</h3>
-                <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.40)" }}>Tell us about your academy and we'll arrange a demo.</p>
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-white mb-1">Academy Programme Enquiry</h3>
+                  <p className="text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>
+                    {selected ? `Enquiring about the ${selected.label} programme.` : "Tell us about your academy and we'll arrange a demo."}
+                  </p>
+                </div>
                 <form onSubmit={handleSubmit} className="space-y-3">
                   {[
                     { placeholder: "Your name", type: "text" },
                     { placeholder: "Work email", type: "email" },
                     { placeholder: "Academy / Club name", type: "text" },
                   ].map(({ placeholder, type }) => (
-                    <input
-                      key={placeholder}
-                      required
-                      type={type}
-                      placeholder={placeholder}
+                    <input key={placeholder} required type={type} placeholder={placeholder}
                       className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/25 focus:outline-none focus:ring-1 focus:ring-amber-400/50 transition-all"
-                      style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)" }}
-                    />
+                      style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)" }} />
                   ))}
-                  <select
-                    required
-                    className="w-full px-4 py-3 rounded-xl text-sm text-white/60 focus:outline-none focus:ring-1 focus:ring-amber-400/50"
-                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)" }}
-                  >
-                    <option value="">Select your league</option>
-                    <option>Premier League</option>
-                    <option>EFL Championship</option>
-                    <option>League One</option>
-                    <option>League Two</option>
+                  <select required className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-amber-400/50 bg-transparent"
+                    style={{ background: "rgba(20,25,45,0.95)", border: "1px solid rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.55)" }}>
+                    <option value="">Select league / level</option>
+                    <option>Premier League Academy</option>
+                    <option>EFL Championship Academy</option>
+                    <option>League One / Two Academy</option>
+                    <option>Non-League / Grassroots</option>
+                    <option>International Academy</option>
                     <option>Other</option>
                   </select>
-                  <button
-                    type="submit"
+                  <textarea rows={2} placeholder="Anything specific you'd like to discuss…"
+                    className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/25 focus:outline-none focus:ring-1 focus:ring-amber-400/50 resize-none transition-all"
+                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)" }} />
+                  <button type="submit"
                     className="w-full py-3.5 rounded-xl font-bold text-sm transition-all hover:scale-[1.02]"
-                    style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
-                  >
-                    Send Enquiry →
+                    style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800", boxShadow: "0 4px 16px rgba(249,115,22,0.30)" }}>
+                    Send Enquiry <i className="ri-arrow-right-line"></i>
                   </button>
                 </form>
               </>
