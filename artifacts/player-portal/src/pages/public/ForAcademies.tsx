@@ -353,6 +353,43 @@ export default function ForAcademies() {
         </div>
       </section>
 
+      {/* ── ACADEMY GALLERY ──────────────────────────────────────────────── */}
+      <section className="py-14 overflow-hidden" style={{ background: "linear-gradient(180deg, #e8eef8 0%, #0f172a 100%)" }}>
+        <div className="max-w-6xl mx-auto px-4 mb-8 text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] mb-2" style={{ color: "#2563eb" }}>Every Story, Every Club</p>
+          <h2 className="text-2xl md:text-3xl font-black" style={{ color: "#0f172a" }}>
+            Their academy. Their badge. Their book.
+          </h2>
+        </div>
+
+        {/* Horizontal scroll gallery */}
+        <div className="flex gap-4 px-4 md:px-8 overflow-x-auto pb-2"
+          style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}>
+          {[
+            { src: "images/academy-coventry-day.png",   club: "Coventry City",  label: "Daytime edition" },
+            { src: "images/academy-coventry-night.png", club: "Coventry City",  label: "Floodlight edition" },
+            { src: "images/academy-chelsea.png",        club: "Chelsea FC",     label: "Floodlight edition" },
+            { src: "images/academy-wolves.png",         club: "Wolves",         label: "Floodlight edition" },
+          ].map(({ src, club, label }) => (
+            <div key={src}
+              className="relative flex-shrink-0 rounded-2xl overflow-hidden"
+              style={{ width: "clamp(220px, 42vw, 300px)", aspectRatio: "2/3", scrollSnapAlign: "start", boxShadow: "0 20px 60px rgba(0,0,0,0.45)" }}>
+              <img
+                src={publicAssetUrl(src)}
+                alt={`${club} academy story illustration`}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+              {/* Gradient + label */}
+              <div className="absolute inset-x-0 bottom-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.80) 0%, transparent 60%)", padding: "1.5rem 1rem 0.75rem" }}>
+                <p className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: "rgba(255,255,255,0.50)" }}>{label}</p>
+                <p className="text-sm font-black" style={{ color: "#fff" }}>{club}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── THE MENTAL PERFORMANCE WALL ──────────────────────────────────── */}
       <section className="relative py-20 overflow-hidden" style={{ background: "linear-gradient(160deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)" }}>
         {/* Subtle football pitch markings */}
