@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useSearch } from "wouter";
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { publicAssetUrl } from "@/lib/publicAssetUrl";
+import { useChildName } from "@/contexts/ChildNameContext";
 
 type Screen = "welcome" | "name" | "pronouns" | "companion" | "story" | "summary";
 type Pronoun = "she/her" | "he/him" | "they/them";
@@ -100,11 +101,12 @@ const GlassPanel = ({ children, className = "", style = {} }: { children: React.
 
 export default function StoryEngine() {
   const search = useSearch();
+  const { childName } = useChildName();
   const [screen, setScreen]         = useState<Screen>("welcome");
   const [story, setStory]           = useState<StoryState>({ name: "", pronoun: "", companion: null, traits: [], favAnimal: "", biggestDream: "" });
   const [currentPage, setCurrentPage] = useState(0);
   const [points, setPoints]         = useState(0);
-  const [nameInput, setNameInput]   = useState("");
+  const [nameInput, setNameInput]   = useState(childName || "");
   const [fromBuilder, setFromBuilder] = useState(false);
 
   useEffect(() => {
@@ -196,7 +198,11 @@ export default function StoryEngine() {
                       The Time-Travelling Tractor
                     </h1>
                     <p className="text-sm" style={{ color: "rgba(254,243,226,0.50)" }}>
-                      An interactive adventure where <strong style={{ color: "#fbbf24" }}>you</strong> are the hero
+                      {childName ? (
+                        <>An adventure written for <strong style={{ color: "#fbbf24" }}>{childName}</strong></>
+                      ) : (
+                        <>An interactive adventure where <strong style={{ color: "#fbbf24" }}>you</strong> are the hero</>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -207,14 +213,16 @@ export default function StoryEngine() {
                     className="w-full py-3.5 font-bold text-sm rounded-xl transition-all hover:scale-[1.01]"
                     style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800", boxShadow: "0 4px 24px rgba(249,115,22,0.35)" }}
                   >
-                    <i className="ri-rocket-line"></i> Start the Adventure
+                    <i className="ri-rocket-line"></i>
+                    {childName ? `Start ${childName}'s Adventure` : "Start the Adventure"}
                   </button>
                   <Link
                     href="/characters/create"
                     className="flex items-center justify-center gap-2 w-full py-3 font-semibold text-sm rounded-xl transition-all"
                     style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)", color: "rgba(254,243,226,0.65)" }}
                   >
-                    <i className="ri-user-smile-line"></i> Build Character First
+                    <i className="ri-user-smile-line"></i>
+                    {childName ? `Build ${childName}'s Character First` : "Build Character First"}
                   </Link>
                 </div>
               </GlassPanel>

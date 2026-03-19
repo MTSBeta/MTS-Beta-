@@ -113,16 +113,37 @@ export default function MarketingHome() {
             </span>
 
             <h1 className="text-4xl sm:text-5xl lg:text-[3.75rem] font-bold leading-[1.08] mb-6" style={{ color: "#fef3e2" }}>
-              Every child deserves{" "}
-              <span style={{
-                background: "linear-gradient(135deg, #fbbf24, #f97316)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}>
-                to be the hero
-              </span>{" "}
-              of their own bedtime story.
+              {childName ? (
+                <>
+                  <span style={{
+                    background: "linear-gradient(135deg, #fbbf24, #f97316)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}>{childName}</span>{" "}
+                  deserves{" "}
+                  <span style={{
+                    background: "linear-gradient(135deg, #fbbf24, #f97316)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}>to be the hero</span>{" "}
+                  of their own bedtime story.
+                </>
+              ) : (
+                <>
+                  Every child deserves{" "}
+                  <span style={{
+                    background: "linear-gradient(135deg, #fbbf24, #f97316)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}>
+                    to be the hero
+                  </span>{" "}
+                  of their own bedtime story.
+                </>
+              )}
             </h1>
 
             <p className="text-lg md:text-xl mb-10 leading-relaxed max-w-lg" style={{ color: "rgba(254,243,226,0.70)" }}>
@@ -436,7 +457,8 @@ export default function MarketingHome() {
             The Time-Travelling Tractor
           </h2>
           <p className="text-lg mb-10 max-w-2xl mx-auto leading-relaxed" style={{ color: "rgba(254,243,226,0.60)" }}>
-            A 6-chapter adventure where your child's name, personality, and biggest dream are woven through every page. Build their character in 2 minutes — then watch the magic begin.
+            A 6-chapter adventure where {child}'s name, personality, and biggest dream are woven through every page.
+            {childName ? ` Build ${childName}'s character in 2 minutes — then watch the magic begin.` : " Build their character in 2 minutes — then watch the magic begin."}
           </p>
 
           {/* Story page preview — glassmorphic panel */}
@@ -450,19 +472,28 @@ export default function MarketingHome() {
             }}
           >
             <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "rgba(254,243,226,0.35)" }}>
-              📖 Chapter 1: The Discovery
+              <i className="ri-book-open-line mr-1"></i> Chapter 1: The Discovery
             </p>
             <p className="text-base md:text-lg leading-relaxed" style={{ fontFamily: "Georgia, serif", color: "rgba(254,243,226,0.88)" }}>
               "The morning mist lay low over the fields when{" "}
-              <strong style={{ color: "#fbbf24" }}>[your child's name]</strong>{" "}
+              <strong style={{ color: "#fbbf24" }}>{child}</strong>{" "}
               found it — half-hidden beneath an old oak tree. Something{" "}
-              <em style={{ color: "#fb923c" }}>[brave / curious / kind]</em>{" "}
+              {childName ? (
+                <em style={{ color: "#fb923c" }}>brave</em>
+              ) : (
+                <em style={{ color: "#fb923c" }}>[brave / curious / kind]</em>
+              )}{" "}
               stirred inside{" "}
-              <em style={{ color: "#a5f3fc" }}>[their]</em>{" "}
+              <em style={{ color: "#a5f3fc" }}>their</em>{" "}
               chest. In the hedgerow, a{" "}
               <em style={{ color: "#86efac" }}>[fox / lion / dragon]</em>{" "}
               watched with knowing eyes…"
             </p>
+            {childName && (
+              <p className="text-xs mt-4 font-semibold" style={{ color: "rgba(254,243,226,0.35)" }}>
+                <i className="ri-sparkling-2-line mr-1"></i> Personality traits, pronouns &amp; companion animal chosen when {childName} builds their character.
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -471,14 +502,15 @@ export default function MarketingHome() {
               className="flex items-center justify-center gap-2 px-8 py-4 font-bold text-lg rounded-xl shadow-xl transition-all hover:scale-[1.02]"
               style={{ background: "linear-gradient(135deg, #f97316, #fbbf24)", color: "#1a0800" }}
             >
-              ✨ Build Character First
+              <i className="ri-user-smile-line"></i>
+              {childName ? `Build ${childName}'s Character` : "Build Character First"}
             </Link>
             <Link
               href="/stories/time-travelling-tractor"
               className="flex items-center justify-center gap-2 px-8 py-4 border font-semibold text-lg rounded-xl transition-all"
               style={{ borderColor: "rgba(254,243,226,0.25)", color: "#fef3e2", background: "rgba(255,255,255,0.06)" }}
             >
-              🚜 Try Without Building
+              🚜 {childName ? `Try as ${childName}` : "Try Without Building"}
             </Link>
           </div>
         </div>
