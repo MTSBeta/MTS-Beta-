@@ -1,0 +1,86 @@
+For the story “Ty & the Time Travelling Tractor”, I want you to build text-based personalisation only for now.
+
+Important:
+We do NOT yet have image generation or reliable visual likeness.
+So do not design this story around changing the child’s hair, face, skin tone, or illustration details yet.
+Hair is especially tricky and should not be treated as a visual personalisation field for now.
+
+Instead, I want this story to feel personalised through the text.
+
+Here is the current story:
+
+Ty & the Time Travelling Tractor
+
+1 — Ty went to the farm with Mummy and Daddy. He saw a cow munching on grass, a pig rolling around in the mud, and a lamb jumping playfully in the field.
+
+2 — Ty was having so much fun, he didn’t want the day to end. So he jumped in the farmer’s tractor, closed his eyes, and made a wish. He wished to go somewhere where he could see loads of other cool creatures.
+
+3 — When Ty opened his eyes, he realised he wasn’t at the farm anymore. The tractor had transported him back in time. He was in the land of the dinosaurs!
+
+4 — Ty drove the tractor down the hill and saw a worried Triceratops stuck in the mud. “What’s the matter, Mr. Triceratops?” asked Ty. “I’m stuck,” cried the Triceratops. “Can you help me get free?” Ty used the digger on the end of the tractor to dig the Triceratops out of the mud. “Thank you!” said the Triceratops with a beaming smile.
+
+5 — Ty drove the tractor into the forest and saw a sad T.Rex. “What’s the matter, Mr. T.Rex?” asked Ty. “I can’t reach the fruit in the tree,” cried the T.Rex. “My arms are too tiny!” Ty used the extendable arm on the tractor to grab apples, oranges, and mangos for the T.Rex. “Thank you!” said the T.Rex with a beaming smile.
+
+6 — Ty drove the tractor to a lake where a Brachiosaurus was washing. “Excuse me,” said the Brachiosaurus. “Would you be so kind as to pass me the soap? I forgot to bring it into the lake with me!” Ty used the tractor’s extendable arm to pass the Brachiosaurus the soap. “Thank you!” said the Brachiosaurus with a beaming smile.
+
+7 — Ty had worked so hard helping all the dinosaurs, he was now really hungry. Good job Mummy had packed all his favourite foods in his backpack!
+
+8 — Ty got out of the tractor and had a picnic with his crisps, cheese, and cucumber. He then heard a rustling in the trees…
+
+9 — It was the dinosaurs… they’d all come to join Ty’s picnic!
+
+10 — Ty and the dinosaurs laughed and ate and had the best time ever.
+
+11 — But Ty was sleepy and now ready to go home. So he said goodbye to all of his new dinosaur friends, picked up his backpack, and got back in the tractor.
+
+12 — He closed his eyes and wished to be back on the farm. He opened his eyes and there he was!
+
+13 — “Have you had a good day, Ty?” asked Mummy on their way home. “Yes,” said Ty. “I’ve had the best day ever!”
+
+14 — Ty fell asleep and dreamt about the Time Travelling Tractor. He couldn’t wait to ride it again!
+
+Please structure the story so the following elements can be dynamically changed between users:
+
+Core variables:
+- child_name
+- guardian wording (e.g. Mummy and Daddy / Mum and Dad / custom)
+- favourite_dinosaur
+- favourite_farm_animal
+- tractor_colour
+- favourite_snack_1
+- favourite_snack_2
+- favourite_fruit
+- favourite_drink
+- personality_trait (e.g. curious, brave, playful, kind, adventurous)
+
+Optional text variables:
+- favourite_food
+- wish_detail
+- favourite_picnic_item
+- loves_mud yes/no
+- loves_tractors yes/no
+- loves_dinosaurs yes/no
+
+What I want:
+1. Review the story and identify the best moments where text personalisation can be inserted naturally.
+2. Rewrite the story so it reads smoothly with placeholders/variables.
+3. Make sure the personalisation feels magical and natural, not robotic or repetitive.
+4. Use the personalised details especially in:
+   - the farm opening
+   - Ty’s wish inside the tractor
+   - the fruit Ty gets for the T.Rex
+   - the picnic scene
+   - the dinosaur picnic moment
+   - the final reflection at the end
+5. Do not add visual personalisation logic yet for hair, facial features, or illustration likeness.
+6. If hair is captured in the form, treat it as future-use metadata only, not something used in the current story output.
+7. Keep the story warm, simple, child-friendly, and emotionally smooth.
+
+Also:
+Please suggest the cleanest way to store these variables in the system for this story, and show me:
+- a variable list
+- a rewritten sample version of the story using placeholders
+- one example rendered story using sample values
+
+Important rule:
+For now, personalisation should come through the child’s world, preferences, food, wish, and personality — not visual likeness.

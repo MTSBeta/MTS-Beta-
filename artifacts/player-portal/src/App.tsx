@@ -53,6 +53,7 @@ import RoseStory from "@/pages/public/RoseStory";
 import FootballMatrix from "@/pages/public/FootballMatrix";
 import CharacterCreator from "@/pages/public/CharacterCreator";
 import StoryEngine from "@/pages/public/StoryEngine";
+import TyStory from "@/pages/public/TyStory";
 import Demo from "@/pages/public/Demo";
 
 const queryClient = new QueryClient({
@@ -67,7 +68,7 @@ function MetyButtonConditional() {
   const [location] = useLocation();
   const publicPaths = ["/", "/about", "/for-academies", "/csr", "/families", "/for-authors",
     "/stories/rose-goes-to-mos", "/football-matrix", "/characters/create",
-    "/stories/time-travelling-tractor"];
+    "/stories/time-travelling-tractor", "/stories/ty-tractor"];
   const isPublic = publicPaths.some((p) => location === p || location.startsWith(p));
   if (isPublic) return null;
   return <MetyButton />;
@@ -87,6 +88,7 @@ function Router() {
       <Route path="/football-matrix" component={FootballMatrix} />
       <Route path="/characters/create" component={CharacterCreator} />
       <Route path="/stories/time-travelling-tractor" component={StoryEngine} />
+      <Route path="/stories/ty-tractor" component={TyStory} />
       <Route path="/demo" component={Demo} />
 
       {/* ── Academy Player Portal (moved from /) ── */}

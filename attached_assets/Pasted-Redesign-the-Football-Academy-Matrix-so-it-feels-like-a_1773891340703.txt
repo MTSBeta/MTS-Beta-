@@ -1,0 +1,87 @@
+Redesign the Football Academy Matrix so it feels like a premium academy-facing proof-of-understanding page, not a basic position selector.
+
+Important context:
+This matrix is not just to explain football positions.
+Its purpose is to show academies that Me Time Stories deeply understands the psychology, identity, pressures, and developmental journey of each role on the pitch.
+
+This page should help an academy instantly understand:
+- we know what each position demands emotionally and mentally
+- we know how to build a personalised story around that role
+- we make the child the hero of their specific position
+- our story system is position-aware, player-aware, and development-aware
+
+So the selected position should not just show generic bullet points.
+It should show how that position becomes a hero journey.
+
+What I want:
+- make the pitch and position selection feel more polished and interactive
+- improve visual hierarchy and selected-state feedback
+- when a position is selected, show a richer academy-facing programme view in modular cards, not just a few bullets
+- make the whole page feel premium, intelligent, and valuable to academy decision-makers
+
+For each position, structure the content like this:
+
+1. Position Identity
+A short statement describing who this player is in the team and what role they carry.
+
+2. Hero Tension
+The emotional and psychological tension of that role.
+For example: pressure, isolation, visibility, responsibility, fear of mistakes, decision-making burden, etc.
+
+3. Hero Arc
+How the player grows through story.
+This should show how the child becomes the hero of that role.
+Example:
+- from self-doubt to courage
+- from pressure to composure
+- from silence to leadership
+
+4. Story Themes
+The main developmental and emotional themes explored in the story.
+
+5. Example Story Angle or Story Title
+Show how the role becomes a personalised story.
+This should feel vivid and specific.
+
+6. Inputs We Use
+Show how the story is built from:
+- player voice
+- coach insight
+- parent contribution
+- academy values
+
+7. Programme Deliverables
+What the academy receives from this role-based story programme.
+
+8. Clear CTA
+For example:
+- Request this programme
+- View sample story pathway
+- Discuss academy pilot
+
+Important:
+The page should clearly communicate that each player is not just assigned a position.
+They are made the hero of that position in a personalised development story.
+
+Design direction:
+- premium
+- structured
+- football-specific
+- modern
+- more strategic than emotional
+- suitable for academy heads, coaches, and decision-makers
+- interactive but polished
+- modular cards rather than one block of text
+
+Do not make it feel like a simple placeholder page.
+Do not make it feel like a generic coaching dashboard.
+Make it feel like a serious story-led player development framework that proves Me Time Stories understands the positional identity of every player.
+
+Also improve the pitch interaction visually:
+- cleaner pitch design
+- better hover states
+- clearer selected role treatment
+- stronger focus on the active position
+- smooth transitions between roles
+
+The selected position area should feel rich enough that an academy can immediately picture one of their own players as the hero in that role.
