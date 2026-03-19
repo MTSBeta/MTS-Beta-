@@ -839,198 +839,172 @@ export default function FootballMatrix() {
               </p>
             </div>
 
-            {/* Hub-and-spoke layout: left cards → portal hub ← right cards */}
+            {/* Stakeholder grid + Book payoff */}
             <div className="mb-6">
-              {/* Desktop hub layout */}
-              <div className="hidden md:grid gap-4 items-stretch" style={{ gridTemplateColumns: "1fr 220px 1fr" }}>
-
-                {/* LEFT column: Players + Coaches */}
-                <div className="flex flex-col gap-4">
-                  {[
-                    { icon: "ri-football-line", title: "Players", desc: "Each player receives a story personalised to their position, personality, and current developmental challenge — making them the hero of their specific role.", color: "#fbbf24", img: "academy-1.jpg", input: "Position · Dreams · Personality" },
-                    { icon: "ri-whistle-line",   title: "Coaches", desc: "Coach insight drives the story. We capture what the coach sees in each player and weave it into the narrative — then provide a conversation guide to support the debrief.", color: "#10b981", img: "academy-5.jpg", input: "Coaching Insight · Debrief Guide" },
-                  ].map(({ icon, title, desc, color, img, input }) => (
-                    <div key={title} className="rounded-2xl overflow-hidden relative flex-1"
-                      style={{ border: `1px solid ${color}22`, boxShadow: `0 0 24px ${color}08`, minHeight: 200 }}>
-                      <img src={publicAssetUrl(`images/academy/${img}`)} alt="" aria-hidden="true"
-                        className="absolute inset-0 w-full h-full object-cover"
-                        style={{ filter: "saturate(0.3) brightness(0.28)" }} />
-                      <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, rgba(4,6,13,0.88) 0%, rgba(4,6,13,0.68) 100%)` }} />
-                      <div className="relative p-5 h-full flex flex-col justify-between">
-                        <div>
-                          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-base mb-3"
-                            style={{ background: `${color}20`, border: `1px solid ${color}40`, color }}>
-                            <i className={icon}></i>
-                          </div>
-                          <h3 className="font-bold text-white text-sm mb-1.5">{title}</h3>
-                          <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.48)" }}>{desc}</p>
-                        </div>
-                        {/* Contribution tag */}
-                        <div className="mt-3 flex items-center gap-1.5">
-                          <div className="h-px flex-1" style={{ background: `linear-gradient(to right, transparent, ${color}50)` }} />
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                            style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>
-                            {input}
-                          </span>
-                          <i className="ri-arrow-right-line text-xs" style={{ color: `${color}80` }}></i>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* CENTER hub: Player Portal */}
-                <div className="flex flex-col items-center justify-center relative py-4">
-                  {/* Vertical connector line */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-px h-full" style={{ background: "linear-gradient(to bottom, transparent 5%, rgba(249,115,22,0.20) 30%, rgba(249,115,22,0.20) 70%, transparent 95%)" }} />
-                  </div>
-
-                  {/* Central portal node */}
-                  <div className="relative z-10 flex flex-col items-center text-center">
-                    {/* Top arrow from left */}
-                    <div className="flex items-center gap-1 mb-4">
-                      <div className="w-8 h-px" style={{ background: "rgba(249,115,22,0.30)" }} />
-                      <i className="ri-arrow-down-line text-[10px]" style={{ color: "rgba(249,115,22,0.40)" }}></i>
-                    </div>
-
-                    {/* Portal card */}
-                    <div className="rounded-3xl flex flex-col items-center px-4 py-5 w-full"
-                      style={{
-                        background: "linear-gradient(160deg, rgba(249,115,22,0.12) 0%, rgba(251,191,36,0.08) 100%)",
-                        border: "1.5px solid rgba(249,115,22,0.30)",
-                        boxShadow: "0 0 40px rgba(249,115,22,0.15), 0 0 80px rgba(249,115,22,0.06)",
-                        backdropFilter: "blur(20px)",
-                      }}
-                    >
-                      {/* Logo */}
-                      <img
-                        src={publicAssetUrl("images/metime-logo-animated.gif")}
-                        alt="Me Time Stories"
-                        className="h-8 w-auto object-contain mb-3"
-                        style={{ filter: "drop-shadow(0 2px 8px rgba(249,115,22,0.40))" }}
-                      />
-
-                      {/* Portal screen mockup */}
-                      <div className="w-full rounded-xl overflow-hidden mb-3"
-                        style={{ background: "rgba(0,0,0,0.50)", border: "1px solid rgba(255,255,255,0.08)", aspectRatio: "4/3" }}>
-                        {/* Fake portal UI */}
-                        <div className="p-2 h-full flex flex-col gap-1.5">
-                          <div className="flex items-center gap-1 mb-1">
-                            <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#f97316" }} />
-                            <div className="h-1 rounded flex-1" style={{ background: "rgba(255,255,255,0.10)" }} />
-                          </div>
-                          {/* Player row */}
-                          {["#fbbf24", "#10b981", "#3b82f6"].map((c, i) => (
-                            <div key={i} className="flex items-center gap-1.5 px-1.5 py-1 rounded-lg" style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${c}22` }}>
-                              <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: `${c}40` }} />
-                              <div className="flex-1 flex flex-col gap-0.5">
-                                <div className="h-1 rounded" style={{ background: `${c}50`, width: ["70%","55%","80%"][i] }} />
-                                <div className="h-0.5 rounded" style={{ background: "rgba(255,255,255,0.10)", width: ["50%","65%","45%"][i] }} />
-                              </div>
-                              <div className="h-3 w-5 rounded flex-shrink-0" style={{ background: `${c}30` }} />
-                            </div>
-                          ))}
-                          {/* Story icon */}
-                          <div className="mt-auto flex items-center justify-center gap-1.5 py-1 rounded-lg"
-                            style={{ background: "linear-gradient(135deg, rgba(249,115,22,0.20), rgba(251,191,36,0.15))", border: "1px solid rgba(249,115,22,0.25)" }}>
-                            <i className="ri-book-2-line text-[8px]" style={{ color: "#fbbf24" }}></i>
-                            <span className="text-[7px] font-bold" style={{ color: "#fbbf24" }}>Story Created</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <p className="text-[10px] font-bold uppercase tracking-[0.14em] mb-1" style={{ color: "#f97316" }}>Player Portal</p>
-                      <p className="text-[9px] text-center leading-relaxed" style={{ color: "rgba(255,255,255,0.35)" }}>
-                        All inputs collected.<br />One story built.
-                      </p>
-                    </div>
-
-                    <div className="flex items-center gap-1 mt-4">
-                      <i className="ri-arrow-down-line text-[10px]" style={{ color: "rgba(249,115,22,0.40)" }}></i>
-                      <div className="w-8 h-px" style={{ background: "rgba(249,115,22,0.30)" }} />
-                    </div>
-
-                    {/* Book output */}
-                    <div className="mt-3 flex flex-col items-center gap-1.5 px-3 py-3 rounded-2xl w-full"
-                      style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.22)" }}>
-                      <i className="ri-book-open-fill text-lg" style={{ color: "#fbbf24" }}></i>
-                      <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: "#fbbf24" }}>The Story</p>
-                      <p className="text-[8px] text-center" style={{ color: "rgba(255,255,255,0.30)" }}>Personalised. Printed. Delivered.</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* RIGHT column: Parents + Sports Psychologists */}
-                <div className="flex flex-col gap-4">
-                  {[
-                    { icon: "ri-home-heart-line",  title: "Parents", desc: "Stories are read at home together. They reinforce academy values in the family environment and deepen parent-club engagement in a structured, meaningful way.", color: "#3b82f6", img: "academy-3.jpg", input: "Family Context · Home Values" },
-                    { icon: "ri-mental-health-line", title: "Sports Psychologists", desc: "Our stories complement existing mental performance work. Position-specific psychological themes are aligned to each club's current wellbeing framework and referral structures.", color: "#8b5cf6", img: "academy-7.jpg", input: "Mental Themes · Wellbeing Framework" },
-                  ].map(({ icon, title, desc, color, img, input }) => (
-                    <div key={title} className="rounded-2xl overflow-hidden relative flex-1"
-                      style={{ border: `1px solid ${color}22`, boxShadow: `0 0 24px ${color}08`, minHeight: 200 }}>
-                      <img src={publicAssetUrl(`images/academy/${img}`)} alt="" aria-hidden="true"
-                        className="absolute inset-0 w-full h-full object-cover"
-                        style={{ filter: "saturate(0.3) brightness(0.28)" }} />
-                      <div className="absolute inset-0" style={{ background: `linear-gradient(225deg, rgba(4,6,13,0.88) 0%, rgba(4,6,13,0.68) 100%)` }} />
-                      <div className="relative p-5 h-full flex flex-col justify-between">
-                        <div>
-                          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-base mb-3"
-                            style={{ background: `${color}20`, border: `1px solid ${color}40`, color }}>
-                            <i className={icon}></i>
-                          </div>
-                          <h3 className="font-bold text-white text-sm mb-1.5">{title}</h3>
-                          <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.48)" }}>{desc}</p>
-                        </div>
-                        <div className="mt-3 flex items-center gap-1.5">
-                          <i className="ri-arrow-left-line text-xs" style={{ color: `${color}80` }}></i>
-                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                            style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>
-                            {input}
-                          </span>
-                          <div className="h-px flex-1" style={{ background: `linear-gradient(to left, transparent, ${color}50)` }} />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Mobile: simple 2x2 grid fallback */}
-              <div className="grid grid-cols-2 gap-3 md:hidden">
+              {/* 2×2 Stakeholder grid — unified across breakpoints */}
+              <div className="grid grid-cols-2 gap-3 mb-6">
                 {[
-                  { icon: "ri-football-line",       title: "Players",               desc: "Personalised to their position and personality — making them the hero.", color: "#fbbf24", img: "academy-1.jpg" },
-                  { icon: "ri-home-heart-line",      title: "Parents",               desc: "Stories read at home reinforce academy values and deepen family-club bonds.", color: "#3b82f6", img: "academy-3.jpg" },
-                  { icon: "ri-whistle-line",         title: "Coaches",               desc: "Coach insight weaves into the narrative with a debrief guide included.", color: "#10b981", img: "academy-5.jpg" },
-                  { icon: "ri-mental-health-line",   title: "Sports Psychologists",  desc: "Position-specific mental themes aligned to your club's wellbeing framework.", color: "#8b5cf6", img: "academy-7.jpg" },
-                ].map(({ icon, title, desc, color, img }) => (
+                  { icon: "ri-football-line",        title: "Players",               desc: "Each player receives a story personalised to their position, personality, and current developmental challenge — making them the hero of their specific role.", color: "#fbbf24", img: "academy-1.jpg", contribution: "Position · Dreams · Personality" },
+                  { icon: "ri-home-heart-line",       title: "Parents",               desc: "Stories are read at home together, reinforcing academy values in the family environment and deepening parent-club engagement in a meaningful way.", color: "#3b82f6", img: "academy-3.jpg", contribution: "Family Context · Home Values" },
+                  { icon: "ri-whistle-line",          title: "Coaches",               desc: "Coach insight drives the narrative. We capture what the coach sees in each player and provide a conversation guide to support the debrief.", color: "#10b981", img: "academy-5.jpg", contribution: "Coaching Insight · Debrief Guide" },
+                  { icon: "ri-mental-health-line",    title: "Sports Psychologists",  desc: "Our stories complement existing mental performance work — position-specific psychological themes aligned to your club's current wellbeing framework.", color: "#8b5cf6", img: "academy-7.jpg", contribution: "Mental Themes · Wellbeing Framework" },
+                ].map(({ icon, title, desc, color, img, contribution }) => (
                   <div key={title} className="rounded-2xl overflow-hidden relative"
-                    style={{ border: `1px solid ${color}22`, minHeight: 160 }}>
+                    style={{ border: `1px solid ${color}22`, boxShadow: `0 0 20px ${color}06`, minHeight: 170 }}>
                     <img src={publicAssetUrl(`images/academy/${img}`)} alt="" aria-hidden="true"
                       className="absolute inset-0 w-full h-full object-cover"
-                      style={{ filter: "saturate(0.3) brightness(0.28)" }} />
-                    <div className="absolute inset-0" style={{ background: "rgba(4,6,13,0.85)" }} />
-                    <div className="relative p-4">
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm mb-2"
-                        style={{ background: `${color}20`, border: `1px solid ${color}40`, color }}>
-                        <i className={icon}></i>
+                      style={{ filter: "saturate(0.28) brightness(0.26)" }} />
+                    <div className="absolute inset-0" style={{ background: "rgba(4,6,13,0.86)" }} />
+                    <div className="relative p-4 h-full flex flex-col justify-between">
+                      <div>
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-sm mb-3"
+                          style={{ background: `${color}18`, border: `1px solid ${color}35`, color }}>
+                          <i className={icon}></i>
+                        </div>
+                        <h3 className="font-bold text-white text-xs mb-1.5">{title}</h3>
+                        <p className="text-[10px] leading-relaxed hidden sm:block" style={{ color: "rgba(255,255,255,0.44)" }}>{desc}</p>
                       </div>
-                      <h3 className="font-bold text-white text-xs mb-1">{title}</h3>
-                      <p className="text-[10px] leading-relaxed" style={{ color: "rgba(255,255,255,0.48)" }}>{desc}</p>
+                      <div className="mt-3">
+                        <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full"
+                          style={{ background: `${color}15`, color, border: `1px solid ${color}28` }}>
+                          {contribution}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Mobile: portal hub strip */}
-              <div className="md:hidden mt-4 flex items-center gap-4 p-4 rounded-2xl"
-                style={{ background: "rgba(249,115,22,0.08)", border: "1.5px solid rgba(249,115,22,0.22)" }}>
-                <img src={publicAssetUrl("images/metime-logo-animated.gif")} alt="Me Time Stories" className="h-7 w-auto object-contain flex-shrink-0" />
-                <div>
-                  <p className="text-xs font-bold" style={{ color: "#f97316" }}>Player Portal</p>
-                  <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.38)" }}>All stakeholder inputs → one personalised story</p>
+              {/* Divider */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.07)" }} />
+                <div className="flex items-center gap-2 px-4 py-1.5 rounded-full"
+                  style={{ background: "rgba(249,115,22,0.10)", border: "1px solid rgba(249,115,22,0.22)" }}>
+                  <i className="ri-arrow-down-line text-xs" style={{ color: "#f97316" }}></i>
+                  <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#f97316" }}>
+                    Four voices. One book.
+                  </span>
+                  <i className="ri-arrow-down-line text-xs" style={{ color: "#f97316" }}></i>
                 </div>
-                <i className="ri-book-2-fill ml-auto text-lg" style={{ color: "#fbbf24" }}></i>
+                <div className="h-px flex-1" style={{ background: "rgba(255,255,255,0.07)" }} />
+              </div>
+
+              {/* Book payoff — Holding the Line */}
+              <div className="rounded-2xl overflow-hidden relative"
+                style={{ background: "linear-gradient(135deg, rgba(10,18,35,0.95) 0%, rgba(4,6,13,0.98) 100%)", border: "1px solid rgba(251,191,36,0.18)", boxShadow: "0 0 60px rgba(251,191,36,0.06)" }}>
+                <div className="grid md:grid-cols-2 gap-0 items-stretch">
+
+                  {/* Left: book cover */}
+                  <div className="flex items-center justify-center p-8"
+                    style={{ background: "linear-gradient(135deg, rgba(251,191,36,0.06) 0%, rgba(249,115,22,0.04) 100%)", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
+                    <div className="flex items-stretch gap-0" style={{ filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.7))" }}>
+                      {/* Spine */}
+                      <div className="w-6 rounded-l-sm flex flex-col items-center justify-center py-4"
+                        style={{ background: "linear-gradient(to right, #0a1a3a, #122040)", borderLeft: "1px solid rgba(251,191,36,0.30)" }}>
+                        <span className="text-[8px] font-bold uppercase tracking-[0.2em] whitespace-nowrap"
+                          style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", color: "rgba(251,191,36,0.60)" }}>
+                          Me Time Stories
+                        </span>
+                      </div>
+                      {/* Cover */}
+                      <div className="w-52 rounded-r-sm relative overflow-hidden" style={{ minHeight: 260 }}>
+                        {/* Sky/pitch background */}
+                        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #071428 0%, #0d2246 45%, #1a3a6e 70%, #0e2a50 100%)" }} />
+                        {/* Floodlight beams */}
+                        <div className="absolute inset-0 pointer-events-none">
+                          <div style={{ position: "absolute", top: 0, left: "20%", width: 80, height: "100%", background: "linear-gradient(180deg, rgba(255,240,180,0.06) 0%, transparent 70%)", transform: "skewX(-10deg)" }} />
+                          <div style={{ position: "absolute", top: 0, right: "20%", width: 60, height: "100%", background: "linear-gradient(180deg, rgba(255,240,180,0.04) 0%, transparent 65%)", transform: "skewX(10deg)" }} />
+                        </div>
+                        {/* Pitch lines */}
+                        <div className="absolute bottom-0 left-0 right-0" style={{ height: "38%", background: "linear-gradient(180deg, transparent 0%, rgba(20,80,40,0.70) 40%, rgba(15,60,30,0.85) 100%)" }}>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div style={{ width: "55%", height: "70%", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 2 }} />
+                          </div>
+                        </div>
+                        {/* Gold badge top-right */}
+                        <div className="absolute top-3 right-3 w-9 h-9 rounded-full flex flex-col items-center justify-center"
+                          style={{ background: "linear-gradient(135deg, #fbbf24, #f97316)", boxShadow: "0 2px 12px rgba(251,191,36,0.45)" }}>
+                          <span className="text-[6px] font-black uppercase leading-tight text-center" style={{ color: "#1a0800" }}>
+                            MeTime<br />Stories
+                          </span>
+                        </div>
+                        {/* Club crest area */}
+                        <div className="absolute top-3 left-3 w-8 h-8 rounded flex items-center justify-center"
+                          style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.14)" }}>
+                          <i className="ri-shield-star-line text-sm" style={{ color: "rgba(255,255,255,0.50)" }}></i>
+                        </div>
+                        {/* Title block */}
+                        <div className="absolute inset-x-0 top-14 px-4">
+                          <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: "rgba(251,191,36,0.70)" }}>MeTime Stories presents</p>
+                          <h4 className="font-black leading-tight mb-2" style={{ fontSize: "1.15rem", color: "#ffffff", textShadow: "0 2px 12px rgba(0,0,0,0.80)" }}>
+                            Holding<br />the Line
+                          </h4>
+                          <div className="h-px w-10 mb-2" style={{ background: "rgba(251,191,36,0.50)" }} />
+                          <p className="text-[9px] leading-relaxed" style={{ color: "rgba(255,255,255,0.62)" }}>
+                            Kofi's Journey<br />at West Brom FC
+                          </p>
+                        </div>
+                        {/* Bottom bar */}
+                        <div className="absolute bottom-0 inset-x-0 px-3 py-2"
+                          style={{ background: "linear-gradient(to top, rgba(0,0,0,0.80) 0%, transparent 100%)" }}>
+                          <p className="text-[8px] font-semibold uppercase tracking-widest" style={{ color: "rgba(251,191,36,0.55)" }}>
+                            Personalised · Printed · Delivered
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: details */}
+                  <div className="p-7 flex flex-col justify-center">
+                    <p className="text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: "#f97316" }}>
+                      Sample Story — Available Now
+                    </p>
+                    <h3 className="font-black text-white mb-1" style={{ fontSize: "1.4rem", lineHeight: 1.2 }}>
+                      Holding the Line
+                    </h3>
+                    <p className="text-sm mb-5" style={{ color: "rgba(255,255,255,0.45)" }}>
+                      Kofi's Journey at West Brom FC
+                    </p>
+
+                    <ul className="space-y-2.5 mb-6">
+                      {[
+                        { icon: "ri-book-2-line",         text: "24 fully illustrated pages" },
+                        { icon: "ri-user-star-line",       text: "Player's name, position & personality woven throughout" },
+                        { icon: "ri-shield-star-line",     text: "Club-branded with your academy's crest & colours" },
+                        { icon: "ri-mental-health-line",   text: "Position-specific psychological themes (centre-back: leadership under pressure)" },
+                        { icon: "ri-chat-3-line",          text: "Coach debrief guide included — 5 conversation starters" },
+                        { icon: "ri-home-heart-line",      text: "Designed to be read at home, debriefed at training" },
+                      ].map(({ icon, text }) => (
+                        <li key={text} className="flex items-start gap-2.5 text-xs" style={{ color: "rgba(255,255,255,0.60)" }}>
+                          <i className={`${icon} text-sm flex-shrink-0 mt-0.5`} style={{ color: "#fbbf24" }}></i>
+                          {text}
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <a
+                        href={publicAssetUrl("holding-the-line-sample.pdf")}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all hover:scale-[1.02]"
+                        style={{ background: "linear-gradient(135deg, #fbbf24, #f97316)", color: "#1a0800", boxShadow: "0 4px 20px rgba(251,191,36,0.28)" }}
+                      >
+                        <i className="ri-download-2-line"></i>
+                        Download Sample Book
+                      </a>
+                      <a
+                        href="/for-academies"
+                        className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm transition-all"
+                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(254,243,226,0.70)" }}
+                      >
+                        <i className="ri-building-4-line"></i>
+                        Request Your Academy's Version
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
