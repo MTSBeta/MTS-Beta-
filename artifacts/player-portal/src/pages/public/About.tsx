@@ -352,8 +352,8 @@ export default function About() {
                 {
                   initials: "RH",
                   name: "Ryan Howard",
-                  org: "U14 Lead Coach, Wolverhampton Wanderers FC",
-                  tags: ["Football Academy Insight", "Player Development", "Academy Relevance"],
+                  org: "U9s Coach, Nottingham Forest FC · formerly Wolves U14s",
+                  tags: ["Football Academy Insight", "Player Development", "Positional Understanding", "Academy Relevance"],
                   color: "#fbbf24",
                 },
                 {
